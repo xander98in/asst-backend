@@ -8,11 +8,11 @@ import lombok.Getter;
 public class Person {
 
     private Long id;
-    private String numeroIdentificacion;
-    private String nombres;
-    private String apellidos;
-    private Integer anioNacimiento;
-    private String tipoIdentificacion;
-    private String sexo;
+    private String identificationNumber;
+    private String firstName;
+    private String lastName;
+    private Integer birthYear;
+    private IdentificationType identificationType;
+    private Gender gender;
 
 }

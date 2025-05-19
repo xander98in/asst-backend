@@ -1,6 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.query;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonResponseDTO;
@@ -11,6 +11,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.in
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Component
 public class PersonQueryHandlerImpl implements PersonQueryHandler {
 
     private final PersonQueryCUInputPort personQueryCUInputPort;
@@ -18,15 +19,9 @@ public class PersonQueryHandlerImpl implements PersonQueryHandler {
 
     @Override
     public ApiResponse<PersonResponseDTO> getPersonById(Long idPerson) {
-        Person person = personQueryCUInputPort.getById(idPerson);
+        Person person = personQueryCUInputPort.getPersonById(idPerson);
         PersonResponseDTO dto = personMapper.toResponseDTO(person);
-
-        return new ApiResponse<>(
-            HttpStatus.OK,
-            "Persona consultada exitosamente",
-            dto,
-            1000
-        );
+        return ApiResponse.success("Persona consultada exitosamente", dto);
     }
 
 }

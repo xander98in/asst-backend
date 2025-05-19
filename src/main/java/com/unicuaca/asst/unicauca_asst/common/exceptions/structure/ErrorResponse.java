@@ -1,0 +1,49 @@
+package com.unicuaca.asst.unicauca_asst.common.exceptions.structure;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
+/**
+ * Clase que representa una respuesta estandarizada de error utilizada en el manejo global
+ * de excepciones dentro de la aplicación. Esta estructura puede ser retornada al cliente
+ * cuando ocurre un error, proporcionando información clara, trazable y consistente.
+ *
+ * Se recomienda su uso dentro de un {@code @RestControllerAdvice} para encapsular errores
+ * personalizados como parte del contrato de la API.
+ */
+@Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class ErrorResponse {
+
+    /**
+     * Código de error definido por la aplicación (ej: BAT-BUS-001).
+     */
+    private String errorCode;
+
+    /**
+     * Mensaje descriptivo del error ocurrido.
+     */
+    private String message;
+
+    /**
+     * Código HTTP correspondiente al tipo de error (ej: 404, 400, 500).
+     */
+    private Integer httpStatus;
+
+    /**
+     * URL del endpoint que generó el error.
+     */
+    @Accessors(chain = true)
+    private String url;
+
+    /**
+     * Método HTTP de la petición que generó el error (GET, POST, etc.).
+     */
+    @Accessors(chain = true)
+    private String method;
+}

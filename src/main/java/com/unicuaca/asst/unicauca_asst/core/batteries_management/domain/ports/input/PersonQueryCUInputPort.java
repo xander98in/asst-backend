@@ -10,6 +10,6 @@ public interface PersonQueryCUInputPort {
      * @param id el identificador de la persona
      * @return una instancia del modelo de dominio {@link Person}
      */
-    Person getById(Long id);
+    Person getPersonById(Long id);
 
 }
