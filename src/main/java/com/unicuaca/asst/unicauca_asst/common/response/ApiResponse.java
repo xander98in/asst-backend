@@ -6,43 +6,65 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Clase genérica para encapsular respuestas estándar de la API REST.
+ * Puede representar tanto respuestas exitosas como errores estructurados.
+ *
+ * @param <T> tipo de dato que contiene el campo 'data' (puede ser DTO o ErrorResponse)
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiResponse<T> {
 
-    private HttpStatus status;
+    /**
+     * Código de estado HTTP de la respuesta (por ejemplo: 200, 404, 500).
+     */
+    private int httpStatus;
+
+    /**
+     * Mensaje descriptivo de la respuesta, ya sea de éxito o de error.
+     */
     private String message;
+
+    /**
+     * Cuerpo de la respuesta. En caso de éxito, contiene el resultado (DTO).
+     * En caso de error, puede contener una estructura con detalles técnicos (por ejemplo, {@code ErrorResponse}).
+     */
     private T data;
-    private Integer code;
 
-    // 🔹 Método para respuestas exitosas (200 OK)
+    // ✅ Éxito simple con datos
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(HttpStatus.OK, "Éxito", data, HttpStatus.OK.value());
+        return new ApiResponse<>(HttpStatus.OK.value(), "Éxito", data);
     }
 
-    // 🔹 Método para respuestas exitosas con mensaje personalizado
+    // ✅ Éxito con mensaje personalizado
     public static <T> ApiResponse<T> success(String message, T data) {
-        return new ApiResponse<>(HttpStatus.OK, message, data, HttpStatus.OK.value());
+        return new ApiResponse<>(HttpStatus.OK.value(), message, data);
     }
 
-    // 🔹 Método para errores
-    public static <T> ApiResponse<T> error(String message, HttpStatus status) {
-        return new ApiResponse<>(status, message, null, status.value());
+    // ✅ Éxito sin datos
+    public static <T> ApiResponse<T> success(String message) {
+        return new ApiResponse<>(HttpStatus.OK.value(), message, null);
     }
 
-    // 🔹 Método para error genérico 500
+    // ✅ Error con datos personalizados (como ErrorResponse)
+    public static <T> ApiResponse<T> error(String message, HttpStatus httpStatus, T errorData) {
+        return new ApiResponse<>(httpStatus.value(), message, errorData);
+    }
+
+    // ✅ Error genérico 500
     public static <T> ApiResponse<T> internalError(String message) {
-        return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, message, null, HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, null);
     }
 
-    // 🔹 Método para error 404
+    // ✅ Error 404
     public static <T> ApiResponse<T> notFound(String message) {
-        return new ApiResponse<>(HttpStatus.NOT_FOUND, message, null, HttpStatus.NOT_FOUND.value());
+        return new ApiResponse<>(HttpStatus.NOT_FOUND.value(), message, null);
     }
 
-    // 🔹 Método para errores completamente personalizados
-    public static <T> ApiResponse<T> customError(String message, HttpStatus status, int code) {
-    return new ApiResponse<>(status, message, null, code);
-}
+    // ✅ Error personalizado sin body
+    public static <T> ApiResponse<T> customError(String message, HttpStatus httpStatus) {
+        return new ApiResponse<>(httpStatus.value(), message, null);
+    }
 }

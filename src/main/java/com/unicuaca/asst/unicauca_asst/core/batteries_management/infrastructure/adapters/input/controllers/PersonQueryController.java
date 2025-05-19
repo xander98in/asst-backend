@@ -12,8 +12,18 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.que
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controlador REST que expone los endpoints de consulta relacionados con el agregado {@code Person}.
+ *
+ * Esta clase pertenece a la capa de infraestructura (adaptador de entrada) de la arquitectura hexagonal,
+ * y se encarga de recibir las solicitudes HTTP desde el exterior y delegarlas a los casos de uso
+ * definidos en la capa de aplicación.
+ *
+ * <p>Utiliza {@link PersonQueryHandler} como puerto de entrada para ejecutar la lógica de consulta
+ * relacionada con personas.</p>
+ */
 @RestController
-@RequestMapping("/persona")
+@RequestMapping("/person")
 @RequiredArgsConstructor
 public class PersonQueryController {
 
@@ -26,9 +36,9 @@ public class PersonQueryController {
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene los datos de la persona
      *         en un objeto {@link PersonResponseDTO}, o un mensaje de error si no se encuentra.
      */
-    @GetMapping("/consultar/{idPersona}")
-    public ResponseEntity<ApiResponse<PersonResponseDTO>> queryPersonById(@PathVariable Long idPersona) {
-        ApiResponse<PersonResponseDTO> response = personQueryHandler.getPersonById(idPersona);
+    @GetMapping("/query-by-id/{idPerson}")
+    public ResponseEntity<ApiResponse<PersonResponseDTO>> queryPersonById(@PathVariable Long idPerson) {
+        ApiResponse<PersonResponseDTO> response = personQueryHandler.getPersonById(idPerson);
         return ResponseEntity.ok(response);
     }
 

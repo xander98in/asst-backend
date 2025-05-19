@@ -2,45 +2,55 @@ package com.unicuaca.asst.unicauca_asst.common.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorResponse;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorUtils;
+import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Manejador global de excepciones para los controladores REST de la aplicación.
  *
- * Esta clase intercepta las excepciones personalizadas lanzadas desde cualquier
- * controlador y construye una respuesta estandarizada del tipo {@link ErrorResponse},
- * permitiendo entregar al cliente información estructurada sobre el error ocurrido.
+ * Esta clase intercepta excepciones personalizadas lanzadas desde cualquier capa
+ * del backend (generalmente desde los casos de uso o infraestructura), y construye
+ * una respuesta uniforme del tipo {@link ApiResponse} que envuelve un {@link ErrorResponse}.
  *
- * <p>Esta clase hace uso de {@link ErrorCode} para representar los códigos de error definidos
- * por la aplicación y de {@link ErrorUtils} para construir respuestas con trazabilidad.</p>
+ * <p>Su propósito es entregar al cliente errores estructurados con trazabilidad,
+ * respetando el contrato de la API REST, y evitando respuestas técnicas genéricas.</p>
+ *
+ * <p>Utiliza {@link ErrorCode} como catálogo de códigos de error definidos por la aplicación
+ * y {@link ErrorUtils} para construir respuestas enriquecidas con metadatos (URL, método HTTP, etc.).</p>
  */
-@ControllerAdvice
+@RestControllerAdvice
 public class RestApiExceptionHandler {
 
     /**
-     * Maneja excepciones del tipo {@link EntityNotFoundException}, devolviendo una respuesta
-     * con código HTTP 404 (NOT FOUND) y un objeto {@link ErrorResponse} estructurado.
+     * Maneja excepciones del tipo {@link EntityNotFoundPersException} lanzadas cuando
+     * no se encuentra una entidad solicitada.
      *
-     * @param req     objeto que contiene información de la petición HTTP original
-     * @param ex      la excepción capturada
-     * @return        una respuesta HTTP con código 404 y detalle del error
+     * <p>Devuelve una respuesta HTTP con código <strong>404 NOT FOUND</strong> y una estructura
+     * de error detallada que incluye el código interno de error, mensaje descriptivo,
+     * URL solicitada y método HTTP.</p>
+     *
+     * @param req objeto que representa la solicitud HTTP original
+     * @param ex  la excepción lanzada desde el dominio o infraestructura
+     * @return    una {@link ResponseEntity} con código 404 y cuerpo estructurado usando {@link ApiResponse} y {@link ErrorResponse}
      */
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleEntityNotFound(final HttpServletRequest req, final EntityNotFoundException ex) {
-        
+    @ExceptionHandler(EntityNotFoundPersException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleEntityNotFoundException(HttpServletRequest req, EntityNotFoundPersException ex) {
         ErrorResponse error = ErrorUtils.createError(
                 ex.getCode(),
-                ex.getMessageKey(),
+                ex.getMessage(),
                 HttpStatus.NOT_FOUND.value())
             .setUrl(req.getRequestURL().toString())
             .setMethod(req.getMethod());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(ApiResponse.error(ex.getMessageKey(), HttpStatus.NOT_FOUND, error));
     }
 }

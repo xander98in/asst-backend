@@ -16,7 +16,7 @@ import lombok.Getter;
  * la ausencia de un recurso solicitado (por ejemplo, una persona, usuario o entidad).
  */
 @Getter
-public class EntityNotFoundException extends RuntimeException {
+public class EntityNotFoundPersException extends RuntimeException {
 
     /**
      * Código de error único, estructurado según convención (ej: BAT-BUS-001).
@@ -36,7 +36,7 @@ public class EntityNotFoundException extends RuntimeException {
      *
      * @param code objeto {@link ErrorCode} con la información del error
      */
-    public EntityNotFoundException(ErrorCode code) {
+    public EntityNotFoundPersException(ErrorCode code) {
         super(code.getMessageKey());
         this.code = code.getCode();
         this.messageKey = code.getMessageKey();
@@ -48,7 +48,7 @@ public class EntityNotFoundException extends RuntimeException {
      *
      * @param message mensaje de error específico
      */
-    public EntityNotFoundException(String message) {
+    public EntityNotFoundPersException(String message) {
         super(message);
         this.code = ErrorCode.ENTITY_NOT_FOUND.getCode();
         this.messageKey = ErrorCode.ENTITY_NOT_FOUND.getMessageKey();

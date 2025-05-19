@@ -30,4 +30,13 @@ public interface PersonQueryRepository {
      * @return true si la persona existe, false si no
      */
     boolean existsById(Long id);
+
+    /**
+     * Verifica si existe una persona con un tipo y número de identificación específicos.
+     *
+     * @param identificationTypeId ID del tipo de identificación (por ejemplo: cédula, pasaporte)
+     * @param identificationNumber número de identificación de la persona
+     * @return true si la persona existe, false si no
+     */
+    boolean existsByIdentification(Long identificationTypeId, String identificationNumber);
 }

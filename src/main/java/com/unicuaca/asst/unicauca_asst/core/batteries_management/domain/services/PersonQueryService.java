@@ -10,20 +10,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PersonQueryService implements PersonQueryCUInputPort {
 
-    /**
-     * Repositorio de consulta de personas.
-     */
     private final PersonQueryRepository personQueryRepository;
     private final ResultFormatterOutputPort resultFormatter;
 
     @Override
     public Person getPersonById(Long id) {
         return personQueryRepository.getPersonById(id)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound("La persona con ID " + id + " no fue encontrada.");
-                    return null; // Este return nunca se ejecuta realmente porque la línea anterior lanza una excepción.
-                });
-        
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound("La persona con ID " + id + " no fue encontrada.");
+                return null; // nunca se ejecuta, pero requerido por el compilador
+            });
     }
 
 }

@@ -10,6 +10,12 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.in
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Implementación del manejador de consultas de persona.
+ *
+ * Delega la lógica de negocio al puerto de entrada y transforma
+ * el modelo de dominio en un DTO para la respuesta.
+ */
 @RequiredArgsConstructor
 @Component
 public class PersonQueryHandlerImpl implements PersonQueryHandler {
@@ -17,6 +23,12 @@ public class PersonQueryHandlerImpl implements PersonQueryHandler {
     private final PersonQueryCUInputPort personQueryCUInputPort;
     private final PersonMapper personMapper;
 
+    /**
+     * Consulta una persona por su ID y devuelve una respuesta formateada.
+     *
+     * @param idPerson ID único de la persona
+     * @return respuesta con los datos de la persona consultada
+     */
     @Override
     public ApiResponse<PersonResponseDTO> getPersonById(Long idPerson) {
         Person person = personQueryCUInputPort.getPersonById(idPerson);

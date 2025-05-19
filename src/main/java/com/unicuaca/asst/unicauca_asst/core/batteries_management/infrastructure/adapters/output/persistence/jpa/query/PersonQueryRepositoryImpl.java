@@ -3,6 +3,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Person;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonQueryRepository;
@@ -10,7 +11,6 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.PersonRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.PersonPersistenceMapper;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -58,5 +58,17 @@ public class PersonQueryRepositoryImpl implements PersonQueryRepository {
     @Override
     public boolean existsById(Long id) {
         return personJpaRepository.existsById(id);
+    }
+
+    /**
+     * Verifica si existe una persona en el sistema con un tipo y número de identificación específicos.
+     *
+     * @param identificationTypeId ID del tipo de identificación (ej. cédula, pasaporte)
+     * @param identificationNumber número de identificación asociado a la persona
+     * @return true si existe una persona con esos datos, false en caso contrario
+     */
+    @Override
+    public boolean existsByIdentification(Long identificationTypeId, String identificationNumber) {
+        return personJpaRepository.existsByIdentificationTypeIdAndIdentificationNumber(identificationTypeId, identificationNumber);
     }
 }

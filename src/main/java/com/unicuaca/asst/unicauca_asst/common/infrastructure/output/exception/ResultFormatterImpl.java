@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 
-import jakarta.persistence.EntityNotFoundException;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityNotFoundPersException;
+
 
 /**
  * Implementación del puerto de salida {@link ResultFormatterOutputPort} encargado de lanzar
@@ -39,7 +40,7 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
      */
     @Override
     public void throwEntityNotFound(String message) {
-        throw new EntityNotFoundException(message);
+        throw new EntityNotFoundPersException(message);
     }
 
     /**
@@ -49,7 +50,6 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
      */
     @Override
     public void throwBusinessRuleViolation(String message) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'throwBusinessRuleViolation'");
     }
 

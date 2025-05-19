@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PersonResponseDTO {
+
     private Long id;
-    private String numeroIdentificacion;
-    private String nombres;
-    private String apellidos;
-    private Integer anioNacimiento;
-    private String tipoIdentificacion;
-    private String sexo;
+    private String identificationNumber;
+    private String firstName;
+    private String lastName;
+    private Integer birthYear;
+    private String identificationType;
+    private String gender;
+    
 }
