@@ -1,5 +1,8 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories;
 
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.PersonEntity;
@@ -20,4 +23,9 @@ public interface PersonRepository extends CrudRepository<PersonEntity, Long> {
      */
     boolean existsByIdentificationTypeIdAndIdentificationNumber(Long identificationTypeId, String identificationNumber);
 
+    @Query("SELECT p FROM PersonEntity p " +
+       "JOIN FETCH p.identificationType " +
+       "JOIN FETCH p.gender " +
+       "WHERE p.id = :id")
+    Optional<PersonEntity> findWithRelationsById(Long id);
 }

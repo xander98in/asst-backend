@@ -33,7 +33,11 @@ public class PersonCommandService implements PersonCommandCUInputPort {
         if(personQueryRepository.existsByIdentification(person.getIdentificationType().getId(), person.getIdentificationNumber())) {
             this.resultFormatter.throwEntityAlreadyExists("La persona " + person.getFirstName() + " se encuentra registrada.");
         }
-        return personCommandRepository.savePerson(person);
+        return personCommandRepository.savePerson(person)
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound("La persona no se creo correctamente");
+                return null; // nunca se ejecuta, pero requerido por el compilador
+            });
     }
 
 }

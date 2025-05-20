@@ -1,5 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output;
 
+import java.util.Optional;
+
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Person;
 
 /**
@@ -20,6 +22,6 @@ public interface PersonCommandRepository {
      * @param person objeto de dominio que representa a la persona a guardar
      * @return la persona persistida con sus datos actualizados (por ejemplo, con ID generado)
      */
-    Person savePerson(Person person);
+    Optional<Person> savePerson(Person person);
 
 }
