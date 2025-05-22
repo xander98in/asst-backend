@@ -1,7 +1,12 @@
 package com.unicuaca.asst.unicauca_asst.common.exceptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -53,4 +58,45 @@ public class RestApiExceptionHandler {
             .status(HttpStatus.NOT_FOUND)
             .body(ApiResponse.error(ex.getMessageKey(), HttpStatus.NOT_FOUND, error));
     }
+
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleEntityAlreadyExistsException(HttpServletRequest req, EntityAlreadyExistsException ex) {
+        ErrorResponse error = ErrorUtils.createError(
+                ex.getCode(),
+                ex.getMessage(),
+                HttpStatus.NOT_FOUND.value())
+            .setUrl(req.getRequestURL().toString())
+            .setMethod(req.getMethod());
+
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(ApiResponse.error(ex.getMessageKey(), HttpStatus.NOT_FOUND, error));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse<?>>> handleValidationExceptions(
+            HttpServletRequest req, MethodArgumentNotValidException ex) {
+
+        Map<String, String> fieldErrors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String field = ((FieldError) error).getField();
+            String message = error.getDefaultMessage();
+            fieldErrors.put(field, message);
+        });
+
+        ErrorResponse<Map<String, String>> error = ErrorUtils.<Map<String, String>>createError(
+                "VALIDATION_ERROR",
+                "Error de validación en los campos enviados",
+                HttpStatus.BAD_REQUEST.value())
+            .setUrl(req.getRequestURL().toString())
+            .setMethod(req.getMethod())
+            .setData(fieldErrors);
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponse.error("Solicitud inválida. Revise los campos.", HttpStatus.BAD_REQUEST, error));
+    }
+
+
+
 }

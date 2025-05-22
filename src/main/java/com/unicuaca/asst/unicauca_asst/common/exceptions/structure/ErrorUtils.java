@@ -19,8 +19,8 @@ public final class ErrorUtils {
      * @param httpStatus  código HTTP correspondiente (ej: 404, 500)
      * @return una instancia de {@link ErrorResponse} completamente construida
      */
-    public static ErrorResponse createError(final String errorCode, final String messageKey, final Integer httpStatus) {
-        return ErrorResponse.builder()
+    public static <T> ErrorResponse<T> createError(final String errorCode, final String messageKey, final Integer httpStatus) {
+        return ErrorResponse.<T>builder()
             .errorCode(errorCode)
             .message(messageKey)
             .httpStatus(httpStatus)

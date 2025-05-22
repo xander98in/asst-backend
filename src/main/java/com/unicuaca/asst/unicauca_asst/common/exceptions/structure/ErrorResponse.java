@@ -1,5 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.common.exceptions.structure;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +20,8 @@ import lombok.experimental.Accessors;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse {
+@Accessors(chain = true)
+public class ErrorResponse<T> {
 
     /**
      * Código de error definido por la aplicación (ej: BAT-BUS-001).
@@ -46,4 +49,10 @@ public class ErrorResponse {
      */
     @Accessors(chain = true)
     private String method;
+
+    /**
+     * Información adicional del error. Solo se incluirá si no es null.
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private T data;
 }

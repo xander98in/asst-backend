@@ -41,6 +41,4 @@ public class PersonCommandRepositoryImpl implements PersonCommandRepository {
         return personJpaRepository.findWithRelationsById(saved.getId())
             .map(personDBMapper::toDomain);
     }
-
-   
 }

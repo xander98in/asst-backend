@@ -3,7 +3,7 @@ package com.unicuaca.asst.unicauca_asst.common.infrastructure.output.exception;
 import org.springframework.stereotype.Service;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
-
+import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityNotFoundPersException;
 
 
@@ -29,8 +29,7 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
      */
     @Override
     public void throwEntityAlreadyExists(String message) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'throwEntityAlreadyExists'");
+        throw new EntityAlreadyExistsException(message);
     }
 
     /**

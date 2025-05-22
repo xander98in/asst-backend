@@ -23,6 +23,16 @@ public interface PersonRepository extends CrudRepository<PersonEntity, Long> {
      */
     boolean existsByIdentificationTypeIdAndIdentificationNumber(Long identificationTypeId, String identificationNumber);
 
+    /**
+     * Consulta una persona por su ID e incluye las relaciones {@code identificationType} y {@code gender}
+     * mediante {@code JOIN FETCH}, lo cual garantiza que estas entidades se cargan completamente.
+     *
+     * Este método se recomienda para evitar problemas de carga perezosa (lazy loading) cuando se necesita
+     * retornar un objeto de dominio que contiene información anidada desde relaciones @ManyToOne.
+     *
+     * @param id identificador único de la persona
+     * @return un {@link Optional} con la persona encontrada y sus relaciones cargadas, o vacío si no existe
+     */
     @Query("SELECT p FROM PersonEntity p " +
        "JOIN FETCH p.identificationType " +
        "JOIN FETCH p.gender " +
