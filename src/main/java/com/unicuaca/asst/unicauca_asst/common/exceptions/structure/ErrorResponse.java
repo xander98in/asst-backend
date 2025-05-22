@@ -13,14 +13,14 @@ import lombok.experimental.Accessors;
  * de excepciones dentro de la aplicación. Esta estructura puede ser retornada al cliente
  * cuando ocurre un error, proporcionando información clara, trazable y consistente.
  *
- * Se recomienda su uso dentro de un {@code @RestControllerAdvice} para encapsular errores
- * personalizados como parte del contrato de la API.
+ * @param <T> Tipo de datos adicionales, útil por ejemplo en errores de validación por campo.
  */
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse<T> {
 
     /**

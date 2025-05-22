@@ -12,19 +12,31 @@ public final class ErrorUtils {
     }
 
     /**
-     * Crea un nuevo objeto {@link ErrorResponse} con los campos básicos.
-     * 
-     * @param errorCode   código de error (ej: BAT-BUS-001)
-     * @param messageKey  mensaje del error (ej: "entity.not.found")
-     * @param httpStatus  código HTTP correspondiente (ej: 404, 500)
-     * @return una instancia de {@link ErrorResponse} completamente construida
+     * Crea un error con datos adicionales opcionales (por ejemplo: errores de validación).
+     *
+     * @param <T> tipo de datos adicionales (usualmente Map<String, String> o un DTO)
+     * @param errorCode código de error definido por la app
+     * @param message mensaje descriptivo
+     * @param httpStatus código HTTP asociado
+     * @return un {@link ErrorResponse<T>} genérico
      */
-    public static <T> ErrorResponse<T> createError(final String errorCode, final String messageKey, final Integer httpStatus) {
+    public static <T> ErrorResponse<T> createError(final String errorCode, final String message, final Integer httpStatus) {
         return ErrorResponse.<T>builder()
             .errorCode(errorCode)
-            .message(messageKey)
+            .message(message)
             .httpStatus(httpStatus)
             .build();
     }
 
+    /**
+     * Crea un error simple sin campo `data`. Útil para errores 404, 403, 500, etc.
+     *
+     * @param errorCode código de error definido por la app
+     * @param message mensaje descriptivo
+     * @param httpStatus código HTTP asociado
+     * @return un {@link ErrorResponse<Void>} sin campo `data`
+     */
+    public static ErrorResponse<Void> createSimpleError(final String errorCode, final String message, final Integer httpStatus) {
+        return createError(errorCode, message, httpStatus);
+    }
 }
