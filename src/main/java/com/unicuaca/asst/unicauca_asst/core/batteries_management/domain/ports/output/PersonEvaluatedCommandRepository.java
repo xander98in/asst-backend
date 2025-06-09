@@ -2,11 +2,11 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.o
 
 import java.util.Optional;
 
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Person;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
 
 /**
  * Puerto de salida que define las operaciones de comando (creación o modificación)
- * relacionadas con el agregado {@link Person}.
+ * relacionadas con el agregado {@link PersonEvaluated}.
  *
  * Esta interfaz representa el contrato que debe implementar la infraestructura
  * para permitir la persistencia de datos de personas en una fuente externa (por ejemplo, base de datos).
@@ -14,14 +14,21 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.P
  * <p>Hace parte del patrón de arquitectura hexagonal, permitiendo que el dominio
  * se mantenga desacoplado de los detalles técnicos de almacenamiento.</p>
  */
-public interface PersonCommandRepository {
+public interface PersonEvaluatedCommandRepository {
 
     /**
      * Persiste una nueva persona o actualiza una existente.
      *
-     * @param person objeto de dominio que representa a la persona a guardar
+     * @param personEvaluated objeto de dominio que representa a la persona a guardar
      * @return la persona persistida con sus datos actualizados (por ejemplo, con ID generado)
      */
-    Optional<Person> savePerson(Person person);
+    Optional<PersonEvaluated> savePersonEvaluated(PersonEvaluated personEvaluated);
 
+    /**
+     * Puerto de salida para actualizar una persona evaluada.
+     * 
+     * @param personEvaluated objeto con los datos a persistir
+     * @return objeto actualizado o vacío si no se encontró
+     */
+    Optional<PersonEvaluated> updatePersonEvaluated(PersonEvaluated personEvaluated);
 }

@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * Representa un tipo de documento (Cédula, Pasaporte, etc.) de una persona evaluada.
+ */
 @Getter
 @AllArgsConstructor
 @Builder

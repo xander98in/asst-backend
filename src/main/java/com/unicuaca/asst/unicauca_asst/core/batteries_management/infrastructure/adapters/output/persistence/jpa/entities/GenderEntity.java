@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,7 @@ import lombok.Setter;
  * Clase entidad que mapea la tabla "sexos" en la base de datos.
  * 
  * Esta entidad representa una categoría de sexo (por ejemplo: "Masculino", "Femenino", "Otro")
- * asociada a una persona dentro del contexto del módulo de gestión de baterías.
+ * asociada a una persona evaluada dentro del contexto del módulo de gestión de baterías.
  * 
  * Se utiliza en la capa de persistencia para interactuar con la base de datos mediante JPA/Hibernate.
  * 
@@ -25,6 +26,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "sexos")
 public class GenderEntity {
@@ -43,7 +45,7 @@ public class GenderEntity {
      * 
      * Ejemplos: "Masculino", "Femenino", "Otro"
      */
-    @Column(name = "descripcion", nullable = false, unique = true, length = 10)
+    @Column(name = "descripcion", nullable = false, unique = true, length = 20)
     private String description;
 
     /**

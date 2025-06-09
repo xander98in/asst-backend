@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonResponseDTO;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.query.PersonQueryHandler;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedResponseDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.query.PersonEvaluatedQueryHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,26 +19,26 @@ import lombok.RequiredArgsConstructor;
  * y se encarga de recibir las solicitudes HTTP desde el exterior y delegarlas a los casos de uso
  * definidos en la capa de aplicación.
  *
- * <p>Utiliza {@link PersonQueryHandler} como puerto de entrada para ejecutar la lógica de consulta
+ * <p>Utiliza {@link PersonEvaluatedQueryHandler} como puerto de entrada para ejecutar la lógica de consulta
  * relacionada con personas.</p>
  */
 @RestController
 @RequestMapping("/person")
 @RequiredArgsConstructor
-public class PersonQueryController {
+public class PersonEvaluatedQueryController {
 
-    private final PersonQueryHandler personQueryHandler;
+    private final PersonEvaluatedQueryHandler personEvaluatedQueryHandler;
 
     /**
      * Endpoint para consultar la información de una persona por su identificador.
      *
-     * @param idPerson identificador único de la persona a consultar.
+     * @param idPersonEvaluated identificador único de la persona a consultar.
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene los datos de la persona
-     *         en un objeto {@link PersonResponseDTO}, o un mensaje de error si no se encuentra.
+     *         en un objeto {@link PersonEvaluatedResponseDTO}, o un mensaje de error si no se encuentra.
      */
     @GetMapping("/query-by-id/{idPerson}")
-    public ResponseEntity<ApiResponse<PersonResponseDTO>> queryPersonById(@PathVariable Long idPerson) {
-        ApiResponse<PersonResponseDTO> response = personQueryHandler.getPersonById(idPerson);
+    public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> queryPersonById(@PathVariable Long idPersonEvaluated) {
+        ApiResponse<PersonEvaluatedResponseDTO> response = personEvaluatedQueryHandler.getPersonEvaluatedById(idPersonEvaluated);
         return ResponseEntity.ok(response);
     }
 

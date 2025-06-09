@@ -1,20 +1,27 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request;
 
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.validation.ValidBirthYear;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.validation.ValidBirthYear;
-
+/**
+ * DTO para la creación de una persona evaluada.
+ * 
+ * Contiene los datos básicos requeridos para registrar a una persona en el sistema de baterías de riesgo psicosocial,
+ * incluyendo validaciones de formato y obligatoriedad.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonCreateRequestDTO {
+@Builder
+public class PersonEvaluatedCreateRequestDTO {
 
     /**
      * Número de identificación de la persona (único).
@@ -46,6 +53,17 @@ public class PersonCreateRequestDTO {
     @NotNull(message = "{person.birthYear.notNull}")
     @ValidBirthYear
     private Integer birthYear;
+
+    /**
+     * Correo electrónico de la persona.
+     */
+    @NotBlank(message = "{person.email.notBlank}")
+    @Size(min = 10, max = 100, message = "{person.email.size}")
+    @Pattern(
+        regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+        message = "{person.email.pattern}"
+    )
+    private String email;
 
     /**
      * ID del tipo de identificación seleccionado (ej: 1 para Cédula, 2 para Pasaporte...).

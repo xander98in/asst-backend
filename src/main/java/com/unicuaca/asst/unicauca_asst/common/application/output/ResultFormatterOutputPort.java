@@ -1,5 +1,9 @@
 package com.unicuaca.asst.unicauca_asst.common.application.output;
 
+import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsException;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityCreationException;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
+
 /**
  * Puerto de salida para formatear o propagar errores de negocio desde los casos de uso.
  *
@@ -19,6 +23,15 @@ public interface ResultFormatterOutputPort {
     void throwEntityAlreadyExists(String message);
 
     /**
+     * Lanza una excepción cuando una entidad que se intenta crear ya existe.
+     *
+     * @param errorCode código de error específico para trazabilidad
+     * @param message mensaje descriptivo del conflicto
+     * @throws EntityAlreadyExistsException si la entidad ya está registrada
+     */
+    void throwEntityAlreadyExists(ErrorCode errorCode, String message);
+
+    /**
      * Lanza una excepción cuando no se encuentra una entidad esperada.
      *
      * @param message mensaje explicativo del error
@@ -31,4 +44,12 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje explicativo del error
      */
     void throwBusinessRuleViolation(String message);
+
+    /**
+     * Lanza una excepción cuando falla la creación de una entidad.
+     *
+     * @param message mensaje descriptivo del error ocurrido durante la creación
+     * @throws EntityCreationException excepción que indica un fallo en la creación
+     */
+    void throwEntityCreationFailed(String message);
 }

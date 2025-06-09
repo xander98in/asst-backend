@@ -13,7 +13,6 @@ public class BirthYearValidator implements ConstraintValidator<ValidBirthYear, I
         if (value == null) return false;
         int currentYear = Year.now().getValue();
         int minYear = currentYear - MAX_YEARS_BACK;
-
         return value >= minYear && value <= currentYear;
     }
 }

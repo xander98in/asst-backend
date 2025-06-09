@@ -79,6 +79,29 @@ public class RestApiExceptionHandler {
     }
 
     /**
+     * Maneja excepciones de tipo {@link EntityCreationException} cuando falla la creación de una entidad.
+     *
+     * <p>Retorna una respuesta HTTP 500 con detalles del error, incluyendo código, mensaje, URL y método HTTP.</p>
+     *
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción lanzada al fallar la creación de la entidad
+     * @return respuesta con estado 500 y cuerpo estructurado de error
+     */
+    @ExceptionHandler(EntityCreationException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityCreationException(HttpServletRequest req, EntityCreationException ex) {
+        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
+                ex.getCode(),
+                ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .setUrl(req.getRequestURL().toString())
+            .setMethod(req.getMethod());
+
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ApiResponse.error(ex.getMessageKey(), HttpStatus.INTERNAL_SERVER_ERROR, error));
+    }
+
+    /**
      * Maneja errores de validación cuando el cuerpo de la solicitud no cumple con las reglas definidas
      * en las anotaciones de validación (como {@code @NotBlank}, {@code @Size}, etc.).
      *

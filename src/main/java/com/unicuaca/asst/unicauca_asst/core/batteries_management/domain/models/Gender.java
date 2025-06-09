@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * Representa un sexo (Masculino, Femenino, Otro) asignado a una persona evaluada.
+ */
 @Getter
 @AllArgsConstructor
 @Builder

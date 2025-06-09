@@ -4,22 +4,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonCommandRepository;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonQueryRepository;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.PersonCommandService;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.PersonQueryService;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.PersonEvaluatedCommandService;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.PersonEvaluatedQueryService;
 
 @Configuration
 public class BeanConfigurations {
 
     @Bean
-    PersonQueryService personQueryService(PersonQueryRepository personQueryRepository, ResultFormatterOutputPort resultFormatterOutputPort) {
-        return new PersonQueryService(personQueryRepository, resultFormatterOutputPort);
+    PersonEvaluatedQueryService personQueryService(PersonEvaluatedQueryRepository personQueryRepository, ResultFormatterOutputPort resultFormatterOutputPort) {
+        return new PersonEvaluatedQueryService(personQueryRepository, resultFormatterOutputPort);
     }
 
     @Bean
-    PersonCommandService personCommandService(PersonCommandRepository personCommandRepository, PersonQueryRepository personQueryRepository, ResultFormatterOutputPort resultFormatterOutputPort) {
-        return new PersonCommandService(personCommandRepository , personQueryRepository, resultFormatterOutputPort);
+    PersonEvaluatedCommandService personEvaluatedCommandService(PersonEvaluatedCommandRepository personEvaluatedCommandRepository, 
+            PersonEvaluatedQueryRepository personEvaluatedQueryRepository, ResultFormatterOutputPort resultFormatterOutputPort) {
+        return new PersonEvaluatedCommandService(personEvaluatedCommandRepository , personEvaluatedQueryRepository, resultFormatterOutputPort);
     }
 
 }

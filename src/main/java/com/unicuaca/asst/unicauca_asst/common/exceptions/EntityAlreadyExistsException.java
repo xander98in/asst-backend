@@ -25,8 +25,8 @@ public class EntityAlreadyExistsException extends RuntimeException {
      *
      * @param code objeto {@link ErrorCode} con la información del error
      */
-    public EntityAlreadyExistsException(ErrorCode code) {
-        super(code.getMessageKey());
+    public EntityAlreadyExistsException(ErrorCode code, String message) {
+        super(message);
         this.code = code.getCode();
         this.messageKey = code.getMessageKey();
     }
