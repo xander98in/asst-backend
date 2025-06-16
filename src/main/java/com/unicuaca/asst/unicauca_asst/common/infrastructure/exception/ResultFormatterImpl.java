@@ -1,4 +1,4 @@
-package com.unicuaca.asst.unicauca_asst.common.infrastructure.output.exception;
+package com.unicuaca.asst.unicauca_asst.common.infrastructure.exception;
 
 import org.springframework.stereotype.Service;
 

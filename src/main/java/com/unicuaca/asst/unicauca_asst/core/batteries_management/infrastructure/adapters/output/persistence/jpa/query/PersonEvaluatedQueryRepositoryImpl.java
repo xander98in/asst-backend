@@ -83,7 +83,7 @@ public class PersonEvaluatedQueryRepositoryImpl implements PersonEvaluatedQueryR
      * @return true si el correo pertenece a otra persona, false en caso contrario
      */
     @Override
-    public boolean existsByEmailAndIdNot(String email, Long id) {
+    public boolean isEmailAssignedToDifferentPerson(String email, Long id) {
         return personEvaluatedJpaRepository.existsByEmailAndIdNot(email, id);
     }
 }

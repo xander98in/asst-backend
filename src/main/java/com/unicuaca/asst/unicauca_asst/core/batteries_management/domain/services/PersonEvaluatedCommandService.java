@@ -38,8 +38,10 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
      */
     @Override
     public PersonEvaluated createPersonEvaluated(PersonEvaluated personEvaluated) {
+        personEvaluated.setFirstName(personEvaluated.getFirstName().toUpperCase());
+        personEvaluated.setLastName(personEvaluated.getLastName().toUpperCase());
         if(personEvaluatedQueryRepository.existsByIdentification(personEvaluated.getIdentificationType().getId(), personEvaluated.getIdentificationNumber())) {
-            this.resultFormatter.throwEntityAlreadyExists("La persona " + personEvaluated.getFirstName() + " se encuentra registrada.");
+            this.resultFormatter.throwEntityAlreadyExists("La persona con identificación: " + personEvaluated.getIdentificationNumber() + " se encuentra registrada.");
         }
         if (personEvaluatedQueryRepository.existsByEmail(personEvaluated.getEmail())) {
             resultFormatter.throwEntityAlreadyExists(ErrorCode.EMAIL_ALREADY_EXISTS, "El correo " + personEvaluated.getEmail() + " ya está registrado.");
@@ -63,13 +65,14 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
     @Override
     public PersonEvaluated updatePersonEvaluated(PersonEvaluated personEvaluated) {
         Long id = personEvaluated.getId();
+        personEvaluated.setFirstName(personEvaluated.getFirstName().toUpperCase());
+        personEvaluated.setLastName(personEvaluated.getLastName().toUpperCase());
         if (!personEvaluatedQueryRepository.existsById(id)) {
             resultFormatter.throwEntityNotFound("La persona con ID " + id + " no existe.");
         }
-        if (personEvaluatedQueryRepository.existsByEmailAndIdNot(personEvaluated.getEmail(), personEvaluated.getId())) {
+        if (personEvaluatedQueryRepository.isEmailAssignedToDifferentPerson(personEvaluated.getEmail(), personEvaluated.getId())) {
             resultFormatter.throwEntityAlreadyExists(ErrorCode.EMAIL_ALREADY_EXISTS, "El correo " + personEvaluated.getEmail() + " ya está registrado por otra persona.");
         }
-
         // Actualizar y retornar
         return personEvaluatedCommandRepository.updatePersonEvaluated(personEvaluated)
             .orElseGet(() -> {

@@ -53,6 +53,7 @@ public class PersonEvaluatedCommandHandlerImpl implements PersonEvaluatedCommand
     public ApiResponse<PersonEvaluatedResponseDTO> updatePersonEvaluated(Long id, PersonEvaluatedUpdateRequestDTO dto) {
         PersonEvaluated domain = personEvaluatedMapper.toDomain(id, dto);
         PersonEvaluated updated = personCommandCUInputPort.updatePersonEvaluated(domain);
-        return ApiResponse.success("Persona actualizada correctamente", personEvaluatedMapper.toResponseDTO(updated));
+        PersonEvaluatedResponseDTO response = personEvaluatedMapper.toResponseDTO(updated);
+        return ApiResponse.success("Persona actualizada correctamente", response);
     }
 }

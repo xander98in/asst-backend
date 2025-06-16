@@ -55,5 +55,5 @@ public interface PersonEvaluatedQueryRepository {
      * @param id ID de la persona actual
      * @return true si el correo pertenece a otra persona, false en caso contrario
      */
-    boolean existsByEmailAndIdNot(String email, Long id);
+    boolean isEmailAssignedToDifferentPerson(String email, Long id);
 }
