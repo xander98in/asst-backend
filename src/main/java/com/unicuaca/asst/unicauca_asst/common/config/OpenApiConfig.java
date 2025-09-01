@@ -35,4 +35,13 @@ public class OpenApiConfig {
             .build();
     }
 
+    @Bean
+    public GroupedOpenApi personasGroup() {
+        return GroupedOpenApi.builder()
+            .group("personas")
+            .packagesToScan("com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers")
+            .pathsToMatch("/asst/person-evaluated/**")  // Si tienes diferentes rutas para personas
+            .build();
+    }
+
 }

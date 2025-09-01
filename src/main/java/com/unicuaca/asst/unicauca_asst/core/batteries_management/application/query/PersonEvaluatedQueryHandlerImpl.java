@@ -1,8 +1,13 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.query;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedInformationListResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.mappers.PersonEvaluatedMapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
@@ -34,6 +39,28 @@ public class PersonEvaluatedQueryHandlerImpl implements PersonEvaluatedQueryHand
         PersonEvaluated person = personEvaluatedQueryCUInputPort.getPersonEvaluatedById(idPerson);
         PersonEvaluatedResponseDTO dto = personEvaluatedMapper.toResponseDTO(person);
         return ApiResponse.success("Persona consultada exitosamente", dto);
+    }
+
+    /**
+     * Consulta personas evaluadas por tipo y número de identificación con paginación.
+     *
+     * @param abbreviation          la abreviatura del tipo de identificación
+     * @param identificationNumber  el número de identificación
+     * @param page                  el número de página (0-indexado)
+     * @param size                  la cantidad de registros por página
+     * @return una {@link ApiResponse} que contiene una lista paginada de {@link PersonEvaluatedInformationListResponseDTO}
+     *         que coinciden con los criterios de búsqueda, o un mensaje de error si no se encuentran resultados.
+     */
+    @Override
+    public ApiResponse<Page<PersonEvaluatedInformationListResponseDTO>> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size) {
+        Page<PersonEvaluated> personEvaluatedPage = personEvaluatedQueryCUInputPort.queryByIdentity(abbreviation, identificationNumber, page, size);
+        List<PersonEvaluatedInformationListResponseDTO> dtoList = personEvaluatedPage.stream()
+            .map(personEvaluatedMapper::toInformationListResponseDTO)
+            .toList();
+        return ApiResponse.success(
+            "Consulta realizada exitosamente", 
+            new PageImpl<>(dtoList, personEvaluatedPage.getPageable(), personEvaluatedPage.getTotalElements())
+        );
     }
 
 }

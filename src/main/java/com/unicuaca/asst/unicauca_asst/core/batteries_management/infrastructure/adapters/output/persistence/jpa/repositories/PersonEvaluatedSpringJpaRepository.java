@@ -2,6 +2,8 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -16,7 +18,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
  * <p>Forma parte del adaptador de persistencia dentro de la arquitectura hexagonal, 
  * y se utiliza para interactuar con la base de datos relacional.</p>
  */
-public interface PersonEvaluatedRepository extends JpaRepository<PersonEvaluatedEntity, Long> {
+public interface PersonEvaluatedSpringJpaRepository extends JpaRepository<PersonEvaluatedEntity, Long> {
 
     /**
      * Verifica si existe una persona evaluada con el número de identificación y tipo de documento especificados.
@@ -58,4 +60,19 @@ public interface PersonEvaluatedRepository extends JpaRepository<PersonEvaluated
            "JOIN FETCH p.gender " +
            "WHERE p.id = :id")
     Optional<PersonEvaluatedEntity> findWithRelationsById(Long id);
+
+    /**
+     * Consulta paginada de personas evaluadas por tipo de identificación y número de identificación.
+     *
+     * @param identificationTypeId el ID del tipo de identificación
+     * @param identificationNumber el número de identificación
+     * @param pageable objeto Pageable con la información de la página
+     * @return una página de personas evaluadas
+     */
+    @Query("SELECT p FROM PersonEvaluatedEntity p " +
+            "JOIN p.identificationType it " +
+            "WHERE it.id = :identificationTypeId " +
+            "AND p.identificationNumber LIKE CONCAT(:identificationNumber, '%')")
+    Page<PersonEvaluatedEntity> queryByIdentity(Long identificationTypeId, String identificationNumber, Pageable pageable);
+
 }

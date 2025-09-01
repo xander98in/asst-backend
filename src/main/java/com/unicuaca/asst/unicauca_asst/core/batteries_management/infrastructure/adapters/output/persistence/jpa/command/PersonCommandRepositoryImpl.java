@@ -9,7 +9,7 @@ import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.per
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedCommandRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.PersonEvaluatedEntity;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.PersonEvaluatedRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.PersonEvaluatedSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.PersonEvaluatedPersistenceMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class PersonCommandRepositoryImpl implements PersonEvaluatedCommandRepository {
 
-    private final PersonEvaluatedRepository personEvaluatedJpaRepository;
+    private final PersonEvaluatedSpringJpaRepository personEvaluatedJpaRepository;
     private final PersonEvaluatedPersistenceMapper personEvaluatedDBMapper;
     private final GenderSpringJpaRepository genderRepository;
     

@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -23,4 +24,11 @@ public interface IdentificationTypeSpringJpaRepository extends JpaRepository<Ide
      */
     boolean existsByAbbreviation(String abbreviation);
 
+    /**
+     * Obtiene el tipo de identificación mediante su abreviatura.
+     *
+     * @param abbreviation la abreviatura del tipo de identificación
+     * @return un {@link Optional} con el tipo de identificación correspondiente, o vacío si no se encuentra
+     */
+    Optional<IdentificationTypeEntity> findByAbbreviation(String abbreviation);
 }

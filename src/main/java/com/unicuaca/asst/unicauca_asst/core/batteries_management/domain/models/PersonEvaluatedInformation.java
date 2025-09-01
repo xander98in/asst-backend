@@ -8,23 +8,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Representa a una persona evaluada en el proceso de riesgo psicosocial.
- * Incluye datos personales y su tipo de documento y sexo.
- */
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
-public class PersonEvaluated {
+public class PersonEvaluatedInformation {
 
     private Long id;
     private IdentificationType identificationType;
     private String identificationNumber;
     private String firstName;
     private String lastName;
-    private Gender gender;
     private Integer birthYear;
-    private String email;
-    private StatusPersonEvaluated status;
+    private Gender gender;
+    private StatusPersonEvaluated statusPersonEvaluated;
+
 }

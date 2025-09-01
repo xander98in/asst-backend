@@ -83,6 +83,22 @@ public class CatalogQueryController {
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link CivilStatusResponseDTO} representando los estados civiles.
      */
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        )
+    })
     @GetMapping("/civil-statuses")
     public ResponseEntity<ApiResponse<List<CivilStatusResponseDTO>>> getCivilStatuses() {
         ApiResponse<List<CivilStatusResponseDTO>> response = catalogQueryHandler.getCivilStatuses();
@@ -95,6 +111,26 @@ public class CatalogQueryController {
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link EducationLevelResponseDTO} representando los niveles educativos.
      */
+    @Operation(
+        summary = "Listar niveles educativos",
+        description = "Retorna el catálogo de niveles educativos disponibles"
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        )
+    })
     @GetMapping("/education-levels")
     public ResponseEntity<ApiResponse<List<EducationLevelResponseDTO>>> getEducationLevels() {
         ApiResponse<List<EducationLevelResponseDTO>> response = catalogQueryHandler.getEducationLevels();
@@ -107,6 +143,26 @@ public class CatalogQueryController {
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link HousingTypeResponseDTO} representando los tipos de vivienda.
      */
+    @Operation(
+        summary = "Listar tipos de vivienda",
+        description = "Retorna el catálogo de tipos de vivienda disponibles"
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        )
+    })
     @GetMapping("/housing-types")
     public ResponseEntity<ApiResponse<List<HousingTypeResponseDTO>>> getHousingTypes() {
         ApiResponse<List<HousingTypeResponseDTO>> response = catalogQueryHandler.getHousingTypes();
@@ -119,6 +175,26 @@ public class CatalogQueryController {
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link SocioeconomicLevelResponseDTO} representando los niveles socioeconómicos.
      */
+    @Operation(
+        summary = "Listar niveles socioeconómicos",
+        description = "Retorna el catálogo de niveles socioeconómicos disponibles"
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        )
+    })
     @GetMapping("/socioeconomic-levels")
     public ResponseEntity<ApiResponse<List<SocioeconomicLevelResponseDTO>>> getSocioeconomicLevels() {
         ApiResponse<List<SocioeconomicLevelResponseDTO>> response = catalogQueryHandler.getSocioeconomicLevels();
@@ -131,6 +207,26 @@ public class CatalogQueryController {
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link JobPositionTypeResponseDTO} representando los tipos de cargo.
      */
+    @Operation(
+        summary = "Listar tipos de cargo",
+        description = "Retorna el catálogo de tipos de cargo disponibles"
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        )
+    })
     @GetMapping("/job-position-types")
     public ResponseEntity<ApiResponse<List<JobPositionTypeResponseDTO>>> getJobPositionTypes() {
         ApiResponse<List<JobPositionTypeResponseDTO>> response = catalogQueryHandler.getJobPositionTypes();
@@ -143,6 +239,26 @@ public class CatalogQueryController {
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link ContractTypeResponseDTO} representando los tipos de contrato.
      */
+    @Operation(
+        summary = "Listar tipos de contrato",
+        description = "Retorna el catálogo de tipos de contrato disponibles"
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        )
+    })
     @GetMapping("/contract-types")
     public ResponseEntity<ApiResponse<List<ContractTypeResponseDTO>>> getContractTypes() {
         ApiResponse<List<ContractTypeResponseDTO>> response = catalogQueryHandler.getContractTypes();
@@ -155,6 +271,26 @@ public class CatalogQueryController {
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link SalaryTypeResponseDTO} representando los tipos de salario.
      */
+    @Operation(
+        summary = "Listar tipos de salario",
+        description = "Retorna el catálogo de tipos de salario disponibles"
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        )
+    })
     @GetMapping("/salary-types")
     public ResponseEntity<ApiResponse<List<SalaryTypeResponseDTO>>> getSalaryTypes() {
         ApiResponse<List<SalaryTypeResponseDTO>> response = catalogQueryHandler.getSalaryTypes();
@@ -167,6 +303,26 @@ public class CatalogQueryController {
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link GenderResponseDTO} representando los géneros.
      */
+    @Operation(
+        summary = "Listar géneros",
+        description = "Retorna el catálogo de géneros disponibles"
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        )
+    })
     @GetMapping("/genders")
     public ResponseEntity<ApiResponse<List<GenderResponseDTO>>> getGenders() {
         ApiResponse<List<GenderResponseDTO>> response = catalogQueryHandler.getGenders();

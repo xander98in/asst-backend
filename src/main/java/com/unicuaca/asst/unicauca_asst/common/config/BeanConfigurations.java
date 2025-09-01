@@ -20,8 +20,9 @@ public class BeanConfigurations {
     }
 
     @Bean
-    PersonEvaluatedQueryService personQueryService(PersonEvaluatedQueryRepository personQueryRepository, ResultFormatterOutputPort resultFormatterOutputPort) {
-        return new PersonEvaluatedQueryService(personQueryRepository, resultFormatterOutputPort);
+    PersonEvaluatedQueryService personQueryService(PersonEvaluatedQueryRepository personQueryRepository, ResultFormatterOutputPort resultFormatterOutputPort,
+        CatalogQueryRepository catalogQueryRepository) {
+        return new PersonEvaluatedQueryService(personQueryRepository, catalogQueryRepository, resultFormatterOutputPort);
     }
 
     @Bean

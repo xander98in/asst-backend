@@ -5,6 +5,7 @@ import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsExce
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityNotFoundPersException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.StatusPersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.PersonEvaluatedCommandCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedCommandRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedQueryRepository;
@@ -46,6 +47,13 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
         if (personEvaluatedQueryRepository.existsByEmail(personEvaluated.getEmail())) {
             resultFormatter.throwEntityAlreadyExists(ErrorCode.EMAIL_ALREADY_EXISTS, "El correo " + personEvaluated.getEmail() + " ya está registrado.");
         }
+
+        StatusPersonEvaluated statusPersonEvaluated = personEvaluatedQueryRepository.getStatusPersonEvaluatedByName("Sin registro")
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound("El estado 'Sin registro' no fue encontrado.");
+                return null;
+            });
+        personEvaluated.setStatus(statusPersonEvaluated);
         return personEvaluatedCommandRepository.savePersonEvaluated(personEvaluated)
             .orElseGet(() -> {
                 resultFormatter.throwEntityCreationFailed("La persona no se creó correctamente");

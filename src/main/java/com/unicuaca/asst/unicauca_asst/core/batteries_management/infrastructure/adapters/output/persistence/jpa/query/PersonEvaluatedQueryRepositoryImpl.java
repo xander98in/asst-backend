@@ -1,14 +1,23 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.query;
 
+import java.io.ObjectInputFilter.Status;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.mappers.CatalogPersistenceMapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.StatusPersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedQueryRepository;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.PersonEvaluatedRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.PersonEvaluatedSpringJpaRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.StatusPersonEvaluatedSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.PersonEvaluatedPersistenceMapper;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.StatusPersonEvaluatedPersistenceMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,8 +35,11 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class PersonEvaluatedQueryRepositoryImpl implements PersonEvaluatedQueryRepository {
 
-    private final PersonEvaluatedRepository personEvaluatedJpaRepository;
+    private final PersonEvaluatedSpringJpaRepository personEvaluatedJpaRepository;
     private final PersonEvaluatedPersistenceMapper personEvaluatedBDMapper;
+    private final StatusPersonEvaluatedSpringJpaRepository statusPersonEvaluatedJpaRepository;
+    private final StatusPersonEvaluatedPersistenceMapper statusPersonEvaluatedBDMapper;
+    private final CatalogPersistenceMapper catalogBDMapper;
 
     /**
      * Busca una persona evaluada por su identificador único y la transforma a su representación de dominio.
@@ -85,5 +97,32 @@ public class PersonEvaluatedQueryRepositoryImpl implements PersonEvaluatedQueryR
     @Override
     public boolean isEmailAssignedToDifferentPerson(String email, Long id) {
         return personEvaluatedJpaRepository.existsByEmailAndIdNot(email, id);
+    }
+
+    /**
+     * Consulta una lista paginada de personas evaluadas por su identidad.
+     *
+     * @param abbreviation       la abreviatura del tipo de identificación
+     * @param identificationNumber el número de identificación
+     * @param page               el número de página
+     * @param size               el tamaño de la página
+     * @return una página de personas evaluadas
+     */
+    @Override
+    public Page<PersonEvaluated> queryByIdentity(IdentificationType identificationType, Integer page, Integer size, Sort sort) {
+        return this.personEvaluatedJpaRepository.queryByIdentity(identificationType.getId(), identificationType.getAbbreviation(), PageRequest.of(page, size, sort))
+            .map(this.personEvaluatedBDMapper::toDomain);
+    }
+
+    /**
+     * Consulta un estado de persona evaluada por su nombre.
+     *
+     * @param name el nombre del estado a buscar
+     * @return un Optional que contiene el estado encontrado, o vacío si no se encuentra
+     */
+    @Override
+    public Optional<StatusPersonEvaluated> getStatusPersonEvaluatedByName(String name) {
+        return statusPersonEvaluatedJpaRepository.findByName(name)
+            .map(statusPersonEvaluatedBDMapper::toDomain);
     }
 }

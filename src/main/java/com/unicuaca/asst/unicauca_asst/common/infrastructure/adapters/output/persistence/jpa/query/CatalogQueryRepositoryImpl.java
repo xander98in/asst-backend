@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.query;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -174,6 +175,18 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
         return entities.stream()
                 .map(catalogPersistenceMapper::toGenderDomain)
                 .toList();
+    }
+
+    /**
+     * Obtiene un tipo de identificación mediante su abreviatura.
+     *
+     * @param abbreviation la abreviatura del tipo de identificación
+     * @return un {@link Optional} con el tipo de identificación correspondiente, o vacío si no se encuentra
+     */
+    @Override
+    public Optional<IdentificationType> getIdTypeByAbbreviation(String abbreviation) {
+        return identificationTypeSpringJpaRepository.findByAbbreviation(abbreviation)
+                .map(catalogPersistenceMapper::toIdentificationTypeDomain);
     }
 }
 

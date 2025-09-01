@@ -15,6 +15,10 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedUpdateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedResponseDTO;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -37,6 +41,26 @@ public class PersonEvaluatedCommandController {
      * @param dto Datos de entrada validados para la creación de una persona.
      * @return Respuesta con el objeto creado y estado HTTP 201 (Created).
      */
+    @Operation(
+        summary = "Crear nueva persona evaluada",
+        description = "Este endpoint permite crear una nueva persona evaluada en el sistema."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "201",
+            description = "Persona evaluada creada con éxito",
+            content = @Content(
+                schema = @Schema(implementation = PersonEvaluatedResponseDTO.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Datos inválidos proporcionados para la creación",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        )
+    })
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> create(@Valid @RequestBody PersonEvaluatedCreateRequestDTO dto) {
         ApiResponse<PersonEvaluatedResponseDTO> response = personEvaluatedCommandHandler.createPersonEvaluated(dto);
@@ -50,6 +74,33 @@ public class PersonEvaluatedCommandController {
      * @param dto cuerpo de la solicitud con los datos nuevos
      * @return respuesta HTTP con el objeto actualizado
      */
+    @Operation(
+        summary = "Actualizar persona evaluada",
+        description = "Este endpoint permite actualizar la información de una persona evaluada existente."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Persona evaluada actualizada correctamente",
+            content = @Content(
+                schema = @Schema(implementation = PersonEvaluatedResponseDTO.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Datos inválidos proporcionados para la actualización",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Persona no encontrada con el ID especificado",
+            content = @Content(
+                schema = @Schema(implementation = ApiResponse.class)
+            )
+        )
+    })
     @PutMapping("/update/{id}")
     public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> update(@PathVariable Long id, @Valid @RequestBody PersonEvaluatedUpdateRequestDTO dto) {
         ApiResponse<PersonEvaluatedResponseDTO> response = personEvaluatedCommandHandler.updatePersonEvaluated(id, dto);

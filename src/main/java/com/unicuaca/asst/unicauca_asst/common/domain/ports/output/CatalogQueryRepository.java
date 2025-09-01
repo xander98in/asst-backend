@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.common.domain.ports.output;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.unicuaca.asst.unicauca_asst.common.domain.models.CivilStatus;
 import com.unicuaca.asst.unicauca_asst.common.domain.models.ContractType;
@@ -82,4 +83,12 @@ public interface CatalogQueryRepository {
      * @return una lista de objetos Gender
      */
     List<Gender> getGenders();
+
+    /**
+     * Obtiene un tipo de identificación mediante su abreviatura.
+     *
+     * @param abbreviation la abreviatura del tipo de identificación
+     * @return un {@link Optional} con el tipo de identificación correspondiente, o vacío si no se encuentra
+     */ 
+    Optional<IdentificationType> getIdTypeByAbbreviation(String abbreviation);
 }

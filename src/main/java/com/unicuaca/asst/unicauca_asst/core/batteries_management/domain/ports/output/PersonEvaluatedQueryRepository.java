@@ -1,8 +1,14 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output;
 
+import java.io.ObjectInputFilter.Status;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+
+import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.StatusPersonEvaluated;
 
 /**
  * Puerto de salida para operaciones de consulta sobre el agregado {@link PersonEvaluated}.
@@ -56,4 +62,22 @@ public interface PersonEvaluatedQueryRepository {
      * @return true si el correo pertenece a otra persona, false en caso contrario
      */
     boolean isEmailAssignedToDifferentPerson(String email, Long id);
+
+    /**
+     * Consulta una lista paginada de personas evaluadas por su identidad.
+     *
+     * @param identificationType  el tipo de identificación
+     * @param page                el número de página
+     * @param size                el tamaño de la página
+     * @return una página de personas evaluadas
+     */
+    Page<PersonEvaluated> queryByIdentity(IdentificationType identificationType, Integer page, Integer size, Sort sort);
+
+    /**
+     * Consulta un estado de persona evaluada por su nombre.
+     *
+     * @param name el nombre del estado a buscar
+     * @return un Optional que contiene el estado encontrado, o vacío si no se encuentra
+     */
+    Optional<StatusPersonEvaluated> getStatusPersonEvaluatedByName(String name);
 }

@@ -1,6 +1,11 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.query;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedInformationListResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedResponseDTO;
 
 public interface PersonEvaluatedQueryHandler {
@@ -13,5 +18,17 @@ public interface PersonEvaluatedQueryHandler {
      *         o un mensaje de error y estado correspondiente si no se encuentra la persona.
      */
     ApiResponse<PersonEvaluatedResponseDTO> getPersonEvaluatedById(Long idPersonEvaluated);
+
+    /**
+     * Consulta personas evaluadas por tipo y número de identificación con paginación.
+     *
+     * @param abbreviation          la abreviatura del tipo de identificación
+     * @param identificationNumber  el número de identificación
+     * @param page                  el número de página (0-indexado)
+     * @param size                  la cantidad de registros por página
+     * @return una {@link ApiResponse} que contiene una lista paginada de {@link PersonEvaluatedInformationListResponseDTO}
+     *         que coinciden con los criterios de búsqueda, o un mensaje de error si no se encuentran resultados.
+     */
+    ApiResponse<Page<PersonEvaluatedInformationListResponseDTO>> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size);
 
 }

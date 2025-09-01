@@ -91,10 +91,17 @@ public class PersonEvaluatedEntity extends AuditableEntity {
     private String email;
 
     /**
+     * Estado de la persona evaluada.
+     */
+    @ManyToOne
+    @JoinColumn(name = "estado_persona_evaluada_id", nullable = false)
+    private StatusPersonEvaluatedEntity status;
+
+    /**
      * Constructor sin ID, útil para operaciones de creación.
      */
     public PersonEvaluatedEntity(String identificationNumber, String firstName, String lastName, Integer birthYear,
-                                 String email, IdentificationTypeEntity identificationType, GenderEntity gender) {
+                                 String email, IdentificationTypeEntity identificationType, GenderEntity gender, StatusPersonEvaluatedEntity status) {
         this.identificationNumber = identificationNumber;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -102,5 +109,6 @@ public class PersonEvaluatedEntity extends AuditableEntity {
         this.email = email;
         this.identificationType = identificationType;
         this.gender = gender;
+        this.status = status;
     }
 }
