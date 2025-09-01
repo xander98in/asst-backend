@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
  * Delega la lógica al {@link PersonEvaluatedCommandHandler}.
  */
 @RestController
-@RequestMapping("/person-evaluated")
+@RequestMapping("/asst/person-evaluated")
 @RequiredArgsConstructor
 public class PersonEvaluatedCommandController {
 

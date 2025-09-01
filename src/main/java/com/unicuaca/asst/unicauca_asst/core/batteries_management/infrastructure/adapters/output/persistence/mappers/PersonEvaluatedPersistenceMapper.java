@@ -24,9 +24,9 @@ public interface PersonEvaluatedPersistenceMapper {
     @Mappings({
         @Mapping(target = "email", source = "email"),
         @Mapping(target = "gender.id", source = "gender.id"),
-        @Mapping(target = "gender.description", source = "gender.description"),
+        @Mapping(target = "gender.name", source = "gender.name"),
         @Mapping(target = "identificationType.id", source = "identificationType.id"),
-        @Mapping(target = "identificationType.description", source = "identificationType.description")
+        @Mapping(target = "identificationType.name", source = "identificationType.name")
     })
     PersonEvaluated toDomain(PersonEvaluatedEntity entity);
 

@@ -12,9 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Entidad que representa los tipos de identificación
- *
- * Mapeará los tipos de identificación a la base de datos.
+/**
+ * Entidad que representa un tipo de cargo en el sistema.
+ * Mapea la tabla "tipo_cargo" en la base de datos.
  */
 @Getter
 @Setter
@@ -22,26 +22,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tipos_identificacion")
-public class IdentificationTypeEntity {
+@Table(name = "tipo_cargo")
+public class JobPositionTypeEntity {
 
     /**
-     * Identificador único del tipo de identificación.
+     * Identificador único del tipo de cargo.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_tipo_identificacion")
+    @Column(name = "id_tipo_cargo")
     private Long id;
 
     /**
-     * Nombre del tipo de identificación.
+     * Nombre del tipo de cargo.
      */
     @Column(name = "nombre", nullable = false, length = 120)
     private String name;
-
-    /**
-     * Abreviatura del tipo de identificación.
-     */
-    @Column(name = "abreviatura", nullable = false, length = 10)
-    private String abbreviation;
 }

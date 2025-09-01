@@ -25,8 +25,8 @@ public interface PersonEvaluatedMapper {
      * Mapea los campos anidados 'identificationType' y 'gender' como sus descripciones.
      */
     @Mappings({
-        @Mapping(target = "identificationType", source = "identificationType.description"),
-        @Mapping(target = "gender", source = "gender.description"),
+        @Mapping(target = "identificationType", source = "identificationType.name"),
+        @Mapping(target = "gender", source = "gender.name"),
         @Mapping(target = "email", source = "email")
     })
     PersonEvaluatedResponseDTO toResponseDTO(PersonEvaluated person);
@@ -39,7 +39,7 @@ public interface PersonEvaluatedMapper {
     @Mappings({
         @Mapping(target = "id", ignore = true),
         @Mapping(target = "email", source = "email"),
-        @Mapping(target = "identificationType", expression = "java(new IdentificationType(dto.getIdentificationTypeId(), null))"),
+        @Mapping(target = "identificationType", expression = "java(new IdentificationType(dto.getIdentificationTypeId(), null, null))"),
         @Mapping(target = "gender", expression = "java(new Gender(dto.getGenderId(), null))")
     })
     PersonEvaluated toDomain(PersonEvaluatedCreateRequestDTO dto);

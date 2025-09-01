@@ -7,7 +7,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.CivilStatusResponseDTO;
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.ContractTypeResponseDTO;
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.EducationLevelResponseDTO;
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.GenderResponseDTO;
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.HousingTypeResponseDTO;
 import com.unicuaca.asst.unicauca_asst.common.application.dto.response.IdentificationTypeResponseDTO;
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.JobPositionTypeResponseDTO;
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.SalaryTypeResponseDTO;
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.SocioeconomicLevelResponseDTO;
 import com.unicuaca.asst.unicauca_asst.common.application.query.CatalogQueryHandler;
 import com.unicuaca.asst.unicauca_asst.common.docs.IdentificationTypesApiResponseDoc;
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
@@ -66,6 +74,102 @@ public class CatalogQueryController {
     @GetMapping("/id-types")
     public ResponseEntity<ApiResponse<List<IdentificationTypeResponseDTO>>> getIdTypes() {
         ApiResponse<List<IdentificationTypeResponseDTO>> response = catalogQueryHandler.getIdTypes();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Endpoint para consultar los estados civiles disponibles.
+     *
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
+     *         {@link CivilStatusResponseDTO} representando los estados civiles.
+     */
+    @GetMapping("/civil-statuses")
+    public ResponseEntity<ApiResponse<List<CivilStatusResponseDTO>>> getCivilStatuses() {
+        ApiResponse<List<CivilStatusResponseDTO>> response = catalogQueryHandler.getCivilStatuses();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Endpoint para consultar los niveles educativos disponibles.
+     *
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
+     *         {@link EducationLevelResponseDTO} representando los niveles educativos.
+     */
+    @GetMapping("/education-levels")
+    public ResponseEntity<ApiResponse<List<EducationLevelResponseDTO>>> getEducationLevels() {
+        ApiResponse<List<EducationLevelResponseDTO>> response = catalogQueryHandler.getEducationLevels();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Endpoint para consultar los tipos de vivienda disponibles.
+     *
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
+     *         {@link HousingTypeResponseDTO} representando los tipos de vivienda.
+     */
+    @GetMapping("/housing-types")
+    public ResponseEntity<ApiResponse<List<HousingTypeResponseDTO>>> getHousingTypes() {
+        ApiResponse<List<HousingTypeResponseDTO>> response = catalogQueryHandler.getHousingTypes();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Endpoint para consultar los niveles socioeconómicos disponibles.
+     *
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
+     *         {@link SocioeconomicLevelResponseDTO} representando los niveles socioeconómicos.
+     */
+    @GetMapping("/socioeconomic-levels")
+    public ResponseEntity<ApiResponse<List<SocioeconomicLevelResponseDTO>>> getSocioeconomicLevels() {
+        ApiResponse<List<SocioeconomicLevelResponseDTO>> response = catalogQueryHandler.getSocioeconomicLevels();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Endpoint para consultar los tipos de cargo disponibles.
+     *
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
+     *         {@link JobPositionTypeResponseDTO} representando los tipos de cargo.
+     */
+    @GetMapping("/job-position-types")
+    public ResponseEntity<ApiResponse<List<JobPositionTypeResponseDTO>>> getJobPositionTypes() {
+        ApiResponse<List<JobPositionTypeResponseDTO>> response = catalogQueryHandler.getJobPositionTypes();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Endpoint para consultar los tipos de contrato disponibles.
+     *
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
+     *         {@link ContractTypeResponseDTO} representando los tipos de contrato.
+     */
+    @GetMapping("/contract-types")
+    public ResponseEntity<ApiResponse<List<ContractTypeResponseDTO>>> getContractTypes() {
+        ApiResponse<List<ContractTypeResponseDTO>> response = catalogQueryHandler.getContractTypes();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Endpoint para consultar los tipos de salario disponibles.
+     *
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
+     *         {@link SalaryTypeResponseDTO} representando los tipos de salario.
+     */
+    @GetMapping("/salary-types")
+    public ResponseEntity<ApiResponse<List<SalaryTypeResponseDTO>>> getSalaryTypes() {
+        ApiResponse<List<SalaryTypeResponseDTO>> response = catalogQueryHandler.getSalaryTypes();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Endpoint para consultar los géneros disponibles.
+     *
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
+     *         {@link GenderResponseDTO} representando los géneros.
+     */
+    @GetMapping("/genders")
+    public ResponseEntity<ApiResponse<List<GenderResponseDTO>>> getGenders() {
+        ApiResponse<List<GenderResponseDTO>> response = catalogQueryHandler.getGenders();
         return ResponseEntity.ok(response);
     }
 

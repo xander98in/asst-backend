@@ -6,17 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Representa un tipo de identificación.
- * Incluye información como el nombre y la abreviatura.
+ * Representa un tipo de vivienda.
+ * Incluye información como el ID y el nombre del tipo de vivienda.
  */
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @Builder
-public class IdentificationType {
+public class HousingType {
 
     private Long id;
     private String name;
-    private String abbreviation;
 
 }

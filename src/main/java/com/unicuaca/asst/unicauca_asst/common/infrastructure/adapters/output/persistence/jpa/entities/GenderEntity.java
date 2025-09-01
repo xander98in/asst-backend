@@ -12,9 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Entidad que representa los tipos de identificación
- *
- * Mapeará los tipos de identificación a la base de datos.
+/**
+ * Entidad que representa el género de una persona.
+ * Mapea la tabla "sexo" en la base de datos.
  */
 @Getter
 @Setter
@@ -22,26 +22,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tipos_identificacion")
-public class IdentificationTypeEntity {
+@Table(name = "sexo")
+public class GenderEntity {
 
     /**
-     * Identificador único del tipo de identificación.
+     * Identificador único del género.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_tipo_identificacion")
+    @Column(name = "id_sexo")
     private Long id;
 
     /**
-     * Nombre del tipo de identificación.
+     * Nombre del género.
      */
-    @Column(name = "nombre", nullable = false, length = 120)
+    @Column(name = "nombre", nullable = false, length = 30)
     private String name;
-
-    /**
-     * Abreviatura del tipo de identificación.
-     */
-    @Column(name = "abreviatura", nullable = false, length = 10)
-    private String abbreviation;
 }

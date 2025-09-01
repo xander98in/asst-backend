@@ -12,9 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Entidad que representa los tipos de identificación
+/**
+ * Entidad que representa un tipo de vivienda.
  *
- * Mapeará los tipos de identificación a la base de datos.
+ * Mapea la tabla "tipo_vivienda" en la base de datos.
  */
 @Getter
 @Setter
@@ -22,26 +23,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tipos_identificacion")
-public class IdentificationTypeEntity {
+@Table(name = "tipo_vivienda")
+public class HousingTypeEntity {
 
-    /**
-     * Identificador único del tipo de identificación.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_tipo_identificacion")
+    @Column(name = "id_tipo_vivienda")
     private Long id;
 
-    /**
-     * Nombre del tipo de identificación.
-     */
-    @Column(name = "nombre", nullable = false, length = 120)
+    @Column(name = "nombre", nullable = false, length = 30)
     private String name;
-
-    /**
-     * Abreviatura del tipo de identificación.
-     */
-    @Column(name = "abreviatura", nullable = false, length = 10)
-    private String abbreviation;
 }

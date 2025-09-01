@@ -28,6 +28,12 @@ import lombok.NoArgsConstructor;
 public class PersonEvaluatedCreateRequestDTO {
 
     /**
+     * ID del tipo de identificación seleccionado (ej: 1 para Cédula, 2 para Pasaporte...).
+     */
+    @NotNull(message = "{person.identificationTypeId.notNull}", groups = FirstGroup.class)
+    private Long identificationTypeId;
+
+    /**
      * Número de identificación de la persona (único).
      */
     @NotBlank(message = "{person.identificationNumber.notBlank}", groups = FirstGroup.class)
@@ -55,6 +61,12 @@ public class PersonEvaluatedCreateRequestDTO {
     private String lastName;
 
     /**
+     * ID del género seleccionado (ej: 1 para Masculino, 2 para Femenino...).
+     */
+    @NotNull(message = "{person.genderId.notNull}", groups = FirstGroup.class)
+    private Long genderId;
+
+    /**
      * Año de nacimiento de la persona.
      */
     @NotNull(message = "{person.birthYear.notNull}")
@@ -73,15 +85,4 @@ public class PersonEvaluatedCreateRequestDTO {
     )
     @Pattern(regexp = "^[^\s].*[^\s]$", message = "{person.email.noTrailingSpaces}", groups = SecondGroup.class)
     private String email;
-
-    /**
-     * ID del tipo de identificación seleccionado (ej: 1 para Cédula, 2 para Pasaporte...).
-     */
-    @NotNull(message = "{person.identificationTypeId.notNull}", groups = FirstGroup.class)
-    private Long identificationTypeId;
-    /**
-     * ID del género seleccionado (ej: 1 para Masculino, 2 para Femenino...).
-     */
-    @NotNull(message = "{person.genderId.notNull}", groups = FirstGroup.class)
-    private Long genderId;
 }

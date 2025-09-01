@@ -6,24 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 /**
- * DTO de respuesta para representar los datos de un tipo de identificación.
- * Incluye el ID, la descripción y la abreviatura del tipo de identificación.
+ * DTO de respuesta para representar un tipo de cargo.
+ * Incluye información como el ID y el nombre del tipo de cargo.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IdentificationTypeResponseDTO {
+public class JobPositionTypeResponseDTO {
 
     @Schema(example = "1")
     private Long id;
 
-    @Schema(example = "Cédula de Ciudadanía")
+    @Schema(example = "Jefatura - tiene personal a cargo")
     private String name;
-
-    @Schema(example = "CC")
-    private String abbreviation;
-
 }

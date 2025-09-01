@@ -12,9 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Entidad que representa los tipos de identificación
- *
- * Mapeará los tipos de identificación a la base de datos.
+/**
+ * Entidad que representa el nivel socioeconómico.
+ * Mapea la tabla "estrato" en la base de datos.
  */
 @Getter
 @Setter
@@ -22,26 +22,21 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tipos_identificacion")
-public class IdentificationTypeEntity {
+@Table(name = "estrato")
+public class SocioeconomicLevelEntity {
 
     /**
-     * Identificador único del tipo de identificación.
+     * Identificador único del nivel socioeconómico.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_tipo_identificacion")
+    @Column(name = "id_estrato")
     private Long id;
 
     /**
-     * Nombre del tipo de identificación.
+     * Nombre del nivel socioeconómico.
      */
-    @Column(name = "nombre", nullable = false, length = 120)
+    @Column(name = "nombre", nullable = false, length = 15)
     private String name;
 
-    /**
-     * Abreviatura del tipo de identificación.
-     */
-    @Column(name = "abreviatura", nullable = false, length = 10)
-    private String abbreviation;
 }

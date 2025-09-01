@@ -5,10 +5,10 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.GenderSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedCommandRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.PersonEvaluatedEntity;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.GenderRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.PersonEvaluatedRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.PersonEvaluatedPersistenceMapper;
 
@@ -26,7 +26,7 @@ public class PersonCommandRepositoryImpl implements PersonEvaluatedCommandReposi
 
     private final PersonEvaluatedRepository personEvaluatedJpaRepository;
     private final PersonEvaluatedPersistenceMapper personEvaluatedDBMapper;
-    private final GenderRepository genderRepository;
+    private final GenderSpringJpaRepository genderRepository;
     
     /**
      * Guarda una entidad {@link PersonEvaluated} en la base de datos y la retorna si fue persistida exitosamente.
@@ -39,7 +39,6 @@ public class PersonCommandRepositoryImpl implements PersonEvaluatedCommandReposi
     public Optional<PersonEvaluated> savePersonEvaluated(PersonEvaluated person) {
         PersonEvaluatedEntity entity = personEvaluatedDBMapper.toEntity(person);
         PersonEvaluatedEntity saved = personEvaluatedJpaRepository.save(entity);
-
         return personEvaluatedJpaRepository.findWithRelationsById(saved.getId())
             .map(personEvaluatedDBMapper::toDomain);
     }

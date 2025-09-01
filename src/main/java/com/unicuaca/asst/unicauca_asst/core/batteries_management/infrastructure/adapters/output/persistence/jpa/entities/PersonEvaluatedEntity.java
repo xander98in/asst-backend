@@ -1,5 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities;
 
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.GenderEntity;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.IdentificationTypeEntity;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.persistence.jpa.entities.AuditableEntity;
 
 import jakarta.persistence.Column;
@@ -42,6 +44,14 @@ public class PersonEvaluatedEntity extends AuditableEntity {
     private Long id;
 
     /**
+     * Tipo de identificación asociado a la persona evaluada.
+     * Relación muchos a uno.
+     */
+    @ManyToOne
+    @JoinColumn(name = "tipo_identificacion_id", nullable = false)
+    private IdentificationTypeEntity identificationType;
+
+    /**
      * Número de identificación único de la persona evaluada.
      */
     @Column(name = "numero_identificacion", nullable = false, unique = true, length = 30)
@@ -50,14 +60,22 @@ public class PersonEvaluatedEntity extends AuditableEntity {
     /**
      * Nombres de pila de la persona evaluada.
      */
-    @Column(name = "nombres", nullable = false, length = 60)
+    @Column(name = "nombres", nullable = false, length = 120)
     private String firstName;
 
     /**
      * Apellidos completos de la persona evaluada.
      */
-    @Column(name = "apellidos", nullable = false, length = 60)
+    @Column(name = "apellidos", nullable = false, length = 120)
     private String lastName;
+
+    /**
+     * Sexo asociado a la persona evaluada.
+     * Relación muchos a uno.
+     */
+    @ManyToOne
+    @JoinColumn(name = "sexo_id", nullable = false)
+    private GenderEntity gender;
 
     /**
      * Año de nacimiento de la persona evaluada.
@@ -73,26 +91,10 @@ public class PersonEvaluatedEntity extends AuditableEntity {
     private String email;
 
     /**
-     * Tipo de identificación asociado a la persona evaluada.
-     * Relación muchos a uno.
-     */
-    @ManyToOne
-    @JoinColumn(name = "tipo_identificacion_id", nullable = false)
-    private IdentificationTypeEntitys identificationType;
-
-    /**
-     * Sexo asociado a la persona evaluada.
-     * Relación muchos a uno.
-     */
-    @ManyToOne
-    @JoinColumn(name = "sexo_id", nullable = false)
-    private GenderEntity gender;
-
-    /**
      * Constructor sin ID, útil para operaciones de creación.
      */
     public PersonEvaluatedEntity(String identificationNumber, String firstName, String lastName, Integer birthYear,
-                                 String email, IdentificationTypeEntitys identificationType, GenderEntity gender) {
+                                 String email, IdentificationTypeEntity identificationType, GenderEntity gender) {
         this.identificationNumber = identificationNumber;
         this.firstName = firstName;
         this.lastName = lastName;

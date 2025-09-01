@@ -6,17 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Representa un tipo de identificación.
- * Incluye información como el nombre y la abreviatura.
+ * Clase que representa el nivel socioeconómico.
+ * Incluye información sobre el ID y el nombre del nivel.
  */
 @Setter
 @Getter
 @AllArgsConstructor
 @Builder
-public class IdentificationType {
+public class SocioeconomicLevel {
 
     private Long id;
     private String name;
-    private String abbreviation;
 
 }

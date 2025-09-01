@@ -13,7 +13,7 @@ public interface IdentificationTypeSpringJpaRepository extends JpaRepository<Ide
      *
      * @return una lista de entidades IdentificationTypeEntity
      */
-    List<IdentificationTypeEntity> findAllByOrderByDescriptionAsc();
+    List<IdentificationTypeEntity> findAllByOrderByNameAsc();
 
     /**
      * Verifica si existe un tipo de identificación con la abreviatura dada.
