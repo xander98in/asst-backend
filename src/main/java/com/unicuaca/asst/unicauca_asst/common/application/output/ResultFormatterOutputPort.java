@@ -52,4 +52,13 @@ public interface ResultFormatterOutputPort {
      * @throws EntityCreationException excepción que indica un fallo en la creación
      */
     void throwEntityCreationFailed(String message);
+
+    /**
+     * Lanza una excepción cuando se intenta acceder a un catálogo vacío.
+     *
+     * @param errorCode código de error específico para trazabilidad
+     * @param message mensaje descriptivo del conflicto
+     * @throws CatalogEmptyException si el catálogo está vacío
+     */
+    void throwCatalogEmptyException(ErrorCode errorCode, String message);
 }

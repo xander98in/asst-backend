@@ -38,7 +38,26 @@ public enum ErrorCode {
     /**
      * Error al intentar crear una entidad, pero la operación falló inesperadamente.
      */
-    ENTITY_CREATION_ERROR("ASST-0008", "Error al crear la entidad");
+    ENTITY_CREATION_ERROR("ASST-0008", "Error al crear la entidad"),
+    
+    CATALOG_EMPTY("ASST-1001", "Catálogo vacío"),
+    CATALOG_UNAVAILABLE("ASST-1002", "Catálogo no disponible"),
+    
+    DB_TIMEOUT("ASST-0101", "Tiempo de espera de base de datos"),
+    DB_UNAVAILABLE("ASST-0102", "Servicio de datos no disponible"),
+    DATA_ACCESS_ERROR("ASST-0103", "Error accediendo a la base de datos"),
+    SQL_GRAMMAR_ERROR("ASST-0104", "Error de sintaxis o estructura SQL"),
+    TRANSACTION_ERROR("ASST-0105", "Error de transacción"),
+
+    BAD_REQUEST("ASST-0200", "Solicitud inválida"),
+    METHOD_NOT_ALLOWED("ASST-0205", "Método HTTP no permitido"),
+    UNSUPPORTED_MEDIA_TYPE("ASST-0215", "Tipo de contenido no soportado"),
+    NOT_ACCEPTABLE("ASST-0206", "Formato de respuesta no aceptable"),
+    UNAUTHORIZED("ASST-0401", "No autenticado"),
+    FORBIDDEN("ASST-0403", "Acceso denegado"),
+
+    MAPPER_ERROR("ASST-0301", "Error de mapeo o dependencia no disponible"),
+    VALIDATION_ERROR("ASST-0201", "Error de validación de campos");
 
     /**
      * Código único del error (para trazabilidad y estandarización).

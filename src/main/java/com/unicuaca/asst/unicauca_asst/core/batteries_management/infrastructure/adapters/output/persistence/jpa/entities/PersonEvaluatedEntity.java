@@ -78,7 +78,7 @@ public class PersonEvaluatedEntity extends AuditableEntity {
      */
     @ManyToOne
     @JoinColumn(name = "tipo_identificacion_id", nullable = false)
-    private IdentificationTypeEntity identificationType;
+    private IdentificationTypeEntitys identificationType;
 
     /**
      * Sexo asociado a la persona evaluada.
@@ -92,7 +92,7 @@ public class PersonEvaluatedEntity extends AuditableEntity {
      * Constructor sin ID, útil para operaciones de creación.
      */
     public PersonEvaluatedEntity(String identificationNumber, String firstName, String lastName, Integer birthYear,
-                                 String email, IdentificationTypeEntity identificationType, GenderEntity gender) {
+                                 String email, IdentificationTypeEntitys identificationType, GenderEntity gender) {
         this.identificationNumber = identificationNumber;
         this.firstName = firstName;
         this.lastName = lastName;

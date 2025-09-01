@@ -2,6 +2,7 @@ package com.unicuaca.asst.unicauca_asst.common.response;
 
 import org.springframework.http.HttpStatus;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,22 +16,26 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(name = "ApiResponse")
 public class ApiResponse<T> {
 
     /**
      * Código de estado HTTP de la respuesta (por ejemplo: 200, 404, 500).
      */
+    @Schema(example = "200")
     private int httpStatus;
 
     /**
      * Mensaje descriptivo de la respuesta, ya sea de éxito o de error.
      */
+    @Schema(example = "Mensaje de información")
     private String message;
 
     /**
      * Cuerpo de la respuesta. En caso de éxito, contiene el resultado (DTO).
      * En caso de error, puede contener una estructura con detalles técnicos (por ejemplo, {@code ErrorResponse}).
      */
+    @Schema(example = "Datos de la respuesta", type = "object")
     private T data;
 
     // ✅ Éxito simple con datos

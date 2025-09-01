@@ -24,8 +24,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tipos_identificacion")
-public class IdentificationTypeEntity {
+@Table(name = "tipos_identificaciones")
+public class IdentificationTypeEntitys {
 
     /**
      * Identificador único del tipo de identificación.
@@ -45,7 +45,7 @@ public class IdentificationTypeEntity {
      *
      * @param description descripción del tipo de identificación
      */
-    public IdentificationTypeEntity(String description) {
+    public IdentificationTypeEntitys(String description) {
         this.description = description;
     }
 }

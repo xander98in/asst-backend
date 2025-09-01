@@ -3,6 +3,7 @@ package com.unicuaca.asst.unicauca_asst.common.infrastructure.exception;
 import org.springframework.stereotype.Service;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.CatalogEmptyException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityCreationException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityNotFoundPersException;
@@ -73,5 +74,17 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
     @Override
     public void throwEntityCreationFailed(String message) {
         throw new EntityCreationException(message);
+    }
+
+    /**
+     * Lanza una excepción cuando se intenta acceder a un catálogo vacío.
+     *
+     * @param errorCode código de error específico para trazabilidad
+     * @param message mensaje descriptivo del conflicto
+     * @throws CatalogEmptyException si el catálogo está vacío
+     */
+    @Override
+    public void throwCatalogEmptyException(ErrorCode errorCode, String message) {
+        throw new CatalogEmptyException(errorCode, message);
     }
 }
