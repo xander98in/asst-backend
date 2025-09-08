@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
     info = @Info(
-        title = "ASST – Catálogos",
+        title = "ASST",
         version = "v1",
         description = "API para catálogos comunes (tipos de identificación, etc.)",
         contact = @Contact(name = "Equipo ASST", email = "soporte@unicauca.edu.co"),

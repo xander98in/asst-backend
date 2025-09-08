@@ -7,7 +7,6 @@ import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatter
 import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedInformation;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.PersonEvaluatedQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedQueryRepository;
 
@@ -47,10 +46,9 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
                 return null;
             });
 
-        Page<PersonEvaluated> personEvaluatedPage = personEvaluatedQueryRepository.queryByIdentity(identificationType, page, size, Sort.by(Sort.Direction.DESC, "id"));
-        if (personEvaluatedPage.isEmpty()) {
-            resultFormatter.throwEntityNotFound("No se encontraron personas evaluadas con el tipo de identificación " + abbreviation + " y número " + identificationNumber + ".");
-        }
+        System.out.println("\n\n\nIdentification Type: " + identificationType.getAbbreviation() );
+        Page<PersonEvaluated> personEvaluatedPage = personEvaluatedQueryRepository.queryByIdentity(identificationType, identificationNumber, page, size, Sort.by(Sort.Direction.DESC, "id"));
+
 
         return personEvaluatedPage;
     }

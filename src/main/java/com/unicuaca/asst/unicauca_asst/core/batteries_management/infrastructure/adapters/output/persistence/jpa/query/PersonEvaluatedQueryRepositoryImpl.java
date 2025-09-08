@@ -1,6 +1,5 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.query;
 
-import java.io.ObjectInputFilter.Status;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.mappers.CatalogPersistenceMapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.StatusPersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedQueryRepository;
@@ -39,7 +37,6 @@ public class PersonEvaluatedQueryRepositoryImpl implements PersonEvaluatedQueryR
     private final PersonEvaluatedPersistenceMapper personEvaluatedBDMapper;
     private final StatusPersonEvaluatedSpringJpaRepository statusPersonEvaluatedJpaRepository;
     private final StatusPersonEvaluatedPersistenceMapper statusPersonEvaluatedBDMapper;
-    private final CatalogPersistenceMapper catalogBDMapper;
 
     /**
      * Busca una persona evaluada por su identificador único y la transforma a su representación de dominio.
@@ -109,8 +106,8 @@ public class PersonEvaluatedQueryRepositoryImpl implements PersonEvaluatedQueryR
      * @return una página de personas evaluadas
      */
     @Override
-    public Page<PersonEvaluated> queryByIdentity(IdentificationType identificationType, Integer page, Integer size, Sort sort) {
-        return this.personEvaluatedJpaRepository.queryByIdentity(identificationType.getId(), identificationType.getAbbreviation(), PageRequest.of(page, size, sort))
+    public Page<PersonEvaluated> queryByIdentity(IdentificationType identificationType, String identificationNumber, Integer page, Integer size, Sort sort) {
+        return this.personEvaluatedJpaRepository.queryByIdentity(identificationType.getAbbreviation(), identificationNumber, PageRequest.of(page, size, sort))
             .map(this.personEvaluatedBDMapper::toDomain);
     }
 

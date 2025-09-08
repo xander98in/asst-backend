@@ -3,6 +3,7 @@ package com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.con
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +39,8 @@ import lombok.RequiredArgsConstructor;
  * <p>Utiliza {@link CatalogQueryHandler} para ejecutar la lógica de consulta relacionada con catálogos.</p>
  */
 @Tag(name = "catálogos", description = "Operaciones de consulta de catálogos comunes")
- @RestController
+@CrossOrigin(origins = "http://localhost:4200")
+@RestController
 @RequestMapping("/asst/catalog")
 @RequiredArgsConstructor
 public class CatalogQueryController {

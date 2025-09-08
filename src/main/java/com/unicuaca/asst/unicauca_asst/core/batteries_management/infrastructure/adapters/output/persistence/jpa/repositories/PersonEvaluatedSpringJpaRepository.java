@@ -71,8 +71,8 @@ public interface PersonEvaluatedSpringJpaRepository extends JpaRepository<Person
      */
     @Query("SELECT p FROM PersonEvaluatedEntity p " +
             "JOIN p.identificationType it " +
-            "WHERE it.id = :identificationTypeId " +
+            "WHERE it.abbreviation = :abbreviation " +
             "AND p.identificationNumber LIKE CONCAT(:identificationNumber, '%')")
-    Page<PersonEvaluatedEntity> queryByIdentity(Long identificationTypeId, String identificationNumber, Pageable pageable);
+    Page<PersonEvaluatedEntity> queryByIdentity(String abbreviation, String identificationNumber, Pageable pageable);
 
 }

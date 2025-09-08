@@ -1,7 +1,5 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.query;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;

@@ -1,6 +1,5 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output;
 
-import java.io.ObjectInputFilter.Status;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -71,7 +70,7 @@ public interface PersonEvaluatedQueryRepository {
      * @param size                el tamaño de la página
      * @return una página de personas evaluadas
      */
-    Page<PersonEvaluated> queryByIdentity(IdentificationType identificationType, Integer page, Integer size, Sort sort);
+    Page<PersonEvaluated> queryByIdentity(IdentificationType identificationType, String identificationNumber, Integer page, Integer size, Sort sort);
 
     /**
      * Consulta un estado de persona evaluada por su nombre.

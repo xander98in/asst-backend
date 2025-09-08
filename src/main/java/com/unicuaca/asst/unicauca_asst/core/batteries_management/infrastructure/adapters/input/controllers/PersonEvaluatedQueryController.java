@@ -2,6 +2,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,8 @@ import lombok.RequiredArgsConstructor;
  * <p>Utiliza {@link PersonEvaluatedQueryHandler} como puerto de entrada para ejecutar la lógica de consulta
  * relacionada con personas.</p>
  */
-@RestController
+@CrossOrigin(origins = "http://localhost:4200")
+ @RestController
 @RequestMapping("/asst/person-evaluated")
 @RequiredArgsConstructor
 public class PersonEvaluatedQueryController {
@@ -74,8 +76,8 @@ public class PersonEvaluatedQueryController {
      *
      * @param abbreviation          la abreviatura del tipo de identificación
      * @param identificationNumber  el número de identificación
-     * @param pagina                el número de página (0-indexado)
-     * @param registrosPorPagina    la cantidad de registros por página
+     * @param page                el número de página (0-indexado)
+     * @param size    la cantidad de registros por página
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista paginada de
      *         {@link PersonEvaluatedInformationListResponseDTO}, o un mensaje de error si no se encuentran resultados.
      */
@@ -103,11 +105,11 @@ public class PersonEvaluatedQueryController {
     public ResponseEntity<ApiResponse<Page<PersonEvaluatedInformationListResponseDTO>>> queryByIdentity(
         @RequestParam String abbreviation, 
         @RequestParam String identificationNumber,
-        @RequestParam(defaultValue = "0") Integer pagina, 
-        @RequestParam(defaultValue = "10") Integer registrosPorPagina) {
+        @RequestParam(defaultValue = "0") Integer page, 
+        @RequestParam(defaultValue = "10") Integer size) {
 
         ApiResponse<Page<PersonEvaluatedInformationListResponseDTO>> response = personEvaluatedQueryHandler.queryByIdentity(
-            abbreviation, identificationNumber, pagina, registrosPorPagina);
+            abbreviation, identificationNumber, page, size);
         return ResponseEntity.ok(response);
     }
 
