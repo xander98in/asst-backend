@@ -38,22 +38,23 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
     /**
      * Lanza una excepción con código específico cuando se detecta una entidad duplicada.
      *
-     * @param errorCode código estructurado del error
+     * @param errorCode código de error personalizado
      * @param message mensaje explicativo del conflicto
      */
     @Override
-    public void throwEntityAlreadyExists(ErrorCode errorCode, String message) {
+    public void throwEntityAlreadyExists(String errorCode, String message) {
         throw new EntityAlreadyExistsException(errorCode, message);
     }
 
     /**
      * Lanza una excepción cuando no se encuentra una entidad esperada.
      *
+     * @param errorCode código de error personalizado
      * @param message mensaje explicativo del error
      */
     @Override
-    public void throwEntityNotFound(String message) {
-        throw new EntityNotFoundPersException(message);
+    public void throwEntityNotFound(String errorCode, String message) {
+        throw new EntityNotFoundPersException(errorCode ,message);
     }
 
     /**
@@ -69,22 +70,22 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
     /**
      * Lanza una excepción cuando ocurre un fallo en la creación de una entidad.
      *
+     * @param errorCode código de error personalizado
      * @param message mensaje que describe el fallo
      */
     @Override
-    public void throwEntityCreationFailed(String message) {
-        throw new EntityCreationException(message);
+    public void throwEntityCreationFailed(String errorCode, String message) {
+        throw new EntityCreationException(errorCode, message);
     }
 
     /**
-     * Lanza una excepción cuando se intenta acceder a un catálogo vacío.
+     * Lanza una excepción cuando se intenta acceder a un catálogo que está vacío.
      *
-     * @param errorCode código de error específico para trazabilidad
+     * @param errorCode código de error personalizado
      * @param message mensaje descriptivo del conflicto
-     * @throws CatalogEmptyException si el catálogo está vacío
      */
     @Override
-    public void throwCatalogEmptyException(ErrorCode errorCode, String message) {
+    public void throwCatalogEmptyException(String errorCode, String message) {
         throw new CatalogEmptyException(errorCode, message);
     }
 }

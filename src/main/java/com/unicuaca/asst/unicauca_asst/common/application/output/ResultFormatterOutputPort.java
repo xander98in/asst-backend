@@ -27,16 +27,16 @@ public interface ResultFormatterOutputPort {
      *
      * @param errorCode código de error específico para trazabilidad
      * @param message mensaje descriptivo del conflicto
-     * @throws EntityAlreadyExistsException si la entidad ya está registrada
      */
-    void throwEntityAlreadyExists(ErrorCode errorCode, String message);
+    void throwEntityAlreadyExists(String errorCode, String message);
 
     /**
      * Lanza una excepción cuando no se encuentra una entidad esperada.
      *
+     * @param errorCode código estructurado del error
      * @param message mensaje explicativo del error
      */
-    void throwEntityNotFound(String message);
+    void throwEntityNotFound(String errorCode, String message);
 
     /**
      * Lanza una excepción cuando se viola una regla de negocio.
@@ -48,17 +48,16 @@ public interface ResultFormatterOutputPort {
     /**
      * Lanza una excepción cuando falla la creación de una entidad.
      *
-     * @param message mensaje descriptivo del error ocurrido durante la creación
-     * @throws EntityCreationException excepción que indica un fallo en la creación
+     * @param errorCode código de error específico para trazabilidad
+     * @param message mensaje descriptivo del error
      */
-    void throwEntityCreationFailed(String message);
+    void throwEntityCreationFailed(String errorCode, String message);
 
     /**
-     * Lanza una excepción cuando se intenta acceder a un catálogo vacío.
+     * Lanza una excepción cuando se encuentra que un catálogo está vacío.
      *
      * @param errorCode código de error específico para trazabilidad
-     * @param message mensaje descriptivo del conflicto
-     * @throws CatalogEmptyException si el catálogo está vacío
+     * @param message mensaje descriptivo del error
      */
-    void throwCatalogEmptyException(ErrorCode errorCode, String message);
+    void throwCatalogEmptyException(String errorCode, String message);
 }

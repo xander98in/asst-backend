@@ -27,7 +27,10 @@ public interface PersonEvaluatedCommandCUInputPort {
 
     /**
      * Actualiza parcialmente los datos de una persona evaluada.
-     * Solo se permite modificar: nombres, apellidos, año de nacimiento, correo y género.
+     *
+     * Este método representa el caso de uso de actualización de una entidad {@link PersonEvaluated}.
+     * La implementación concreta debe encargarse de validar la información, aplicar reglas de negocio
+     * y delegar la persistencia en los puertos de salida.
      *
      * @param personEvaluated objeto de dominio con datos modificables
      * @return la persona actualizada

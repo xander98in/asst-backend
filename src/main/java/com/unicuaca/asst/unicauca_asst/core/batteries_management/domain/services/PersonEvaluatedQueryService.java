@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services;
 
+import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
@@ -23,7 +24,10 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
     public PersonEvaluated getPersonEvaluatedById(Long id) {
         return personEvaluatedQueryRepository.getPersonEvaluatedById(id)
             .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound("La persona con ID " + id + " no fue encontrada.");
+                this.resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona con ID " + id + " no fue encontrada.")
+                );
                 return null; // nunca se ejecuta, pero requerido por el compilador
             });
     }
@@ -42,15 +46,13 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
 
         IdentificationType identificationType = catalogQueryRepository.getIdTypeByAbbreviation(abbreviation)
             .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound("El tipo de identificación con abreviatura " + abbreviation + " no fue encontrado.");
+                this.resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de identificación con abreviatura " + abbreviation + " no fue encontrado.")
+                );
                 return null;
             });
-
-        System.out.println("\n\n\nIdentification Type: " + identificationType.getAbbreviation() );
-        Page<PersonEvaluated> personEvaluatedPage = personEvaluatedQueryRepository.queryByIdentity(identificationType, identificationNumber, page, size, Sort.by(Sort.Direction.DESC, "id"));
-
-
-        return personEvaluatedPage;
+        return personEvaluatedQueryRepository.queryByIdentity(identificationType, identificationNumber, page, size, Sort.by(Sort.Direction.DESC, "id"));
     }
 
 }

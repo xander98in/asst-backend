@@ -8,56 +8,55 @@ import lombok.RequiredArgsConstructor;
 public enum ErrorCode {
 
     /**
-     * Error genérico no clasificado.
+     * Errores genéricos del sistema.
      */
-    GENERIC_ERROR("ASST-0001", "ERROR GENERICO"),
+    GENERIC_ERROR("ASST-GEN-0001", "Error interno del servidor."),
+    METHOD_NOT_ALLOWED("ASST-GEN-0002", "Método HTTP no permitido."),
+    UNSUPPORTED_MEDIA_TYPE("ASST-GEN-0003", "Tipo de contenido no soportado."),
+    NOT_ACCEPTABLE("ASST-GEN-0004", "Formato de respuesta no aceptable."),
     /**
-     * La entidad que se intenta crear ya existe.
+     * Errores relacionados con la validación de solicitudes.
      */
-    ENTITY_ALREADY_EXISTS("ASST-0002", "ERROR ENTIDAD YA EXISTE"),
+    VALIDATION_ERROR("ASST-VAL-0000", "Error genérico de validación."),
+    BAD_REQUEST("ASST-VAL-0001", "Solicitud inválida."),
+    FIELD_VALIDATION("ASST-VAL-0002", "Hay errores de validación en los campos."),
     /**
-     * La entidad solicitada no fue encontrada.
+     * Errores de autenticación y autorización.
      */
-    ENTITY_NOT_FOUND("ASST-0003", "Entidad no encontrada"),
+    AUTHENTICATION_ERROR("ASST-SEC-0000", "Error genérico de autenticación."),
+    UNAUTHORIZED("ASST-SEC-0001", "No autenticado."),
+    FORBIDDEN("ASST-SEC-0002", "Acceso denegado."),
+    INVALID_CREDENTIALS("ASST-SEC-0003", "Credenciales inválidas."),
+    USER_DISABLED("ASST-SEC-0004", "El usuario no ha sido verificado."),
     /**
-     * Se ha violado una regla de negocio definida por el sistema.
+     * Errores relacionados con la base de datos y persistencia.
      */
-    BUSINESS_RULE_VIOLATION("ASST-0004", "Regla de negocio violada"),
+    DATA_ERROR("ASST-DAT-0000", "Error de conflicto en datos."),
+    DB_TIMEOUT("ASST-DAT-0001", "Tiempo de espera de base de datos."),
+    DB_UNAVAILABLE("ASST-DAT-0002", "Servicio de datos no disponible."),
+    DATA_ACCESS("ASST-DAT-0003", "Error accediendo a la base de datos."),
+    SQL_GRAMMAR("ASST-DAT-0004", "Error de sintaxis SQL."),
+    TRANSACTION_ERROR("ASST-DAT-0005", "Error de transacción."),
+    ENTITY_ALREADY_EXISTS("ASST-DAT-0006", "La entidad ya existe. %s"),
+    ENTITY_NOT_FOUND("ASST-DAT-0007", "Entidad no encontrada. %s"),
+    ENTITY_CREATION_ERROR("ASST-DAT-0008", "Error al crear la entidad. %s"),
+    ENTITY_UPDATE_ERROR("ASST-DAT-0009", "Error al actualizar la entidad. %s"),
     /**
-     * Error al autenticar, credenciales inválidas.
+     * Errores relacionados con catálogos.
      */
-    INVALID_CREDENTIALS("ASST-0005", "Error al iniciar sesión, compruebe sus credenciales y vuelva a intentarlo"),
+    CATALOG_ERROR("ASST-CAT-0000", "Error genérico de catálogo."),
+    CATALOG_EMPTY("ASST-CAT-0001", "El catálogo de %s está vacio. Debe existir al menos un registro."),
+    CATALOG_UNAVAILABLE("ASST-CAT-0002", "Catálogo no disponible temporalmente."),
     /**
-     * El correo electrónico ya está registrado en el sistema.
+     * Errores específicos de reglas de negocio.
      */
-    EMAIL_ALREADY_EXISTS("ASST-0006", "Correo ya registrado"),
-    /**
-     * El usuario existe pero no está habilitado o verificado.
-     */
-    USER_DISABLED("ASST-0007", "El usuario no ha sido verificado, por favor revise su correo para verificar su cuenta"),
-    /**
-     * Error al intentar crear una entidad, pero la operación falló inesperadamente.
-     */
-    ENTITY_CREATION_ERROR("ASST-0008", "Error al crear la entidad"),
-    
-    CATALOG_EMPTY("ASST-1001", "Catálogo vacío"),
-    CATALOG_UNAVAILABLE("ASST-1002", "Catálogo no disponible"),
-    
-    DB_TIMEOUT("ASST-0101", "Tiempo de espera de base de datos"),
-    DB_UNAVAILABLE("ASST-0102", "Servicio de datos no disponible"),
-    DATA_ACCESS_ERROR("ASST-0103", "Error accediendo a la base de datos"),
-    SQL_GRAMMAR_ERROR("ASST-0104", "Error de sintaxis o estructura SQL"),
-    TRANSACTION_ERROR("ASST-0105", "Error de transacción"),
+    BUSINESS_RULE_VIOLATION("ASST-BUS-0001", "Regla de negocio violada"),
+    STATE_NOT_FOUND("ASST-BUS-0002", "El estado %s no fue encontrado."),
+    PERSON_EVALUATED_NOT_FOUND("ASST-BUS-0003", "La persona evaluada con ID %s no fue encontrada."),
+    BATTERY_RECORD_DUPLICATE("ASST-BUS-0004", "La persona evaluada con ID %s ya tiene un registro de gestión de baterías."),
+    EMAIL_ALREADY_EXISTS("ASST-BUS-0005", "Correo ya registrado. %s"),
 
-    BAD_REQUEST("ASST-0200", "Solicitud inválida"),
-    METHOD_NOT_ALLOWED("ASST-0205", "Método HTTP no permitido"),
-    UNSUPPORTED_MEDIA_TYPE("ASST-0215", "Tipo de contenido no soportado"),
-    NOT_ACCEPTABLE("ASST-0206", "Formato de respuesta no aceptable"),
-    UNAUTHORIZED("ASST-0401", "No autenticado"),
-    FORBIDDEN("ASST-0403", "Acceso denegado"),
-
-    MAPPER_ERROR("ASST-0301", "Error de mapeo o dependencia no disponible"),
-    VALIDATION_ERROR("ASST-0201", "Error de validación de campos");
+    MAPPER_ERROR("ASST-0301", "Error de mapeo o dependencia no disponible");
 
     /**
      * Código único del error (para trazabilidad y estandarización).

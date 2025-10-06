@@ -28,7 +28,9 @@ public interface PersonEvaluatedMapper {
     @Mappings({
         @Mapping(target = "identificationType", source = "identificationType.name"),
         @Mapping(target = "gender", source = "gender.name"),
-        @Mapping(target = "email", source = "email")
+        @Mapping(target = "email", source = "email"),
+        @Mapping(target = "genderId", source = "gender.id"),
+        @Mapping(target = "identificacionAbbreviation", source = "identificationType.abbreviation")
     })
     PersonEvaluatedResponseDTO toResponseDTO(PersonEvaluated person);
 
@@ -40,7 +42,7 @@ public interface PersonEvaluatedMapper {
     @Mappings({
         @Mapping(target = "id", ignore = true),
         @Mapping(target = "email", source = "email"),
-        @Mapping(target = "identificationType", expression = "java(new IdentificationType(dto.getIdentificationTypeId(), null, null))"),
+        @Mapping(target = "identificationType", expression = "java(new IdentificationType(null, null, dto.getIdentificationType()))"),
         @Mapping(target = "gender", expression = "java(new Gender(dto.getGenderId(), null))"),
         @Mapping(target = "status", expression = "java(null)")
     })
@@ -53,24 +55,36 @@ public interface PersonEvaluatedMapper {
      * @param dto objeto con los datos nuevos
      * @return modelo de dominio completo
      */
+    /**
+     * Convierte un DTO de actualización en un modelo de dominio con ID.
+     *
+     * @param id  identificador de la persona a actualizar
+     * @param dto objeto con los datos nuevos
+     * @return modelo de dominio completo
+     */
     @Mappings({
         @Mapping(target = "id", source = "id"),
-        @Mapping(target = "identificationType", ignore = true), // no se modifica
-        @Mapping(target = "identificationNumber", ignore = true), // no se modifica
+        @Mapping(target = "identificationType", expression = "java(new IdentificationType(null, null, dto.getIdentificationType()))"),
+        @Mapping(target = "identificationNumber", source = "dto.identificationNumber"),
+        @Mapping(target = "firstName", source = "dto.firstName"),
+        @Mapping(target = "lastName", source = "dto.lastName"),
         @Mapping(target = "gender", expression = "java(new Gender(dto.getGenderId(), null))"),
-        @Mapping(target = "status", expression = "java(null)")
+        @Mapping(target = "birthYear", source = "dto.birthYear"),
+        @Mapping(target = "email", source = "dto.email"),
+        @Mapping(target = "status", ignore = true)
     })
     PersonEvaluated toDomain(Long id, PersonEvaluatedUpdateRequestDTO dto);
 
     @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "identificationType", source = "identificationType.name"),
-            @Mapping(target = "identificationNumber", source = "identificationNumber"),
-            @Mapping(target = "firstName", source = "firstName"),
-            @Mapping(target = "lastName", source = "lastName"),
-            @Mapping(target = "gender", source = "gender.name"),
-            @Mapping(target = "birthYear", source = "birthYear"),
-            @Mapping(target = "status", source = "status.name")
-        })
+        @Mapping(target = "id", source = "id"),
+        @Mapping(target = "identificationType", source = "identificationType.name"),
+        @Mapping(target = "identificacionAbbreviation", source = "identificationType.abbreviation"),
+        @Mapping(target = "identificationNumber", source = "identificationNumber"),
+        @Mapping(target = "firstName", source = "firstName"),
+        @Mapping(target = "lastName", source = "lastName"),
+        @Mapping(target = "gender", source = "gender.name"),
+        @Mapping(target = "birthYear", source = "birthYear"),
+        @Mapping(target = "status", source = "status.name")
+    })
     PersonEvaluatedInformationListResponseDTO toInformationListResponseDTO(PersonEvaluated personEvaluated);
 }

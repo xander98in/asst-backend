@@ -64,7 +64,7 @@ public interface PersonEvaluatedSpringJpaRepository extends JpaRepository<Person
     /**
      * Consulta paginada de personas evaluadas por tipo de identificación y número de identificación.
      *
-     * @param identificationTypeId el ID del tipo de identificación
+     * @param abbreviation el ID del tipo de identificación
      * @param identificationNumber el número de identificación
      * @param pageable objeto Pageable con la información de la página
      * @return una página de personas evaluadas
@@ -74,5 +74,15 @@ public interface PersonEvaluatedSpringJpaRepository extends JpaRepository<Person
             "WHERE it.abbreviation = :abbreviation " +
             "AND p.identificationNumber LIKE CONCAT(:identificationNumber, '%')")
     Page<PersonEvaluatedEntity> queryByIdentity(String abbreviation, String identificationNumber, Pageable pageable);
+
+    /**
+     * Verifica si existe una persona evaluada con el mismo tipo y número de identificación, excluyendo un ID específico.
+     * 
+     * @param identificationTypeId ID del tipo de identificación
+     * @param identificationNumber número de identificación
+     * @param id ID de la persona a excluir en la verificación
+     * @return true si existe otra persona con esos datos, false en caso contrario
+     */
+    boolean existsByIdentificationTypeIdAndIdentificationNumberAndIdNot(Long identificationTypeId, String identificationNumber, Long id);
 
 }

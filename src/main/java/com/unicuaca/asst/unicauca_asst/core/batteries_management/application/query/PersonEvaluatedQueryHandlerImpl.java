@@ -35,10 +35,9 @@ public class PersonEvaluatedQueryHandlerImpl implements PersonEvaluatedQueryHand
      * @return respuesta con los datos de la persona consultada
      */
     @Override
-    public ApiResponse<PersonEvaluatedResponseDTO> getPersonEvaluatedById(Long idPerson) {
+    public PersonEvaluatedResponseDTO getPersonEvaluatedById(Long idPerson) {
         PersonEvaluated person = personEvaluatedQueryCUInputPort.getPersonEvaluatedById(idPerson);
-        PersonEvaluatedResponseDTO dto = personEvaluatedMapper.toResponseDTO(person);
-        return ApiResponse.success("Persona consultada exitosamente", dto);
+        return personEvaluatedMapper.toResponseDTO(person);
     }
 
     /**
@@ -48,19 +47,16 @@ public class PersonEvaluatedQueryHandlerImpl implements PersonEvaluatedQueryHand
      * @param identificationNumber  el número de identificación
      * @param page                  el número de página (0-indexado)
      * @param size                  la cantidad de registros por página
-     * @return una {@link ApiResponse} que contiene una lista paginada de {@link PersonEvaluatedInformationListResponseDTO}
+     * @return una {@link Page} que contiene una lista paginada de {@link PersonEvaluatedInformationListResponseDTO}
      *         que coinciden con los criterios de búsqueda, o un mensaje de error si no se encuentran resultados.
      */
     @Override
-    public ApiResponse<Page<PersonEvaluatedInformationListResponseDTO>> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size) {
+    public Page<PersonEvaluatedInformationListResponseDTO> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size) {
         Page<PersonEvaluated> personEvaluatedPage = personEvaluatedQueryCUInputPort.queryByIdentity(abbreviation, identificationNumber, page, size);
         List<PersonEvaluatedInformationListResponseDTO> dtoList = personEvaluatedPage.stream()
             .map(personEvaluatedMapper::toInformationListResponseDTO)
             .toList();
-        return ApiResponse.success(
-            "Consulta realizada exitosamente", 
-            new PageImpl<>(dtoList, personEvaluatedPage.getPageable(), personEvaluatedPage.getTotalElements())
-        );
+        return new PageImpl<>(dtoList, personEvaluatedPage.getPageable(), personEvaluatedPage.getTotalElements());
     }
 
 }

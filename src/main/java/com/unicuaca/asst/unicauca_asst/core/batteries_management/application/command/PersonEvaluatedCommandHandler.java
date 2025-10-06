@@ -14,9 +14,9 @@ public interface PersonEvaluatedCommandHandler {
      * Registra una nueva persona evaluada en el sistema.
      *
      * @param dto datos de entrada
-     * @return respuesta con los datos creados o mensaje de error
+     * @return respuesta con la persona creada
      */
-    ApiResponse<PersonEvaluatedResponseDTO> createPersonEvaluated(PersonEvaluatedCreateRequestDTO dto);
+    PersonEvaluatedResponseDTO createPersonEvaluated(PersonEvaluatedCreateRequestDTO dto);
 
     /**
     * Actualiza una persona evaluada con los datos permitidos.
@@ -25,5 +25,5 @@ public interface PersonEvaluatedCommandHandler {
     * @param dto datos a actualizar
     * @return respuesta con la persona actualizada
     */
-    ApiResponse<PersonEvaluatedResponseDTO> updatePersonEvaluated(Long id, PersonEvaluatedUpdateRequestDTO dto);
+    PersonEvaluatedResponseDTO updatePersonEvaluated(Long id, PersonEvaluatedUpdateRequestDTO dto);
 }

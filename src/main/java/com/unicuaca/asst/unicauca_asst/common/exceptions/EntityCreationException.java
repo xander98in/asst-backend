@@ -14,28 +14,41 @@ import lombok.Getter;
 public class EntityCreationException extends RuntimeException {
 
     private final String code;
-    private final String messageKey;
+    private final String message;
 
     /**
-     * Construye una excepción con un {@link ErrorCode} específico y un mensaje personalizado.
+     * Construye una excepción con un código y mensaje personalizados basados en un {@link ErrorCode}.
      *
-     * @param code    código y clave del error
+     * @param code    el código funcional del error
      * @param message mensaje descriptivo del error
      */
     public EntityCreationException(ErrorCode code, String message) {
         super(message);
         this.code = code.getCode();
-        this.messageKey = code.getMessageKey();
+        this.message = code.getMessageKey();
     }
 
     /**
-     * Construye una excepción con mensaje personalizado y código {@code ENTITY_CREATION_ERROR} por defecto.
+     * Constructor que inicializa la excepción con un mensaje personalizado
+     * y utiliza los valores por defecto de {@link ErrorCode#ENTITY_CREATION_ERROR}.
      *
-     * @param message mensaje descriptivo del error
+     * @param message el mensaje descriptivo del error
      */
     public EntityCreationException(String message) {
         super(message);
         this.code = ErrorCode.ENTITY_CREATION_ERROR.getCode();
-        this.messageKey = ErrorCode.ENTITY_CREATION_ERROR.getMessageKey();
+        this.message = ErrorCode.ENTITY_CREATION_ERROR.getMessageKey();
+    }
+
+    /**
+     * Constructor que inicializa la excepción con un código y mensaje personalizados.
+     *
+     * @param code el código funcional del error
+     * @param message el mensaje descriptivo del error
+     */
+    public EntityCreationException(String code, String message) {
+        super(message);
+        this.code = code;
+        this.message = message;
     }
 }

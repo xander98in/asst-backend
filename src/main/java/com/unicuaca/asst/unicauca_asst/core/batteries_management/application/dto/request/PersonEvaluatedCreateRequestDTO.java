@@ -3,6 +3,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dt
 import com.unicuaca.asst.unicauca_asst.common.validation.FirstGroup;
 import com.unicuaca.asst.unicauca_asst.common.validation.SecondGroup;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.validation.ValidBirthYear;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.validation.ValidIdentificationNumber;
 
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.NotBlank;
@@ -24,14 +25,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ValidIdentificationNumber(
+    fieldIdentificationNumber = "identificationNumber",
+    fieldIdentificationType = "identificationType",
+    message = "El número de identificación no es válido para el tipo de identificación proporcionado."
+)
 @GroupSequence({FirstGroup.class, SecondGroup.class, PersonEvaluatedCreateRequestDTO.class})
 public class PersonEvaluatedCreateRequestDTO {
 
     /**
      * ID del tipo de identificación seleccionado (ej: 1 para Cédula, 2 para Pasaporte...).
      */
-    @NotNull(message = "{person.identificationTypeId.notNull}", groups = FirstGroup.class)
-    private Long identificationTypeId;
+    @NotBlank(message = "{person.identificationType.notBlank}", groups = FirstGroup.class)
+    @Size(min = 1, max = 3, message = "{person.identificationType.size}", groups = SecondGroup.class)
+    private String identificationType;
 
     /**
      * Número de identificación de la persona (único).
@@ -41,6 +48,19 @@ public class PersonEvaluatedCreateRequestDTO {
     @Pattern(regexp = "^[a-zA-Z0-9-]+$", message = "{person.identificationNumber.pattern}", groups = SecondGroup.class)
     @Pattern(regexp = "^[^\s].*[^\s]$", message = "{person.identificationNumber.noTrailingSpaces}", groups = SecondGroup.class)
     private String identificationNumber;
+
+    /**
+     * Año de nacimiento de la persona.
+     */
+    @NotNull(message = "{person.birthYear.notNull}" , groups = FirstGroup.class) 
+    @ValidBirthYear(groups = SecondGroup.class)
+    private Integer birthYear;
+
+    /**
+     * ID del género seleccionado (ej: 1 para Masculino, 2 para Femenino...).
+     */
+    @NotNull(message = "{person.genderId.notNull}", groups = FirstGroup.class)
+    private Long genderId;
 
     /**
      * Nombres de la persona.
@@ -59,19 +79,6 @@ public class PersonEvaluatedCreateRequestDTO {
     @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9 ]+$", message = "{person.lastName.pattern}", groups = SecondGroup.class)
     @Pattern(regexp = "^(?!\\s)(?!.*\\s$).*", message = "{person.lastName.noTrailingSpaces}", groups = SecondGroup.class)
     private String lastName;
-
-    /**
-     * ID del género seleccionado (ej: 1 para Masculino, 2 para Femenino...).
-     */
-    @NotNull(message = "{person.genderId.notNull}", groups = FirstGroup.class)
-    private Long genderId;
-
-    /**
-     * Año de nacimiento de la persona.
-     */
-    @NotNull(message = "{person.birthYear.notNull}")
-    @ValidBirthYear
-    private Integer birthYear;
 
     /**
      * Correo electrónico de la persona.

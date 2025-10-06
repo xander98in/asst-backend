@@ -1,6 +1,8 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
+import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityNotFoundPersException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
@@ -23,6 +25,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
 
     private final PersonEvaluatedCommandRepository personEvaluatedCommandRepository;
     private final PersonEvaluatedQueryRepository personEvaluatedQueryRepository;
+    private final CatalogQueryRepository catalogQueryRepository;
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
@@ -41,22 +44,46 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
     public PersonEvaluated createPersonEvaluated(PersonEvaluated personEvaluated) {
         personEvaluated.setFirstName(personEvaluated.getFirstName().toUpperCase());
         personEvaluated.setLastName(personEvaluated.getLastName().toUpperCase());
+
+        IdentificationType identificationType = catalogQueryRepository.getIdTypeByAbbreviation(personEvaluated.getIdentificationType().getAbbreviation())
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de identificación con abreviatura " + personEvaluated.getIdentificationType().getAbbreviation() + " no fue encontrado.")
+                );
+                return null;
+            });
+
+        personEvaluated.setIdentificationType(identificationType);
+
         if(personEvaluatedQueryRepository.existsByIdentification(personEvaluated.getIdentificationType().getId(), personEvaluated.getIdentificationNumber())) {
-            this.resultFormatter.throwEntityAlreadyExists("La persona con identificación: " + personEvaluated.getIdentificationNumber() + " se encuentra registrada.");
+            this.resultFormatter.throwEntityAlreadyExists(
+                ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
+                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "La persona con identificación: " + personEvaluated.getIdentificationNumber() + " se encuentra registrada.")
+            );
         }
         if (personEvaluatedQueryRepository.existsByEmail(personEvaluated.getEmail())) {
-            resultFormatter.throwEntityAlreadyExists(ErrorCode.EMAIL_ALREADY_EXISTS, "El correo " + personEvaluated.getEmail() + " ya está registrado.");
+            resultFormatter.throwEntityAlreadyExists(
+                ErrorCode.EMAIL_ALREADY_EXISTS.getCode(),
+                String.format(ErrorCode.EMAIL_ALREADY_EXISTS.getMessageKey(), "El correo " + personEvaluated.getEmail() + " ya está registrado.")
+            );
         }
 
         StatusPersonEvaluated statusPersonEvaluated = personEvaluatedQueryRepository.getStatusPersonEvaluatedByName("Sin registro")
             .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound("El estado 'Sin registro' no fue encontrado.");
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado 'Sin registro' no fue encontrado.")
+                );
                 return null;
             });
         personEvaluated.setStatus(statusPersonEvaluated);
         return personEvaluatedCommandRepository.savePersonEvaluated(personEvaluated)
             .orElseGet(() -> {
-                resultFormatter.throwEntityCreationFailed("La persona no se creó correctamente");
+                resultFormatter.throwEntityCreationFailed(
+                    ErrorCode.ENTITY_CREATION_ERROR.getCode(),
+                    String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "La persona no se creó correctamente")
+                );
                 return null; // nunca se ejecuta, pero requerido por el compilador
             });
     }
@@ -75,16 +102,44 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
         Long id = personEvaluated.getId();
         personEvaluated.setFirstName(personEvaluated.getFirstName().toUpperCase());
         personEvaluated.setLastName(personEvaluated.getLastName().toUpperCase());
+
         if (!personEvaluatedQueryRepository.existsById(id)) {
-            resultFormatter.throwEntityNotFound("La persona con ID " + id + " no existe.");
+            this.resultFormatter.throwEntityNotFound(
+                ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona con ID " + id + " no existe.")
+            );
         }
+
+        IdentificationType identificationType = catalogQueryRepository.getIdTypeByAbbreviation(personEvaluated.getIdentificationType().getAbbreviation())
+            .orElseGet(() -> {
+                this.resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de identificación con abreviatura " + personEvaluated.getIdentificationType().getAbbreviation() + " no fue encontrado.")
+                );
+                return null;
+            });
+        personEvaluated.setIdentificationType(identificationType);
+
+        if(personEvaluatedQueryRepository.isIdentificationAssignedToDifferentPerson(personEvaluated.getIdentificationType().getId(), personEvaluated.getIdentificationNumber(), personEvaluated.getId())) {
+            this.resultFormatter.throwEntityAlreadyExists(
+                ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
+                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "La persona con identificación: " + personEvaluated.getIdentificationNumber() + " se encuentra registrada.")
+            );
+        }
+
         if (personEvaluatedQueryRepository.isEmailAssignedToDifferentPerson(personEvaluated.getEmail(), personEvaluated.getId())) {
-            resultFormatter.throwEntityAlreadyExists(ErrorCode.EMAIL_ALREADY_EXISTS, "El correo " + personEvaluated.getEmail() + " ya está registrado por otra persona.");
+            this.resultFormatter.throwEntityAlreadyExists(
+                ErrorCode.EMAIL_ALREADY_EXISTS.getCode(),
+                String.format(ErrorCode.EMAIL_ALREADY_EXISTS.getMessageKey(), "El correo " + personEvaluated.getEmail() + " ya está registrado por otra persona.")
+            );
         }
         // Actualizar y retornar
         return personEvaluatedCommandRepository.updatePersonEvaluated(personEvaluated)
             .orElseGet(() -> {
-                resultFormatter.throwEntityCreationFailed("Error al actualizar la persona evaluada");
+                resultFormatter.throwEntityCreationFailed(
+                    ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
+                    String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "La persona con ID " + id + " no se actualizó correctamente.")
+                );
                 return null;
             });
     }

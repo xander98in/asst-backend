@@ -2,6 +2,7 @@ package com.unicuaca.asst.unicauca_asst.common.exceptions.structure;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,35 +25,28 @@ import lombok.experimental.Accessors;
 public class ErrorResponse<T> {
 
     /**
-     * Código de error definido por la aplicación (ej: BAT-BUS-001).
+     * Código de error definido por la aplicación (ej: ASST-BUS-0001).
      */
+    @Schema(example = "ASST-BUS-0001", description = "Código de error definido por la aplicación")
     private String errorCode;
 
     /**
      * Mensaje descriptivo del error ocurrido.
      */
+    @Schema(example = "La persona evaluada con ID 123 no fue encontrada.", description = "Mensaje descriptivo del error")
     private String message;
 
     /**
-     * Código HTTP correspondiente al tipo de error (ej: 404, 400, 500).
-     */
-    private Integer httpStatus;
-
-    /**
-     * URL del endpoint que generó el error.
+     * Método HTTP de la petición que generó el error.
      */
     @Accessors(chain = true)
-    private String url;
-
-    /**
-     * Método HTTP de la petición que generó el error (GET, POST, etc.).
-     */
-    @Accessors(chain = true)
+    @Schema(example = "POST", description = "Método HTTP de la petición que generó el error")
     private String method;
 
     /**
      * Información adicional del error. Solo se incluirá si no es null.
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Schema(description = "Información adicional del error, si aplica")
     private T data;
 }

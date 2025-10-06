@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.GenderSpringJpaRepository;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.IdentificationTypeSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedCommandRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.PersonEvaluatedEntity;
@@ -27,6 +28,7 @@ public class PersonCommandRepositoryImpl implements PersonEvaluatedCommandReposi
     private final PersonEvaluatedSpringJpaRepository personEvaluatedJpaRepository;
     private final PersonEvaluatedPersistenceMapper personEvaluatedDBMapper;
     private final GenderSpringJpaRepository genderRepository;
+    private final IdentificationTypeSpringJpaRepository identificationTypeRepository;
     
     /**
      * Guarda una entidad {@link PersonEvaluated} en la base de datos y la retorna si fue persistida exitosamente.
@@ -61,6 +63,8 @@ public class PersonCommandRepositoryImpl implements PersonEvaluatedCommandReposi
 
         PersonEvaluatedEntity entity = entityOpt.get();
         // Solo se actualizan campos permitidos
+        entity.setIdentificationType(identificationTypeRepository.getReferenceById(personEvaluated.getIdentificationType().getId()));
+        entity.setIdentificationNumber(personEvaluated.getIdentificationNumber());
         entity.setFirstName(personEvaluated.getFirstName());
         entity.setLastName(personEvaluated.getLastName());
         entity.setBirthYear(personEvaluated.getBirthYear());

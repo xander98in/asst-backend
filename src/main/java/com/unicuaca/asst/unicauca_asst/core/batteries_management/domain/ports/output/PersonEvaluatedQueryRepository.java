@@ -18,7 +18,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.S
  * <p>Hace parte de la arquitectura hexagonal, separando las dependencias externas
  * de la lógica del dominio.</p>
  */
-public interface PersonEvaluatedQueryRepository {
+public interface    PersonEvaluatedQueryRepository {
 
     /**
      * Consulta una persona evaluada a partir de su identificador único.
@@ -79,4 +79,14 @@ public interface PersonEvaluatedQueryRepository {
      * @return un Optional que contiene el estado encontrado, o vacío si no se encuentra
      */
     Optional<StatusPersonEvaluated> getStatusPersonEvaluatedByName(String name);
+
+    /**
+     * Verifica si existe una persona evaluada con el mismo tipo y número de identificación, excluyendo un ID específico.
+     * 
+     * @param identificationTypeId ID del tipo de identificación
+     * @param identificationNumber número de identificación
+     * @param id ID de la persona a excluir en la verificación
+     * @return true si existe otra persona con esos datos, false en caso contrario
+     */
+    boolean isIdentificationAssignedToDifferentPerson(Long identificationTypeId, String identificationNumber, Long id);
 }

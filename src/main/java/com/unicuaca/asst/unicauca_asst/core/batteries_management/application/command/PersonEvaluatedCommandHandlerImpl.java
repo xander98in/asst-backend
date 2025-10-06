@@ -37,11 +37,10 @@ public class PersonEvaluatedCommandHandlerImpl implements PersonEvaluatedCommand
      * @return respuesta con el DTO de la persona creada
      */
     @Override
-    public ApiResponse<PersonEvaluatedResponseDTO> createPersonEvaluated(PersonEvaluatedCreateRequestDTO dto) {
+    public PersonEvaluatedResponseDTO createPersonEvaluated(PersonEvaluatedCreateRequestDTO dto) {
         PersonEvaluated domain = personEvaluatedMapper.toDomain(dto);
         PersonEvaluated created = personCommandCUInputPort.createPersonEvaluated(domain);
-        PersonEvaluatedResponseDTO response = personEvaluatedMapper.toResponseDTO(created);
-        return ApiResponse.success("Persona creada exitosamente", response);
+        return personEvaluatedMapper.toResponseDTO(created);
     }
 
     /**
@@ -52,10 +51,9 @@ public class PersonEvaluatedCommandHandlerImpl implements PersonEvaluatedCommand
      * @return respuesta estandarizada con DTO actualizado
      */
     @Override
-    public ApiResponse<PersonEvaluatedResponseDTO> updatePersonEvaluated(Long id, PersonEvaluatedUpdateRequestDTO dto) {
+    public PersonEvaluatedResponseDTO updatePersonEvaluated(Long id, PersonEvaluatedUpdateRequestDTO dto) {
         PersonEvaluated domain = personEvaluatedMapper.toDomain(id, dto);
         PersonEvaluated updated = personCommandCUInputPort.updatePersonEvaluated(domain);
-        PersonEvaluatedResponseDTO response = personEvaluatedMapper.toResponseDTO(updated);
-        return ApiResponse.success("Persona actualizada correctamente", response);
+        return personEvaluatedMapper.toResponseDTO(updated);
     }
 }

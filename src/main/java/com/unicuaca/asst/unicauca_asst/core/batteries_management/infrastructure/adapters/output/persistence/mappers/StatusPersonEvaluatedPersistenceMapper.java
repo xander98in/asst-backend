@@ -5,6 +5,11 @@ import org.mapstruct.Mapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.StatusPersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.StatusPersonEvaluatedEntity;
 
+/**
+ * Mapper MapStruct entre:
+ * - StatusPersonEvaluatedEntity (JPA/infraestructura)
+ * - StatusPersonEvaluated (dominio)
+ */
 @Mapper(componentModel = "spring")
 public interface StatusPersonEvaluatedPersistenceMapper {
 

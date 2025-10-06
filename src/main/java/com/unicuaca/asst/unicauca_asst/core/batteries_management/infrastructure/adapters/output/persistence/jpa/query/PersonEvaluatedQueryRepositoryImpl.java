@@ -122,4 +122,17 @@ public class PersonEvaluatedQueryRepositoryImpl implements PersonEvaluatedQueryR
         return statusPersonEvaluatedJpaRepository.findByName(name)
             .map(statusPersonEvaluatedBDMapper::toDomain);
     }
+
+    /**
+     * Verifica si el tipo y número de identificación ya están asignados a otra persona distinta del ID dado.
+     * 
+     * @param identificationTypeId ID del tipo de identificación
+     * @param identificationNumber número de identificación
+     * @param id ID de la persona a excluir en la verificación
+     * @return true si el tipo y número de identificación pertenecen a otra persona, false en caso contrario
+     */
+    @Override
+    public boolean isIdentificationAssignedToDifferentPerson(Long identificationTypeId, String identificationNumber, Long id) {
+        return personEvaluatedJpaRepository.existsByIdentificationTypeIdAndIdentificationNumberAndIdNot(identificationTypeId, identificationNumber, id);
+    }
 }

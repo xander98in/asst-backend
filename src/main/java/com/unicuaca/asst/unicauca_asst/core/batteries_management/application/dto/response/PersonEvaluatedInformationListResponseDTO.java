@@ -16,6 +16,7 @@ public class PersonEvaluatedInformationListResponseDTO {
 
     private Long id;
     private String identificationType;
+    private String identificacionAbbreviation;
     private String identificationNumber;
     private String firstName;
     private String lastName;

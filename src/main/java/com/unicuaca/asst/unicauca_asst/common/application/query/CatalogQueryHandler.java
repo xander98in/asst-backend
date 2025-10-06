@@ -18,63 +18,63 @@ public interface CatalogQueryHandler {
     /**
      * Consulta los tipos de identificación disponibles en el sistema.
      *
-     * @return una {@link ApiResponse} que contiene una lista de {@link IdentificationTypeResponseDTO} representando los tipos de identificación.
+     * @return una lista de {@link IdentificationTypeResponseDTO} representando los tipos de identificación.
      */
-    ApiResponse<List<IdentificationTypeResponseDTO>> getIdTypes();
+    List<IdentificationTypeResponseDTO> getIdTypes();
 
     /**
      * Consulta los estados civiles disponibles en el sistema.
      *
-     * @return una {@link ApiResponse} que contiene una lista de {@link CivilStatusResponseDTO} representando los estados civiles.
+     * @return una lista de {@link CivilStatusResponseDTO} representando los estados civiles.
      */
-    ApiResponse<List<CivilStatusResponseDTO>> getCivilStatuses();
+    List<CivilStatusResponseDTO> getCivilStatuses();
 
     /**
-     * Consulta los niveles educativos disponibles en el sistema.
+     * Consulta los niveles de educación disponibles en el sistema.
      *
-     * @return una {@link ApiResponse} que contiene una lista de {@link EducationLevelResponseDTO} representando los niveles educativos.
+     * @return una lista de {@link EducationLevelResponseDTO} representando los niveles de educación.
      */
-    ApiResponse<List<EducationLevelResponseDTO>> getEducationLevels();
+    List<EducationLevelResponseDTO> getEducationLevels();
 
     /**
      * Consulta los tipos de vivienda disponibles en el sistema.
      *
-     * @return una {@link ApiResponse} que contiene una lista de {@link HousingTypeResponseDTO} representando los tipos de vivienda.
+     * @return una lista de {@link HousingTypeResponseDTO} representando los tipos de vivienda.
      */
-    ApiResponse<List<HousingTypeResponseDTO>> getHousingTypes();
+    List<HousingTypeResponseDTO> getHousingTypes();
 
     /**
      * Consulta los niveles socioeconómicos disponibles en el sistema.
      *
-     * @return una {@link ApiResponse} que contiene una lista de {@link SocioeconomicLevelResponseDTO} representando los niveles socioeconómicos.
+     * @return una lista de {@link SocioeconomicLevelResponseDTO} representando los niveles socioeconómicos.
      */
-    ApiResponse<List<SocioeconomicLevelResponseDTO>> getSocioeconomicLevels();
+    List<SocioeconomicLevelResponseDTO> getSocioeconomicLevels();
 
     /**
      * Consulta los tipos de cargo disponibles en el sistema.
      *
-     * @return una {@link ApiResponse} que contiene una lista de {@link JobPositionTypeResponseDTO} representando los tipos de cargo.
+     * @return una lista de {@link JobPositionTypeResponseDTO} representando los tipos de cargo.
      */
-    ApiResponse<List<JobPositionTypeResponseDTO>> getJobPositionTypes();
+    List<JobPositionTypeResponseDTO> getJobPositionTypes();
 
     /**
      * Consulta los tipos de contrato disponibles en el sistema.
      *
-     * @return una {@link ApiResponse} que contiene una lista de {@link ContractTypeResponseDTO} representando los tipos de contrato.
+     * @return una lista de {@link ContractTypeResponseDTO} representando los tipos de contrato.
      */
-    ApiResponse<List<ContractTypeResponseDTO>> getContractTypes();
+    List<ContractTypeResponseDTO> getContractTypes();
 
     /**
      * Consulta los tipos de salario disponibles en el sistema.
      *
-     * @return una {@link ApiResponse} que contiene una lista de {@link SalaryTypeResponseDTO} representando los tipos de salario.
+     * @return una lista de {@link SalaryTypeResponseDTO} representando los tipos de salario.
      */
-    ApiResponse<List<SalaryTypeResponseDTO>> getSalaryTypes();
+    List<SalaryTypeResponseDTO> getSalaryTypes();
 
     /**
      * Consulta los géneros disponibles en el sistema.
      *
-     * @return una {@link ApiResponse} que contiene una lista de {@link GenderResponseDTO} representando los géneros.
+     * @return una lista de {@link GenderResponseDTO} representando los géneros.
      */
-    ApiResponse<List<GenderResponseDTO>> getGenders();
+    List<GenderResponseDTO> getGenders();
 }

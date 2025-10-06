@@ -39,11 +39,10 @@ public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
      * @return una lista de objetos IdentificationTypeResponseDTO
      */
     @Override
-    public ApiResponse<List<IdentificationTypeResponseDTO>> getIdTypes() {
-        List<IdentificationTypeResponseDTO> responseDTOs = catalogQueryCUInputPort.getIdTypes().stream()
+    public List<IdentificationTypeResponseDTO> getIdTypes() {
+         return catalogQueryCUInputPort.getIdTypes().stream()
             .map(catalogMapper::toIdentificationTypeResponseDTO)
             .collect(Collectors.toList());
-        return ApiResponse.success("Tipos de identificación obtenidos exitosamente", responseDTOs);
     }
 
     /**
@@ -52,11 +51,10 @@ public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
      * @return una lista de objetos CivilStatusResponseDTO
      */
     @Override
-    public ApiResponse<List<CivilStatusResponseDTO>> getCivilStatuses() {
-        List<CivilStatusResponseDTO> responseDTOs = catalogQueryCUInputPort.getCivilStatuses().stream()
+    public List<CivilStatusResponseDTO> getCivilStatuses() {
+        return catalogQueryCUInputPort.getCivilStatuses().stream()
             .map(catalogMapper::toCivilStatusResponseDTO)
             .collect(Collectors.toList());
-        return ApiResponse.success("Estados civiles obtenidos exitosamente", responseDTOs);
     }
 
     /**
@@ -65,11 +63,10 @@ public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
      * @return una lista de objetos EducationLevelResponseDTO
      */
     @Override
-    public ApiResponse<List<EducationLevelResponseDTO>> getEducationLevels() {
-        List<EducationLevelResponseDTO> responseDTOs = catalogQueryCUInputPort.getEducationLevels().stream()
+    public List<EducationLevelResponseDTO> getEducationLevels() {
+        return catalogQueryCUInputPort.getEducationLevels().stream()
             .map(catalogMapper::toEducationLevelResponseDTO)
             .collect(Collectors.toList());
-        return ApiResponse.success("Niveles educativos obtenidos exitosamente", responseDTOs);
     }
 
     /**
@@ -78,11 +75,11 @@ public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
      * @return una lista de objetos HousingTypeResponseDTO
      */
     @Override
-    public ApiResponse<List<HousingTypeResponseDTO>> getHousingTypes() {
-        List<HousingTypeResponseDTO> responseDTOs = catalogQueryCUInputPort.getHousingTypes().stream()
+    public List<HousingTypeResponseDTO> getHousingTypes() {
+        return catalogQueryCUInputPort.getHousingTypes().stream()
             .map(catalogMapper::toHousingTypeResponseDTO)
             .collect(Collectors.toList());
-        return ApiResponse.success("Tipos de vivienda obtenidos exitosamente", responseDTOs);
+
     }
 
     /**
@@ -91,11 +88,10 @@ public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
      * @return una lista de objetos SocioeconomicLevelResponseDTO
      */
     @Override
-    public ApiResponse<List<SocioeconomicLevelResponseDTO>> getSocioeconomicLevels() {
-        List<SocioeconomicLevelResponseDTO> responseDTOs = catalogQueryCUInputPort.getSocioeconomicLevels().stream()
+    public List<SocioeconomicLevelResponseDTO> getSocioeconomicLevels() {
+        return catalogQueryCUInputPort.getSocioeconomicLevels().stream()
             .map(catalogMapper::toSocioeconomicLevelResponseDTO)
             .collect(Collectors.toList());
-        return ApiResponse.success("Niveles socioeconómicos obtenidos exitosamente", responseDTOs);
     }
 
     /**
@@ -104,11 +100,10 @@ public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
      * @return una lista de objetos JobPositionTypeResponseDTO
      */
     @Override
-    public ApiResponse<List<JobPositionTypeResponseDTO>> getJobPositionTypes() {
-        List<JobPositionTypeResponseDTO> responseDTOs = catalogQueryCUInputPort.getJobPositionTypes().stream()
+    public List<JobPositionTypeResponseDTO> getJobPositionTypes() {
+        return catalogQueryCUInputPort.getJobPositionTypes().stream()
             .map(catalogMapper::toJobPositionTypeResponseDTO)
             .collect(Collectors.toList());
-        return ApiResponse.success("Tipos de cargo obtenidos exitosamente", responseDTOs);
     }
 
     /**
@@ -117,11 +112,10 @@ public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
      * @return una lista de objetos ContractTypeResponseDTO
      */
     @Override
-    public ApiResponse<List<ContractTypeResponseDTO>> getContractTypes() {
-        List<ContractTypeResponseDTO> responseDTOs = catalogQueryCUInputPort.getContractTypes().stream()
+    public List<ContractTypeResponseDTO> getContractTypes() {
+        return catalogQueryCUInputPort.getContractTypes().stream()
             .map(catalogMapper::toContractTypeResponseDTO)
             .collect(Collectors.toList());
-        return ApiResponse.success("Tipos de contrato obtenidos exitosamente", responseDTOs);
     }
 
     /**
@@ -130,11 +124,10 @@ public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
      * @return una lista de objetos SalaryTypeResponseDTO
      */
     @Override
-    public ApiResponse<List<SalaryTypeResponseDTO>> getSalaryTypes() {
-        List<SalaryTypeResponseDTO> responseDTOs = catalogQueryCUInputPort.getSalaryTypes().stream()
+    public List<SalaryTypeResponseDTO> getSalaryTypes() {
+        return catalogQueryCUInputPort.getSalaryTypes().stream()
             .map(catalogMapper::toSalaryTypeResponseDTO)
             .collect(Collectors.toList());
-        return ApiResponse.success("Tipos de salario obtenidos exitosamente", responseDTOs);
     }
 
     /**
@@ -143,10 +136,10 @@ public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
      * @return una lista de objetos GenderResponseDTO
      */
     @Override
-    public ApiResponse<List<GenderResponseDTO>> getGenders() {
-        List<GenderResponseDTO> responseDTOs = catalogQueryCUInputPort.getGenders().stream()
+    public List<GenderResponseDTO> getGenders() {
+        return catalogQueryCUInputPort.getGenders().stream()
             .map(catalogMapper::toGenderResponseDTO)
             .collect(Collectors.toList());
-        return ApiResponse.success("Géneros obtenidos exitosamente", responseDTOs);
+
     }
 }

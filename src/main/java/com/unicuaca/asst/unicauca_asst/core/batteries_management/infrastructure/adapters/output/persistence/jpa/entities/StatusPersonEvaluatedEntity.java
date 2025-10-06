@@ -36,6 +36,6 @@ public class StatusPersonEvaluatedEntity {
     /**
      * Nombre del estado de la persona evaluada.
      */
-    @Column(name = "nombre", nullable = false, length = 30)
+    @Column(name = "nombre", nullable = false, length = 30, unique = true)
     private String name;
 }

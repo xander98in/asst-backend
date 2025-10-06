@@ -15,7 +15,7 @@ public interface PersonEvaluatedQueryHandler {
      * @return una {@link ApiResponse} que contiene un {@link PersonEvaluatedResponseDTO} con la información de la persona,
      *         o un mensaje de error y estado correspondiente si no se encuentra la persona.
      */
-    ApiResponse<PersonEvaluatedResponseDTO> getPersonEvaluatedById(Long idPersonEvaluated);
+    PersonEvaluatedResponseDTO getPersonEvaluatedById(Long idPersonEvaluated);
 
     /**
      * Consulta personas evaluadas por tipo y número de identificación con paginación.
@@ -27,6 +27,6 @@ public interface PersonEvaluatedQueryHandler {
      * @return una {@link ApiResponse} que contiene una lista paginada de {@link PersonEvaluatedInformationListResponseDTO}
      *         que coinciden con los criterios de búsqueda, o un mensaje de error si no se encuentran resultados.
      */
-    ApiResponse<Page<PersonEvaluatedInformationListResponseDTO>> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size);
+    Page<PersonEvaluatedInformationListResponseDTO> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size);
 
 }

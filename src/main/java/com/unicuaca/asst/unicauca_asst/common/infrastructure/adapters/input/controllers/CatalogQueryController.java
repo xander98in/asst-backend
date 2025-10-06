@@ -2,6 +2,9 @@ package com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.con
 
 import java.util.List;
 
+import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
+import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,9 +77,9 @@ public class CatalogQueryController {
         )
     })
     @GetMapping("/id-types")
-    public ResponseEntity<ApiResponse<List<IdentificationTypeResponseDTO>>> getIdTypes() {
-        ApiResponse<List<IdentificationTypeResponseDTO>> response = catalogQueryHandler.getIdTypes();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<IdentificationTypeResponseDTO>>> getIdTypes(HttpServletRequest request) {
+        List<IdentificationTypeResponseDTO> response = catalogQueryHandler.getIdTypes();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Tipos de identificación obtenidos exitosamente", response);
     }
 
     /**
@@ -102,9 +105,9 @@ public class CatalogQueryController {
         )
     })
     @GetMapping("/civil-statuses")
-    public ResponseEntity<ApiResponse<List<CivilStatusResponseDTO>>> getCivilStatuses() {
-        ApiResponse<List<CivilStatusResponseDTO>> response = catalogQueryHandler.getCivilStatuses();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<CivilStatusResponseDTO>>> getCivilStatuses(HttpServletRequest request) {
+        List<CivilStatusResponseDTO> response = catalogQueryHandler.getCivilStatuses();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Estados civiles obtenidos exitosamente", response);
     }
 
     /**
@@ -134,9 +137,9 @@ public class CatalogQueryController {
         )
     })
     @GetMapping("/education-levels")
-    public ResponseEntity<ApiResponse<List<EducationLevelResponseDTO>>> getEducationLevels() {
-        ApiResponse<List<EducationLevelResponseDTO>> response = catalogQueryHandler.getEducationLevels();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<EducationLevelResponseDTO>>> getEducationLevels(HttpServletRequest request) {
+        List<EducationLevelResponseDTO> response = catalogQueryHandler.getEducationLevels();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Niveles educativos obtenidos exitosamente", response);
     }
 
     /**
@@ -166,9 +169,9 @@ public class CatalogQueryController {
         )
     })
     @GetMapping("/housing-types")
-    public ResponseEntity<ApiResponse<List<HousingTypeResponseDTO>>> getHousingTypes() {
-        ApiResponse<List<HousingTypeResponseDTO>> response = catalogQueryHandler.getHousingTypes();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<HousingTypeResponseDTO>>> getHousingTypes(HttpServletRequest request) {
+        List<HousingTypeResponseDTO> response = catalogQueryHandler.getHousingTypes();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Tipos de vivienda obtenidos exitosamente", response);
     }
 
     /**
@@ -198,9 +201,9 @@ public class CatalogQueryController {
         )
     })
     @GetMapping("/socioeconomic-levels")
-    public ResponseEntity<ApiResponse<List<SocioeconomicLevelResponseDTO>>> getSocioeconomicLevels() {
-        ApiResponse<List<SocioeconomicLevelResponseDTO>> response = catalogQueryHandler.getSocioeconomicLevels();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<SocioeconomicLevelResponseDTO>>> getSocioeconomicLevels(HttpServletRequest request) {
+        List<SocioeconomicLevelResponseDTO> response = catalogQueryHandler.getSocioeconomicLevels();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Niveles socioeconómicos obtenidos exitosamente", response);
     }
 
     /**
@@ -230,9 +233,9 @@ public class CatalogQueryController {
         )
     })
     @GetMapping("/job-position-types")
-    public ResponseEntity<ApiResponse<List<JobPositionTypeResponseDTO>>> getJobPositionTypes() {
-        ApiResponse<List<JobPositionTypeResponseDTO>> response = catalogQueryHandler.getJobPositionTypes();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<JobPositionTypeResponseDTO>>> getJobPositionTypes(HttpServletRequest request) {
+        List<JobPositionTypeResponseDTO> response = catalogQueryHandler.getJobPositionTypes();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Tipos de cargo obtenidos exitosamente", response);
     }
 
     /**
@@ -262,9 +265,9 @@ public class CatalogQueryController {
         )
     })
     @GetMapping("/contract-types")
-    public ResponseEntity<ApiResponse<List<ContractTypeResponseDTO>>> getContractTypes() {
-        ApiResponse<List<ContractTypeResponseDTO>> response = catalogQueryHandler.getContractTypes();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<ContractTypeResponseDTO>>> getContractTypes(HttpServletRequest request) {
+        List<ContractTypeResponseDTO> response = catalogQueryHandler.getContractTypes();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Tipos de contrato obtenidos exitosamente", response);
     }
 
     /**
@@ -294,9 +297,9 @@ public class CatalogQueryController {
         )
     })
     @GetMapping("/salary-types")
-    public ResponseEntity<ApiResponse<List<SalaryTypeResponseDTO>>> getSalaryTypes() {
-        ApiResponse<List<SalaryTypeResponseDTO>> response = catalogQueryHandler.getSalaryTypes();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<SalaryTypeResponseDTO>>> getSalaryTypes(HttpServletRequest request) {
+        List<SalaryTypeResponseDTO> response = catalogQueryHandler.getSalaryTypes();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Tipos de salario obtenidos exitosamente", response);
     }
 
     /**
@@ -326,9 +329,9 @@ public class CatalogQueryController {
         )
     })
     @GetMapping("/genders")
-    public ResponseEntity<ApiResponse<List<GenderResponseDTO>>> getGenders() {
-        ApiResponse<List<GenderResponseDTO>> response = catalogQueryHandler.getGenders();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<List<GenderResponseDTO>>> getGenders(HttpServletRequest request) {
+        List<GenderResponseDTO> response = catalogQueryHandler.getGenders();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Géneros obtenidos exitosamente", response);
     }
 
 }

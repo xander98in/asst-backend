@@ -2,6 +2,7 @@ package com.unicuaca.asst.unicauca_asst.common.domain.services;
 
 import java.util.List;
 
+import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.domain.models.CivilStatus;
 import com.unicuaca.asst.unicauca_asst.common.domain.models.ContractType;
 import com.unicuaca.asst.unicauca_asst.common.domain.models.EducationLevel;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class CatalogQueryService implements CatalogQueryCUInputPort {
 
     private final CatalogQueryRepository catalogQueryRepository;
+    private final ResultFormatterOutputPort resultFormatterOutputPort;
 
     /**
      * Obtiene una lista de todos los tipos de identificación.
@@ -37,7 +39,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<IdentificationType> getIdTypes() {
         List<IdentificationType> list = catalogQueryRepository.getIdTypes();
         if (list == null || list.isEmpty()) {
-            throw new CatalogEmptyException(ErrorCode.CATALOG_EMPTY,"El catálogo de tipos de identificación está vacío. Debe existir al menos un registro."
+            this.resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY.getCode(),
+                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "tipos de identificación")
             );
         }
         return list;
@@ -52,7 +56,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<CivilStatus> getCivilStatuses() {
         List<CivilStatus> list = catalogQueryRepository.getCivilStatuses();
         if (list == null || list.isEmpty()) {
-            throw new CatalogEmptyException(ErrorCode.CATALOG_EMPTY,"El catálogo de estados civiles está vacío. Debe existir al menos un registro."
+            this.resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY.getCode(),
+                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "estados civiles")
             );
         }
         return list;
@@ -67,7 +73,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<EducationLevel> getEducationLevels() {
         List<EducationLevel> list = catalogQueryRepository.getEducationLevels();
         if (list == null || list.isEmpty()) {
-            throw new CatalogEmptyException(ErrorCode.CATALOG_EMPTY,"El catálogo de niveles educativos está vacío. Debe existir al menos un registro."
+            this.resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY.getCode(),
+                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "niveles educativos")
             );
         }
         return list;
@@ -82,7 +90,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<HousingType> getHousingTypes() {
         List<HousingType> list = catalogQueryRepository.getHousingTypes();
         if (list == null || list.isEmpty()) {
-            throw new CatalogEmptyException(ErrorCode.CATALOG_EMPTY,"El catálogo de tipos de vivienda está vacío. Debe existir al menos un registro."
+            this.resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY.getCode(),
+                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "tipos de vivienda")
             );
         }
         return list;
@@ -97,7 +107,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<SocioeconomicLevel> getSocioeconomicLevels() {
         List<SocioeconomicLevel> list = catalogQueryRepository.getSocioeconomicLevels();
         if (list == null || list.isEmpty()) {
-            throw new CatalogEmptyException(ErrorCode.CATALOG_EMPTY,"El catálogo de niveles socioeconómicos está vacío. Debe existir al menos un registro."
+            this.resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY.getCode(),
+                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "niveles socioeconómicos")
             );
         }
         return list;
@@ -112,7 +124,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<JobPositionType> getJobPositionTypes() {
         List<JobPositionType> list = catalogQueryRepository.getJobPositionTypes();
         if (list == null || list.isEmpty()) {
-            throw new CatalogEmptyException(ErrorCode.CATALOG_EMPTY,"El catálogo de tipos de cargo está vacío. Debe existir al menos un registro."
+            this.resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY.getCode(),
+                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "tipos de cargo")
             );
         }
         return list;
@@ -127,7 +141,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<ContractType> getContractTypes() {
         List<ContractType> list = catalogQueryRepository.getContractTypes();
         if (list == null || list.isEmpty()) {
-            throw new CatalogEmptyException(ErrorCode.CATALOG_EMPTY,"El catálogo de tipos de contrato está vacío. Debe existir al menos un registro."
+            this.resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY.getCode(),
+                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "tipos de contrato")
             );
         }
         return list;
@@ -142,7 +158,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<SalaryType> getSalaryTypes() {
         List<SalaryType> list = catalogQueryRepository.getSalaryTypes();
         if (list == null || list.isEmpty()) {
-            throw new CatalogEmptyException(ErrorCode.CATALOG_EMPTY,"El catálogo de tipos de salario está vacío. Debe existir al menos un registro."
+            this.resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY.getCode(),
+                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "tipos de salario")
             );
         }
         return list;
@@ -157,7 +175,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<Gender> getGenders() {
         List<Gender> list = catalogQueryRepository.getGenders();
         if (list == null || list.isEmpty()) {
-            throw new CatalogEmptyException(ErrorCode.CATALOG_EMPTY,"El catálogo de géneros está vacío. Debe existir al menos un registro."
+            this.resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY.getCode(),
+                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "géneros")
             );
         }
         return list;

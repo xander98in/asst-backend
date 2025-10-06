@@ -1,5 +1,8 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers;
 
+import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
+import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -65,10 +68,10 @@ public class PersonEvaluatedQueryController {
             )
         )
     })
-    @GetMapping("/query-by-id/{idPerson}")
-    public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> queryPersonById(@PathVariable Long idPersonEvaluated) {
-        ApiResponse<PersonEvaluatedResponseDTO> response = personEvaluatedQueryHandler.getPersonEvaluatedById(idPersonEvaluated);
-        return ResponseEntity.ok(response);
+    @GetMapping("/query-by-id/{idPersonEvaluated}")
+    public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> queryPersonById(@PathVariable Long idPersonEvaluated, HttpServletRequest request) {
+        PersonEvaluatedResponseDTO response = personEvaluatedQueryHandler.getPersonEvaluatedById(idPersonEvaluated);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
     }
 
     /**
@@ -106,11 +109,12 @@ public class PersonEvaluatedQueryController {
         @RequestParam String abbreviation, 
         @RequestParam String identificationNumber,
         @RequestParam(defaultValue = "0") Integer page, 
-        @RequestParam(defaultValue = "10") Integer size) {
+        @RequestParam(defaultValue = "10") Integer size,
+        HttpServletRequest request) {
 
-        ApiResponse<Page<PersonEvaluatedInformationListResponseDTO>> response = personEvaluatedQueryHandler.queryByIdentity(
+        Page<PersonEvaluatedInformationListResponseDTO> response = personEvaluatedQueryHandler.queryByIdentity(
             abbreviation, identificationNumber, page, size);
-        return ResponseEntity.ok(response);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
     }
 
 }

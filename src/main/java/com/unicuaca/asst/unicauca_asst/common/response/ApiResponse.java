@@ -1,11 +1,11 @@
 package com.unicuaca.asst.unicauca_asst.common.response;
 
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.time.OffsetDateTime;
 
 /**
  * Clase genérica para encapsular respuestas estándar de la API REST.
@@ -13,63 +13,63 @@ import lombok.NoArgsConstructor;
  *
  * @param <T> tipo de dato que contiene el campo 'data' (puede ser DTO o ErrorResponse)
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Schema(name = "ApiResponse")
 public class ApiResponse<T> {
 
     /**
-     * Código de estado HTTP de la respuesta (por ejemplo: 200, 404, 500).
+     * Código funcional estandarizado de la operación (p. ej. {@code ASST-0001}, {@code ASST-0002}).
+     * No es el código HTTP. Suele mapear a {@link SuccessCode}.
      */
-    @Schema(example = "200")
-    private int httpStatus;
+    @Schema(example = "ASST-0002", description = "Código funcional estandarizado de la operación.")
+    private String code;
 
     /**
-     * Mensaje descriptivo de la respuesta, ya sea de éxito o de error.
+     * Mensaje humano que describe el resultado (éxito o error) de la operación.
      */
-    @Schema(example = "Mensaje de información")
+    @Schema(example = "Recurso obtenido exitosamente.", description = "Mensaje descriptivo del resultado.")
     private String message;
 
     /**
-     * Cuerpo de la respuesta. En caso de éxito, contiene el resultado (DTO).
-     * En caso de error, puede contener una estructura con detalles técnicos (por ejemplo, {@code ErrorResponse}).
+     * Datos de la respuesta. En éxito, contiene el DTO o colección solicitada.
+     * En error, puede transportar detalles (p. ej., un objeto ErrorResponse).
      */
-    @Schema(example = "Datos de la respuesta", type = "object")
+    @Schema(description = "Datos retornados por la operación. En error puede incluir detalles.", type = "object")
     private T data;
 
-    // ✅ Éxito simple con datos
-    public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(HttpStatus.OK.value(), "Éxito", data);
-    }
+    /**
+     * Ruta del endpoint que generó la respuesta. Útil para auditoría y trazabilidad.
+     */
+    @Schema(example = "/asst/battery-management-record/create/123", description = "Ruta del endpoint que atendió la solicitud.")
+    private String path;
 
-    // ✅ Éxito con mensaje personalizado
-    public static <T> ApiResponse<T> success(String message, T data) {
-        return new ApiResponse<>(HttpStatus.OK.value(), message, data);
-    }
+    /**
+     * Marca de tiempo generada por el servidor en el momento de construir la respuesta,
+     * en formato ISO-8601 con offset.
+     */
+    @Schema(example = "2025-10-04T17:45:12.123-05:00", description = "Fecha/hora del servidor en que se construyó la respuesta.")
+    @Builder.Default
+    private OffsetDateTime timestamp = OffsetDateTime.now();
 
-    // ✅ Éxito sin datos
-    public static <T> ApiResponse<T> success(String message) {
-        return new ApiResponse<>(HttpStatus.OK.value(), message, null);
-    }
-
-    // ✅ Error con datos personalizados (como ErrorResponse)
-    public static <T> ApiResponse<T> error(String message, HttpStatus httpStatus, T errorData) {
-        return new ApiResponse<>(httpStatus.value(), message, errorData);
-    }
-
-    // ✅ Error genérico 500
-    public static <T> ApiResponse<T> internalError(String message) {
-        return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, null);
-    }
-
-    // ✅ Error 404
-    public static <T> ApiResponse<T> notFound(String message) {
-        return new ApiResponse<>(HttpStatus.NOT_FOUND.value(), message, null);
-    }
-
-    // ✅ Error personalizado sin body
-    public static <T> ApiResponse<T> customError(String message, HttpStatus httpStatus) {
-        return new ApiResponse<>(httpStatus.value(), message, null);
+    /**
+     * Fábrica conveniente para construir una respuesta completa en una sola línea.
+     *
+     * @param code    Código funcional (p. ej., {@code ASST-0002}).
+     * @param message Mensaje humano de resultado.
+     * @param data    Cuerpo de la respuesta.
+     * @param path    Ruta del endpoint invocado.
+     */
+    public static <T> ApiResponse<T> of(String code, String message, T data, String path) {
+        return ApiResponse.<T>builder()
+            .code(code)
+            .message(message)
+            .data(data)
+            .path(path)
+            .timestamp(OffsetDateTime.now())
+            .build();
     }
 }

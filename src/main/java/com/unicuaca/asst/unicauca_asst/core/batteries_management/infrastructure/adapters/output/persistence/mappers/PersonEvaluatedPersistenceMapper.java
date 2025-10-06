@@ -1,9 +1,10 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers;
 
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.mappers.GenderPersistenceMapper;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.mappers.IdentificationTypePersistenceMapper;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.PersonEvaluatedEntity;
@@ -12,7 +13,14 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
  * Mapper para convertir entre entidades JPA y modelos del dominio relacionados con personas evaluadas.
  * Utiliza MapStruct para generar el código automáticamente.
  */
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    uses = {
+        IdentificationTypePersistenceMapper.class,
+        GenderPersistenceMapper.class,
+        StatusPersonEvaluatedPersistenceMapper.class
+    }
+)
 public interface PersonEvaluatedPersistenceMapper {
 
     /**
@@ -21,20 +29,22 @@ public interface PersonEvaluatedPersistenceMapper {
      * @param entity entidad de base de datos
      * @return modelo de dominio
      */
-    @Mappings({
-        @Mapping(target = "email", source = "email"),
-        @Mapping(target = "gender.id", source = "gender.id"),
-        @Mapping(target = "gender.name", source = "gender.name"),
-        @Mapping(target = "identificationType.id", source = "identificationType.id"),
-        @Mapping(target = "identificationType.name", source = "identificationType.name")
-    })
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "identificationType", source = "identificationType")
+    @Mapping(target = "identificationNumber", source = "identificationNumber")
+    @Mapping(target = "firstName", source = "firstName")
+    @Mapping(target = "lastName", source = "lastName")
+    @Mapping(target = "gender", source = "gender")
+    @Mapping(target = "birthYear", source = "birthYear")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "status", source = "status")
     PersonEvaluated toDomain(PersonEvaluatedEntity entity);
 
     /**
      * Convierte un modelo del dominio en una entidad JPA.
      *
-     * @param domain modelo del dominio
-     * @return entidad persistente
+     * @param domain modelo de dominio
+     * @return entidad de base de datos
      */
     @InheritInverseConfiguration
     PersonEvaluatedEntity toEntity(PersonEvaluated domain);

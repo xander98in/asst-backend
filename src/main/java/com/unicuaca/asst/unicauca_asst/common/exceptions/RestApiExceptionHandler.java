@@ -4,6 +4,7 @@ import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
 import org.hibernate.exception.JDBCConnectionException;
 import org.hibernate.exception.SQLGrammarException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -51,84 +52,87 @@ public class RestApiExceptionHandler {
     private MessageSource messageSource;
 
     /**
-     * Maneja excepciones lanzadas cuando una entidad no se encuentra en el sistema.
+     * Maneja la excepción {@link EntityNotFoundPersException} cuando una entidad solicitada no existe.
      *
-     * @param req la solicitud HTTP que generó la excepción
-     * @param ex  la excepción específica {@link EntityNotFoundPersException}
-     * @return una respuesta con estado 404 (Not Found) y cuerpo estructurado con {@link ErrorResponse}
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción lanzada al no encontrar la entidad
+     * @return {@link ResponseEntity} con estado 404 y cuerpo estandarizado de error
      */
     @ExceptionHandler(EntityNotFoundPersException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityNotFoundException(HttpServletRequest req, EntityNotFoundPersException ex) {
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ex.getCode(),
-                ex.getMessage(),
-                HttpStatus.NOT_FOUND.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.of(
+            ex.getCode(),
+            ex.getMessage(),
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .body(ApiResponse.error(ex.getMessageKey(), HttpStatus.NOT_FOUND, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.DATA_ERROR.getCode(),
+            HttpStatus.NOT_FOUND,
+            ErrorCode.DATA_ERROR.getMessageKey(),
+            details
+        );
     }
 
     /**
-     * Maneja excepciones lanzadas cuando una entidad ya existe en el sistema
-     * y no puede crearse de nuevo (violación de unicidad o duplicado lógico).
+     * Maneja la excepción {@link EntityAlreadyExistsException} cuando se intenta crear
+     * una entidad que ya existe (violación de unicidad o duplicado lógico).
      *
-     * @param req la solicitud HTTP que generó la excepción
-     * @param ex  la excepción específica {@link EntityAlreadyExistsException}
-     * @return una respuesta con estado 409 (Conflict) y cuerpo estructurado con {@link ErrorResponse}
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción lanzada al detectar duplicidad
+     * @return {@link ResponseEntity} con estado 409 y cuerpo estandarizado de error
      */
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityAlreadyExistsException(HttpServletRequest req, EntityAlreadyExistsException ex) {
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ex.getCode(),
-                ex.getMessage(),
-                HttpStatus.CONFLICT.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
-
-        return ResponseEntity
-            .status(HttpStatus.CONFLICT.value())
-            .body(ApiResponse.error(ex.getMessageKey(), HttpStatus.CONFLICT, error));    
+        var details = ErrorUtils.of(
+            ex.getCode(),
+            ex.getMessage(),
+            req.getMethod()
+        );
+        return ResponseUtil.error(
+            req,
+            ErrorCode.DATA_ERROR.getCode(),
+            HttpStatus.CONFLICT,
+            ErrorCode.DATA_ERROR.getMessageKey(),
+            details
+        );
     }
 
     /**
-     * Maneja excepciones de tipo {@link EntityCreationException} cuando falla la creación de una entidad.
-     *
-     * <p>Retorna una respuesta HTTP 500 con detalles del error, incluyendo código, mensaje, URL y método HTTP.</p>
+     * Maneja la excepción {@link EntityCreationException} cuando falla la creación de una entidad.
      *
      * @param req solicitud HTTP que originó la excepción
-     * @param ex  excepción lanzada al fallar la creación de la entidad
-     * @return respuesta con estado 500 y cuerpo estructurado de error
+     * @param ex  excepción de fallo en creación de entidad
+     * @return {@link ResponseEntity} con estado 500 y cuerpo estandarizado de error
      */
     @ExceptionHandler(EntityCreationException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityCreationException(HttpServletRequest req, EntityCreationException ex) {
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ex.getCode(),
-                ex.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.of(
+            ex.getCode(),
+            ex.getMessage(),
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ApiResponse.error(ex.getMessageKey(), HttpStatus.INTERNAL_SERVER_ERROR, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.DATA_ERROR.getCode(),
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            ErrorCode.DATA_ERROR.getMessageKey(),
+            details
+        );
     }
 
     /**
-     * Maneja errores de validación cuando el cuerpo de la solicitud no cumple con las reglas definidas
-     * en las anotaciones de validación (como {@code @NotBlank}, {@code @Size}, etc.).
+     * Maneja errores de validación de entrada lanzados por Spring (p. ej., anotaciones
+     * {@code @NotBlank}, {@code @Size}, {@code @Email}, etc.).
      *
-     * <p>Extrae los errores campo a campo y los devuelve dentro del campo {@code data} de {@link ErrorResponse},
-     * permitiendo al cliente saber qué atributos no cumplen con las restricciones.</p>
-     *
-     * @param req la solicitud HTTP que generó la excepción
-     * @param ex  la excepción de validación lanzada por Spring
-     * @return una respuesta con estado 400 (Bad Request) y cuerpo detallado con los errores por campo
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción de validación con los errores de binding
+     * @return {@link ResponseEntity} con estado 400 y detalle de errores por campo
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse<?>>> handleValidationExceptions(
+    public ResponseEntity<ApiResponse<ErrorResponse<Map<String, String>>>> handleValidationExceptions(
             HttpServletRequest req, MethodArgumentNotValidException ex) {
 
         Map<String, String> fieldErrors = new HashMap<>();
@@ -142,40 +146,46 @@ public class RestApiExceptionHandler {
         String internalMessage = messageSource.getMessage("error.validation.fields", null, req.getLocale());
         String clientMessage = messageSource.getMessage("error.validation.client", null, req.getLocale());
 
-        ErrorResponse<Map<String, String>> error = ErrorUtils.<Map<String, String>>createError(
-                "VALIDATION_ERROR",
-                internalMessage,
-                HttpStatus.BAD_REQUEST.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod())
-            .setData(fieldErrors);
+        var details = ErrorUtils.createError(
+            ErrorCode.FIELD_VALIDATION,
+            req.getMethod(),
+            fieldErrors
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(ApiResponse.error(clientMessage, HttpStatus.BAD_REQUEST, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.VALIDATION_ERROR.getCode(),
+            HttpStatus.BAD_REQUEST,
+            ErrorCode.VALIDATION_ERROR.getMessageKey(),
+            details
+        );
     }
 
     /**
-     * Maneja excepciones de catálogo vacío.
+     * Maneja la excepción {@link CatalogEmptyException} cuando un catálogo solicitado no
+     * contiene elementos.
      *
-     * @param req la solicitud HTTP que generó la excepción
-     * @param ex  la excepción lanzada al acceder a un catálogo vacío
-     * @return una respuesta con estado 404 (Not Found) y cuerpo detallado del error
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción lanzada al encontrar un catálogo vacío
+     * @return {@link ResponseEntity} con estado 404 y cuerpo estandarizado de error
      */
     @ExceptionHandler(CatalogEmptyException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleCatalogEmpty(
             HttpServletRequest req, CatalogEmptyException ex) {
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ex.getCode(),
-                ex.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.of(
+            ex.getCode(),
+            ex.getMessage(),
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ApiResponse.error(ex.getMessageKey(), HttpStatus.INTERNAL_SERVER_ERROR, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.CATALOG_ERROR.getCode(),
+            HttpStatus.NOT_FOUND,
+            ErrorCode.CATALOG_ERROR.getMessageKey(),
+            details
+        );
     }
 
     /**
@@ -184,24 +194,45 @@ public class RestApiExceptionHandler {
      * ------------------------------------------------------
      */
 
-    // --- TIMEOUT de consulta (ej. SELECT tardó demasiado) -> 504
+    /**
+     * Maneja {@link QueryTimeoutException} cuando una consulta a la base
+     * de datos excede el tiempo de espera configurado.
+     *
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción de timeout en consulta a base de datos
+     * @return {@link ResponseEntity} con estado 504 y cuerpo estandarizado de error
+     */
     @ExceptionHandler(QueryTimeoutException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleQueryTimeout(
             HttpServletRequest req, QueryTimeoutException ex) {
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.DB_TIMEOUT.getCode(),
-                ErrorCode.DB_TIMEOUT.getMessageKey(),
-                HttpStatus.GATEWAY_TIMEOUT.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.createSimpleError(
+            ErrorCode.DB_TIMEOUT,
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.GATEWAY_TIMEOUT)
-            .body(ApiResponse.error(ErrorCode.DB_TIMEOUT.getMessageKey(), HttpStatus.GATEWAY_TIMEOUT, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.DATA_ERROR.getCode(),
+            HttpStatus.GATEWAY_TIMEOUT,
+            ErrorCode.DATA_ERROR.getMessageKey(),
+            details
+        );
     }
 
-    // --- Recurso de datos no disponible / conexión caída -> 503
+    /**
+     * Maneja errores cuando la base de datos no está disponible o no es posible abrir una transacción.
+     *
+     * <p>Atrapa: {@link DataAccessResourceFailureException},
+     * {@link CannotCreateTransactionException},
+     * {@link JDBCConnectionException},
+     * {@link java.sql.SQLTransientConnectionException}.</p>
+     *
+     * <p>Responde con <b>503 Service Unavailable</b> y cuerpo:
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción de base de datos no disponible
+     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     */
     @ExceptionHandler({
         DataAccessResourceFailureException.class,
         CannotCreateTransactionException.class,
@@ -211,125 +242,183 @@ public class RestApiExceptionHandler {
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleDbUnavailable(
             HttpServletRequest req, Exception ex) {
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.DB_UNAVAILABLE.getCode(),
-                ErrorCode.DB_UNAVAILABLE.getMessageKey(),
-                HttpStatus.SERVICE_UNAVAILABLE.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.createSimpleError(
+            ErrorCode.DB_UNAVAILABLE,
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.SERVICE_UNAVAILABLE)
-            .body(ApiResponse.error(ErrorCode.DB_UNAVAILABLE.getMessageKey(), HttpStatus.SERVICE_UNAVAILABLE, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.DATA_ERROR.getCode(),
+            HttpStatus.SERVICE_UNAVAILABLE,
+            ErrorCode.DATA_ERROR.getMessageKey(),
+            details
+        );
     }
 
-    // --- Errores de gramática SQL / tabla/columna inexistente -> 500
+    /**
+     * Maneja errores de sintaxis/uso de SQL (gramática SQL inválida).
+     *
+     * <p>Atrapa: {@link InvalidDataAccessResourceUsageException},
+     * {@link SQLGrammarException},
+     * {@link java.sql.SQLSyntaxErrorException}.</p>
+     *
+     * <p>Responde con <b>500 Internal Server Error</b> y cuerpo:
+     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     */
     @ExceptionHandler({
         InvalidDataAccessResourceUsageException.class,
         SQLGrammarException.class,
         SQLSyntaxErrorException.class
     })
-    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleSqlGrammar(
-            HttpServletRequest req, Exception ex) {
+    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleSqlGrammar(HttpServletRequest req, Exception ex) {
+        var details = ErrorUtils.createSimpleError(
+            ErrorCode.SQL_GRAMMAR,
+            req.getMethod()
+        );
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.SQL_GRAMMAR_ERROR.getCode(),
-                ErrorCode.SQL_GRAMMAR_ERROR.getMessageKey(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
-
-        return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ApiResponse.error(ErrorCode.SQL_GRAMMAR_ERROR.getMessageKey(), HttpStatus.INTERNAL_SERVER_ERROR, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.DATA_ERROR.getCode(),
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            ErrorCode.DATA_ERROR.getMessageKey(),
+            details
+        );
     }
 
-    // --- Fallback para errores de acceso a datos -> 500
+    /**
+     * Maneja errores generales de acceso a datos (consultas, actualizaciones, etc.).
+     *
+     * <p>Atrapa: {@link DataAccessException}.</p>
+     *
+     * <p>Responde con <b>500 Internal Server Error</b> y cuerpo:
+     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     */
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleDataAccess(
             HttpServletRequest req, DataAccessException ex) {
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.DATA_ACCESS_ERROR.getCode(),
-                ErrorCode.DATA_ACCESS_ERROR.getMessageKey(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.createSimpleError(
+            ErrorCode.DATA_ACCESS,
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ApiResponse.error(ErrorCode.DATA_ACCESS_ERROR.getMessageKey(), HttpStatus.INTERNAL_SERVER_ERROR, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.DATA_ERROR.getCode(),
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            ErrorCode.DATA_ERROR.getMessageKey(),
+            details
+        );
     }
 
-    // --- Parámetros de request inválidos (query/path) -> 400
+    /**
+     * Maneja solicitudes mal formadas o con parámetros inválidos.
+     *
+     * <p>Atrapa: {@link MissingServletRequestParameterException},
+     * {@link MethodArgumentTypeMismatchException},
+     * {@link ConstraintViolationException}.</p>
+     *
+     * <p>Responde con <b>400 Bad Request</b> y cuerpo:
+     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     */
     @ExceptionHandler({
         MissingServletRequestParameterException.class,
         MethodArgumentTypeMismatchException.class,
         ConstraintViolationException.class
     })
-    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleBadRequest(
-            HttpServletRequest req, Exception ex) {
+    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleBadRequest(HttpServletRequest req, Exception ex) {
+        var details = ErrorUtils.createSimpleError(
+            ErrorCode.BAD_REQUEST,
+            req.getMethod()
+        );
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.BAD_REQUEST.getCode(),
-                ErrorCode.BAD_REQUEST.getMessageKey(),
-                HttpStatus.BAD_REQUEST.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
-
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(ApiResponse.error(ErrorCode.BAD_REQUEST.getMessageKey(), HttpStatus.BAD_REQUEST, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.VALIDATION_ERROR.getCode(),
+            HttpStatus.BAD_REQUEST,
+            ErrorCode.VALIDATION_ERROR.getMessageKey(),
+            details
+        );
     }
 
-    // --- Método HTTP no soportado -> 405
+    /**
+     * Maneja invocaciones con un método HTTP no soportado por el endpoint.
+     *
+     * <p>Atrapa: {@link HttpRequestMethodNotSupportedException}.</p>
+     *
+     * <p>Responde con <b>405 Method Not Allowed</b> y cuerpo:
+     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleMethodNotAllowed(
             HttpServletRequest req, HttpRequestMethodNotSupportedException ex) {
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.METHOD_NOT_ALLOWED.getCode(),
-                ErrorCode.METHOD_NOT_ALLOWED.getMessageKey(),
-                HttpStatus.METHOD_NOT_ALLOWED.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.createSimpleError(
+            ErrorCode.METHOD_NOT_ALLOWED,
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.METHOD_NOT_ALLOWED)
-            .body(ApiResponse.error(ErrorCode.METHOD_NOT_ALLOWED.getMessageKey(), HttpStatus.METHOD_NOT_ALLOWED, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.GENERIC_ERROR.getCode(),
+            HttpStatus.METHOD_NOT_ALLOWED,
+            ErrorCode.GENERIC_ERROR.getMessageKey(),
+            details
+        );
     }
 
-    // --- Media type no soportado / no aceptable -> 415 / 406
+    /**
+     * Maneja peticiones con tipo de contenido no soportado por el servidor.
+     *
+     * <p>Atrapa: {@link HttpMediaTypeNotSupportedException}.</p>
+     *
+     * <p>Responde con <b>415 Unsupported Media Type</b> y cuerpo:
+     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     */
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleUnsupportedMediaType(
             HttpServletRequest req, HttpMediaTypeNotSupportedException ex) {
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.UNSUPPORTED_MEDIA_TYPE.getCode(),
-                ErrorCode.UNSUPPORTED_MEDIA_TYPE.getMessageKey(),
-                HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.createSimpleError(
+            ErrorCode.UNSUPPORTED_MEDIA_TYPE,
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-            .body(ApiResponse.error(ErrorCode.UNSUPPORTED_MEDIA_TYPE.getMessageKey(), HttpStatus.UNSUPPORTED_MEDIA_TYPE, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.GENERIC_ERROR.getCode(),
+            HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+            ErrorCode.GENERIC_ERROR.getMessageKey(),
+            details
+        );
     }
 
+    /**
+     * Maneja solicitudes cuyo formato de respuesta solicitado por el cliente
+     * (header {@code Accept}) no es aceptable.
+     *
+     * <p>Atrapa: {@link HttpMediaTypeNotAcceptableException}.</p>
+     *
+     * <p>Responde con <b>406 Not Acceptable</b> y cuerpo:
+     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     */
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleNotAcceptable(
             HttpServletRequest req, HttpMediaTypeNotAcceptableException ex) {
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.NOT_ACCEPTABLE.getCode(),
-                ErrorCode.NOT_ACCEPTABLE.getMessageKey(),
-                HttpStatus.NOT_ACCEPTABLE.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.createSimpleError(
+            ErrorCode.NOT_ACCEPTABLE,
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.NOT_ACCEPTABLE)
-            .body(ApiResponse.error(ErrorCode.NOT_ACCEPTABLE.getMessageKey(), HttpStatus.NOT_ACCEPTABLE, error));   
+        return ResponseUtil.error(
+            req,
+            ErrorCode.GENERIC_ERROR.getCode(),
+            HttpStatus.NOT_ACCEPTABLE,
+            ErrorCode.GENERIC_ERROR.getMessageKey(),
+            details
+        );
     }
 
     // --- Seguridad: 401 / 403
@@ -365,38 +454,63 @@ public class RestApiExceptionHandler {
             .body(ApiResponse.error(ErrorCode.FORBIDDEN.getMessageKey(), HttpStatus.FORBIDDEN, error));
     } */
 
-    // --- Bean de mapper o dependencia no encontrada (cableado) -> 500
+    /**
+     * Maneja la ausencia de beans en el contexto de Spring (p. ej., cuando un mapper
+     * o componente requerido no está definido o no pudo inyectarse).
+     *
+     * <p>Atrapa: {@link NoSuchBeanDefinitionException}.</p>
+     *
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción lanzada por Spring al no encontrar el bean
+     * @return {@link ResponseEntity} con estado 500 y cuerpo estandarizado de error
+     */
     @ExceptionHandler(NoSuchBeanDefinitionException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleNoBean(
             HttpServletRequest req, NoSuchBeanDefinitionException ex) {
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.MAPPER_ERROR.getCode(),
-                ErrorCode.MAPPER_ERROR.getMessageKey(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.createSimpleError(
+            ErrorCode.MAPPER_ERROR,
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ApiResponse.error(ErrorCode.MAPPER_ERROR.getMessageKey(), HttpStatus.INTERNAL_SERVER_ERROR, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.MAPPER_ERROR.getCode(),
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            ErrorCode.MAPPER_ERROR.getMessageKey(),
+            details
+        );
     }
 
-    // --- Fallback genérico -> 500
+    /**
+     * Handler genérico para cualquier excepción no controlada por otros manejadores
+     * específicos del {@code @RestControllerAdvice}.
+     *
+     * <p>Responde con <b>500 Internal Server Error</b>. El cuerpo sigue el contrato:
+     * {@code ApiResponse<ErrorResponse<Void>>}. Para evitar filtrar detalles sensibles,
+     * se envía un mensaje genérico al cliente (puedes loguear {@code ex} para diagnóstico).</p>
+     *
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción no controlada
+     * @return {@link ResponseEntity} con estado 500 y cuerpo estandarizado de error
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleGeneric(
             HttpServletRequest req, Exception ex) {
 
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.GENERIC_ERROR.getCode(),
-                ErrorCode.GENERIC_ERROR.getMessageKey(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
+        var details = ErrorUtils.of(
+            ErrorCode.GENERIC_ERROR.getCode(),
+            ex.getMessage(),
+            req.getMethod()
+        );
 
-        return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ApiResponse.error(ErrorCode.GENERIC_ERROR.getMessageKey(), HttpStatus.INTERNAL_SERVER_ERROR, error));
+        return ResponseUtil.error(
+            req,
+            ErrorCode.GENERIC_ERROR.getCode(),
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            ErrorCode.GENERIC_ERROR.getMessageKey(),
+            details
+        );
     }
 
 }

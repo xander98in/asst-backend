@@ -1,7 +1,10 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers;
 
-import org.springframework.http.HttpStatus;
+import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
+import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,6 +31,7 @@ import lombok.RequiredArgsConstructor;
  * Forma parte de la capa de entrada (Input Adapter) en la arquitectura hexagonal.
  * Delega la lógica al {@link PersonEvaluatedCommandHandler}.
  */
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/person-evaluated")
 @RequiredArgsConstructor
@@ -62,9 +66,9 @@ public class PersonEvaluatedCommandController {
         )
     })
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> create(@Valid @RequestBody PersonEvaluatedCreateRequestDTO dto) {
-        ApiResponse<PersonEvaluatedResponseDTO> response = personEvaluatedCommandHandler.createPersonEvaluated(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> create(@Valid @RequestBody PersonEvaluatedCreateRequestDTO dto, HttpServletRequest request) {
+        PersonEvaluatedResponseDTO response = personEvaluatedCommandHandler.createPersonEvaluated(dto);
+        return ResponseUtil.created(request, "/asst/person-evaluated/create", SuccessCode.CREATED, "Persona evaluada creada con éxito", response);
     }
 
     /**
@@ -102,8 +106,8 @@ public class PersonEvaluatedCommandController {
         )
     })
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> update(@PathVariable Long id, @Valid @RequestBody PersonEvaluatedUpdateRequestDTO dto) {
-        ApiResponse<PersonEvaluatedResponseDTO> response = personEvaluatedCommandHandler.updatePersonEvaluated(id, dto);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> update(@PathVariable Long id, @Valid @RequestBody PersonEvaluatedUpdateRequestDTO dto, HttpServletRequest request) {
+        PersonEvaluatedResponseDTO response = personEvaluatedCommandHandler.updatePersonEvaluated(id, dto);
+        return ResponseUtil.ok(request, SuccessCode.UPDATED, "Persona evaluada actualizada exitosamente.", response);
     }
 }

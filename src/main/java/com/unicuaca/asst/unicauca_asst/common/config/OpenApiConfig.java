@@ -44,4 +44,13 @@ public class OpenApiConfig {
             .build();
     }
 
+    @Bean
+    public GroupedOpenApi BatteryManagementRecordGroup() {
+        return GroupedOpenApi.builder()
+            .group("registros-gestion-baterias")
+            .packagesToScan("com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers")
+            .pathsToMatch("/asst/battery-management-record/**")
+            .build();
+    }
+
 }
