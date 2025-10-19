@@ -5,6 +5,7 @@ import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecordStatus;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.BatteryManagementRecordStatusCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.BatteryManagementRecordCommandCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordCommandRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordQueryRepository;
@@ -27,19 +28,17 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             .personEvaluated(null)
             .build();
 
-        System.out.println("\n\nBatteryManagementRecord createBatteryManagementRecord: ");
-        BatteryManagementRecordStatus batteryManagementRecordStatus = batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName("Generado")
+        BatteryManagementRecordStatus batteryManagementRecordStatus = batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(BatteryManagementRecordStatusCode.CREATED.getDescription())
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado 'Generado' no fue encontrado")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado 'Creado' no fue encontrado")
                 );
                 return null;
             });
 
-        System.out.println("\n\nBatteryManagementRecord createBatteryManagementRecord: " + batteryManagementRecordStatus);
         record.setStatus(batteryManagementRecordStatus);
-        PersonEvaluated personEvaluated = null;
+        PersonEvaluated personEvaluated;
         if(personEvaluatedQueryRepository.existsById(personEvaluatedId)) {
             personEvaluated = personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId)
                 .orElseGet(() -> {

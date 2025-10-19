@@ -4,5 +4,11 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto
 
 public interface BatteryManagementRecordCommandHandler {
 
+    /**
+     * Crea un nuevo registro de gestión de baterías para la persona evaluada indicada.
+     *
+     * @param personEvaluatedId ID de la persona evaluada para la cual se crea el registro.
+     * @return El DTO del registro de gestión de baterías creado.
+     */
     BatteryManagementRecordResponseDTO createBatteryManagementRecord(Long personEvaluatedId);
 }

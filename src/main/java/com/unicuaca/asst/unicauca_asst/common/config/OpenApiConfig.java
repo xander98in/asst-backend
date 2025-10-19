@@ -53,4 +53,13 @@ public class OpenApiConfig {
             .build();
     }
 
+    @Bean
+    public GroupedOpenApi QuestionnaireGroupedOpenApi() {
+        return GroupedOpenApi.builder()
+            .group("cuestionarios")
+            .packagesToScan("com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers")
+            .pathsToMatch("/asst/questionnaires/**")
+            .build();
+    }
+
 }

@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
  * relacionada con personas.</p>
  */
 @CrossOrigin(origins = "http://localhost:4200")
- @RestController
+@RestController
 @RequestMapping("/asst/person-evaluated")
 @RequiredArgsConstructor
 public class PersonEvaluatedQueryController {

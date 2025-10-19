@@ -16,6 +16,12 @@ public class BatteryManagementRecordCommandHandlerImpl implements BatteryManagem
     private final BatteryManagementRecordCommandCUInputPort batteryManagementRecordCommandCUInputPort;
     private final BatteryManagementRecordMapper batteryManagementRecordMapper;
 
+    /**
+     * Crea un nuevo registro de gestión de baterías para la persona evaluada indicada.
+     *
+     * @param personEvaluatedId ID de la persona evaluada para la cual se crea el registro.
+     * @return El DTO del registro de gestión de baterías creado.
+     */
     @Override
     public BatteryManagementRecordResponseDTO createBatteryManagementRecord(Long personEvaluatedId) {
         BatteryManagementRecord record = batteryManagementRecordCommandCUInputPort.createBatteryManagementRecord(personEvaluatedId);

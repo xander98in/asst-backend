@@ -1,16 +1,14 @@
 package com.unicuaca.asst.unicauca_asst.common.config;
 
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordCommandRepository;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.BatteryManagementRecordCommandService;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.QuestionnaireQueryService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
 import com.unicuaca.asst.unicauca_asst.common.domain.services.CatalogQueryService;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedCommandRepository;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedQueryRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.PersonEvaluatedCommandService;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.PersonEvaluatedQueryService;
 
@@ -43,5 +41,12 @@ public class BeanConfigurations {
         ResultFormatterOutputPort resultFormatterOutputPort) {
         return new BatteryManagementRecordCommandService(batteryManagementRecordCommandRepository,
             batteryManagementRecordQueryRepository, personEvaluatedQueryRepository, resultFormatterOutputPort);
+    }
+
+    @Bean
+    QuestionnaireQueryService questionnaireQueryService(
+        QuestionnaireQueryRepository questionnaireQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort) {
+        return new QuestionnaireQueryService(questionnaireQueryRepository, resultFormatterOutputPort);
     }
 }

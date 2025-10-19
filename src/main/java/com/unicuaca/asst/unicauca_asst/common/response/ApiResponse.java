@@ -31,7 +31,7 @@ public class ApiResponse<T> {
     /**
      * Mensaje humano que describe el resultado (éxito o error) de la operación.
      */
-    @Schema(example = "Recurso obtenido exitosamente.", description = "Mensaje descriptivo del resultado.")
+    @Schema(example = "Mensaje del resultado", description = "Mensaje descriptivo del resultado.")
     private String message;
 
     /**
