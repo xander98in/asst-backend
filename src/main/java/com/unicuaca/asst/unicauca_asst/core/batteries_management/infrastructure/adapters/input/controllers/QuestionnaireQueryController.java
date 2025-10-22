@@ -53,6 +53,7 @@ public class QuestionnaireQueryController {
         return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
     }
 
+
     /**
      * Obtiene un cuestionario por su abreviatura exacta.
      *
