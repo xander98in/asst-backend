@@ -19,11 +19,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(
-    name = "ciudades",
-    uniqueConstraints = {
-        @UniqueConstraint(name = "uk_ciudad_codigo", columnNames = {"codigo"}),
-        @UniqueConstraint(name = "uk_ciudad_nombre", columnNames = {"nombre"})
-    }
+    name = "ciudades"
 )
 @ToString
 public class CityEntity {

@@ -1,25 +1,11 @@
 package com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.mappers;
 
+import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.*;
 import org.mapstruct.Mapper;
 
-import com.unicuaca.asst.unicauca_asst.common.domain.models.CivilStatus;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.ContractType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.EducationLevel;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.Gender;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.HousingType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.JobPositionType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SalaryType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SocioeconomicLevel;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.CivilStatusEntity;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.ContractTypeEntity;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.EducationLevelEntity;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.GenderEntity;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.HousingTypeEntity;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.IdentificationTypeEntity;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.JobPositionTypeEntity;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.SalaryTypeEntity;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.SocioeconomicLevelEntity;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface CatalogPersistenceMapper {
@@ -167,4 +153,90 @@ public interface CatalogPersistenceMapper {
      * @return el objeto GenderEntity resultante
      */
     GenderEntity toGenderEntity(Gender gender);
+
+    /**
+     * Convierte un objeto CityEntity en un objeto City. (sin department)
+     *
+     * @param entity el objeto CityEntity a convertir
+     * @return el objeto City resultante
+     */
+    @Named("toCityDomain")
+    @Mapping(target = "department", ignore = true)
+    City toCityDomain(CityEntity entity);
+
+    /**
+     * Convierte un objeto City en un objeto CityEntity. (sin department)
+     *
+     * @param domain el objeto City a convertir
+     * @return el objeto CityEntity resultante
+     */
+    @Named("toCityEntity")
+    @Mapping(target = "department", ignore = true)
+    CityEntity toCityEntity(City domain);
+
+    /**
+     * Convierte una entidad DepartmentEntity en el modelo de dominio Department, ignorando las ciudades.
+     *
+     * @param entity la entidad DepartmentEntity a convertir
+     * @return el modelo de dominio Department resultante
+     */
+    @Named("toDepartmentDomain")
+    @Mapping(target = "cities", ignore = true)
+    Department toDepartmentDomain(DepartmentEntity entity);
+
+    /**
+     * Convierte un modelo de dominio Department en su entidad DepartmentEntity equivalente, ignorando las ciudades.
+     *
+     * @param domain el modelo de dominio Department a convertir
+     * @return la entidad DepartmentEntity resultante
+     */
+    @Named("toDepartmentEntity")
+    @Mapping(target = "cities", ignore = true)
+    DepartmentEntity toDepartmentEntity(Department domain);
+
+    /**
+     * Convierte un objeto CityEntity en un objeto City, incluyendo el departamento asociado
+     * (pero sin traer las ciudades del departamento).
+     *
+     * @param entity el objeto CityEntity a convertir
+     * @return el objeto City resultante
+     */
+    @Named("toCityDomainWithDepartment")
+    @Mapping(target = "department", qualifiedByName = "toDepartmentDomain")
+    City toCityDomainWithDepartment(CityEntity entity);
+
+    /**
+     * Convierte un objeto City en un objeto CityEntity, incluyendo el departamento asociado
+     * (pero sin traer las ciudades del departamento).
+     *
+     * @param domain el objeto City a convertir
+     * @return el objeto CityEntity resultante
+     */
+    @Named("toCityEntityWithDepartment")
+    @Mapping(target = "department", qualifiedByName = "toDepartmentEntity")
+    CityEntity toCityEntityWithDepartment(City domain);
+
+    /** DepartmentEntity -> Department incluyendo cities (City sin department) */
+
+    /**
+     * Convierte una entidad DepartmentEntity en el modelo de dominio Department, incluyendo las ciudades.
+     * (Pero las ciudades no incluyen el departamento para evitar referencias circulares).
+     *
+     * @param entity la entidad DepartmentEntity a convertir
+     * @return el modelo de dominio Department resultante
+     */
+    @Named("toDepartmentDomainWithCities")
+    @Mapping(target = "cities", qualifiedByName = "toCityDomain")
+    Department toDepartmentDomainWithCities(DepartmentEntity entity);
+
+    /**
+     * Convierte un modelo de dominio Department en su entidad DepartmentEntity equivalente, incluyendo las ciudades.
+     * (Pero las ciudades no incluyen el departamento para evitar referencias circulares).
+     *
+     * @param domain el modelo de dominio Department a convertir
+     * @return la entidad DepartmentEntity resultante
+     */
+    @Named("toDepartmentEntityWithCities")
+    @Mapping(target = "cities", qualifiedByName = "toCityEntity")
+    DepartmentEntity toDepartmentEntityWithCities(Department domain);
 }

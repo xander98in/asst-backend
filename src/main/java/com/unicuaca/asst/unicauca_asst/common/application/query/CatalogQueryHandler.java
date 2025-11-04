@@ -2,16 +2,7 @@ package com.unicuaca.asst.unicauca_asst.common.application.query;
 
 import java.util.List;
 
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.CivilStatusResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.ContractTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.EducationLevelResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.GenderResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.HousingTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.IdentificationTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.JobPositionTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.SalaryTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.SocioeconomicLevelResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.*;
 
 public interface CatalogQueryHandler {
 
@@ -77,4 +68,68 @@ public interface CatalogQueryHandler {
      * @return una lista de {@link GenderResponseDTO} representando los géneros.
      */
     List<GenderResponseDTO> getGenders();
+
+    /**
+     * Devuelve la ciudad (por código) con su departamento (sin ciudades).
+     *
+     * @param code código de la ciudad
+     * @return la ciudad con su departamento
+     */
+    CityResponseDTO getCityByCodeWithDepartment(String code);
+
+    /**
+     * Devuelve la ciudad (por nombre) con su departamento (sin ciudades).
+     *
+     * @param name nombre de la ciudad
+     * @return la ciudad con su departamento
+     */
+    CityResponseDTO getCityByNameWithDepartment(String name);
+
+    /**
+     * Devuelve el departamento (por código) con sus ciudades (cada ciudad sin department).
+     *
+     * @param code código del departamento
+     * @return el departamento con sus ciudades
+     */
+    DepartmentResponseDTO getDepartmentByCodeWithCities(String code);
+
+    /**
+     * Devuelve el departamento (por nombre) con sus ciudades (cada ciudad sin department).
+     *
+     * @param name nombre del departamento
+     * @return el departamento con sus ciudades
+     */
+    DepartmentResponseDTO getDepartmentByNameWithCities(String name);
+
+    /**
+     * Lista todos los departamentos (sin incluir sus ciudades).
+     *
+     * @return lista de departamentos
+     */
+    List<DepartmentResponseDTO> getAllDepartments();
+
+    /**
+     * Lista todos los departamentos con sus ciudades
+     * (cada City sin su Department).
+     *
+     * @return lista de departamentos con ciudades
+     */
+    List<DepartmentResponseDTO> getAllDepartmentsWithCities();
+
+    /**
+     * Lista todas las ciudades (sin incluir su Department).
+     * Devuelve el DTO resumen de ciudad.
+     *
+     * @return lista de ciudades
+     */
+    List<CitySummaryResponseDTO> getAllCities();
+
+    /**
+     * Lista todas las ciudades con su Department
+     * (Department en versión resumen, sin cities).
+     *
+     * @return lista de ciudades con departamento
+     */
+    List<CityResponseDTO> getAllCitiesWithDepartment();
+
 }

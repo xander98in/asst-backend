@@ -3,17 +3,9 @@ package com.unicuaca.asst.unicauca_asst.common.application.query;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.*;
 import org.springframework.stereotype.Component;
 
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.CivilStatusResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.ContractTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.EducationLevelResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.GenderResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.HousingTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.IdentificationTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.JobPositionTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.SalaryTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.SocioeconomicLevelResponseDTO;
 import com.unicuaca.asst.unicauca_asst.common.application.mappers.CatalogMapper;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.input.CatalogQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
@@ -141,5 +133,108 @@ public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
             .map(catalogMapper::toGenderResponseDTO)
             .collect(Collectors.toList());
 
+    }
+
+    /**
+     * Obtiene una ciudad por su código junto con su departamento.
+     *
+     * @param code el código de la ciudad
+     * @return un objeto CityResponseDTO que representa la ciudad y su departamento
+     */
+    @Override
+    public CityResponseDTO getCityByCodeWithDepartment(String code) {
+        return catalogMapper.toCityResponseDTO(
+            catalogQueryCUInputPort.getCityByCodeWithDepartment(code)
+        );
+    }
+
+    /**
+     * Obtiene una ciudad por su nombre junto con su departamento.
+     *
+     * @param name el nombre de la ciudad
+     * @return un objeto CityResponseDTO que representa la ciudad y su departamento
+     */
+    @Override
+    public CityResponseDTO getCityByNameWithDepartment(String name) {
+        return catalogMapper.toCityResponseDTO(
+            catalogQueryCUInputPort.getCityByNameWithDepartment(name)
+        );
+    }
+
+    /**
+     * Obtiene un departamento por su código junto con sus ciudades.
+     *
+     * @param code el código del departamento
+     * @return un objeto DepartmentResponseDTO que representa el departamento y sus ciudades
+     */
+    @Override
+    public DepartmentResponseDTO getDepartmentByCodeWithCities(String code) {
+        return catalogMapper.toDepartmentResponseDTO(
+            catalogQueryCUInputPort.getDepartmentByCodeWithCities(code)
+        );
+    }
+
+    /**
+     * Obtiene un departamento por su nombre junto con sus ciudades.
+     *
+     * @param name el nombre del departamento
+     * @return un objeto DepartmentResponseDTO que representa el departamento y sus ciudades
+     */
+    @Override
+    public DepartmentResponseDTO getDepartmentByNameWithCities(String name) {
+        return catalogMapper.toDepartmentResponseDTO(
+            catalogQueryCUInputPort.getDepartmentByNameWithCities(name)
+        );
+    }
+
+    /**
+     * Lista todos los departamentos sin incluir sus ciudades.
+     *
+     * @return lista de departamentos
+     */
+    @Override
+    public List<DepartmentResponseDTO> getAllDepartments() {
+        return catalogQueryCUInputPort.getAllDepartments().stream()
+            .map(catalogMapper::toDepartmentResponseDTO)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Lista todos los departamentos incluyendo sus ciudades
+     * (cada City sin su Department).
+     *
+     * @return lista de departamentos con ciudades
+     */
+    @Override
+    public List<DepartmentResponseDTO> getAllDepartmentsWithCities() {
+        return catalogQueryCUInputPort.getAllDepartmentsWithCities().stream()
+            .map(catalogMapper::toDepartmentResponseDTO)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Lista todas las ciudades (sin incluir su Department).
+     * Devuelve el DTO resumen de ciudad.
+     *
+     * @return lista de ciudades
+     */
+    @Override
+    public List<CitySummaryResponseDTO> getAllCities() {
+        return catalogQueryCUInputPort.getAllCities().stream()
+            .map(catalogMapper::toCitySummaryDTO)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Lista todas las ciudades incluyendo su Department
+     * (Department en versión resumen, sin cities).
+     *
+     * @return lista de ciudades
+     */
+    @Override
+    public List<CityResponseDTO> getAllCitiesWithDepartment() {
+        return catalogQueryCUInputPort.getAllCitiesWithDepartment().stream()
+            .map(catalogMapper::toCityResponseDTO)
+            .collect(Collectors.toList());
     }
 }

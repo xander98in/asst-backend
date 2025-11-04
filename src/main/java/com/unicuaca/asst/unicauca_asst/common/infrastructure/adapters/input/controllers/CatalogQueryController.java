@@ -2,24 +2,16 @@ package com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.con
 
 import java.util.List;
 
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.*;
+import com.unicuaca.asst.unicauca_asst.common.docs.ErrorResponseApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.CityApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.DepartmentApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
 import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.CivilStatusResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.ContractTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.EducationLevelResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.GenderResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.HousingTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.IdentificationTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.JobPositionTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.SalaryTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.SocioeconomicLevelResponseDTO;
 import com.unicuaca.asst.unicauca_asst.common.application.query.CatalogQueryHandler;
 import com.unicuaca.asst.unicauca_asst.common.docs.IdentificationTypesApiResponseDoc;
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
@@ -334,4 +326,223 @@ public class CatalogQueryController {
         return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Géneros obtenidos exitosamente", response);
     }
 
+    /**
+     * Obtiene una ciudad por código, incluyendo su departamento (sin ciudades).
+     *
+     * @param code código de la ciudad
+     * @param request el request HTTP
+     * @return ResponseEntity con la respuesta API que contiene la ciudad
+     */
+    @Operation(
+        summary = "Obtener ciudad por código (con departamento)",
+        description = "Retorna la ciudad correspondiente al código, incluyendo el departamento al que pertenece."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Ciudad encontrada",
+            content = @Content(schema = @Schema(implementation = CityApiResponse.class))
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Ciudad no encontrada",
+            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+        )
+    })
+    @GetMapping("/cities/by-code/{code}")
+    public ResponseEntity<ApiResponse<CityResponseDTO>> getCityByCodeWithDepartment(@PathVariable String code, HttpServletRequest request) {
+        CityResponseDTO dto = catalogQueryHandler.getCityByCodeWithDepartment(code);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Ciudad obtenida exitosamente", dto);
+    }
+
+    /**
+     * Obtiene una ciudad por nombre, incluyendo su departamento (sin ciudades).
+     *
+     * @param name nombre de la ciudad
+     * @param request el request HTTP
+     * @return ResponseEntity con la respuesta API que contiene la ciudad
+     */
+    @Operation(
+        summary = "Obtener ciudad por nombre (con departamento)",
+        description = "Retorna la ciudad correspondiente al nombre, incluyendo el departamento al que pertenece."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Ciudad encontrada",
+            content = @Content(schema = @Schema(implementation = CityApiResponse.class))
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Ciudad no encontrada",
+            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+        )
+    })
+    @GetMapping("/cities/by-name/{name}")
+    public ResponseEntity<ApiResponse<CityResponseDTO>> getCityByNameWithDepartment(@PathVariable String name, HttpServletRequest request) {
+        CityResponseDTO dto = catalogQueryHandler.getCityByNameWithDepartment(name);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Ciudad obtenida exitosamente", dto);
+    }
+
+    /**
+     * Obtiene un departamento por código, incluyendo sus ciudades
+     * (cada ciudad sin el campo department).
+     *
+     * @param code código del departamento
+     * @param request el request HTTP
+     * @return ResponseEntity con la respuesta API que contiene el departamento
+     */
+    @Operation(
+        summary = "Obtener departamento por código (con ciudades)",
+        description = "Retorna el departamento correspondiente al código, incluyendo el listado de sus ciudades."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Departamento encontrado",
+            content = @Content(schema = @Schema(implementation = DepartmentApiResponse.class))
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Departamento no encontrado",
+            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+        )
+    })
+    @GetMapping("/departments/by-code/{code}")
+    public ResponseEntity<ApiResponse<DepartmentResponseDTO>> getDepartmentByCodeWithCities(@PathVariable String code, HttpServletRequest request) {
+        DepartmentResponseDTO dto = catalogQueryHandler.getDepartmentByCodeWithCities(code);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Departamento obtenido exitosamente", dto);
+    }
+
+    /**
+     * Obtiene un departamento por nombre, incluyendo sus ciudades
+     * (cada ciudad sin el campo department).
+     *
+     * @param name nombre del departamento
+     * @param request el request HTTP
+     * @return ResponseEntity con la respuesta API que contiene el departamento
+     */
+    @Operation(
+        summary = "Obtener departamento por nombre (con ciudades)",
+        description = "Retorna el departamento correspondiente al nombre, incluyendo el listado de sus ciudades."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Departamento encontrado",
+            content = @Content(schema = @Schema(implementation = DepartmentApiResponse.class))
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Departamento no encontrado",
+            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+        )
+    })
+    @GetMapping("/departments/by-name/{name}")
+    public ResponseEntity<ApiResponse<DepartmentResponseDTO>> getDepartmentByNameWithCities(@PathVariable String name, HttpServletRequest request) {
+        DepartmentResponseDTO dto = catalogQueryHandler.getDepartmentByNameWithCities(name);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Departamento obtenido exitosamente", dto);
+    }
+
+    /**
+     * Lista todos los departamentos (sin incluir sus ciudades).
+     */
+    @Operation(
+        summary = "Listar departamentos (sin ciudades)",
+        description = "Retorna todos los departamentos sin el listado de sus ciudades."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Catálogo vacío o error interno",
+            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+        )
+    })
+    @GetMapping("/departments")
+    public ResponseEntity<ApiResponse<List<DepartmentResponseDTO>>> getAllDepartments(HttpServletRequest request) {
+        List<DepartmentResponseDTO> response = catalogQueryHandler.getAllDepartments();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Departamentos obtenidos exitosamente", response);
+    }
+
+    /**
+     * Lista todos los departamentos incluyendo sus ciudades
+     * (cada ciudad sin el campo department).
+     */
+    @Operation(
+        summary = "Listar departamentos con sus ciudades",
+        description = "Retorna todos los departamentos con el listado de sus ciudades (cada ciudad sin su department)."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Catálogo vacío o error interno",
+            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+        )
+    })
+    @GetMapping("/departments/with-cities")
+    public ResponseEntity<ApiResponse<List<DepartmentResponseDTO>>> getAllDepartmentsWithCities(HttpServletRequest request) {
+        List<DepartmentResponseDTO> response = catalogQueryHandler.getAllDepartmentsWithCities();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Departamentos (con ciudades) obtenidos exitosamente", response);
+    }
+
+    /**
+     * Lista todas las ciudades (sin incluir su departamento).
+     */
+    @Operation(
+        summary = "Listar ciudades (sin departamento)",
+        description = "Retorna todas las ciudades sin la información del departamento."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Catálogo vacío o error interno",
+            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+        )
+    })
+    @GetMapping("/cities")
+    public ResponseEntity<ApiResponse<List<CitySummaryResponseDTO>>> getAllCities(HttpServletRequest request) {
+        List<CitySummaryResponseDTO> response = catalogQueryHandler.getAllCities();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Ciudades obtenidas exitosamente", response);
+    }
+
+    /**
+     * Lista todas las ciudades incluyendo su departamento
+     * (el Department no incluye sus cities).
+     */
+    @Operation(
+        summary = "Listar ciudades con su departamento",
+        description = "Retorna todas las ciudades con la información de su departamento (sin incluir las ciudades del departamento)."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Catálogo obtenido correctamente",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Catálogo vacío o error interno",
+            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+        )
+    })
+    @GetMapping("/cities/with-department")
+    public ResponseEntity<ApiResponse<List<CityResponseDTO>>> getAllCitiesWithDepartment(HttpServletRequest request) {
+        List<CityResponseDTO> response = catalogQueryHandler.getAllCitiesWithDepartment();
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Ciudades (con departamento) obtenidas exitosamente", response);
+    }
 }

@@ -3,18 +3,11 @@ package com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.pe
 import java.util.List;
 import java.util.Optional;
 
+import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.unicuaca.asst.unicauca_asst.common.domain.models.CivilStatus;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.ContractType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.EducationLevel;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.Gender;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.HousingType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.JobPositionType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SalaryType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SocioeconomicLevel;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.CivilStatusEntity;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.ContractTypeEntity;
@@ -25,15 +18,6 @@ import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.per
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.JobPositionTypeEntity;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.SalaryTypeEntity;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.SocioeconomicLevelEntity;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.CivilStatusSpringJpaRepository;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.ContractTypeSpringJpaRepository;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.EducationLevelSpringJpaRepository;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.GenderSpringJpaRepository;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.HousingTypeSpringJpaRepository;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.IdentificationTypeSpringJpaRepository;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.JobPositionTypeSpringJpaRepository;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.SalaryTypeSpringJpaRepository;
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.SocioeconomicLevelSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.mappers.CatalogPersistenceMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -57,6 +41,8 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
     private final ContractTypeSpringJpaRepository contractTypeSpringJpaRepository;
     private final SalaryTypeSpringJpaRepository salaryTypeSpringJpaRepository;
     private final GenderSpringJpaRepository genderSpringJpaRepository;
+    private final CitySpringJpaRepository citySpringJpaRepository;
+    private final DepartmentSpringJpaRepository departmentSpringJpaRepository;
 
     private final CatalogPersistenceMapper catalogPersistenceMapper;
 
@@ -187,6 +173,110 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
     public Optional<IdentificationType> getIdTypeByAbbreviation(String abbreviation) {
         return identificationTypeSpringJpaRepository.findByAbbreviation(abbreviation)
                 .map(catalogPersistenceMapper::toIdentificationTypeDomain);
+    }
+
+    /**
+     * Obtiene una ciudad por su código incluyendo su departamento.
+     *
+     * @param code código de la ciudad.
+     * @return un {@link Optional} con la ciudad encontrada, o vacío si no existe.
+     */
+    @Override
+    public Optional<City> getCityByCodeWithDepartment(String code) {
+        return this.citySpringJpaRepository
+            .findByCodeWithDepartment(code)
+            .map(this.catalogPersistenceMapper::toCityDomainWithDepartment);
+    }
+
+    /**
+     * Obtiene una ciudad por su nombre incluyendo su departamento.
+     *
+     * @param name nombre de la ciudad.
+     * @return un {@link Optional} con la ciudad encontrada, o vacío si no existe.
+     */
+    @Override
+    public Optional<City> getCityByNameWithDepartment(String name) {
+        return this.citySpringJpaRepository
+            .findByNameWithDepartment(name)
+            .map(this.catalogPersistenceMapper::toCityDomainWithDepartment);
+    }
+
+    /**
+     * Obtiene un departamento por su código incluyendo sus ciudades.
+     *
+     * @param code código del departamento.
+     * @return un {@link Optional} con el departamento encontrado, o vacío si no existe.
+     */
+    @Override
+    public Optional<Department> getDepartmentByCodeWithCities(String code) {
+        return this.departmentSpringJpaRepository
+            .findByCodeWithCities(code)
+            .map(this.catalogPersistenceMapper::toDepartmentDomainWithCities);
+    }
+
+    /**
+     * Obtiene un departamento por su nombre incluyendo sus ciudades.
+     *
+     * @param name nombre del departamento.
+     * @return un {@link Optional} con el departamento encontrado, o vacío si no existe.
+     */
+    @Override
+    public Optional<Department> getDepartmentByNameWithCities(String name) {
+        return this.departmentSpringJpaRepository
+            .findByNameWithCities(name)
+            .map(this.catalogPersistenceMapper::toDepartmentDomainWithCities);
+    }
+
+    /**
+     * Obtiene todos los departamentos. (Sin incluir ciudades)
+     *
+     * @return una lista de todos los departamentos.
+     */
+    @Override
+    public List<Department> getAllDepartments() {
+        return this.departmentSpringJpaRepository.findAll()
+            .stream()
+            .map(catalogPersistenceMapper::toDepartmentDomain)
+            .toList();
+    }
+
+    /**
+     * Obtiene todos los departamentos incluyendo sus ciudades.
+     *
+     * @return una lista de todos los departamentos con sus ciudades.
+     */
+    @Override
+    public List<Department> getAllDepartmentsWithCities() {
+        return this.departmentSpringJpaRepository.findAllWithCitiesJoinFetch()
+            .stream()
+            .map(catalogPersistenceMapper::toDepartmentDomainWithCities)
+            .toList();
+    }
+
+    /**
+     * Obtiene todas las ciudades. (Sin incluir departamentos)
+     *
+     * @return una lista de todas las ciudades.
+     */
+    @Override
+    public List<City> getAllCities() {
+        return citySpringJpaRepository.findAll()
+            .stream()
+            .map(catalogPersistenceMapper::toCityDomain)
+            .toList();
+    }
+
+    /**
+     * Obtiene todas las ciudades incluyendo sus departamentos.
+     *
+     * @return una lista de todas las ciudades con sus departamentos.
+     */
+    @Override
+    public List<City> getAllCitiesWithDepartment() {
+        return citySpringJpaRepository.findAllWithDepartmentJoinFetch()
+            .stream()
+            .map(catalogPersistenceMapper::toCityDomainWithDepartment)
+            .toList();
     }
 }
 

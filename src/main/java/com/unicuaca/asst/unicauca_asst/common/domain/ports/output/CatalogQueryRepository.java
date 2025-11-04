@@ -3,15 +3,7 @@ package com.unicuaca.asst.unicauca_asst.common.domain.ports.output;
 import java.util.List;
 import java.util.Optional;
 
-import com.unicuaca.asst.unicauca_asst.common.domain.models.CivilStatus;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.ContractType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.EducationLevel;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.Gender;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.HousingType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.JobPositionType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SalaryType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SocioeconomicLevel;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
 
 /**
  * Puerto de salida para las consultas de catálogos.
@@ -91,4 +83,68 @@ public interface CatalogQueryRepository {
      * @return un {@link Optional} con el tipo de identificación correspondiente, o vacío si no se encuentra
      */ 
     Optional<IdentificationType> getIdTypeByAbbreviation(String abbreviation);
+
+    /**
+     * Obtiene una ciudad por su código, incluyendo la información del departamento.
+     *
+     * @param code código de la ciudad
+     * @return Optional con la ciudad (con department), o vacío si no existe
+     */
+    Optional<City> getCityByCodeWithDepartment(String code);
+
+    /**
+     * Obtiene una ciudad por su nombre, incluyendo la información del departamento.
+     *
+     * @param name nombre de la ciudad
+     * @return Optional con la ciudad (con department), o vacío si no existe
+     */
+    Optional<City> getCityByNameWithDepartment(String name);
+
+    /**
+     * Obtiene un departamento por su código, incluyendo sus ciudades.
+     * (Cada City no contiene department para evitar ciclos.)
+     *
+     * @param code código del departamento
+     * @return Optional con el departamento (con cities), o vacío si no existe
+     */
+    Optional<Department> getDepartmentByCodeWithCities(String code);
+
+    /**
+     * Obtiene un departamento por su nombre, incluyendo sus ciudades.
+     * (Cada City no contiene department para evitar ciclos.)
+     *
+     * @param name nombre del departamento
+     * @return Optional con el departamento (con cities), o vacío si no existe
+     */
+    Optional<Department> getDepartmentByNameWithCities(String name);
+
+    /**
+     * Lista todos los departamentos SIN incluir sus ciudades.
+     *
+     * @return lista de departamentos
+     */
+    List<Department> getAllDepartments();
+
+    /**
+     * Lista todos los departamentos INCLUYENDO sus ciudades.
+     * (Cada City no contiene su Department para evitar ciclos).
+     *
+     * @return lista de departamentos con sus ciudades
+     */
+    List<Department> getAllDepartmentsWithCities();
+
+    /**
+     * Lista todas las ciudades SIN incluir el departamento.
+     *
+     * @return lista de ciudades
+     */
+    List<City> getAllCities();
+
+    /**
+     * Lista todas las ciudades INCLUYENDO su departamento.
+     * (El Department no incluye sus cities para evitar ciclos).
+     *
+     * @return lista de ciudades con su departamento
+     */
+    List<City> getAllCitiesWithDepartment();
 }

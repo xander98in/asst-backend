@@ -1,25 +1,14 @@
 package com.unicuaca.asst.unicauca_asst.common.application.mappers;
 
+import com.unicuaca.asst.unicauca_asst.common.application.dto.response.*;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
 import org.mapstruct.Mapper;
 
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.CivilStatusResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.ContractTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.EducationLevelResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.GenderResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.HousingTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.IdentificationTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.JobPositionTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.SalaryTypeResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.application.dto.response.SocioeconomicLevelResponseDTO;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.CivilStatus;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.ContractType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.EducationLevel;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.Gender;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.HousingType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.JobPositionType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SalaryType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SocioeconomicLevel;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Mapper para convertir entre objetos de dominio y DTOs.
@@ -98,4 +87,55 @@ public interface CatalogMapper {
      * @return el objeto GenderResponseDTO resultante
      */
     GenderResponseDTO toGenderResponseDTO(Gender gender);
+
+    /**
+     * Convierte un objeto City en un objeto CitySummaryResponseDTO.
+     *
+     * @param city el objeto City a convertir
+     * @return el objeto CitySummaryResponseDTO resultante
+     */
+    @Named("toCitySummaryDTO")
+    CitySummaryResponseDTO toCitySummaryDTO(City city);
+
+    /**
+     * Convierte un objeto Department en un objeto DepartmentSummaryResponseDTO.
+     *
+     * @param department el objeto Department a convertir
+     * @return el objeto DepartmentSummaryResponseDTO resultante
+     */
+    @Named("toDepartmentSummaryDTO")
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "code", source = "code")
+    @Mapping(target = "name", source = "name")
+    DepartmentSummaryResponseDTO toDepartmentSummaryDTO(Department department);
+
+    /**
+     * Convierte un objeto City en un objeto CityResponseDTO.
+     *
+     * @param city el objeto City a convertir
+     * @return el objeto CityResponseDTO resultante
+     */
+    @Mapping(target = "department", source = "department", qualifiedByName = "toDepartmentSummaryDTO")
+    CityResponseDTO toCityResponseDTO(City city);
+
+    /**
+     * Convierte un objeto Department en un objeto DepartmentResponseDTO.
+     * @param department el objeto Department a convertir
+     * @return el objeto DepartmentResponseDTO resultante
+     */
+    @Mapping(target = "cities", source = "cities", qualifiedByName = "toCitySummaryList")
+    DepartmentResponseDTO toDepartmentResponseDTO(Department department);
+
+    /**
+     * Convierte un conjunto de objetos City en una lista de CitySummaryResponseDTO.
+     *
+     * @param cities el conjunto de objetos City a convertir
+     * @return la lista de CitySummaryResponseDTO resultante
+     */
+    @Named("toCitySummaryList")
+    default List<CitySummaryResponseDTO> toCitySummaryList(Set<City> cities) {
+        return cities == null ? List.of() : cities.stream()
+            .map(this::toCitySummaryDTO)
+            .toList();
+    }
 }

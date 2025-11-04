@@ -2,15 +2,7 @@ package com.unicuaca.asst.unicauca_asst.common.domain.ports.input;
 
 import java.util.List;
 
-import com.unicuaca.asst.unicauca_asst.common.domain.models.CivilStatus;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.ContractType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.EducationLevel;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.Gender;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.HousingType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.JobPositionType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SalaryType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SocioeconomicLevel;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
 
 public interface CatalogQueryCUInputPort {
 
@@ -76,4 +68,70 @@ public interface CatalogQueryCUInputPort {
      * @return una lista de objetos Gender
      */
     List<Gender> getGenders();
+
+    /**
+     * Obtiene una ciudad por su código incluyendo su departamento.
+     * Lanza excepción si no existe.
+     *
+     * @param code código de la ciudad.
+     * @return la ciudad con su departamento.
+     */
+    City getCityByCodeWithDepartment(String code);
+
+    /**
+     * Obtiene una ciudad por su nombre incluyendo su departamento.
+     * Lanza excepción si no existe.
+     *
+     * @param name nombre de la ciudad.
+     * @return la ciudad con su departamento.
+     */
+    City getCityByNameWithDepartment(String name);
+
+    /**
+     * Obtiene un departamento por su código incluyendo sus ciudades. (cada City no contiene department).
+     * Lanza excepción si no existe.
+     *
+     * @param code código del departamento.
+     * @return el departamento con sus ciudades.
+     */
+    Department getDepartmentByCodeWithCities(String code);
+
+    /**
+     * Obtiene un departamento por su nombre incluyendo sus ciudades. (cada City no contiene department).
+     * Lanza excepción si no existe.
+     *
+     * @param name nombre del departamento.
+     * @return el departamento con sus ciudades.
+     */
+    Department getDepartmentByNameWithCities(String name);
+
+    /**
+     * Lista todos los departamentos (sin incluir sus ciudades).
+     *
+     * @return lista de departamentos.
+     */
+    List<Department> getAllDepartments();
+
+    /**
+     * Lista todos los departamentos incluyendo sus ciudades
+     * (cada City sin su Department para evitar ciclos).
+     *
+     * @return lista de departamentos con sus ciudades.
+     */
+    List<Department> getAllDepartmentsWithCities();
+
+    /**
+     * Lista todas las ciudades (sin incluir su Department).
+     *
+     * @return lista de ciudades.
+     */
+    List<City> getAllCities();
+
+    /**
+     * Lista todas las ciudades incluyendo su Department
+     * (el Department no incluye sus cities para evitar ciclos).
+     *
+     * @return lista de ciudades con su departamento.
+     */
+    List<City> getAllCitiesWithDepartment();
 }
