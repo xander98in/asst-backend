@@ -39,13 +39,11 @@ public interface PersonEvaluatedMapper {
      *
      * Construye objetos anidados con solo sus IDs.
      */
-    @Mappings({
-        @Mapping(target = "id", ignore = true),
-        @Mapping(target = "email", source = "email"),
-        @Mapping(target = "identificationType", expression = "java(new IdentificationType(null, null, dto.getIdentificationType()))"),
-        @Mapping(target = "gender", expression = "java(new Gender(dto.getGenderId(), null))"),
-        @Mapping(target = "status", expression = "java(null)")
-    })
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "identificationType", expression = "java(new IdentificationType(null, null, dto.getIdentificationType()))")
+    @Mapping(target = "gender", expression = "java(new Gender(dto.getGenderId(), null))")
+    @Mapping(target = "status", expression = "java(null)")
     PersonEvaluated toDomain(PersonEvaluatedCreateRequestDTO dto);
 
     /**

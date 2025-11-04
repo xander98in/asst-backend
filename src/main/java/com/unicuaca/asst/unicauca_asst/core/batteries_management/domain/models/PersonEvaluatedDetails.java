@@ -18,7 +18,11 @@ public class PersonEvaluatedDetails {
 
     private Long id;
 
+    private BatteryManagementRecord batteryManagementRecord;
+
     private PersonEvaluated personEvaluated;
+
+    private Gender gender;
 
     private CivilStatus civilStatus;
 
