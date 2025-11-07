@@ -28,11 +28,27 @@ public interface CatalogQueryRepository {
     List<CivilStatus> getCivilStatuses();
 
     /**
+     * Obtiene un estado civil por su ID.
+     *
+     * @param id el ID del estado civil
+     * @return un {@link Optional} con el estado civil correspondiente, o vacío si no se encuentra
+     */
+    Optional<CivilStatus> getCivilStatusById(Long id);
+
+    /**
      * Obtiene una lista de todos los niveles educativos.
      *
      * @return una lista de objetos EducationLevel
      */
     List<EducationLevel> getEducationLevels();
+
+    /**
+     * Obtiene un nivel educativo por su ID.
+     *
+     * @param id el ID del nivel educativo
+     * @return un {@link Optional} con el nivel educativo correspondiente, o vacío si no se encuentra
+     */
+    Optional<EducationLevel> getEducationLevelById(Long id);
 
     /**
      * Obtiene una lista de todos los tipos de vivienda.
@@ -42,11 +58,27 @@ public interface CatalogQueryRepository {
     List<HousingType> getHousingTypes();
 
     /**
+     * Obtiene un tipo de vivienda por su ID.
+     *
+     * @param id el ID del tipo de vivienda
+     * @return un {@link Optional} con el tipo de vivienda correspondiente, o vacío si no se encuentra
+     */
+    Optional<HousingType> getHousingTypeById(Long id);
+
+    /**
      * Obtiene una lista de todos los niveles socioeconómicos.
      *
      * @return una lista de objetos SocioeconomicLevel
      */
     List<SocioeconomicLevel> getSocioeconomicLevels();
+
+    /**
+     * Obtiene un nivel socioeconómico por su ID.
+     *
+     * @param id el ID del nivel socioeconómico
+     * @return un {@link Optional} con el nivel socioeconómico correspondiente, o vacío si no se encuentra
+     */
+    Optional<SocioeconomicLevel> getSocioeconomicLevelById(Long id);
 
     /**
      * Obtiene una lista de todos los tipos de cargo.
@@ -56,11 +88,27 @@ public interface CatalogQueryRepository {
     List<JobPositionType> getJobPositionTypes();
 
     /**
+     * Obtiene un tipo de cargo por su ID.
+     *
+     * @param id el ID del tipo de cargo
+     * @return un {@link Optional} con el tipo de cargo correspondiente, o vacío si no se encuentra
+     */
+    Optional<JobPositionType> getJobPositionTypeById(Long id);
+
+    /**
      * Obtiene una lista de todos los tipos de contrato.
      *
      * @return una lista de objetos ContractType
      */
     List<ContractType> getContractTypes();
+
+    /**
+     * Obtiene un tipo de contrato por su ID.
+     *
+     * @param id el ID del tipo de contrato
+     * @return un {@link Optional} con el tipo de contrato correspondiente, o vacío si no se encuentra
+     */
+    Optional<ContractType> getContractTypeById(Long id);
 
     /**
      * Obtiene una lista de todos los tipos de salario.
@@ -70,11 +118,27 @@ public interface CatalogQueryRepository {
     List<SalaryType> getSalaryTypes();
 
     /**
+     * Obtiene un tipo de salario por su ID.
+     *
+     * @param id el ID del tipo de salario
+     * @return un {@link Optional} con el tipo de salario correspondiente, o vacío si no se encuentra
+     */
+    Optional<SalaryType> getSalaryTypeById(Long id);
+
+    /**
      * Obtiene una lista de todos los géneros.
      *
      * @return una lista de objetos Gender
      */
     List<Gender> getGenders();
+
+    /**
+     * Obtiene un género por su ID.
+     *
+     * @param id el ID del género
+     * @return un {@link Optional} con el género correspondiente, o vacío si no se encuentra
+     */
+    Optional<Gender> getGenderById(Long id);
 
     /**
      * Obtiene un tipo de identificación mediante su abreviatura.
@@ -99,6 +163,14 @@ public interface CatalogQueryRepository {
      * @return Optional con la ciudad (con department), o vacío si no existe
      */
     Optional<City> getCityByNameWithDepartment(String name);
+
+    /**
+     * Obtiene una ciudad por su ID.
+     *
+     * @param id ID de la ciudad
+     * @return Optional con la ciudad, o vacío si no existe
+     */
+    Optional<City> getCityById(Long id);
 
     /**
      * Obtiene un departamento por su código, incluyendo sus ciudades.

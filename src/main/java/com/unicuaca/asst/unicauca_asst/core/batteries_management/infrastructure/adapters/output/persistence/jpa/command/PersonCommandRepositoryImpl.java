@@ -69,7 +69,6 @@ public class PersonCommandRepositoryImpl implements PersonEvaluatedCommandReposi
         entity.setLastName(personEvaluated.getLastName());
         entity.setBirthYear(personEvaluated.getBirthYear());
         entity.setEmail(personEvaluated.getEmail());
-        entity.setGender(genderRepository.getReferenceById(personEvaluated.getGender().getId()));
 
         PersonEvaluatedEntity saved = personEvaluatedJpaRepository.save(entity);
         return Optional.of(personEvaluatedDBMapper.toDomain(saved));

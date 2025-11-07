@@ -99,10 +99,11 @@ public class PersonEvaluatedQueryRepositoryImpl implements PersonEvaluatedQueryR
     /**
      * Consulta una lista paginada de personas evaluadas por su identidad.
      *
-     * @param abbreviation       la abreviatura del tipo de identificación
+     * @param identificationType  el tipo de identificación
      * @param identificationNumber el número de identificación
-     * @param page               el número de página
-     * @param size               el tamaño de la página
+     * @param page                el número de página
+     * @param size                el tamaño de la página
+     * @param sort                el criterio de ordenamiento
      * @return una página de personas evaluadas
      */
     @Override

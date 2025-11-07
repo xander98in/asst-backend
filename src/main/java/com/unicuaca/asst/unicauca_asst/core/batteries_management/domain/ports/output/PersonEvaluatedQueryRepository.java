@@ -18,7 +18,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.S
  * <p>Hace parte de la arquitectura hexagonal, separando las dependencias externas
  * de la lógica del dominio.</p>
  */
-public interface    PersonEvaluatedQueryRepository {
+public interface PersonEvaluatedQueryRepository {
 
     /**
      * Consulta una persona evaluada a partir de su identificador único.

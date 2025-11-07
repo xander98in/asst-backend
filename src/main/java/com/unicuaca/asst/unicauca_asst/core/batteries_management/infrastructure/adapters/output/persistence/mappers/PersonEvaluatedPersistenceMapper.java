@@ -17,7 +17,6 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
     componentModel = "spring",
     uses = {
         IdentificationTypePersistenceMapper.class,
-        GenderPersistenceMapper.class,
         StatusPersonEvaluatedPersistenceMapper.class
     }
 )
@@ -34,7 +33,6 @@ public interface PersonEvaluatedPersistenceMapper {
     @Mapping(target = "identificationNumber", source = "identificationNumber")
     @Mapping(target = "firstName", source = "firstName")
     @Mapping(target = "lastName", source = "lastName")
-    @Mapping(target = "gender", source = "gender")
     @Mapping(target = "birthYear", source = "birthYear")
     @Mapping(target = "email", source = "email")
     @Mapping(target = "status", source = "status")

@@ -1,16 +1,13 @@
 package com.unicuaca.asst.unicauca_asst.common.config;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.BatteryManagementRecordCommandService;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.QuestionnaireQueryService;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
 import com.unicuaca.asst.unicauca_asst.common.domain.services.CatalogQueryService;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.PersonEvaluatedCommandService;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.PersonEvaluatedQueryService;
 
 @Configuration
 public class BeanConfigurations {
@@ -48,5 +45,15 @@ public class BeanConfigurations {
         QuestionnaireQueryRepository questionnaireQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort) {
         return new QuestionnaireQueryService(questionnaireQueryRepository, resultFormatterOutputPort);
+    }
+
+    @Bean
+    PersonEvaluatedDetailsCommandService personEvaluatedDetailsCommandService(
+        CatalogQueryRepository catalogQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+        ) {
+        return new PersonEvaluatedDetailsCommandService(
+            catalogQueryRepository,
+            resultFormatterOutputPort);
     }
 }

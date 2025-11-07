@@ -19,8 +19,10 @@ import lombok.*;
 @Table(
     name = "personas_evaluadas_detalles",
     uniqueConstraints = {
-        // Garantiza un único registro de detalles por persona evaluada
-        @UniqueConstraint(name = "uk_detalles_persona_evaluada", columnNames = {"id_persona_evaluada"})
+        @UniqueConstraint(
+            name = "uk_personas_evaluadas_detalles_registro_gestion_bateria",
+            columnNames = "id_registro_gestion_bateria"
+        )
     }
 )
 public class PersonEvaluatedDetailsEntity {
@@ -33,12 +35,12 @@ public class PersonEvaluatedDetailsEntity {
     private Long id;
 
     /**
-     * Persona evaluada asociada (relación 1:1).
+     * Registro de gestión de batería asociado (relación 1:1).
      * Se garantiza unicidad por constraint de tabla.
      */
     @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_persona_evaluada", nullable = false, unique = true)
-    private PersonEvaluatedEntity personEvaluated;
+    @JoinColumn(name = "id_registro_gestion_bateria", nullable = false, unique = true)
+    private BatteryManagementRecordEntity batteryManagementRecord;
 
     /**
      * Estado civil de la persona evaluada (ManyToOne).

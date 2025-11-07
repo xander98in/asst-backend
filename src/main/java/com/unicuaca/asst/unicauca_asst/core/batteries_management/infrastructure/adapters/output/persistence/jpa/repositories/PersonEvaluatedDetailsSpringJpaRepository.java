@@ -15,46 +15,46 @@ import java.util.Optional;
 public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository<PersonEvaluatedDetailsEntity, Long> {
 
     /**
-     * Verifica si existe un registro de detalles por ID de persona evaluada.
+     * Verifica si existe un registro de detalles por ID de registro de gestión de batería.
      *
-     * @param personEvaluatedId ID de la persona evaluada
+     * @param BatteryManagementRecordId ID del registro de gestión de batería
      * @return true si existe un registro de detalles, false en caso contrario
      */
-    boolean existsByPersonEvaluated_Id(Long personEvaluatedId);
+    boolean existsByBatteryManagementRecord_Id(Long BatteryManagementRecordId);
 
     /**
-     * Obtiene los detalles por ID de persona evaluada (sin forzar cargas).
+     * Obtiene los detalles por ID de registro de gestión de batería. (sin forzar carga de relaciones)
      *
-     * @param personEvaluatedId ID de la persona evaluada
+     * @param batteryManagementRecordId ID del registro de gestión de batería
      * @return Detalles de la persona evaluada envueltos en un Optional
      */
-    Optional<PersonEvaluatedDetailsEntity> findByPersonEvaluated_Id(Long personEvaluatedId);
+    Optional<PersonEvaluatedDetailsEntity> findByBatteryManagementRecord_Id(Long batteryManagementRecordId);
 
     /**
-     * Variante JPQL para verificar existencia por ID de persona evaluada.
+     * Variante JPQL para verificar existencia por ID de registro de gestión de batería.
      *
-     * @param personEvaluatedId ID de la persona evaluada
+     * @param batteryManagementRecordId ID del registro de gestión de batería
      * @return true si existe un registro de detalles, false en caso contrario
      */
     @Query("""
        SELECT CASE WHEN COUNT(d) > 0 THEN TRUE ELSE FALSE END
        FROM PersonEvaluatedDetailsEntity d
-       WHERE d.personEvaluated.id = :personEvaluatedId
+       WHERE d.batteryManagementRecord.id = :batteryManagementRecordId
        """)
-    boolean existsByPersonEvaluatedIdQuery(@Param("personEvaluatedId") Long personEvaluatedId);
+    boolean existsByPersonEvaluatedIdQuery(@Param("batteryManagementRecordId") Long batteryManagementRecordId);
 
     /**
      * Variante JPQL para obtener detalles por ID de persona evaluada.
      *
-     * @param personEvaluatedId ID de la persona evaluada
+     * @param batteryManagementRecordId ID del registro de gestión de batería
      * @return Detalles de la persona evaluada envueltos en un Optional
      */
     @Query("""
        SELECT d
        FROM PersonEvaluatedDetailsEntity d
-       WHERE d.personEvaluated.id = :personEvaluatedId
+       WHERE d.batteryManagementRecord.id = :batteryManagementRecordId
        """)
-    Optional<PersonEvaluatedDetailsEntity> findByPersonEvaluatedIdQuery(@Param("personEvaluatedId") Long personEvaluatedId);
+    Optional<PersonEvaluatedDetailsEntity> findByPersonEvaluatedIdQuery(@Param("batteryManagementRecordId") Long batteryManagementRecordId);
 
     /**
      * Variante JPQL con JOIN FETCH para traer TODA la información, incluyendo
@@ -66,7 +66,7 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
     @Query("""
            SELECT d
            FROM PersonEvaluatedDetailsEntity d
-           LEFT JOIN FETCH d.personEvaluated p
+           LEFT JOIN FETCH d.batteryManagementRecord p
            LEFT JOIN FETCH d.civilStatus cs
            LEFT JOIN FETCH d.educationLevel el
            LEFT JOIN FETCH d.residenceCity rc
@@ -91,7 +91,7 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
     @Query("""
            SELECT d
            FROM PersonEvaluatedDetailsEntity d
-           LEFT JOIN FETCH d.personEvaluated p
+           LEFT JOIN FETCH d.batteryManagementRecord p
            LEFT JOIN FETCH d.civilStatus cs
            LEFT JOIN FETCH d.educationLevel el
            LEFT JOIN FETCH d.residenceCity rc

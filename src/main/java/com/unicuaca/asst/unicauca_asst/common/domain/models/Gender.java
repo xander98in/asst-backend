@@ -1,9 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.common.domain.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * Modelo que representa el género de una persona.
@@ -12,6 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Builder
+@ToString
 public class Gender {
 
     private Long id;

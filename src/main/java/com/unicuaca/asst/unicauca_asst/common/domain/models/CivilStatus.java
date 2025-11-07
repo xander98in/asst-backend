@@ -1,9 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.common.domain.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * Representa el estado civil de una persona.
@@ -13,9 +10,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Builder
+@ToString
 public class CivilStatus {
 
     private Long id;
     private String name;
-
 }

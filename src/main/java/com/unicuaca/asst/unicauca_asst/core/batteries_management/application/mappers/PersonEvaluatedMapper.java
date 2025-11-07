@@ -27,9 +27,7 @@ public interface PersonEvaluatedMapper {
      */
     @Mappings({
         @Mapping(target = "identificationType", source = "identificationType.name"),
-        @Mapping(target = "gender", source = "gender.name"),
         @Mapping(target = "email", source = "email"),
-        @Mapping(target = "genderId", source = "gender.id"),
         @Mapping(target = "identificacionAbbreviation", source = "identificationType.abbreviation")
     })
     PersonEvaluatedResponseDTO toResponseDTO(PersonEvaluated person);
@@ -42,7 +40,6 @@ public interface PersonEvaluatedMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "email", source = "email")
     @Mapping(target = "identificationType", expression = "java(new IdentificationType(null, null, dto.getIdentificationType()))")
-    @Mapping(target = "gender", expression = "java(new Gender(dto.getGenderId(), null))")
     @Mapping(target = "status", expression = "java(null)")
     PersonEvaluated toDomain(PersonEvaluatedCreateRequestDTO dto);
 
@@ -66,7 +63,6 @@ public interface PersonEvaluatedMapper {
         @Mapping(target = "identificationNumber", source = "dto.identificationNumber"),
         @Mapping(target = "firstName", source = "dto.firstName"),
         @Mapping(target = "lastName", source = "dto.lastName"),
-        @Mapping(target = "gender", expression = "java(new Gender(dto.getGenderId(), null))"),
         @Mapping(target = "birthYear", source = "dto.birthYear"),
         @Mapping(target = "email", source = "dto.email"),
         @Mapping(target = "status", ignore = true)
@@ -80,7 +76,6 @@ public interface PersonEvaluatedMapper {
         @Mapping(target = "identificationNumber", source = "identificationNumber"),
         @Mapping(target = "firstName", source = "firstName"),
         @Mapping(target = "lastName", source = "lastName"),
-        @Mapping(target = "gender", source = "gender.name"),
         @Mapping(target = "birthYear", source = "birthYear"),
         @Mapping(target = "status", source = "status.name")
     })

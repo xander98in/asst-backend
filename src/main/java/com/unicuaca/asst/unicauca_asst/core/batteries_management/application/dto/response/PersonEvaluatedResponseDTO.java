@@ -41,9 +41,4 @@ public class PersonEvaluatedResponseDTO {
     @Schema(example = "CC", description = "Abreviatura del tipo de identificación")
     private String identificacionAbbreviation;
 
-    @Schema(example = "Masculino", description = "Género de la persona evaluada")
-    private String gender;
-
-    @Schema(example = "1", description = "ID del género de la persona evaluada")
-    private Long genderId;
 }

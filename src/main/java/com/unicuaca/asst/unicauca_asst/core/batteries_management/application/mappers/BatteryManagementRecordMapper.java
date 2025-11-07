@@ -18,6 +18,5 @@ public interface BatteryManagementRecordMapper {
     @Mapping(target = "identificationNumber", source = "personEvaluated.identificationNumber")
     @Mapping(target = "firstName", source = "personEvaluated.firstName")
     @Mapping(target = "lastName", source = "personEvaluated.lastName")
-    @Mapping(target = "gender", source = "personEvaluated.gender.name")
     BatteryManagementRecordResponseDTO toResponseDTO(BatteryManagementRecord batteryManagementRecord);
 }

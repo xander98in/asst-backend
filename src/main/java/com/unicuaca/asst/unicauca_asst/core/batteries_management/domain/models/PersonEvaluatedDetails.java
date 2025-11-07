@@ -20,8 +20,6 @@ public class PersonEvaluatedDetails {
 
     private BatteryManagementRecord batteryManagementRecord;
 
-    private PersonEvaluated personEvaluated;
-
     private Gender gender;
 
     private CivilStatus civilStatus;

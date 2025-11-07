@@ -77,14 +77,6 @@ public class PersonEvaluatedEntity extends AuditableEntity {
     private String lastName;
 
     /**
-     * Sexo asociado a la persona evaluada.
-     * Relación muchos a uno.
-     */
-    @ManyToOne
-    @JoinColumn(name = "sexo_id", nullable = false)
-    private GenderEntity gender;
-
-    /**
      * Año de nacimiento de la persona evaluada.
      */
     @Column(name = "anio_nacimiento", nullable = false)
@@ -108,14 +100,13 @@ public class PersonEvaluatedEntity extends AuditableEntity {
      * Constructor sin ID, útil para operaciones de creación.
      */
     public PersonEvaluatedEntity(String identificationNumber, String firstName, String lastName, Integer birthYear,
-                                 String email, IdentificationTypeEntity identificationType, GenderEntity gender, StatusPersonEvaluatedEntity status) {
+                                 String email, IdentificationTypeEntity identificationType, StatusPersonEvaluatedEntity status) {
         this.identificationNumber = identificationNumber;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthYear = birthYear;
         this.email = email;
         this.identificationType = identificationType;
-        this.gender = gender;
         this.status = status;
     }
 }

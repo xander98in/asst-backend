@@ -20,7 +20,6 @@ public class PersonEvaluatedInformationListResponseDTO {
     private String identificationNumber;
     private String firstName;
     private String lastName;
-    private String gender;
     private Integer birthYear;
     private String status;
 

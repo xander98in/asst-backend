@@ -57,7 +57,6 @@ public interface PersonEvaluatedSpringJpaRepository extends JpaRepository<Person
      */
     @Query("SELECT p FROM PersonEvaluatedEntity p " +
            "JOIN FETCH p.identificationType " +
-           "JOIN FETCH p.gender " +
            "WHERE p.id = :id")
     Optional<PersonEvaluatedEntity> findWithRelationsById(Long id);
 

@@ -57,12 +57,6 @@ public class PersonEvaluatedCreateRequestDTO {
     private Integer birthYear;
 
     /**
-     * ID del género seleccionado (ej: 1 para Masculino, 2 para Femenino...).
-     */
-    @NotNull(message = "{person.genderId.notNull}", groups = FirstGroup.class)
-    private Long genderId;
-
-    /**
      * Nombres de la persona.
      */
     @NotBlank(message = "{person.firstName.notBlank}", groups = FirstGroup.class)

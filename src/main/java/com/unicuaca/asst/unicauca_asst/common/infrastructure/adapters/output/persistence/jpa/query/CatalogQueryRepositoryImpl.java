@@ -73,6 +73,18 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
     }
 
     /**
+     * Obtiene un estado civil por su ID.
+     *
+     * @param id el ID del estado civil
+     * @return un {@link Optional} con el estado civil correspondiente, o vacío si no se encuentra
+     */
+    @Override
+    public Optional<CivilStatus> getCivilStatusById(Long id) {
+        return civilStatusSpringJpaRepository.findById(id)
+                .map(catalogPersistenceMapper::toCivilStatusDomain);
+    }
+
+    /**
      * Obtiene una lista de todos los niveles educativos.
      *
      * @return una lista de objetos EducationLevel
@@ -83,6 +95,18 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
         return entities.stream()
                 .map(catalogPersistenceMapper::toEducationLevelDomain)
                 .toList();
+    }
+
+    /**
+     * Obtiene un nivel educativo por su ID.
+     *
+     * @param id el ID del nivel educativo
+     * @return un {@link Optional} con el nivel educativo correspondiente, o vacío si no se encuentra
+     */
+    @Override
+    public Optional<EducationLevel> getEducationLevelById(Long id) {
+        return educationLevelSpringJpaRepository.findById(id)
+                .map(catalogPersistenceMapper::toEducationLevelDomain);
     }
 
     /**
@@ -99,6 +123,18 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
     }
 
     /**
+     * Obtiene un tipo de vivienda por su ID.
+     *
+     * @param id el ID del tipo de vivienda
+     * @return un {@link Optional} con el tipo de vivienda correspondiente, o vacío si no se encuentra
+     */
+    @Override
+    public Optional<HousingType> getHousingTypeById(Long id) {
+        return housingTypeSpringJpaRepository.findById(id)
+                .map(catalogPersistenceMapper::toHousingTypeDomain);
+    }
+
+    /**
      * Obtiene una lista de todos los niveles socioeconómicos.
      *
      * @return una lista de objetos SocioeconomicLevel
@@ -109,6 +145,18 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
         return entities.stream()
                 .map(catalogPersistenceMapper::toSocioeconomicLevelDomain)
                 .toList();
+    }
+
+    /**
+     * Obtiene un nivel socioeconómico por su ID.
+     *
+     * @param id el ID del nivel socioeconómico
+     * @return un {@link Optional} con el nivel socioeconómico correspondiente, o vacío si no se encuentra
+     */
+    @Override
+    public Optional<SocioeconomicLevel> getSocioeconomicLevelById(Long id) {
+        return socioeconomicLevelSpringJpaRepository.findById(id)
+                .map(catalogPersistenceMapper::toSocioeconomicLevelDomain);
     }
 
     /**
@@ -125,6 +173,18 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
     }
 
     /**
+     * Obtiene un tipo de cargo por su ID.
+     *
+     * @param id el ID del tipo de cargo
+     * @return un {@link Optional} con el tipo de cargo correspondiente, o vacío si no se encuentra
+     */
+    @Override
+    public Optional<JobPositionType> getJobPositionTypeById(Long id) {
+        return this.jobPositionTypeSpringJpaRepository.findById(id)
+                .map(catalogPersistenceMapper::toJobPositionTypeDomain);
+    }
+
+    /**
      * Obtiene una lista de todos los tipos de contrato.
      *
      * @return una lista de objetos ContractType
@@ -135,6 +195,18 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
         return entities.stream()
                 .map(catalogPersistenceMapper::toContractTypeDomain)
                 .toList();
+    }
+
+    /**
+     * Obtiene un tipo de contrato por su ID.
+     *
+     * @param id el ID del tipo de contrato
+     * @return un {@link Optional} con el tipo de contrato correspondiente, o vacío si no se encuentra
+     */
+    @Override
+    public Optional<ContractType> getContractTypeById(Long id) {
+        return this.contractTypeSpringJpaRepository.findById(id)
+                .map(catalogPersistenceMapper::toContractTypeDomain);
     }
 
     /**
@@ -151,6 +223,18 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
     }
 
     /**
+     * Obtiene un tipo de salario por su ID.
+     *
+     * @param id el ID del tipo de salario
+     * @return un {@link Optional} con el tipo de salario correspondiente, o vacío si no se encuentra
+     */
+    @Override
+    public Optional<SalaryType> getSalaryTypeById(Long id) {
+        return this.salaryTypeSpringJpaRepository.findById(id)
+                .map(catalogPersistenceMapper::toSalaryTypeDomain);
+    }
+
+    /**
      * Obtiene una lista de todos los géneros.
      *
      * @return una lista de objetos Gender
@@ -161,6 +245,18 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
         return entities.stream()
                 .map(catalogPersistenceMapper::toGenderDomain)
                 .toList();
+    }
+
+    /**
+     * Obtiene un género por su ID.
+     *
+     * @param id el ID del género
+     * @return un {@link Optional} con el género correspondiente, o vacío si no se encuentra
+     */
+    @Override
+    public Optional<Gender> getGenderById(Long id) {
+        return this.genderSpringJpaRepository.findById(id)
+                .map(catalogPersistenceMapper::toGenderDomain);
     }
 
     /**
@@ -199,6 +295,19 @@ public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
         return this.citySpringJpaRepository
             .findByNameWithDepartment(name)
             .map(this.catalogPersistenceMapper::toCityDomainWithDepartment);
+    }
+
+    /**
+     * Obtiene una ciudad por su ID.
+     *
+     * @param id ID de la ciudad.
+     * @return un {@link Optional} con la ciudad encontrada, o vacío si no existe.
+     */
+    @Override
+    public Optional<City> getCityById(Long id) {
+        return this.citySpringJpaRepository
+            .findById(id)
+            .map(this.catalogPersistenceMapper::toCityDomain);
     }
 
     /**

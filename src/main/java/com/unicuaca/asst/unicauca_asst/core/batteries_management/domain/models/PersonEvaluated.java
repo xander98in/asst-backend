@@ -23,7 +23,6 @@ public class PersonEvaluated {
     private String identificationNumber;
     private String firstName;
     private String lastName;
-    private Gender gender;
     private Integer birthYear;
     private String email;
     private StatusPersonEvaluated status;
