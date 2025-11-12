@@ -65,8 +65,10 @@ public class PersonEvaluatedDetailsCommandController {
     public ResponseEntity<ApiResponse<PersonEvaluatedDetailsResponseDTO>> create(@Valid @RequestBody PersonEvaluatedDetailsCreateRequestDTO dto, HttpServletRequest request) {
         PersonEvaluatedDetailsResponseDTO response = personEvaluatedDetailsCommandHandler.createPersonEvaluatedDetails(dto);
         return ResponseUtil.created(
-            request, "/asst/person-evaluated-details/create", 
-            SuccessCode.CREATED, "Detalles creados con éxito.", response
+            request, 
+            "/asst/person-evaluated-details/create", 
+            SuccessCode.CREATED, 
+            "Detalles creados con éxito.", response
         );
     }
 }

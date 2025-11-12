@@ -5,6 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
+/**
+ * Repositorio JPA para la entidad {@link BatteryManagementRecordStatusEntity}.
+ * Proporciona métodos para realizar operaciones CRUD y consultas personalizadas en la tabla
+ * "estados_registro_gestion_baterias".
+ */
 public interface BatteryManagementRecordStatusSpringJpaRepository extends JpaRepository<BatteryManagementRecordStatusEntity, Long> {
 
     /**
