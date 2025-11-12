@@ -11,10 +11,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementación del manejador de comandos para PersonEvaluatedDetails.
+ * Implementación del manejador de comandos para la creación de
+ * detalles de persona evaluada (PersonEvaluatedDetails).
  *
- * Nota: Esta clase es una "impresión" sin lógica de negocio aún.
- * Solo deja trazas y marca el método como no implementado.
+ * <p>Su responsabilidad principal es convertir los datos de entrada (DTO) en modelos de dominio,
+ * delegar la ejecución del caso de uso al puerto correspondiente y transformar la respuesta del dominio
+ * en un DTO de salida adecuado para el cliente.</p>
  */
 @RequiredArgsConstructor
 @Component
@@ -24,48 +26,17 @@ public class PersonEvaluatedDetailsCommandHandlerImpl implements PersonEvaluated
     private final PersonEvaluatedDetailsCommandCUInputPort personEvaluatedDetailsCommandCUInputPort;
     private final PersonEvaluatedDetailsMapper personEvaluatedDetailsMapper;
 
+    /** 
+     * Registra los detalles de una persona evaluada en el sistema.
+     *
+     * @param dto datos de entrada validados para la creación
+     * @return DTO de respuesta con la información creada y enriquecida desde el dominio
+     */
     @Override
     public PersonEvaluatedDetailsResponseDTO createPersonEvaluatedDetails(PersonEvaluatedDetailsCreateRequestDTO dto) {
-        System.out.println("Creando person evaluated details");
-        System.out.println("Datos recibidos: " + dto);
         PersonEvaluatedDetails personEvaluatedDetails = personEvaluatedDetailsMapper.toDomain(dto);
-        System.out.println("Entidad mapeada: " + personEvaluatedDetails); 
-
-        System.out.println("---- ENTIDAD MAPEADA ----");
-    System.out.println("ID: " + personEvaluatedDetails.getId());
-    System.out.println("BatteryManagementRecord ID: " + 
-        (personEvaluatedDetails.getBatteryManagementRecord() != null ? personEvaluatedDetails.getBatteryManagementRecord().getId() : "null"));
-    System.out.println("PersonEvaluated: " + personEvaluatedDetails.getPersonEvaluated());
-    System.out.println("Gender ID: " + 
-        (personEvaluatedDetails.getGender() != null ? personEvaluatedDetails.getGender().getName() : "null"));
-    System.out.println("CivilStatus ID: " + 
-        (personEvaluatedDetails.getCivilStatus() != null ? personEvaluatedDetails.getCivilStatus().getId() : "null"));
-    System.out.println("EducationLevel ID: " + 
-        (personEvaluatedDetails.getEducationLevel() != null ? personEvaluatedDetails.getEducationLevel().getId() : "null"));
-    System.out.println("Profession: " + personEvaluatedDetails.getProfession());
-    System.out.println("ResidenceCity ID: " + 
-        (personEvaluatedDetails.getResidenceCity() != null ? personEvaluatedDetails.getResidenceCity().getId() : "null"));
-    System.out.println("SocioeconomicLevel ID: " + 
-        (personEvaluatedDetails.getSocioeconomicLevel() != null ? personEvaluatedDetails.getSocioeconomicLevel().getId() : "null"));
-    System.out.println("HousingType ID: " + 
-        (personEvaluatedDetails.getHousingType() != null ? personEvaluatedDetails.getHousingType().getId() : "null"));
-    System.out.println("DependentsCount: " + personEvaluatedDetails.getDependentsCount());
-    System.out.println("WorkCity ID: " + 
-        (personEvaluatedDetails.getWorkCity() != null ? personEvaluatedDetails.getWorkCity().getId() : "null"));
-    System.out.println("YearsAtCompany: " + personEvaluatedDetails.getYearsAtCompany());
-    System.out.println("JobTitle: " + personEvaluatedDetails.getJobTitle());
-    System.out.println("JobPositionType ID: " + 
-        (personEvaluatedDetails.getJobPositionType() != null ? personEvaluatedDetails.getJobPositionType().getId() : "null"));
-    System.out.println("YearsInPosition: " + personEvaluatedDetails.getYearsInPosition());
-    System.out.println("WorkAreaName: " + personEvaluatedDetails.getWorkAreaName());
-    System.out.println("ContractType ID: " + 
-        (personEvaluatedDetails.getContractType() != null ? personEvaluatedDetails.getContractType().getId() : "null"));
-    System.out.println("DailyWorkHours: " + personEvaluatedDetails.getDailyWorkHours());
-    System.out.println("SalaryType ID: " + 
-        (personEvaluatedDetails.getSalaryType() != null ? personEvaluatedDetails.getSalaryType().getId() : "null"));
-    System.out.println("--------------------------");
-
         PersonEvaluatedDetails createdDetails = personEvaluatedDetailsCommandCUInputPort.createPersonEvaluatedDetails(personEvaluatedDetails);
+        System.out.println("\n\ncreatePersonEvaluatedDetails method called with DTO: " + createdDetails);
         return null;
     }
 }

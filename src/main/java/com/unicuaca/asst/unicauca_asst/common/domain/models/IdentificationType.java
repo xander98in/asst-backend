@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Representa un tipo de identificación.
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @Builder
+@ToString
 public class IdentificationType {
 
     private Long id;

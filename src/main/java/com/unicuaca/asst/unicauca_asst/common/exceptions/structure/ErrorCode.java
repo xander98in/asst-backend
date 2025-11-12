@@ -55,6 +55,7 @@ public enum ErrorCode {
     PERSON_EVALUATED_NOT_FOUND("ASST-BUS-0003", "La persona evaluada con ID %s no fue encontrada."),
     BATTERY_RECORD_DUPLICATE("ASST-BUS-0004", "La persona evaluada con ID %s ya tiene un registro de gestión de baterías."),
     EMAIL_ALREADY_EXISTS("ASST-BUS-0005", "Correo ya registrado. %s"),
+    PERSON_EVALUATED_DETAILS_DUPLICATE("ASST-BUS-0006", "El registro de detalles para el registro de gestión de batería con ID %s ya existe."),
 
     MAPPER_ERROR("ASST-0301", "Error de mapeo o dependencia no disponible");
 

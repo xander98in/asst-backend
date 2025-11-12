@@ -3,6 +3,7 @@ package com.unicuaca.asst.unicauca_asst.common.infrastructure.exception;
 import org.springframework.stereotype.Service;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.BusinessRuleViolationException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.CatalogEmptyException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityCreationException;
@@ -87,5 +88,16 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
     @Override
     public void throwCatalogEmptyException(String errorCode, String message) {
         throw new CatalogEmptyException(errorCode, message);
+    }
+
+    /**
+     * Lanza una excepción cuando se viola una regla de negocio del sistema.
+     *
+     * @param errorCode código de error personalizado
+     * @param message mensaje explicativo del error
+     */
+    @Override
+    public void throwBusinessRuleViolation(String errorCode, String message) {
+        throw new BusinessRuleViolationException(errorCode, message);
     }
 }

@@ -27,7 +27,6 @@ public class PersonCommandRepositoryImpl implements PersonEvaluatedCommandReposi
 
     private final PersonEvaluatedSpringJpaRepository personEvaluatedJpaRepository;
     private final PersonEvaluatedPersistenceMapper personEvaluatedDBMapper;
-    private final GenderSpringJpaRepository genderRepository;
     private final IdentificationTypeSpringJpaRepository identificationTypeRepository;
     
     /**

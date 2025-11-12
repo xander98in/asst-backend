@@ -50,10 +50,17 @@ public class BeanConfigurations {
     @Bean
     PersonEvaluatedDetailsCommandService personEvaluatedDetailsCommandService(
         CatalogQueryRepository catalogQueryRepository,
+        BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository,
+        PersonEvaluatedDetailsCommandRepository personEvaluatedDetailsCommandRepository,
+        PersonEvaluatedDetailsQueryRepository personEvaluatedDetailsQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
         ) {
         return new PersonEvaluatedDetailsCommandService(
             catalogQueryRepository,
-            resultFormatterOutputPort);
+            batteryManagementRecordQueryRepository,
+            personEvaluatedDetailsCommandRepository,
+            personEvaluatedDetailsQueryRepository,
+            resultFormatterOutputPort
+        );
     }
 }

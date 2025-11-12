@@ -43,6 +43,14 @@ public class PersonEvaluatedDetailsEntity {
     private BatteryManagementRecordEntity batteryManagementRecord;
 
     /**
+     * Género de la persona evaluada (ManyToOne).
+     * Ej.: masculino, femenino, otro.
+     */
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_sexo", nullable = true)
+    private GenderEntity gender;
+
+    /**
      * Estado civil de la persona evaluada (ManyToOne).
      * Ej.: soltero, casado, divorciado, etc.
      */

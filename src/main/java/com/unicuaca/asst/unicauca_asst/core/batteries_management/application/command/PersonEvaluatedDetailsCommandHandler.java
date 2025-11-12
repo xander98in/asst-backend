@@ -4,15 +4,16 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedDetailsResponseDTO;
 
 /**
- * Manejador de comandos para operaciones sobre los detalles de una persona evaluada.
+ * Manejador de comandos para operaciones de creación/modificación
+ * sobre los detalles adicionales de una persona evaluada (PersonEvaluatedDetails).
  */
 public interface PersonEvaluatedDetailsCommandHandler {
 
     /**
-     * Crea los detalles de una persona evaluada.
+     * Registra los detalles de una persona evaluada en el sistema.
      *
-     * @param dto datos de entrada validados
-     * @return DTO de respuesta con la información creada
+     * @param dto datos de entrada validados para la creación
+     * @return DTO de respuesta con la información creada y enriquecida desde el dominio
      */
     PersonEvaluatedDetailsResponseDTO createPersonEvaluatedDetails(PersonEvaluatedDetailsCreateRequestDTO dto);
 }

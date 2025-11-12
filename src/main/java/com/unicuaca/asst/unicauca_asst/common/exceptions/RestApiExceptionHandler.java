@@ -76,6 +76,31 @@ public class RestApiExceptionHandler {
     }
 
     /**
+     * Maneja la excepción {@link BusinessRuleViolationException} cuando se viola
+     * una regla de negocio definida en el dominio.
+     *
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción lanzada al violar una regla de negocio
+     * @return {@link ResponseEntity} con estado 400 y cuerpo estandarizado de error
+     */
+    @ExceptionHandler(BusinessRuleViolationException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleBusinessRuleViolationException(HttpServletRequest req, BusinessRuleViolationException ex) {
+        var details = ErrorUtils.of(
+            ex.getCode(),
+            ex.getMessage(),
+            req.getMethod()
+        );
+
+        return ResponseUtil.error(
+            req,
+            ErrorCode.BUSINESS_RULE_VIOLATION.getCode(),
+            HttpStatus.BAD_REQUEST,
+            ErrorCode.BUSINESS_RULE_VIOLATION.getMessageKey(),
+            details
+        );
+    }
+
+    /**
      * Maneja la excepción {@link EntityAlreadyExistsException} cuando se intenta crear
      * una entidad que ya existe (violación de unicidad o duplicado lógico).
      *

@@ -1,194 +1,272 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.PersonEvaluatedDetailsCommandCUInputPort;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedDetailsCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedDetailsQueryRepository;
+
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Implementación del caso de uso para operaciones que gestiona la creación de detalles
+ * adicionales de una persona evaluada.
+ * 
+ * Esta clase pertenece a la capa de dominio y orquesta la lógica de negocio para la creación de detalles
+ * de persona evaluada.
+ */
 @RequiredArgsConstructor
 public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDetailsCommandCUInputPort {
 
     private final CatalogQueryRepository catalogQueryRepository;
+    private final BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository;
+    private final PersonEvaluatedDetailsCommandRepository personEvaluatedDetailsCommandRepository;
+    private final PersonEvaluatedDetailsQueryRepository personEvaluatedDetailsQueryRepository;
     private final ResultFormatterOutputPort resultFormatter;
 
+    /**
+     * Crea los detalles de una persona evaluada.
+     * 
+     * @param personEvaluatedDetails el objeto {@link PersonEvaluatedDetails} que contiene los datos a crear
+     * @return la entidad {@link PersonEvaluatedDetails} creada, incluyendo su ID generado u otros datos resultantes del proceso
+     */
     @Override
     public PersonEvaluatedDetails createPersonEvaluatedDetails(PersonEvaluatedDetails personEvaluatedDetails) {
 
-        System.out.println("Sexo: " + personEvaluatedDetails.getGender());
-        Long genderId = personEvaluatedDetails.getGender().getId();
-        System.out.println("Id: " + genderId);
+        System.out.println("\n\n\nDtos recibidos en el servicio: " + personEvaluatedDetails + "\n\n");
 
-        Gender gender = this.catalogQueryRepository.getGenderById(genderId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El género con ID " + genderId + " no fue encontrado.")
-                );
-                return null; // nunca se ejecuta, pero requerido por el compilador
-            });
-        System.out.println("gender: " + gender);
-        personEvaluatedDetails.setGender(gender);
+        personEvaluatedDetails.setBatteryManagementRecord(resolveBatteryRecord(personEvaluatedDetails.getBatteryManagementRecord()));
 
-        System.out.println("createPersonEvaluatedDetails");
-        System.out.println("datos de estado civil: " + personEvaluatedDetails.getCivilStatus());
-        Long civilStatusId = personEvaluatedDetails.getCivilStatus().getId();
+        Long bmrId = personEvaluatedDetails.getBatteryManagementRecord().getId();
+        if (personEvaluatedDetailsQueryRepository.existsByBatteryManagementRecordId(bmrId)) {
+            resultFormatter.throwBusinessRuleViolation(
+                ErrorCode.PERSON_EVALUATED_DETAILS_DUPLICATE.getCode(),
+                String.format(ErrorCode.PERSON_EVALUATED_DETAILS_DUPLICATE.getMessageKey(), bmrId)
+            );
+        }
 
-        CivilStatus civilStatus = this.catalogQueryRepository.getCivilStatusById(civilStatusId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado civil con ID " + civilStatusId + " no fue encontrado.")
-                );
-                return null; // nunca se ejecuta, pero requerido por el compilador
-            });
-
-        System.out.println("civilStatus: " + civilStatus);
-        personEvaluatedDetails.setCivilStatus(civilStatus);
-
-        Long educationLevelId = personEvaluatedDetails.getEducationLevel().getId();
-        EducationLevel educationLevel = this.catalogQueryRepository.getEducationLevelById(educationLevelId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El nivel de educación con ID " + educationLevelId + " no fue encontrado.")
-                );
-                return null; // nunca se ejecuta, pero requerido por el compilador
-            });
-
-        personEvaluatedDetails.setEducationLevel(educationLevel);
-        System.out.println("educationLevel: " + educationLevel);
-
-        System.out.println("profession: " + personEvaluatedDetails.getProfession());
+        personEvaluatedDetails.setGender(resolveGender(personEvaluatedDetails.getGender()));
+        personEvaluatedDetails.setCivilStatus(resolveCivilStatus(personEvaluatedDetails.getCivilStatus()));
+        personEvaluatedDetails.setEducationLevel(resolveEducationLevel(personEvaluatedDetails.getEducationLevel()));
         personEvaluatedDetails.setProfession(normalizeText(personEvaluatedDetails.getProfession()));
-        System.out.println("profession normalizada: " + personEvaluatedDetails.getProfession());
-
-        System.out.println("datos de ciudad de residencia: " + personEvaluatedDetails.getResidenceCity());
-        Long residenceCityId = personEvaluatedDetails.getResidenceCity().getId();
-        System.out.println("residenceCityId: " + residenceCityId);
-        City residenceCity = this.catalogQueryRepository.getCityById(residenceCityId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La ciudad de residencia con ID " + residenceCityId + " no fue encontrada.")
-                );
-                return null; // nunca se ejecuta, pero requerido por el compilador
-            });
-        System.out.println("residenceCity: " + residenceCity);
-        personEvaluatedDetails.setResidenceCity(residenceCity);
-
-        Long socioeconomicLevelId = personEvaluatedDetails.getSocioeconomicLevel().getId();
-        System.out.println("socioeconomicLevel: " + personEvaluatedDetails.getSocioeconomicLevel());
-        SocioeconomicLevel socioeconomicLevel = this.catalogQueryRepository.getSocioeconomicLevelById(socioeconomicLevelId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El nivel socioeconómico con ID " + socioeconomicLevelId + " no fue encontrado.")
-                );
-                return null; // nunca se ejecuta, pero requerido por el compilador
-            });
-
-        personEvaluatedDetails.setSocioeconomicLevel(socioeconomicLevel);
-        System.out.println("socioeconomicLevel: " + socioeconomicLevel);
-
-        System.out.println("datos de la vivienda: " + personEvaluatedDetails.getHousingType());
-        Long housingTypeId = personEvaluatedDetails.getHousingType().getId();
-        System.out.println("housingTypeId: " + housingTypeId);
-
-        HousingType housingType = this.catalogQueryRepository.getHousingTypeById(housingTypeId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de vivienda con ID " + housingTypeId + " no fue encontrado.")
-                );
-                return null; // nunca se ejecuta, pero requerido por el compilador
-            });
-
-        personEvaluatedDetails.setHousingType(housingType);
-        System.out.println("housingType: " + housingType);
-
-        System.out.println("Numero de dependientes: " + personEvaluatedDetails.getDependentsCount());
-
-        System.out.println("Ciudad de trabajo: " + personEvaluatedDetails.getWorkCity());
-        Long workCityId = personEvaluatedDetails.getWorkCity().getId();
-        System.out.println("workCityId: " + workCityId);
-        City workCity = this.catalogQueryRepository.getCityById(workCityId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La ciudad de trabajo con ID " + workCityId + " no fue encontrada.")
-                );
-                return null; // nunca se ejecuta, pero requerido por el compilador
-            });
-        personEvaluatedDetails.setWorkCity(workCity);
-        System.out.println("workCity: " + workCity);
-
-        System.out.println("Years At Company: " + personEvaluatedDetails.getYearsAtCompany());
+        personEvaluatedDetails.setResidenceCity(resolveCity(personEvaluatedDetails.getResidenceCity(), "residencia"));
+        personEvaluatedDetails.setSocioeconomicLevel(resolveSocioeconomicLevel(personEvaluatedDetails.getSocioeconomicLevel()));
+        personEvaluatedDetails.setHousingType(resolveHousingType(personEvaluatedDetails.getHousingType()));
+        personEvaluatedDetails.setWorkCity(resolveCity(personEvaluatedDetails.getWorkCity(), "trabajo"));
         personEvaluatedDetails.setYearsAtCompany(normalizeText(personEvaluatedDetails.getYearsAtCompany()));
-        System.out.println("Years At Company normalizada: " + personEvaluatedDetails.getYearsAtCompany());
-
-        System.out.println("Job Title: " + personEvaluatedDetails.getJobTitle());
         personEvaluatedDetails.setJobTitle(normalizeText(personEvaluatedDetails.getJobTitle()));
-        System.out.println("Job Title normalizada: " + personEvaluatedDetails.getJobTitle());
-
-        System.out.println("datos de tipo de cargo: " + personEvaluatedDetails.getJobPositionType());
-        Long jobPositionTypeId = personEvaluatedDetails.getJobPositionType().getId();
-        System.out.println("jobPositionTypeId: " + jobPositionTypeId);
-        JobPositionType jobPositionType = this.catalogQueryRepository.getJobPositionTypeById(jobPositionTypeId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de cargo con ID " + jobPositionTypeId + " no fue encontrado.")
-                );
-                return null; // nunca se ejecuta, pero requerido por el compilador
-            });
-        personEvaluatedDetails.setJobPositionType(jobPositionType);
-        System.out.println("jobPositionType: " + jobPositionType);
-
-        System.out.println("Years In Position: " + personEvaluatedDetails.getYearsInPosition());
+        personEvaluatedDetails.setJobPositionType(resolveJobPositionType(personEvaluatedDetails.getJobPositionType()));
         personEvaluatedDetails.setYearsInPosition(normalizeText(personEvaluatedDetails.getYearsInPosition()));
-        System.out.println("Years In Position normalizada: " + personEvaluatedDetails.getYearsInPosition());
-
-        System.out.println("Work Area Name: " + personEvaluatedDetails.getWorkAreaName());
         personEvaluatedDetails.setWorkAreaName(normalizeText(personEvaluatedDetails.getWorkAreaName()));
-        System.out.println("Work Area Name normalizada: " + personEvaluatedDetails.getWorkAreaName());
+        personEvaluatedDetails.setContractType(resolveContractType(personEvaluatedDetails.getContractType()));
+        personEvaluatedDetails.setSalaryType(resolveSalaryType(personEvaluatedDetails.getSalaryType()));
 
-        System.out.println("datos de tipo de contrato: " + personEvaluatedDetails.getContractType());
-        Long contractTypeId = personEvaluatedDetails.getContractType().getId();
-        System.out.println("contractTypeId: " + contractTypeId);
-        ContractType contractType = this.catalogQueryRepository.getContractTypeById(contractTypeId)
+        System.out.println("\n\n\nDtos validados y completos en el servicio: " + personEvaluatedDetails + "\n\n");
+
+        return personEvaluatedDetailsCommandRepository
+            .savePersonEvaluatedDetails(personEvaluatedDetails)
             .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de contrato con ID " + contractTypeId + " no fue encontrado.")
+                resultFormatter.throwEntityCreationFailed(
+                    ErrorCode.ENTITY_CREATION_ERROR.getCode(),
+                    String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "Los detalles de la persona evaluada no se crearon correctamente.")
                 );
-                return null; // nunca se ejecuta, pero requerido por el compilador
+                return null; // requerido por el compilador
             });
-        personEvaluatedDetails.setContractType(contractType);
-        System.out.println("contractType: " + contractType);
-
-        System.out.println("Daily Work Hours: " + personEvaluatedDetails.getDailyWorkHours());
-
-        System.out.println("datos de tipo de salario: " + personEvaluatedDetails.getSalaryType());
-        Long salaryTypeId = personEvaluatedDetails.getSalaryType().getId();
-        System.out.println("salaryTypeId: " + salaryTypeId);
-        SalaryType salaryType = this.catalogQueryRepository.getSalaryTypeById(salaryTypeId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de salario con ID " + salaryTypeId + " no fue encontrado.")
-                );
-                return null; // nunca se ejecuta, pero requerido por el compilador
-            });
-        personEvaluatedDetails.setSalaryType(salaryType);
-        System.out.println("salaryType: " + salaryType);
-
-
-
-        return null;
     }
+
+    /* ========================== Helpers de resolución ========================== */
+
+    /**
+     * Resuelve y valida un registro de gestión de batería.
+     *
+     * @param input el registro de gestión de batería a resolver
+     * @return el registro resuelto
+     */
+    private BatteryManagementRecord resolveBatteryRecord(BatteryManagementRecord input) {
+        Long id = safeId(input, input::getId, "registro de gestión de batería");
+        return fetchOrThrow(
+            () -> batteryManagementRecordQueryRepository.getBatteryManagementRecordById(id),
+            String.format("El registro de gestión de batería con ID %d no fue encontrado.", id)
+        );
+    }
+
+    /**
+     * Resuelve y valida un género.
+     *
+     * @param input el género a resolver
+     * @return el género resuelto
+     */
+    private Gender resolveGender(Gender input) {
+        Long id = safeId(input, input::getId, "género");
+        return fetchOrThrow(
+            () -> catalogQueryRepository.getGenderById(id),
+            String.format("El género con ID %d no fue encontrado.", id)
+        );
+    }
+
+    /**
+     * Resuelve y valida un estado civil.
+     *
+     * @param input el estado civil a resolver
+     * @return el estado civil resuelto
+     */
+    private CivilStatus resolveCivilStatus(CivilStatus input) {
+        Long id = safeId(input, input::getId, "estado civil");
+        return fetchOrThrow(
+            () -> catalogQueryRepository.getCivilStatusById(id),
+            String.format("El estado civil con ID %d no fue encontrado.", id)
+        );
+    }
+
+    /**
+     * Resuelve y valida un nivel de educación.
+     *
+     * @param input el nivel de educación a resolver
+     * @return el nivel de educación resuelto
+     */
+    private EducationLevel resolveEducationLevel(EducationLevel input) {
+        Long id = safeId(input, input::getId, "nivel de educación");
+        return fetchOrThrow(
+            () -> catalogQueryRepository.getEducationLevelById(id),
+            String.format("El nivel de educación con ID %d no fue encontrado.", id)
+        );
+    }
+
+    /**
+     * Resuelve y valida una ciudad.
+     *
+     * @param input el objeto ciudad a resolver
+     * @param contexto contexto descriptivo para mensajes de error
+     * @return la ciudad resuelta
+     */
+    private City resolveCity(City input, String contexto) {
+        Long id = safeId(input, input::getId, "ciudad de " + contexto);
+        return fetchOrThrow(
+            () -> catalogQueryRepository.getCityById(id),
+            String.format("La ciudad de %s con ID %d no fue encontrada.", contexto, id)
+        );
+    }
+
+    /**
+     * Resuelve y valida un nivel socioeconómico.
+     *
+     * @param input el nivel socioeconómico a resolver
+     * @return el nivel socioeconómico resuelto
+     */
+    private SocioeconomicLevel resolveSocioeconomicLevel(SocioeconomicLevel input) {
+        Long id = safeId(input, input::getId, "nivel socioeconómico");
+        return fetchOrThrow(
+            () -> catalogQueryRepository.getSocioeconomicLevelById(id),
+            String.format("El nivel socioeconómico con ID %d no fue encontrado.", id)
+        );
+    }
+
+    /**
+     * Resuelve y valida un tipo de vivienda.
+     *
+     * @param input el tipo de vivienda a resolver
+     * @return el tipo de vivienda resuelto
+     */
+    private HousingType resolveHousingType(HousingType input) {
+        Long id = safeId(input, input::getId, "tipo de vivienda");
+        return fetchOrThrow(
+            () -> catalogQueryRepository.getHousingTypeById(id),
+            String.format("El tipo de vivienda con ID %d no fue encontrado.", id)
+        );
+    }
+
+    /**
+     * Resuelve y valida un tipo de cargo.
+     *
+     * @param input el tipo de cargo a resolver
+     * @return el tipo de cargo resuelto
+     */
+    private JobPositionType resolveJobPositionType(JobPositionType input) {
+        Long id = safeId(input, input::getId, "tipo de cargo");
+        return fetchOrThrow(
+            () -> catalogQueryRepository.getJobPositionTypeById(id),
+            String.format("El tipo de cargo con ID %d no fue encontrado.", id)
+        );
+    }
+
+    /**
+     * Resuelve y valida un tipo de contrato.
+     *
+     * @param input el tipo de contrato a resolver
+     * @return el tipo de contrato resuelto
+     */
+    private ContractType resolveContractType(ContractType input) {
+        Long id = safeId(input, input::getId, "tipo de contrato");
+        return fetchOrThrow(
+            () -> catalogQueryRepository.getContractTypeById(id),
+            String.format("El tipo de contrato con ID %d no fue encontrado.", id)
+        );
+    }
+
+    /**
+     * Resuelve y valida un tipo de salario.
+     *
+     * @param input el tipo de salario a resolver
+     * @return el tipo de salario resuelto
+     */
+    private SalaryType resolveSalaryType(SalaryType input) {
+        Long id = safeId(input, input::getId, "tipo de salario");
+        return fetchOrThrow(
+            () -> catalogQueryRepository.getSalaryTypeById(id),
+            String.format("El tipo de salario con ID %d no fue encontrado.", id)
+        );
+    }
+
+    /**
+     * Helper genérico para obtener un recurso o lanzar excepción estandarizada.
+     *
+     * @param fetcher      supplier que obtiene el Optional del recurso
+     * @param notFoundMsg  mensaje específico cuando no existe
+     * @return recurso resuelto
+     */
+    private <T> T fetchOrThrow(Supplier<Optional<T>> fetcher, String notFoundMsg) {
+        return fetcher.get().orElseGet(() -> {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), notFoundMsg)
+            );
+            return null; // requerido por el compilador
+        });
+    }
+
+    /**
+     * Extrae de manera segura el ID de un objeto y valida nulls de forma genérica.
+     *
+     * <p>Este helper evita NullPointerException verificando que tanto el objeto como su ID sean válidos.</p>
+     *
+     * @param ref         referencia al objeto (puede ser null)
+     * @param idSupplier  función que obtiene el ID del objeto
+     * @param nombre      nombre legible del recurso (para el mensaje de error)
+     * @return el ID no nulo del recurso
+     */
+    private Long safeId(Object ref, Supplier<Long> idSupplier, String nombre) {
+        Long id = (ref != null) ? idSupplier.get() : null;
+
+        if (id == null) {
+            resultFormatter.throwBusinessRuleViolation(
+                ErrorCode.BAD_REQUEST.getCode(),
+                String.format("El %s es obligatorio y debe contener un ID.", nombre)
+            );
+            return null; // requerido por el compilador
+        }
+
+        return id;
+    }
+
+    /* ========================== Helpers de resolución ========================== */
 
     /**
      * Normaliza un texto: elimina espacios y convierte la primera letra en mayúscula.

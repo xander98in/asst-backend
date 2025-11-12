@@ -1,9 +1,5 @@
 package com.unicuaca.asst.unicauca_asst.common.application.output;
 
-import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsException;
-import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityCreationException;
-import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
-
 /**
  * Puerto de salida para formatear o propagar errores de negocio desde los casos de uso.
  *
@@ -44,6 +40,14 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje explicativo del error
      */
     void throwBusinessRuleViolation(String message);
+
+    /**
+     * Lanza una excepción cuando se viola una regla de negocio.
+     *
+     * @param errorCode código de error específico para trazabilidad
+     * @param message mensaje descriptivo del error
+     */
+    void throwBusinessRuleViolation(String errorCode, String message);
 
     /**
      * Lanza una excepción cuando falla la creación de una entidad.

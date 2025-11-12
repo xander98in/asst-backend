@@ -22,7 +22,6 @@ public interface PersonEvaluatedDetailsMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "batteryManagementRecordId", target = "batteryManagementRecord")
-    @Mapping(target = "personEvaluated", ignore = true)
     @Mapping(source = "genderId", target = "gender")
     @Mapping(source = "civilStatusId", target = "civilStatus")
     @Mapping(source = "educationLevelId", target = "educationLevel")
