@@ -62,4 +62,13 @@ public class OpenApiConfig {
             .build();
     }
 
+    @Bean
+    GroupedOpenApi QuestionnaireManagementRecordStatusGroup() {
+        return GroupedOpenApi.builder()
+            .group("estados-registro-gestion-cuestionarios")
+            .packagesToScan("com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers")
+            .pathsToMatch("/asst/questionnaire-management-record-statuses/**")
+            .build();
+    }
+
 }

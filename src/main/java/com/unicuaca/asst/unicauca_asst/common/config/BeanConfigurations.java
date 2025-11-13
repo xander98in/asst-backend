@@ -63,4 +63,14 @@ public class BeanConfigurations {
             resultFormatterOutputPort
         );
     }
+
+    @Bean
+    QuestionnaireManagementRecordStatusQueryService questionnaireManagementRecordStatusQueryService(
+        QuestionnaireManagementRecordStatusQueryRepository questionnaireManagementRecordStatusQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort) {
+        return new QuestionnaireManagementRecordStatusQueryService(
+            questionnaireManagementRecordStatusQueryRepository,
+            resultFormatterOutputPort
+        );
+    }
 }
