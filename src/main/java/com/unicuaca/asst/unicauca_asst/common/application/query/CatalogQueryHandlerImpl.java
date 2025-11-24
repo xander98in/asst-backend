@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import com.unicuaca.asst.unicauca_asst.common.application.mappers.CatalogMapper;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.input.CatalogQueryCUInputPort;
-import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 

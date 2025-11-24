@@ -8,7 +8,6 @@ import com.unicuaca.asst.unicauca_asst.common.exceptions.CatalogEmptyException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityCreationException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityNotFoundPersException;
-import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 
 
 /**

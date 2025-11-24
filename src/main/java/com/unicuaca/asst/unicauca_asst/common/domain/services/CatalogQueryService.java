@@ -6,7 +6,6 @@ import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatter
 import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.input.CatalogQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
-import com.unicuaca.asst.unicauca_asst.common.exceptions.CatalogEmptyException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 
 import lombok.RequiredArgsConstructor;

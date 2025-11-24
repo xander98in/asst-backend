@@ -2,7 +2,6 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.ma
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedCreateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedUpdateRequestDTO;
@@ -25,11 +24,10 @@ public interface PersonEvaluatedMapper {
      *
      * Mapea los campos anidados 'identificationType' y 'gender' como sus descripciones.
      */
-    @Mappings({
-        @Mapping(target = "identificationType", source = "identificationType.name"),
-        @Mapping(target = "email", source = "email"),
-        @Mapping(target = "identificacionAbbreviation", source = "identificationType.abbreviation")
-    })
+   
+    @Mapping(target = "identificationType", source = "identificationType.name")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "identificacionAbbreviation", source = "identificationType.abbreviation")
     PersonEvaluatedResponseDTO toResponseDTO(PersonEvaluated person);
 
     /**
@@ -46,38 +44,33 @@ public interface PersonEvaluatedMapper {
     /**
      * Convierte un DTO de actualización en un modelo de dominio con ID.
      *
-     * @param id identificador de la persona a actualizar
-     * @param dto objeto con los datos nuevos
-     * @return modelo de dominio completo
-     */
-    /**
-     * Convierte un DTO de actualización en un modelo de dominio con ID.
-     *
      * @param id  identificador de la persona a actualizar
      * @param dto objeto con los datos nuevos
      * @return modelo de dominio completo
      */
-    @Mappings({
-        @Mapping(target = "id", source = "id"),
-        @Mapping(target = "identificationType", expression = "java(new IdentificationType(null, null, dto.getIdentificationType()))"),
-        @Mapping(target = "identificationNumber", source = "dto.identificationNumber"),
-        @Mapping(target = "firstName", source = "dto.firstName"),
-        @Mapping(target = "lastName", source = "dto.lastName"),
-        @Mapping(target = "birthYear", source = "dto.birthYear"),
-        @Mapping(target = "email", source = "dto.email"),
-        @Mapping(target = "status", ignore = true)
-    })
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "identificationType", expression = "java(new IdentificationType(null, null, dto.getIdentificationType()))")
+    @Mapping(target = "identificationNumber", source = "dto.identificationNumber")
+    @Mapping(target = "firstName", source = "dto.firstName")
+    @Mapping(target = "lastName", source = "dto.lastName")
+    @Mapping(target = "birthYear", source = "dto.birthYear")
+    @Mapping(target = "email", source = "dto.email")
+    @Mapping(target = "status", ignore = true)
     PersonEvaluated toDomain(Long id, PersonEvaluatedUpdateRequestDTO dto);
 
-    @Mappings({
-        @Mapping(target = "id", source = "id"),
-        @Mapping(target = "identificationType", source = "identificationType.name"),
-        @Mapping(target = "identificacionAbbreviation", source = "identificationType.abbreviation"),
-        @Mapping(target = "identificationNumber", source = "identificationNumber"),
-        @Mapping(target = "firstName", source = "firstName"),
-        @Mapping(target = "lastName", source = "lastName"),
-        @Mapping(target = "birthYear", source = "birthYear"),
-        @Mapping(target = "status", source = "status.name")
-    })
+    /**
+     * Convierte un modelo de dominio {@link PersonEvaluated} en un DTO de respuesta para listas {@link PersonEvaluatedInformationListResponseDTO}.
+     * 
+     * @param personEvaluated el modelo de dominio a convertir
+     * @return el DTO de respuesta correspondiente
+     */
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "identificationType", source = "identificationType.name")
+    @Mapping(target = "identificacionAbbreviation", source = "identificationType.abbreviation")
+    @Mapping(target = "identificationNumber", source = "identificationNumber")
+    @Mapping(target = "firstName", source = "firstName")
+    @Mapping(target = "lastName", source = "lastName")
+    @Mapping(target = "birthYear", source = "birthYear")
+    @Mapping(target = "status", source = "status.name")
     PersonEvaluatedInformationListResponseDTO toInformationListResponseDTO(PersonEvaluated personEvaluated);
 }

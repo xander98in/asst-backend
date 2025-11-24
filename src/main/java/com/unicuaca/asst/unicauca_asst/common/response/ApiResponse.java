@@ -1,7 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.common.response;
 
 import lombok.*;
-import org.springframework.http.HttpStatus;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

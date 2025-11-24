@@ -73,4 +73,14 @@ public class BeanConfigurations {
             resultFormatterOutputPort
         );
     }
+
+    @Bean
+    QuestionQueryService questionQueryService(
+        QuestionQueryRepository questionQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort) {
+        return new QuestionQueryService(
+            questionQueryRepository,
+            resultFormatterOutputPort
+        );
+    }
 }

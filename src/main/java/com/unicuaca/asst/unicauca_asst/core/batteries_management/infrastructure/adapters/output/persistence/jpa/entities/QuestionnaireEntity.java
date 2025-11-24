@@ -1,5 +1,8 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,6 +53,15 @@ public class QuestionnaireEntity {
      */
     @Column(name = "descripcion", length = 1000)
     private String description;
+
+    /**
+     * Lista de preguntas asociadas a este cuestionario.
+     *
+     * Relación uno-a-muchos:
+     * un cuestionario puede tener muchas preguntas asociadas.
+     */
+    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionEntity> questions = new ArrayList<>();
 
     /**
      * Constructor útil para creación de nuevos registros.

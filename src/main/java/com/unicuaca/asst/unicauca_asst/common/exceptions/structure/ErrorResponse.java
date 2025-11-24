@@ -33,7 +33,7 @@ public class ErrorResponse<T> {
     /**
      * Mensaje descriptivo del error ocurrido.
      */
-    @Schema(example = "La persona evaluada con ID 123 no fue encontrada.", description = "Mensaje descriptivo del error")
+    @Schema(example = "Recurso no encontrado", description = "Mensaje descriptivo del error ocurrido")
     private String message;
 
     /**
