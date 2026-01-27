@@ -32,4 +32,14 @@ public class BatteryManagementRecordCommandRepositoryImpl implements BatteryMana
     public Optional<BatteryManagementRecord> updateBatteryManagementRecord(BatteryManagementRecord record) {
         return Optional.empty();
     }
+
+    /**
+     * Elimina un registro de gestión de baterías por su ID.
+     *
+     * @param id ID del registro
+     */
+    @Override
+    public void deleteBatteryManagementRecordById(Long id) {
+        batteryManagementRecordSpringJpaRepository.deleteById(id);
+    }
 }

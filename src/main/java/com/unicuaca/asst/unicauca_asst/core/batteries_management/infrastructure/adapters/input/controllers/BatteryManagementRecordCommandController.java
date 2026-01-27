@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers;
 
 import com.unicuaca.asst.unicauca_asst.common.docs.ErrorResponseApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.docs.VoidApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
 import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
@@ -85,6 +86,45 @@ public class BatteryManagementRecordCommandController {
             "Registro de gestión de baterías creado exitosamente",
             dto
         );
+    }
+
+    @Operation(
+        summary = "Eliminar registro de gestión de baterías",
+        description = "Elimina un registro de gestión de baterías a partir de su ID."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Registro eliminado exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = VoidApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Registro no encontrado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Parámetros inválidos",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        )
+    })
+    @DeleteMapping(value = "/{recordId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse<Void>> deleteBatteryManagementRecord(
+        @PathVariable @Positive @Min(1) Long recordId,
+        HttpServletRequest request
+    ) {
+        batteryManagementRecordCommandHandler.deleteBatteryManagementRecord(recordId);
+        return ResponseUtil.ok(request, SuccessCode.DELETED, "Registro de gestión de baterías eliminado exitosamente", null);
     }
 
 }

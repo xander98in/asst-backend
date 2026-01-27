@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.mappers;
 
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedDetailsMetaResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -19,6 +20,18 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.P
 
 @Mapper(componentModel = "spring")
 public interface PersonEvaluatedDetailsMapper {
+
+    /**
+     * Convierte un objeto PersonEvaluatedDetails a su representación DTO de metadatos.
+     *
+     * @param details el objeto PersonEvaluatedDetails a convertir
+     * @return el DTO de metadatos correspondiente
+     */
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "batteryManagementRecordId", source = "batteryManagementRecord.id")
+    @Mapping(target = "createdAt", source = "createdAt")
+    @Mapping(target = "updatedAt", source = "updatedAt")
+    PersonEvaluatedDetailsMetaResponseDTO toMetaResponseDTO(PersonEvaluatedDetails details);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "batteryManagementRecordId", target = "batteryManagementRecord")

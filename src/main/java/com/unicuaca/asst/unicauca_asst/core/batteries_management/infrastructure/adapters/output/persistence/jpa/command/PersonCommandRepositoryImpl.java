@@ -2,6 +2,8 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 
 import java.util.Optional;
 
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.StatusPersonEvaluatedEntity;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.StatusPersonEvaluatedSpringJpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ public class PersonCommandRepositoryImpl implements PersonEvaluatedCommandReposi
 
     private final PersonEvaluatedSpringJpaRepository personEvaluatedJpaRepository;
     private final PersonEvaluatedPersistenceMapper personEvaluatedDBMapper;
+    private final StatusPersonEvaluatedSpringJpaRepository statusPersonEvaluatedRepository;
     private final IdentificationTypeSpringJpaRepository identificationTypeRepository;
     
     /**
@@ -68,7 +71,22 @@ public class PersonCommandRepositoryImpl implements PersonEvaluatedCommandReposi
         entity.setBirthYear(personEvaluated.getBirthYear());
         entity.setEmail(personEvaluated.getEmail());
 
+        if(personEvaluated.getStatus() != null) {
+            Optional<StatusPersonEvaluatedEntity> statusOpt = statusPersonEvaluatedRepository.findById(personEvaluated.getStatus().getId());
+            statusOpt.ifPresent(entity::setStatus);
+        }
+
         PersonEvaluatedEntity saved = personEvaluatedJpaRepository.save(entity);
         return Optional.of(personEvaluatedDBMapper.toDomain(saved));
+    }
+
+    /**
+     * Elimina una persona evaluada por su ID.
+     *
+     * @param id identificador de la persona a eliminar
+     */
+    @Override
+    public void deletePersonEvaluatedById(Long id) {
+        this.personEvaluatedJpaRepository.deleteById(id);
     }
 }

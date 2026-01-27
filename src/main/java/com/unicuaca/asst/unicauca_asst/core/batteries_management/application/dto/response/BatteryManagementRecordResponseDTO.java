@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * DTO que representa la respuesta de un registro de gestión de baterías.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,7 +46,4 @@ public class BatteryManagementRecordResponseDTO {
 
     @Schema(example = "Pérez", description = "Apellido de la persona evaluada")
     private String lastName;
-
-    @Schema(example = "Masculino", description = "Género de la persona evaluada")
-    private String gender;
 }

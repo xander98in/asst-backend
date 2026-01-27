@@ -23,11 +23,25 @@ public class BeanConfigurations {
         return new PersonEvaluatedQueryService(personQueryRepository, catalogQueryRepository, resultFormatterOutputPort);
     }
 
+    /**
+     * Crea una instancia de PersonEvaluatedCommandService.
+     *
+     * @param personEvaluatedCommandRepository
+     * @param personEvaluatedQueryRepository
+     * @param batteryManagementRecordQueryRepository
+     * @param catalogQueryRepository
+     * @param resultFormatterOutputPort
+     * @return
+     */
     @Bean
-    PersonEvaluatedCommandService personEvaluatedCommandService(PersonEvaluatedCommandRepository personEvaluatedCommandRepository,
-                                                                PersonEvaluatedQueryRepository personEvaluatedQueryRepository, CatalogQueryRepository catalogQueryRepository,
-                                                                ResultFormatterOutputPort resultFormatterOutputPort) {
-        return new PersonEvaluatedCommandService(personEvaluatedCommandRepository, personEvaluatedQueryRepository, catalogQueryRepository, resultFormatterOutputPort);
+    PersonEvaluatedCommandService personEvaluatedCommandService(
+        PersonEvaluatedCommandRepository personEvaluatedCommandRepository,
+        PersonEvaluatedQueryRepository personEvaluatedQueryRepository,
+        BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository,
+        CatalogQueryRepository catalogQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new PersonEvaluatedCommandService(personEvaluatedCommandRepository, personEvaluatedQueryRepository, batteryManagementRecordQueryRepository, catalogQueryRepository, resultFormatterOutputPort);
     }
 
     @Bean
@@ -35,9 +49,10 @@ public class BeanConfigurations {
         BatteryManagementRecordCommandRepository batteryManagementRecordCommandRepository,
         BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository,
         PersonEvaluatedQueryRepository personEvaluatedQueryRepository,
+        PersonEvaluatedCommandRepository personEvaluatedCommandRepository,
         ResultFormatterOutputPort resultFormatterOutputPort) {
         return new BatteryManagementRecordCommandService(batteryManagementRecordCommandRepository,
-            batteryManagementRecordQueryRepository, personEvaluatedQueryRepository, resultFormatterOutputPort);
+            batteryManagementRecordQueryRepository, personEvaluatedQueryRepository, personEvaluatedCommandRepository, resultFormatterOutputPort);
     }
 
     @Bean
@@ -80,6 +95,28 @@ public class BeanConfigurations {
         ResultFormatterOutputPort resultFormatterOutputPort) {
         return new QuestionQueryService(
             questionQueryRepository,
+            resultFormatterOutputPort
+        );
+    }
+
+    @Bean
+    public BatteryManagementRecordQueryService batteryManagementRecordQueryCUInputPort(
+        BatteryManagementRecordQueryRepository recordQueryRepository,
+        PersonEvaluatedDetailsQueryRepository detailsQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new BatteryManagementRecordQueryService(recordQueryRepository, detailsQueryRepository, resultFormatterOutputPort);
+    }
+
+    @Bean
+    public PersonEvaluatedDetailsQueryService personEvaluatedDetailsQueryService(
+        PersonEvaluatedDetailsQueryRepository personEvaluatedDetailsQueryRepository,
+        BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new PersonEvaluatedDetailsQueryService(
+            personEvaluatedDetailsQueryRepository,
+            batteryManagementRecordQueryRepository,
             resultFormatterOutputPort
         );
     }

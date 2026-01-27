@@ -41,6 +41,7 @@ public enum ErrorCode {
     ENTITY_NOT_FOUND("ASST-DAT-0007", "Entidad no encontrada. %s"),
     ENTITY_CREATION_ERROR("ASST-DAT-0008", "Error al crear la entidad. %s"),
     ENTITY_UPDATE_ERROR("ASST-DAT-0009", "Error al actualizar la entidad. %s"),
+    PERSON_EVALUATED_DETAIL_NOT_FOUNDS("ASST-DAT-0010", "El detalle de la persona evaluada para el registro de gestión de batería con ID %s no fue encontrado."),
     /**
      * Errores relacionados con catálogos.
      */
@@ -56,7 +57,12 @@ public enum ErrorCode {
     BATTERY_RECORD_DUPLICATE("ASST-BUS-0004", "La persona evaluada con ID %s ya tiene un registro de gestión de baterías."),
     EMAIL_ALREADY_EXISTS("ASST-BUS-0005", "Correo ya registrado. %s"),
     PERSON_EVALUATED_DETAILS_DUPLICATE("ASST-BUS-0006", "El registro de detalles para el registro de gestión de batería con ID %s ya existe."),
+    PERSON_WITH_BATTERY_RECORD("ASST-BUS-0007", "No se puede eliminar la persona evaluada, porque tiene registros de gestión de baterías asociados."),
+    DELETE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0008", "No se puede eliminar el registro de gestión de batería en estado %s."),
 
+    /**
+     * Errores relacionados con mapeo y dependencias.
+     */
     MAPPER_ERROR("ASST-0301", "Error de mapeo o dependencia no disponible");
 
     /**

@@ -20,6 +20,12 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
     private final CatalogQueryRepository catalogQueryRepository;
     private final ResultFormatterOutputPort resultFormatter;
 
+    /**
+     * Consulta una persona por su ID.
+     *
+     * @param id el identificador de la persona
+     * @return una instancia del modelo de dominio {@link PersonEvaluated}
+     */
     @Override
     public PersonEvaluated getPersonEvaluatedById(Long id) {
         return personEvaluatedQueryRepository.getPersonEvaluatedById(id)

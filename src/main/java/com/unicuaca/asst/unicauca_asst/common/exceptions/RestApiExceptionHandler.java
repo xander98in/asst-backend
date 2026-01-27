@@ -8,8 +8,6 @@ import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
 import org.hibernate.exception.JDBCConnectionException;
 import org.hibernate.exception.SQLGrammarException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
@@ -48,8 +46,8 @@ import jakarta.validation.ConstraintViolationException;
 @RestControllerAdvice
 public class RestApiExceptionHandler {
 
-    @Autowired
-    private MessageSource messageSource;
+    /* @Autowired
+    private MessageSource messageSource; */
 
     /**
      * Maneja la excepción {@link EntityNotFoundPersException} cuando una entidad solicitada no existe.
@@ -168,8 +166,8 @@ public class RestApiExceptionHandler {
         });
 
         // Resolver mensajes desde el archivo error-messages.properties
-        String internalMessage = messageSource.getMessage("error.validation.fields", null, req.getLocale());
-        String clientMessage = messageSource.getMessage("error.validation.client", null, req.getLocale());
+        //String internalMessage = messageSource.getMessage("error.validation.fields", null, req.getLocale());
+        //String clientMessage = messageSource.getMessage("error.validation.client", null, req.getLocale());
 
         var details = ErrorUtils.createError(
             ErrorCode.FIELD_VALIDATION,

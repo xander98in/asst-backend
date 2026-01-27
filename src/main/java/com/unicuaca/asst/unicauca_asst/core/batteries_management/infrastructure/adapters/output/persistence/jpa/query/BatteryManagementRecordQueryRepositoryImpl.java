@@ -9,6 +9,9 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.BatteryManagementRecordPersistenceMapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.BatteryManagementRecordStatusPersistenceMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,5 +82,60 @@ public class BatteryManagementRecordQueryRepositoryImpl implements BatteryManage
     @Override
     public boolean existsByPersonEvaluatedId(Long personEvaluatedId) {
         return batteryManagementRecordSpringJpaRepository.existsByPersonEvaluatedId(personEvaluatedId);
+    }
+
+    /**
+     * Lista registros de gestión de baterías de forma paginada,
+     * excluyendo los que tengan el estado indicado (ej: "Cerrado").
+     *
+     * @param excludedStatus nombre del estado a excluir (ej: "Cerrado")
+     * @param page número de página (0-indexed)
+     * @param size tamaño de la página
+     * @param sort criterios de ordenamiento
+     * @return página de registros de gestión de baterías excluyendo el estado especificado
+     */
+    @Override
+    public Page<BatteryManagementRecord> listPagedExcludingStatus(String excludedStatus, Integer page, Integer size, Sort sort) {
+        return batteryManagementRecordSpringJpaRepository
+            .listPagedExcludingStatus(excludedStatus, PageRequest.of(page, size, sort))
+            .map(batteryManagementRecordPersistenceMapper::toDomain);
+    }
+
+    /**
+     * Lista registros de gestión de baterías paginados, excluyendo un estado específico
+     * y filtrando por prefijo de número de identificación,
+     * ordenados por el criterio proporcionado de manera descendente.
+     *
+     * @param excludedStatus nombre del estado a excluir
+     * @param identificationNumberPrefix prefijo del número de identificación para filtrar
+     * @param page número de página (0-indexed)
+     * @param size tamaño de la página
+     * @param sort criterios de ordenamiento
+     * @return página de registros de gestión de baterías que coinciden con el prefijo y excluyen el estado especificado
+     */
+    @Override
+    public Page<BatteryManagementRecord> listPaginatedByIdentificationPrefix(String excludedStatus, String identificationNumberPrefix, Integer page, Integer size, Sort sort) {
+        return batteryManagementRecordSpringJpaRepository
+            .listPagedByIdentificationPrefixExcludingStatus(excludedStatus, identificationNumberPrefix, PageRequest.of(page, size, sort))
+            .map(batteryManagementRecordPersistenceMapper::toDomain);
+    }
+
+    /**
+     * Lista registros de gestión de baterías paginados, excluyendo un estado específico
+     * y filtrando por término de búsqueda en número de identificación o nombre del área de trabajo,
+     * ordenados según el criterio proporcionado.
+     *
+     * @param excludedStatus nombre del estado a excluir
+     * @param searchTerm término de búsqueda para filtrar por número de identificación
+     * @param page número de página (0-indexed)
+     * @param size tamaño de página
+     * @param sort criterio de ordenamiento
+     * @return una página de {@link BatteryManagementRecord}
+     */
+    @Override
+    public Page<BatteryManagementRecord> listPagedExcludingStatusWithSearchTerm(String excludedStatus, String searchTerm, Integer page, Integer size, Sort sort) {
+        return batteryManagementRecordSpringJpaRepository
+            .listPagedExcludingStatusWithSearchTerm(excludedStatus, searchTerm, PageRequest.of(page, size, sort))
+            .map(batteryManagementRecordPersistenceMapper::toDomain);
     }
 }

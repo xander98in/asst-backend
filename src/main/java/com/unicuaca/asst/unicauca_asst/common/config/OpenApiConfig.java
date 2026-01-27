@@ -65,6 +65,20 @@ public class OpenApiConfig {
     }
 
     /**
+     * Grupo de documentación para los detalles de las personas evaluadas.
+     *
+     * Agrupa todos los endpoints bajo el prefijo <code>/asst/person-evaluated-details/**</code>.
+     */
+    @Bean
+    GroupedOpenApi personEvaluatedDetailsGroup() {
+        return GroupedOpenApi.builder()
+            .group("detalles-persona-evaluada")
+            .packagesToScan("com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers")
+            .pathsToMatch("/asst/person-evaluated-details/**")
+            .build();
+    }
+
+    /**
      * Grupo de documentación para los registros de gestión de baterías,
      * que representan los procesos/gestiones asociados a la aplicación de la batería
      * de instrumentos psicosociales.

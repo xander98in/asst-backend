@@ -11,4 +11,11 @@ public interface BatteryManagementRecordCommandHandler {
      * @return El DTO del registro de gestión de baterías creado.
      */
     BatteryManagementRecordResponseDTO createBatteryManagementRecord(Long personEvaluatedId);
+
+    /**
+     * Elimina un registro de gestión de baterías por su ID.
+     *
+     * @param recordId ID del registro de gestión de baterías a eliminar.
+     */
+    void deleteBatteryManagementRecord(Long recordId);
 }

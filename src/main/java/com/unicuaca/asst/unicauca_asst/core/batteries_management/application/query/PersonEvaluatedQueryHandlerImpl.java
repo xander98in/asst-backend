@@ -2,11 +2,11 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.qu
 
 import java.util.List;
 
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedInformationResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedInformationListResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.mappers.PersonEvaluatedMapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
@@ -46,13 +46,13 @@ public class PersonEvaluatedQueryHandlerImpl implements PersonEvaluatedQueryHand
      * @param identificationNumber  el número de identificación
      * @param page                  el número de página (0-indexado)
      * @param size                  la cantidad de registros por página
-     * @return una {@link Page} que contiene una lista paginada de {@link PersonEvaluatedInformationListResponseDTO}
+     * @return una {@link Page} que contiene una lista paginada de {@link PersonEvaluatedInformationResponseDTO}
      *         que coinciden con los criterios de búsqueda, o un mensaje de error si no se encuentran resultados.
      */
     @Override
-    public Page<PersonEvaluatedInformationListResponseDTO> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size) {
+    public Page<PersonEvaluatedInformationResponseDTO> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size) {
         Page<PersonEvaluated> personEvaluatedPage = personEvaluatedQueryCUInputPort.queryByIdentity(abbreviation, identificationNumber, page, size);
-        List<PersonEvaluatedInformationListResponseDTO> dtoList = personEvaluatedPage.stream()
+        List<PersonEvaluatedInformationResponseDTO> dtoList = personEvaluatedPage.stream()
             .map(personEvaluatedMapper::toInformationListResponseDTO)
             .toList();
         return new PageImpl<>(dtoList, personEvaluatedPage.getPageable(), personEvaluatedPage.getTotalElements());

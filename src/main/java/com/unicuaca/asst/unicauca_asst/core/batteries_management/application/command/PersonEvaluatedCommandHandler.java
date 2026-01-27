@@ -25,4 +25,11 @@ public interface PersonEvaluatedCommandHandler {
     * @return respuesta con la persona actualizada
     */
     PersonEvaluatedResponseDTO updatePersonEvaluated(Long id, PersonEvaluatedUpdateRequestDTO dto);
+
+    /**
+     * Elimina una persona evaluada del sistema por su identificador.
+     *
+     * @param id identificador de la persona a eliminar
+     */
+    void deletePersonEvaluated(Long id);
 }

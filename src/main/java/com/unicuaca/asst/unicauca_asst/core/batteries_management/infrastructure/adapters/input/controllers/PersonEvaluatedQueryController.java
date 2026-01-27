@@ -1,7 +1,12 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers;
 
+import com.unicuaca.asst.unicauca_asst.common.docs.ErrorResponseApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
 import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedInformationResponseDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers.docs.PersonEvaluatedInformationApiResponse;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers.docs.PersonEvaluatedInformationListApiResponse;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedInformationListResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.query.PersonEvaluatedQueryHandler;
 
@@ -57,14 +61,16 @@ public class PersonEvaluatedQueryController {
             responseCode = "200",
             description = "Persona encontrada",
             content = @Content(
-                schema = @Schema(implementation = PersonEvaluatedInformationListResponseDTO.class)
+                mediaType = "application/json",
+                schema = @Schema(implementation = PersonEvaluatedInformationApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Persona no encontrada",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
@@ -82,39 +88,54 @@ public class PersonEvaluatedQueryController {
      * @param page                el número de página (0-indexado)
      * @param size    la cantidad de registros por página
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista paginada de
-     *         {@link PersonEvaluatedInformationListResponseDTO}, o un mensaje de error si no se encuentran resultados.
+     *         {@link PersonEvaluatedInformationResponseDTO}, o un mensaje de error si no se encuentran resultados.
      */
      @Operation(
         summary = "Consultar personas evaluadas por tipo y número de identificación",
-        description = "Retorna una lista paginada de personas evaluadas por su tipo de identificación y número."
+        description = "Retorna una lista paginada de personas evaluadas. Si no hay resultados, retorna una página vacía."
     )
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Lista obtenida correctamente",
+            description = "Consulta exitosa (puede retornar página vacía)",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                mediaType = "application/json",
+                schema = @Schema(implementation = PersonEvaluatedInformationListApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Parámetros inválidos",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
     @GetMapping("/query-by-identity")
-    public ResponseEntity<ApiResponse<Page<PersonEvaluatedInformationListResponseDTO>>> queryByIdentity(
-        @RequestParam String abbreviation, 
+    public ResponseEntity<ApiResponse<Page<PersonEvaluatedInformationResponseDTO>>> queryByIdentity(
+        @Parameter(description = "Abreviatura del tipo de identificación (ej: CC, CE, TI)", example = "CC", required = true)
+        @RequestParam String abbreviation,
+
+        @Parameter(description = "Número de identificación", example = "1234567890", required = true)
         @RequestParam String identificationNumber,
-        @RequestParam(defaultValue = "0") Integer page, 
+
+        @Parameter(description = "Página (0-indexado)", example = "0")
+        @RequestParam(defaultValue = "0") Integer page,
+
+        @Parameter(description = "Cantidad de registros por página", example = "10")
         @RequestParam(defaultValue = "10") Integer size,
         HttpServletRequest request) {
 
-        Page<PersonEvaluatedInformationListResponseDTO> response = personEvaluatedQueryHandler.queryByIdentity(
-            abbreviation, identificationNumber, page, size);
+        Page<PersonEvaluatedInformationResponseDTO> response = personEvaluatedQueryHandler.queryByIdentity(abbreviation, identificationNumber, page, size);
         return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
     }
-
 }

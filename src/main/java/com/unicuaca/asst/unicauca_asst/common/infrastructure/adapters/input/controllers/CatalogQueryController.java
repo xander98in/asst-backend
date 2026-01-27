@@ -6,6 +6,7 @@ import com.unicuaca.asst.unicauca_asst.common.application.dto.response.*;
 import com.unicuaca.asst.unicauca_asst.common.docs.ErrorResponseApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.CityApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.DepartmentApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.IdentificationTypesApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
 import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,14 +58,14 @@ public class CatalogQueryController {
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
             content = @Content(
-                schema = @Schema(implementation = IdentificationTypesApiResponseDoc.class)
+                schema = @Schema(implementation = IdentificationTypesApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "500",
-            description = "Catálogo vacío o error interno",
+            responseCode = "404",
+            description = "Catálogo vacío o no encontrado",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })

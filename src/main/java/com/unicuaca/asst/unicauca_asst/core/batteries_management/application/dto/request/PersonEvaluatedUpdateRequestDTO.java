@@ -51,12 +51,6 @@ public class PersonEvaluatedUpdateRequestDTO {
     private Integer birthYear;
 
     /**
-     * ID del nuevo género.
-     */
-    @NotNull(message = "{person.genderId.notNull}", groups = FirstGroup.class)
-    private Long genderId;
-
-    /**
      * Nombres de la persona evaluada.
      */
     @NotBlank(message = "{person.firstName.notBlank}", groups = FirstGroup.class)

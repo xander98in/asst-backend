@@ -1,16 +1,13 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers;
 
+import com.unicuaca.asst.unicauca_asst.common.docs.ErrorResponseApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.docs.VoidApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
 import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers.docs.PersonEvaluatedApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.command.PersonEvaluatedCommandHandler;
@@ -54,18 +51,28 @@ public class PersonEvaluatedCommandController {
             responseCode = "201",
             description = "Persona evaluada creada con éxito",
             content = @Content(
-                schema = @Schema(implementation = PersonEvaluatedResponseDTO.class)
+                mediaType = "application/json",
+                schema = @Schema(implementation = PersonEvaluatedApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Datos inválidos proporcionados para la creación",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "409",
+            description = "Conflicto al crear la entidad",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> create(@Valid @RequestBody PersonEvaluatedCreateRequestDTO dto, HttpServletRequest request) {
         PersonEvaluatedResponseDTO response = personEvaluatedCommandHandler.createPersonEvaluated(dto);
         return ResponseUtil.created(request, "/asst/person-evaluated/create", SuccessCode.CREATED, "Persona evaluada creada con éxito", response);
@@ -87,27 +94,74 @@ public class PersonEvaluatedCommandController {
             responseCode = "200",
             description = "Persona evaluada actualizada correctamente",
             content = @Content(
-                schema = @Schema(implementation = PersonEvaluatedResponseDTO.class)
+                mediaType = "application/json",
+                schema = @Schema(implementation = PersonEvaluatedApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Datos inválidos proporcionados para la actualización",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Persona no encontrada con el ID especificado",
+            description = "Entidad no encontrada para el ID proporcionado",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "409",
+            description = "Conflicto al actualizar la entidad",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<PersonEvaluatedResponseDTO>> update(@PathVariable Long id, @Valid @RequestBody PersonEvaluatedUpdateRequestDTO dto, HttpServletRequest request) {
         PersonEvaluatedResponseDTO response = personEvaluatedCommandHandler.updatePersonEvaluated(id, dto);
         return ResponseUtil.ok(request, SuccessCode.UPDATED, "Persona evaluada actualizada exitosamente.", response);
+    }
+
+    @Operation(
+        summary = "Eliminar persona evaluada",
+        description = "Este endpoint permite eliminar una persona evaluada existente por su ID."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Persona evaluada eliminada correctamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = VoidApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Entidad no encontrada para el ID proporcionado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "409",
+            description = "Conflicto al eliminar la entidad",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        )
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id, HttpServletRequest request) {
+        personEvaluatedCommandHandler.deletePersonEvaluated(id);
+        return ResponseUtil.ok(request, SuccessCode.DELETED, "Persona evaluada eliminada exitosamente.", null);
     }
 }

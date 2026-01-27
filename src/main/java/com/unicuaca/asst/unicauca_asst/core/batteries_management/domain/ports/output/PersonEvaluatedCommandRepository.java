@@ -31,4 +31,11 @@ public interface PersonEvaluatedCommandRepository {
      * @return objeto actualizado o vacío si no se encontró
      */
     Optional<PersonEvaluated> updatePersonEvaluated(PersonEvaluated personEvaluated);
+
+    /**
+     * Elimina una persona evaluada por su ID.
+     *
+     * @param id identificador de la persona a eliminar
+     */
+    void deletePersonEvaluatedById(Long id);
 }

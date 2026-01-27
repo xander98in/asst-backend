@@ -20,10 +20,8 @@ import lombok.Setter;
 
 /**
  * Entidad que representa una persona evaluada en el sistema.
- * 
  * Mapea la tabla "personas_evaluadas" en la base de datos, que almacena información básica de identificación
  * como nombres, apellidos, tipo de identificación, sexo, año de nacimiento y correo electrónico.
- *
  * Esta entidad hereda los campos de auditoría {@code createdAt} y {@code updatedAt} desde {@link AuditableEntity}.
  */
 @Getter

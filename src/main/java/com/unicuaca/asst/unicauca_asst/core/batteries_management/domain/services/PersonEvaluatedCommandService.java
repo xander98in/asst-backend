@@ -9,6 +9,7 @@ import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.StatusPersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.PersonEvaluatedCommandCUInputPort;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordQueryRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedCommandRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedQueryRepository;
 
@@ -25,6 +26,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
 
     private final PersonEvaluatedCommandRepository personEvaluatedCommandRepository;
     private final PersonEvaluatedQueryRepository personEvaluatedQueryRepository;
+    private final BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository;
     private final CatalogQueryRepository catalogQueryRepository;
     private final ResultFormatterOutputPort resultFormatter;
 
@@ -78,6 +80,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
                 return null;
             });
         personEvaluated.setStatus(statusPersonEvaluated);
+
         return personEvaluatedCommandRepository.savePersonEvaluated(personEvaluated)
             .orElseGet(() -> {
                 resultFormatter.throwEntityCreationFailed(
@@ -123,7 +126,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
         if(personEvaluatedQueryRepository.isIdentificationAssignedToDifferentPerson(personEvaluated.getIdentificationType().getId(), personEvaluated.getIdentificationNumber(), personEvaluated.getId())) {
             this.resultFormatter.throwEntityAlreadyExists(
                 ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
-                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "La persona con identificación: " + personEvaluated.getIdentificationNumber() + " se encuentra registrada.")
+                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "La persona con identificación: " + personEvaluated.getIdentificationNumber() + " ya se encuentra registrada.")
             );
         }
 
@@ -142,5 +145,31 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
                 );
                 return null;
             });
+    }
+
+    /**
+     * Elimina una persona evaluada del sistema por su identificador.
+     *
+     * @param id identificador de la persona a eliminar
+     */
+    @Override
+    public void deletePersonEvaluated(Long id) {
+
+        if (!personEvaluatedQueryRepository.existsById(id)) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona con ID " + id + " no existe.")
+            );
+        }
+
+        boolean hasBatteryRecords = batteryManagementRecordQueryRepository.existsByPersonEvaluatedId(id);
+        if (hasBatteryRecords) {
+            resultFormatter.throwBusinessRuleViolation(
+                ErrorCode.PERSON_WITH_BATTERY_RECORD.getCode(),
+                ErrorCode.PERSON_WITH_BATTERY_RECORD.getMessageKey()
+            );
+        }
+
+        personEvaluatedCommandRepository.deletePersonEvaluatedById(id);
     }
 }

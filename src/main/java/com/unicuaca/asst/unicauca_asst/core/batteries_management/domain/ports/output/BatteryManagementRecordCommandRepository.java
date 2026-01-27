@@ -21,4 +21,11 @@ public interface BatteryManagementRecordCommandRepository {
      * Debe retornar el registro actualizado o vacío si no existe.
      */
     Optional<BatteryManagementRecord> updateBatteryManagementRecord(BatteryManagementRecord record);
+
+    /**
+     * Elimina un registro de gestión de baterías por su ID.
+     *
+     * @param id ID del registro
+     */
+    void deleteBatteryManagementRecordById(Long id);
 }

@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities;
 
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.*;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.persistence.jpa.entities.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,7 +26,7 @@ import lombok.*;
         )
     }
 )
-public class PersonEvaluatedDetailsEntity {
+public class PersonEvaluatedDetailsEntity extends AuditableEntity {
 
     /**
      * Identificador único del detalle de persona evaluada.

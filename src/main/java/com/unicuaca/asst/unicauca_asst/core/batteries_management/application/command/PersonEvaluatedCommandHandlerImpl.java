@@ -55,4 +55,14 @@ public class PersonEvaluatedCommandHandlerImpl implements PersonEvaluatedCommand
         PersonEvaluated updated = personCommandCUInputPort.updatePersonEvaluated(domain);
         return personEvaluatedMapper.toResponseDTO(updated);
     }
+
+    /**
+     * Elimina una persona evaluada por su ID.
+     *
+     * @param id identificador de la persona a eliminar
+     */
+    @Override
+    public void deletePersonEvaluated(Long id) {
+        personCommandCUInputPort.deletePersonEvaluated(id);
+    }
 }

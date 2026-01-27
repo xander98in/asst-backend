@@ -78,6 +78,7 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
            LEFT JOIN FETCH d.jobPositionType jpt
            LEFT JOIN FETCH d.contractType ct
            LEFT JOIN FETCH d.salaryType st
+           LEFT JOIN FETCH d.gender g
            WHERE d.id = :id
            """)
     Optional<PersonEvaluatedDetailsEntity> findByIdWithAll(@Param("id") Long id);
@@ -103,7 +104,95 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
            LEFT JOIN FETCH d.jobPositionType jpt
            LEFT JOIN FETCH d.contractType ct
            LEFT JOIN FETCH d.salaryType st
+           LEFT JOIN FETCH d.gender g
            WHERE p.id = :personEvaluatedId
            """)
     Optional<PersonEvaluatedDetailsEntity> findByPersonEvaluatedIdWithAll(@Param("personEvaluatedId") Long personEvaluatedId);
+
+    /**
+     * Obtiene el nombre del área de trabajo por ID de registro de gestión de batería.
+     *
+     * @param recordId ID del registro de gestión de batería
+     * @return Nombre del área de trabajo envuelto en un Optional
+     */
+    @Query("""
+           SELECT d.workAreaName
+           FROM PersonEvaluatedDetailsEntity d
+           WHERE d.batteryManagementRecord.id = :recordId
+           """)
+    Optional<String> findWorkAreaNameByBatteryManagementRecordId(@Param("recordId") Long recordId);
+
+
+
+
+
+
+    @Query("""
+       SELECT d
+       FROM PersonEvaluatedDetailsEntity d
+       LEFT JOIN FETCH d.gender
+       LEFT JOIN FETCH d.civilStatus
+       LEFT JOIN FETCH d.educationLevel
+       LEFT JOIN FETCH d.residenceCity rc
+       LEFT JOIN FETCH rc.department
+       LEFT JOIN FETCH d.socioeconomicLevel
+       LEFT JOIN FETCH d.housingType
+       LEFT JOIN FETCH d.workCity wc
+       LEFT JOIN FETCH wc.department
+       LEFT JOIN FETCH d.jobPositionType
+       LEFT JOIN FETCH d.contractType
+       LEFT JOIN FETCH d.salaryType
+       WHERE d.batteryManagementRecord.id = :recordId
+        """)
+    Optional<PersonEvaluatedDetailsEntity> findDetailsWithRelationsWithoutRecordByBatteryManagementRecordId(@Param("recordId") Long recordId);
+
+    @Query("""
+       SELECT d
+       FROM PersonEvaluatedDetailsEntity d
+       JOIN FETCH d.batteryManagementRecord r
+       JOIN FETCH r.personEvaluated p
+       JOIN FETCH p.identificationType
+       JOIN FETCH r.status
+       LEFT JOIN FETCH d.gender
+       LEFT JOIN FETCH d.civilStatus
+       LEFT JOIN FETCH d.educationLevel
+       LEFT JOIN FETCH d.residenceCity rc
+       LEFT JOIN FETCH rc.department
+       LEFT JOIN FETCH d.socioeconomicLevel
+       LEFT JOIN FETCH d.housingType
+       LEFT JOIN FETCH d.workCity wc
+       LEFT JOIN FETCH wc.department
+       LEFT JOIN FETCH d.jobPositionType
+       LEFT JOIN FETCH d.contractType
+       LEFT JOIN FETCH d.salaryType
+       WHERE r.id = :recordId
+       """)
+    Optional<PersonEvaluatedDetailsEntity> findDetailsWithRecordAndPersonByBatteryManagementRecordId(@Param("recordId") Long recordId);
+
+
+    /**
+     * ------------
+     * r e v i s a r
+     * -----------
+     */
+    @Query("""
+       SELECT d
+       FROM PersonEvaluatedDetailsEntity d
+       LEFT JOIN FETCH d.gender g
+       LEFT JOIN FETCH d.civilStatus cs
+       LEFT JOIN FETCH d.educationLevel el
+       LEFT JOIN FETCH d.residenceCity rc
+       LEFT JOIN FETCH rc.department rcd
+       LEFT JOIN FETCH d.socioeconomicLevel sl
+       LEFT JOIN FETCH d.housingType ht
+       LEFT JOIN FETCH d.workCity wc
+       LEFT JOIN FETCH wc.department wcd
+       LEFT JOIN FETCH d.jobPositionType jpt
+       LEFT JOIN FETCH d.contractType ct
+       LEFT JOIN FETCH d.salaryType st
+       WHERE d.batteryManagementRecord.id = :recordId
+   """)
+    Optional<PersonEvaluatedDetailsEntity> findByBatteryManagementRecordIdWithAllExceptRecordBattery(
+        @Param("recordId") Long recordId
+    );
 }

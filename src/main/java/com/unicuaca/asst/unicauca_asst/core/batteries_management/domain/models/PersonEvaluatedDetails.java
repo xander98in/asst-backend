@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 /**
  * Representa los detalles adicionales de una persona evaluada,
  * incluyendo información demográfica, laboral y socioeconómica.
@@ -55,4 +57,8 @@ public class PersonEvaluatedDetails {
     private Integer dailyWorkHours;
 
     private SalaryType salaryType;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }

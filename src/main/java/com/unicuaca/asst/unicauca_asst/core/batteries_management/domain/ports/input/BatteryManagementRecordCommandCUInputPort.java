@@ -11,4 +11,11 @@ public interface BatteryManagementRecordCommandCUInputPort {
      * @return El registro de gestión de baterías creado.
      */
     BatteryManagementRecord createBatteryManagementRecord(Long personEvaluatedId);
+
+    /**
+     * Elimina un registro de gestión de baterías por su ID.
+     *
+     * @param id ID del registro de gestión de baterías a eliminar.
+     */
+    void deleteBatteryManagementRecord(Long id);
 }

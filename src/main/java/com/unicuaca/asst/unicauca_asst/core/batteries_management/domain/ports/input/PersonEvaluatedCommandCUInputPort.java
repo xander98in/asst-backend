@@ -36,4 +36,11 @@ public interface PersonEvaluatedCommandCUInputPort {
      * @return la persona actualizada
      */
     PersonEvaluated updatePersonEvaluated(PersonEvaluated personEvaluated);
+
+    /**
+     * Elimina una persona evaluada del sistema por su identificador.
+     *
+     * @param id identificador de la persona a eliminar
+     */
+    void deletePersonEvaluated(Long id);
 }
