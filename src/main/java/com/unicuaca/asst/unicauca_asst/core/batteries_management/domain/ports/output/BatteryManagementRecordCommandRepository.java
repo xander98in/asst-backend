@@ -17,8 +17,10 @@ public interface BatteryManagementRecordCommandRepository {
     Optional<BatteryManagementRecord> saveBatteryManagementRecord(BatteryManagementRecord record);
 
     /**
-     * Actualiza un registro existente de gestión de batería.
-     * Debe retornar el registro actualizado o vacío si no existe.
+     * Actualiza un registro de gestión de batería existente.
+     *
+     * @param record Registro a actualizar
+     * @return Registro actualizado, si la operación fue exitosa
      */
     Optional<BatteryManagementRecord> updateBatteryManagementRecord(BatteryManagementRecord record);
 

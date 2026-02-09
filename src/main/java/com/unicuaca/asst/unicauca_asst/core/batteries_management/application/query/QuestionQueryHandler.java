@@ -49,4 +49,20 @@ public interface QuestionQueryHandler {
      * @return {@link QuestionWithQuestionnaireResponseDTO} correspondiente.
      */
     QuestionWithQuestionnaireResponseDTO getByOrderAndQuestionnaireIdWithQuestionnaire(Integer order, Long questionnaireId);
+
+    /**
+     * Obtiene las preguntas asociadas a un cuestionario por su ID.
+     *
+     * @param questionnaireId ID del cuestionario.
+     * @return Lista de preguntas (sin info anidada del cuestionario).
+     */
+    List<QuestionResponseDTO> getByQuestionnaireId(Long questionnaireId);
+
+    /**
+     * Obtiene las preguntas asociadas a un cuestionario por su Abreviatura.
+     *
+     * @param abbreviation Abreviatura del cuestionario (ej: "ILA").
+     * @return Lista de preguntas (sin info anidada del cuestionario).
+     */
+    List<QuestionResponseDTO> getByQuestionnaireAbbreviation(String abbreviation);
 }

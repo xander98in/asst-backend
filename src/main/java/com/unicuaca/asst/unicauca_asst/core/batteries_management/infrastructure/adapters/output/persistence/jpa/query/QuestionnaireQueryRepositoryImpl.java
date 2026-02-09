@@ -67,6 +67,17 @@ public class QuestionnaireQueryRepositoryImpl implements QuestionnaireQueryRepos
     }
 
     /**
+    * Verifica si existe un cuestionario con el identificador especificado.
+    *
+    * @param id Identificador del cuestionario a verificar.
+    * @return {@code true} si existe un cuestionario con ese identificador, {@code false} en caso contrario.
+    */
+    @Override
+    public boolean existsById(Long id) {
+        return questionnaireJpaRepository.existsById(id);
+    }
+
+    /**
      * Busca un cuestionario por su nombre exacto.
      *
      * @param name nombre del cuestionario a buscar.

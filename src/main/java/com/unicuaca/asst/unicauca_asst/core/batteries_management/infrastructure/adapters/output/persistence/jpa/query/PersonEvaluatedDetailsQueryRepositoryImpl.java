@@ -63,4 +63,28 @@ public class PersonEvaluatedDetailsQueryRepositoryImpl implements PersonEvaluate
             .findByBatteryManagementRecord_Id(batteryManagementRecordId)
             .map(personEvaluatedDetailsPersistenceMapper::toDomain);
     }
+
+    /**
+     * Obtiene los detalles completos por ID del detalle (con relaciones cargadas).
+     *
+     * @param personEvaluatedDetailsId ID del detalle
+     * @return Optional con PersonEvaluatedDetails si existe
+     */
+    @Override
+    public Optional<PersonEvaluatedDetails> getByIdWithAll(Long personEvaluatedDetailsId) {
+        return personEvaluatedDetailsSpringJpaRepository
+            .findByIdWithAll(personEvaluatedDetailsId)
+            .map(personEvaluatedDetailsPersistenceMapper::toDomain);
+    }
+
+    /**
+     * Verifica si existe un PersonEvaluatedDetails por su ID.
+     *
+     * @param id ID del detalle
+     * @return true si existe, false si no
+     */
+    @Override
+    public boolean existsById(Long id) {
+        return this.personEvaluatedDetailsSpringJpaRepository.existsById(id);
+    }
 }

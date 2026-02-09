@@ -95,4 +95,32 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
                 .findByOrderAndQuestionnaireIdWithQuestionnaire(order, questionnaireId)
                 .map(questionPersistenceMapper::toDomain);
     }
+
+    /**
+     * Obtiene las preguntas de un cuestionario específico.
+     *
+     * @param questionnaireId identificador del cuestionario para el cual se desean obtener las preguntas.
+     * @return lista de preguntas asociadas al cuestionario especificado (posiblemente vacía si no hay resultados).
+     */
+    @Override
+    public List<Question> getByQuestionnaireId(Long questionnaireId) {
+        return questionSpringJpaRepository.findByQuestionnaireId(questionnaireId)
+            .stream()
+            .map(questionPersistenceMapper::toDomain)
+            .toList();
+    }
+
+    /**
+     * Obtiene las preguntas de un cuestionario por su abreviatura.
+     *
+     * @param abbreviation abreviatura del cuestionario para el cual se desean obtener las preguntas (p. ej., "ILA", "EXT", "EST").
+     * @return lista de preguntas asociadas al cuestionario con la abreviatura especificada (posiblemente vacía si no hay resultados).
+     */
+    @Override
+    public List<Question> getByQuestionnaireAbbreviation(String abbreviation) {
+        return questionSpringJpaRepository.findByQuestionnaireAbbreviation(abbreviation)
+            .stream()
+            .map(questionPersistenceMapper::toDomain)
+            .toList();
+    }
 }

@@ -32,4 +32,20 @@ public interface PersonEvaluatedDetailsQueryRepository {
      * @return Optional con PersonEvaluatedDetails si existe
      */
     Optional<PersonEvaluatedDetails> getByBatteryManagementRecordId(Long batteryManagementRecordId);
+
+    /**
+     * Obtiene los detalles completos por ID del detalle (con relaciones cargadas).
+     *
+     * @param personEvaluatedDetailsId ID del detalle
+     * @return Optional con PersonEvaluatedDetails si existe
+     */
+    Optional<PersonEvaluatedDetails> getByIdWithAll(Long personEvaluatedDetailsId);
+
+    /**
+     * Verifica si existe un PersonEvaluatedDetails por su ID.
+     *
+     * @param id ID del detalle
+     * @return true si existe, false si no
+     */
+    boolean existsById(Long id);
 }

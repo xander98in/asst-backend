@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.query;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -85,6 +86,32 @@ public class QuestionQueryHandlerImpl implements QuestionQueryHandler {
     public QuestionWithQuestionnaireResponseDTO getByOrderAndQuestionnaireIdWithQuestionnaire(Integer order, Long questionnaireId) {
         return questionMapper.toQuestionWithQuestionnaireResponseDTO(
             questionQueryCUInputPort.getQuestionByOrderAndQuestionnaireIdWithQuestionnaire(order, questionnaireId)
+        );
+    }
+
+    /**
+     * Obtiene las preguntas asociadas a un cuestionario por su ID.
+     *
+     * @param questionnaireId ID del cuestionario.
+     * @return Lista de preguntas (sin info anidada del cuestionario).
+     */
+    @Override
+    public List<QuestionResponseDTO> getByQuestionnaireId(Long questionnaireId) {
+        return questionMapper.toQuestionResponseDTOList(
+            questionQueryCUInputPort.getQuestionsByQuestionnaireId(questionnaireId)
+        );
+    }
+
+    /**
+     * Obtiene las preguntas asociadas a un cuestionario por su Abreviatura.
+     *
+     * @param abbreviation Abreviatura del cuestionario (ej: "ILA").
+     * @return Lista de preguntas (sin info anidada del cuestionario).
+     */
+    @Override
+    public List<QuestionResponseDTO> getByQuestionnaireAbbreviation(String abbreviation) {
+        return questionMapper.toQuestionResponseDTOList(
+            questionQueryCUInputPort.getQuestionsByQuestionnaireAbbreviation(abbreviation)
         );
     }
 }

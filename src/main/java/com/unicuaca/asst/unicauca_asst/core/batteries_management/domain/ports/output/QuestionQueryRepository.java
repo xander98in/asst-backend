@@ -55,4 +55,20 @@ public interface QuestionQueryRepository {
      * @return un {@link Optional} con la pregunta encontrada (incluyendo su cuestionario) o vacío si no existe.
      */
     Optional<Question> getQuestionByOrderAndQuestionnaireIdWithQuestionnaire(Integer order, Long questionnaireId);
+
+    /**
+     * Obtiene las preguntas de un cuestionario específico.
+     *
+     * @param questionnaireId identificador del cuestionario para el cual se desean obtener las preguntas.
+     * @return lista de preguntas asociadas al cuestionario especificado (posiblemente vacía si no hay resultados).
+     */
+    List<Question> getByQuestionnaireId(Long questionnaireId);
+
+    /**
+     * Obtiene las preguntas de un cuestionario por su abreviatura.
+     *
+     * @param abbreviation abreviatura del cuestionario para el cual se desean obtener las preguntas (p. ej., "ILA", "EXT", "EST").
+     * @return lista de preguntas asociadas al cuestionario con la abreviatura especificada (posiblemente vacía si no hay resultados).
+     */
+    List<Question> getByQuestionnaireAbbreviation(String abbreviation);
 }

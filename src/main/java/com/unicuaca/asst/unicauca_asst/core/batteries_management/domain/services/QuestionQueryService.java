@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
@@ -8,6 +9,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Q
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.QuestionQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionQueryRepository;
 
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireQueryRepository;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class QuestionQueryService implements QuestionQueryCUInputPort {
 
     private final QuestionQueryRepository questionQueryRepository;
+    private final QuestionnaireQueryRepository questionnaireQueryRepository;
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
@@ -104,6 +107,42 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                     );
                     return null;
                 });
+    }
+
+    /**
+     * Obtiene las preguntas asociadas a un cuestionario específico por su ID.
+     *
+     * @param questionnaireId ID del cuestionario.
+     * @return Lista de preguntas.
+     */
+    @Override
+    public List<Question> getQuestionsByQuestionnaireId(Long questionnaireId) {
+        if (!questionnaireQueryRepository.existsById(questionnaireId)) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                String.format("El cuestionario con ID %d no existe.", questionnaireId)
+            );
+            return null; // requerido por el compilador, aunque no se alcanzará debido a la excepción lanzada
+        }
+        return questionQueryRepository.getByQuestionnaireId(questionnaireId);
+    }
+
+    /**
+     * Obtiene las preguntas asociadas a un cuestionario específico por su abreviatura.
+     *
+     * @param abbreviation Abreviatura del cuestionario.
+     * @return Lista de preguntas.
+     */
+    @Override
+    public List<Question> getQuestionsByQuestionnaireAbbreviation(String abbreviation) {
+        if (!questionnaireQueryRepository.existsByAbbreviation(abbreviation)) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                String.format("El cuestionario con abreviatura '%s' no existe.", abbreviation)
+            );
+            return null; // requerido por el compilador, aunque no se alcanzará debido a la excepción lanzada
+        }
+        return questionQueryRepository.getByQuestionnaireAbbreviation(abbreviation);
     }
 
 }

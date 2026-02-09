@@ -55,4 +55,20 @@ public interface QuestionQueryCUInputPort {
      * @return la pregunta encontrada (incluyendo su cuestionario).
      */
     Question getQuestionByOrderAndQuestionnaireIdWithQuestionnaire(Integer order, Long questionnaireId);
+
+    /**
+     * Obtiene las preguntas asociadas a un cuestionario específico por su ID.
+     *
+     * @param questionnaireId ID del cuestionario.
+     * @return Lista de preguntas.
+     */
+    List<Question> getQuestionsByQuestionnaireId(Long questionnaireId);
+
+    /**
+     * Obtiene las preguntas asociadas a un cuestionario específico por su abreviatura.
+     *
+     * @param abbreviation Abreviatura del cuestionario.
+     * @return Lista de preguntas.
+     */
+    List<Question> getQuestionsByQuestionnaireAbbreviation(String abbreviation);
 }

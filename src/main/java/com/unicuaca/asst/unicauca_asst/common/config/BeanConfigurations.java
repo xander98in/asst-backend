@@ -68,6 +68,9 @@ public class BeanConfigurations {
         BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository,
         PersonEvaluatedDetailsCommandRepository personEvaluatedDetailsCommandRepository,
         PersonEvaluatedDetailsQueryRepository personEvaluatedDetailsQueryRepository,
+        QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository,
+        BatteryManagementRecordCommandRepository batteryManagementRecordCommandRepository,
+        BatteryManagementRecordStatusQueryRepository batteryManagementRecordStatusQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
         ) {
         return new PersonEvaluatedDetailsCommandService(
@@ -75,6 +78,9 @@ public class BeanConfigurations {
             batteryManagementRecordQueryRepository,
             personEvaluatedDetailsCommandRepository,
             personEvaluatedDetailsQueryRepository,
+            questionnaireManagementRecordQueryRepository,
+            batteryManagementRecordCommandRepository,
+            batteryManagementRecordStatusQueryRepository,
             resultFormatterOutputPort
         );
     }
@@ -92,9 +98,11 @@ public class BeanConfigurations {
     @Bean
     QuestionQueryService questionQueryService(
         QuestionQueryRepository questionQueryRepository,
+        QuestionnaireQueryRepository questionnaireQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort) {
         return new QuestionQueryService(
             questionQueryRepository,
+            questionnaireQueryRepository,
             resultFormatterOutputPort
         );
     }
@@ -117,6 +125,24 @@ public class BeanConfigurations {
         return new PersonEvaluatedDetailsQueryService(
             personEvaluatedDetailsQueryRepository,
             batteryManagementRecordQueryRepository,
+            resultFormatterOutputPort
+        );
+    }
+
+    /**
+     * Crea una instancia de QuestionnaireManagementRecordQueryService.
+     *
+     * @param questionnaireManagementRecordQueryRepository
+     * @param resultFormatterOutputPort
+     * @return QuestionnaireManagementRecordQueryService
+     */
+    @Bean
+    public QuestionnaireManagementRecordQueryService questionnaireManagementRecordQueryService(
+        QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new QuestionnaireManagementRecordQueryService(
+            questionnaireManagementRecordQueryRepository,
             resultFormatterOutputPort
         );
     }

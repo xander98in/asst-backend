@@ -28,9 +28,22 @@ public class BatteryManagementRecordCommandRepositoryImpl implements BatteryMana
         return Optional.of(batteryManagementRecordPersistenceMapper.toDomain(loaded));
     }
 
+    /**
+     * Actualiza un registro de gestión de baterías existente.
+     *
+     * @param record El registro de gestión de baterías con los datos actualizados.
+     * @return Un {@link Optional} que contiene el registro actualizado, o vacío si no se pudo actualizar.
+     */
     @Override
     public Optional<BatteryManagementRecord> updateBatteryManagementRecord(BatteryManagementRecord record) {
-        return Optional.empty();
+        BatteryManagementRecordEntity entity = batteryManagementRecordPersistenceMapper.toEntity(record);
+        BatteryManagementRecordEntity saved = batteryManagementRecordSpringJpaRepository.save(entity);
+
+        BatteryManagementRecordEntity loaded = batteryManagementRecordSpringJpaRepository
+            .findByIdWithRelations(saved.getId())
+            .orElse(saved);
+
+        return Optional.of(batteryManagementRecordPersistenceMapper.toDomain(loaded));
     }
 
     /**

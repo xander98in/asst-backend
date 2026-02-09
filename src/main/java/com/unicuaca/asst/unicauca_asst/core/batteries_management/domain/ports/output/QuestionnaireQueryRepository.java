@@ -37,6 +37,14 @@ public interface QuestionnaireQueryRepository {
     boolean existsByAbbreviation(String abbreviation);
 
     /**
+     * Verifica si existe un cuestionario con el identificador especificado.
+     *
+     * @param id Identificador del cuestionario a verificar.
+     * @return true si existe, false en caso contrario.
+     */
+    boolean existsById(Long id);
+
+    /**
      * Obtiene un cuestionario a partir de su nombre exacto.
      *
      * @param name nombre completo del cuestionario (por ejemplo, "Cuestionario Intralaboral - Forma A").

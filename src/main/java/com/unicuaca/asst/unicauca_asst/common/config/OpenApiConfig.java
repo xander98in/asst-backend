@@ -142,4 +142,18 @@ public class OpenApiConfig {
             .build();
     }
 
+    /**
+     * Grupo de documentación para los registros de gestión de cuestionarios,
+     *
+     * Agrupa todos los endpoints bajo el prefijo <code>/asst/questionnaire-management-record/**</code>.
+     */
+    @Bean
+    GroupedOpenApi questionnaireManagementRecordGroup() {
+        return GroupedOpenApi.builder()
+            .group("registros-gestion-cuestionarios")
+            .packagesToScan("com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers")
+            .pathsToMatch("/asst/questionnaire-management-record/**")
+            .build();
+    }
+
 }

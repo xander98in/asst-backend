@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -119,5 +120,57 @@ public interface QuestionnaireManagementRecordSpringJpaRepository extends JpaRep
     Optional<QuestionnaireManagementRecordEntity> findByIdAndQuestionnaireAbbreviationWithAll(
             @Param("id") Long id,
             @Param("abbreviation") String abbreviation
+    );
+
+    /**
+     * Verifica si existe al menos un registro de gestión de cuestionario
+     * asociado a un registro de gestión de batería específico
+     * y cuyo cuestionario tenga una abreviatura dentro del conjunto proporcionado.
+     *
+     * @param batteryManagementRecordId ID del registro de gestión de batería.
+     * @param abbreviations             Colección de abreviaturas de cuestionarios.
+     * @return {@code true} si existe al menos un registro que cumple los criterios, {@code false} en caso contrario.
+     */
+    @Query("""
+        SELECT CASE WHEN COUNT(r) > 0 THEN TRUE ELSE FALSE END
+        FROM QuestionnaireManagementRecordEntity r
+        WHERE r.batteryManagementRecord.id = :batteryManagementRecordId
+          AND r.questionnaire.abbreviation IN :abbreviations
+    """)
+    boolean existsByBatteryManagementRecordIdAndQuestionnaireAbbreviations(
+        @Param("batteryManagementRecordId") Long batteryManagementRecordId,
+        @Param("abbreviations") Collection<String> abbreviations
+    );
+
+    /**
+     * Verifica si existe al menos un registro de gestión de cuestionario
+     * asociado a un registro de gestión de batería específico.
+     *
+     * @param batteryManagementRecordId ID del registro de gestión de batería.
+     * @return {@code true} si existe al menos un registro que cumple el criterio, {@code false} en caso contrario.
+     */
+    boolean existsByBatteryManagementRecord_Id(Long batteryManagementRecordId);
+
+    /**
+     * Obtiene un registro de gestión de cuestionario por el ID del registro de gestión de batería
+     * y la abreviatura del cuestionario, incluyendo la información del registro de gestión de batería,
+     * del cuestionario y del estado mediante JOIN FETCH.
+     *
+     * @param batteryManagementRecordId ID del registro de gestión de batería.
+     * @param abbreviation              Abreviatura del cuestionario.
+     * @return Registro de gestión de cuestionario con todas sus relaciones, envuelto en un Optional.
+     */
+    @Query("""
+       SELECT r
+       FROM QuestionnaireManagementRecordEntity r
+       LEFT JOIN FETCH r.batteryManagementRecord br
+       LEFT JOIN FETCH r.questionnaire q
+       LEFT JOIN FETCH r.status s
+       WHERE br.id = :batteryManagementRecordId
+         AND q.abbreviation = :abbreviation
+       """)
+    Optional<QuestionnaireManagementRecordEntity> findByBatteryManagementRecordIdAndQuestionnaireAbbreviationWithAll(
+        @Param("batteryManagementRecordId") Long batteryManagementRecordId,
+        @Param("abbreviation") String abbreviation
     );
 }

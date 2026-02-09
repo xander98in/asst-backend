@@ -20,6 +20,12 @@ public class PersonEvaluatedDetailsResponseDTO {
     @Schema(example = "1", description = "ID único de los detalles de la persona evaluada")
     private Long id;
 
+    @Schema(example = "1", description = "ID del género que hace parte de los detalles de la persona evaluada")
+    private Long genderId;
+
+    @Schema(example = "Masculino", description = "Nombre del género que hace parte de los detalles de la persona evaluada")
+    private String genderName;
+
     @Schema(example = "1", description = "ID del estado civil que hace parte de los detalles de la persona evaluada")
     private Long civilStatusId;
 

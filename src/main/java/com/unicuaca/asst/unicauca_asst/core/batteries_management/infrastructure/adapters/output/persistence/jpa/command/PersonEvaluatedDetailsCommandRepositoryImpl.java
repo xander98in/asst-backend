@@ -40,4 +40,32 @@ public class PersonEvaluatedDetailsCommandRepositoryImpl implements PersonEvalua
                 .map(personEvaluatedDetailsMapper::toDomain);
     }
 
+    /**
+     * Actualiza los detalles de una persona evaluada.
+     *
+     * @param id ID de los detalles de la persona evaluada a actualizar.
+     * @param personEvaluatedDetails Los nuevos detalles de la persona evaluada.
+     * @return Un Optional que contiene los detalles actualizados de la persona evaluada, o vacío si no se pudo actualizar.
+     */
+    @Override
+    public Optional<PersonEvaluatedDetails> updatePersonEvaluatedDetails(Long id, PersonEvaluatedDetails personEvaluatedDetails) {
+        personEvaluatedDetails.setId(id);
+
+        PersonEvaluatedDetailsEntity entity = personEvaluatedDetailsMapper.toEntity(personEvaluatedDetails);
+        PersonEvaluatedDetailsEntity saved = personEvaluatedDetailsJpaRepository.save(entity);
+
+        return personEvaluatedDetailsJpaRepository.findByIdWithAll(saved.getId())
+            .map(personEvaluatedDetailsMapper::toDomain);
+    }
+
+    /**
+     * Elimina los detalles de una persona evaluada por su ID.
+     *
+     * @param id ID del detalle a eliminar
+     */
+    @Override
+    public void deleteById(Long id) {
+        this.personEvaluatedDetailsJpaRepository.deleteById(id);
+    }
+
 }

@@ -78,4 +78,22 @@ public interface QuestionSpringJpaRepository extends JpaRepository<QuestionEntit
             @Param("order") Integer order,
             @Param("questionnaireId") Long questionnaireId
     );
+
+    /**
+     * Busca preguntas por ID del cuestionario, ordenadas por el campo 'orden'.
+     *
+     * @param questionnaireId
+     * @return lista de preguntas asociadas al cuestionario con el ID especificado, ordenadas por su campo 'orden' de forma ascendente.
+     */
+    @Query("SELECT q FROM QuestionEntity q WHERE q.questionnaire.id = :questionnaireId ORDER BY q.order ASC")
+    List<QuestionEntity> findByQuestionnaireId(@Param("questionnaireId") Long questionnaireId);
+
+    /**
+     * Busca preguntas por Abreviatura del cuestionario, ordenadas por el campo 'orden'.
+     *
+     * @param abbreviation abreviatura del cuestionario a buscar.
+     * @return lista de preguntas asociadas al cuestionario con la abreviatura especificada, ordenadas por su campo 'orden' de forma ascendente.
+     */
+    @Query("SELECT q FROM QuestionEntity q WHERE q.questionnaire.abbreviation = :abbreviation ORDER BY q.order ASC")
+    List<QuestionEntity> findByQuestionnaireAbbreviation(@Param("abbreviation") String abbreviation);
 }

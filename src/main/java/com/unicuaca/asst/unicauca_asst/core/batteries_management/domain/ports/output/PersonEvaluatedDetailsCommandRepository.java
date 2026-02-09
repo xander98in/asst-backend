@@ -25,4 +25,20 @@ public interface PersonEvaluatedDetailsCommandRepository {
      */
     Optional<PersonEvaluatedDetails> savePersonEvaluatedDetails(PersonEvaluatedDetails personEvaluatedDetails);
 
+    /**
+     * Actualiza los detalles de una persona evaluada.
+     *
+     * @param id ID de los detalles de la persona evaluada a actualizar.
+     * @param personEvaluatedDetails Los nuevos detalles de la persona evaluada.
+     * @return Un Optional que contiene los detalles actualizados de la persona evaluada, o vacío si no se pudo actualizar.
+     */
+    Optional<PersonEvaluatedDetails> updatePersonEvaluatedDetails(Long id, PersonEvaluatedDetails personEvaluatedDetails);
+
+    /**
+     * Elimina los detalles de una persona evaluada por su ID.
+     *
+     * @param id ID del detalle a eliminar
+     */
+    void deleteById(Long id);
+
 }

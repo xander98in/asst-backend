@@ -1,6 +1,8 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.mappers;
 
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedDetailsUpdateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedDetailsMetaResponseDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedDetailsResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -22,6 +24,50 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.P
 public interface PersonEvaluatedDetailsMapper {
 
     /**
+     * Convierte un modelo de dominio {@link PersonEvaluatedDetails} a un DTO de respuesta completo.
+     *
+     * @param details modelo de dominio
+     * @return DTO de respuesta {@link PersonEvaluatedDetailsResponseDTO}
+     */
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "genderId", source = "gender.id")
+    @Mapping(target = "genderName", source = "gender.name")
+    @Mapping(target = "civilStatusId", source = "civilStatus.id")
+    @Mapping(target = "civilStatusName", source = "civilStatus.name")
+    @Mapping(target = "educationLevelId", source = "educationLevel.id")
+    @Mapping(target = "educationLevelName", source = "educationLevel.name")
+    @Mapping(target = "profession", source = "profession")
+    @Mapping(target = "residenceCityId", source = "residenceCity.id")
+    @Mapping(target = "residenceCityCode", source = "residenceCity.code")
+    @Mapping(target = "residenceCityName", source = "residenceCity.name")
+    @Mapping(target = "residenceDepartmentId", source = "residenceCity.department.id")
+    @Mapping(target = "residenceDepartmentCode", source = "residenceCity.department.code")
+    @Mapping(target = "residenceDepartmentName", source = "residenceCity.department.name")
+    @Mapping(target = "socioeconomicLevelId", source = "socioeconomicLevel.id")
+    @Mapping(target = "socioeconomicLevelName", source = "socioeconomicLevel.name")
+    @Mapping(target = "housingTypeId", source = "housingType.id")
+    @Mapping(target = "housingTypeName", source = "housingType.name")
+    @Mapping(target = "dependentsCount", source = "dependentsCount")
+    @Mapping(target = "workCityId", source = "workCity.id")
+    @Mapping(target = "workCityCode", source = "workCity.code")
+    @Mapping(target = "workCityName", source = "workCity.name")
+    @Mapping(target = "workDepartmentId", source = "workCity.department.id")
+    @Mapping(target = "workDepartmentCode", source = "workCity.department.code")
+    @Mapping(target = "workDepartmentName", source = "workCity.department.name")
+    @Mapping(target = "yearsAtCompany", source = "yearsAtCompany")
+    @Mapping(target = "jobTitle", source = "jobTitle")
+    @Mapping(target = "jobPositionId", source = "jobPositionType.id")
+    @Mapping(target = "jobPositionName", source = "jobPositionType.name")
+    @Mapping(target = "yearsInPosition", source = "yearsInPosition")
+    @Mapping(target = "workAreaName", source = "workAreaName")
+    @Mapping(target = "contractTypeId", source = "contractType.id")
+    @Mapping(target = "contractTypeName", source = "contractType.name")
+    @Mapping(target = "dailyWorkHours", source = "dailyWorkHours")
+    @Mapping(target = "salaryTypeId", source = "salaryType.id")
+    @Mapping(target = "salaryTypeName", source = "salaryType.name")
+    PersonEvaluatedDetailsResponseDTO toResponseDTO(PersonEvaluatedDetails details);
+
+    /**
      * Convierte un objeto PersonEvaluatedDetails a su representación DTO de metadatos.
      *
      * @param details el objeto PersonEvaluatedDetails a convertir
@@ -29,6 +75,8 @@ public interface PersonEvaluatedDetailsMapper {
      */
     @Mapping(target = "id", source = "id")
     @Mapping(target = "batteryManagementRecordId", source = "batteryManagementRecord.id")
+    @Mapping(target = "jobPositionTypeId", source = "jobPositionType.id")
+    @Mapping(target = "jobPositionTypeName", source = "jobPositionType.name")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
     PersonEvaluatedDetailsMetaResponseDTO toMetaResponseDTO(PersonEvaluatedDetails details);
@@ -53,6 +101,26 @@ public interface PersonEvaluatedDetailsMapper {
     @Mapping(source = "dailyWorkHours", target = "dailyWorkHours")
     @Mapping(source = "salaryTypeId", target = "salaryType")
     PersonEvaluatedDetails toDomain(PersonEvaluatedDetailsCreateRequestDTO dto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "genderId", target = "gender")
+    @Mapping(source = "civilStatusId", target = "civilStatus")
+    @Mapping(source = "educationLevelId", target = "educationLevel")
+    @Mapping(source = "profession", target = "profession")
+    @Mapping(source = "residenceCityId", target = "residenceCity")
+    @Mapping(source = "socioeconomicLevelId", target = "socioeconomicLevel")
+    @Mapping(source = "housingTypeId", target = "housingType")
+    @Mapping(source = "dependentsCount", target = "dependentsCount")
+    @Mapping(source = "workCityId", target = "workCity")
+    @Mapping(source = "yearsAtCompany", target = "yearsAtCompany")
+    @Mapping(source = "jobTitle", target = "jobTitle")
+    @Mapping(source = "jobPositionTypeId", target = "jobPositionType")
+    @Mapping(source = "yearsInPosition", target = "yearsInPosition")
+    @Mapping(source = "workAreaName", target = "workAreaName")
+    @Mapping(source = "contractTypeId", target = "contractType")
+    @Mapping(source = "dailyWorkHours", target = "dailyWorkHours")
+    @Mapping(source = "salaryTypeId", target = "salaryType")
+    PersonEvaluatedDetails toDomain(PersonEvaluatedDetailsUpdateRequestDTO dto);
 
     // ---------- Helpers (MapStruct los usa por firma) ----------
     default BatteryManagementRecord mapBattery(Long id) {

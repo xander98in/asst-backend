@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities;
 
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.persistence.jpa.entities.AuditableEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,7 +33,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "registros_gestion_cuestionarios")
-public class QuestionnaireManagementRecordEntity {
+public class QuestionnaireManagementRecordEntity extends AuditableEntity {
 
    /**
      * Identificador único del registro de gestión de cuestionario.

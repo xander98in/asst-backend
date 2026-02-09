@@ -10,19 +10,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO para la creación de los detalles adicionales de una persona evaluada.
- * Contiene información demográfica y laboral relevante para la evaluación de riesgo psicosocial.
+ * DTO para actualizar los detalles adicionales de una persona evaluada.
+ * Nota: es independiente del DTO de creación para permitir cambios futuros sin afectar create.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@GroupSequence({PersonEvaluatedDetailsCreateRequestDTO.class, FirstGroup.class, SecondGroup.class})
-public class PersonEvaluatedDetailsCreateRequestDTO {
+@GroupSequence({PersonEvaluatedDetailsUpdateRequestDTO.class, FirstGroup.class, SecondGroup.class})
+public class PersonEvaluatedDetailsUpdateRequestDTO {
 
-    @NotNull(message = "{personEvaluatedDetails.batteryManagementRecordId.notNull}", groups = FirstGroup.class)
-    @Min(value = 1, message = "{personEvaluatedDetails.batteryManagementRecordId.min}", groups = SecondGroup.class)
-    private Long batteryManagementRecordId;
+    //@NotNull(message = "{personEvaluatedDetails.batteryManagementRecordId.notNull}", groups = FirstGroup.class)
+    //@Min(value = 1, message = "{personEvaluatedDetails.batteryManagementRecordId.min}", groups = SecondGroup.class)
+    //private Long batteryManagementRecordId;
 
     @NotNull(message = "{personEvaluatedDetails.genderId.notNull}", groups = FirstGroup.class)
     @Min(value = 1, message = "{personEvaluatedDetails.genderId.min}", groups = SecondGroup.class)

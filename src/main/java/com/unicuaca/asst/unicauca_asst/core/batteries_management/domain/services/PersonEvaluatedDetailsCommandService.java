@@ -8,11 +8,10 @@ import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecordStatus;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.PersonEvaluatedDetailsCommandCUInputPort;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordQueryRepository;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedDetailsCommandRepository;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedDetailsQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,16 +29,18 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
     private final BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository;
     private final PersonEvaluatedDetailsCommandRepository personEvaluatedDetailsCommandRepository;
     private final PersonEvaluatedDetailsQueryRepository personEvaluatedDetailsQueryRepository;
+    private final QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository;
+    private final BatteryManagementRecordCommandRepository batteryManagementRecordCommandRepository;
+    private final BatteryManagementRecordStatusQueryRepository batteryManagementRecordStatusQueryRepository;
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
      * Crea los detalles de una persona evaluada.
      * 
      * @param personEvaluatedDetails el objeto {@link PersonEvaluatedDetails} que contiene los datos a crear
-     * @return la entidad {@link PersonEvaluatedDetails} creada, incluyendo su ID generado u otros datos resultantes del proceso
      */
     @Override
-    public PersonEvaluatedDetails createPersonEvaluatedDetails(PersonEvaluatedDetails personEvaluatedDetails) {
+    public void createPersonEvaluatedDetails(PersonEvaluatedDetails personEvaluatedDetails) {
 
         System.out.println("\n\n\nDtos recibidos en el servicio: " + personEvaluatedDetails + "\n\n");
 
@@ -71,7 +72,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
 
         System.out.println("\n\n\nDtos validados y completos en el servicio: " + personEvaluatedDetails + "\n\n");
 
-        return personEvaluatedDetailsCommandRepository
+        personEvaluatedDetailsCommandRepository
             .savePersonEvaluatedDetails(personEvaluatedDetails)
             .orElseGet(() -> {
                 resultFormatter.throwEntityCreationFailed(
@@ -80,6 +81,187 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                 );
                 return null; // requerido por el compilador
             });
+
+        BatteryManagementRecord record = batteryManagementRecordQueryRepository
+            .getBatteryManagementRecordById(bmrId)
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(
+                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                        "El registro de gestión de batería con ID " + bmrId + " no fue encontrado."
+                    )
+                );
+                return null;
+            });
+
+        BatteryManagementRecordStatus createdStatus = batteryManagementRecordStatusQueryRepository
+            .getStatusByName("En diligenciamiento")
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(
+                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                        "El estado 'En diligenciamiento' no fue encontrado."
+                    )
+                );
+                return null;
+            });
+
+        record.setStatus(createdStatus);
+
+        batteryManagementRecordCommandRepository
+            .updateBatteryManagementRecord(record)
+            .orElseGet(() -> {
+                resultFormatter.throwEntityCreationFailed(
+                    ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
+                    String.format(
+                        ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(),
+                        "No se pudo actualizar el estado del registro de gestión de batería con ID " + bmrId
+                    )
+                );
+                return null;
+            });
+    }
+
+    /**
+     * Actualiza los detalles de una persona evaluada por su ID.
+     *
+     * @param id ID del detalle
+     * @param personEvaluatedDetails datos a actualizar
+     */
+    @Override
+    public void updatePersonEvaluatedDetails(Long id, PersonEvaluatedDetails personEvaluatedDetails) {
+        // Validar que existe el detalle
+        PersonEvaluatedDetails existing = personEvaluatedDetailsQueryRepository
+            .getByIdWithAll(id)
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(
+                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                        "Los detalles de la persona evaluada con ID " + id + " no fueron encontrados."
+                    )
+                );
+                return null;
+            });
+
+        // Resolver catálogos (igual que create)
+        personEvaluatedDetails.setBatteryManagementRecord(existing.getBatteryManagementRecord());
+        personEvaluatedDetails.setGender(resolveGender(personEvaluatedDetails.getGender()));
+        personEvaluatedDetails.setCivilStatus(resolveCivilStatus(personEvaluatedDetails.getCivilStatus()));
+        personEvaluatedDetails.setEducationLevel(resolveEducationLevel(personEvaluatedDetails.getEducationLevel()));
+        personEvaluatedDetails.setProfession(normalizeText(personEvaluatedDetails.getProfession()));
+        personEvaluatedDetails.setResidenceCity(resolveCity(personEvaluatedDetails.getResidenceCity(), "residencia"));
+        personEvaluatedDetails.setSocioeconomicLevel(resolveSocioeconomicLevel(personEvaluatedDetails.getSocioeconomicLevel()));
+        personEvaluatedDetails.setHousingType(resolveHousingType(personEvaluatedDetails.getHousingType()));
+        personEvaluatedDetails.setWorkCity(resolveCity(personEvaluatedDetails.getWorkCity(), "trabajo"));
+        personEvaluatedDetails.setYearsAtCompany(normalizeText(personEvaluatedDetails.getYearsAtCompany()));
+        personEvaluatedDetails.setJobTitle(normalizeText(personEvaluatedDetails.getJobTitle()));
+        personEvaluatedDetails.setJobPositionType(resolveJobPositionType(personEvaluatedDetails.getJobPositionType()));
+        personEvaluatedDetails.setYearsInPosition(normalizeText(personEvaluatedDetails.getYearsInPosition()));
+        personEvaluatedDetails.setWorkAreaName(normalizeText(personEvaluatedDetails.getWorkAreaName()));
+        personEvaluatedDetails.setContractType(resolveContractType(personEvaluatedDetails.getContractType()));
+        personEvaluatedDetails.setSalaryType(resolveSalaryType(personEvaluatedDetails.getSalaryType()));
+        // Asegurar ID a actualizar y preservar createdAt si lo manejas en dominio (opcional)
+        personEvaluatedDetails.setId(existing.getId());
+
+        // Persistir
+        personEvaluatedDetailsCommandRepository
+            .updatePersonEvaluatedDetails(id, personEvaluatedDetails)
+            .orElseGet(() -> {
+                resultFormatter.throwEntityCreationFailed(
+                    ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
+                    String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "Los detalles de la persona evaluada no se actualizaron correctamente.")
+                );
+                return null;
+            });
+    }
+
+    /**
+     * Elimina los detalles de una persona evaluada por su ID.
+     *
+     * @param personEvaluatedDetailsId ID del detalle a eliminar
+     */
+    @Override
+    public void deletePersonEvaluatedDetails(Long personEvaluatedDetailsId) {
+
+        PersonEvaluatedDetails details = personEvaluatedDetailsQueryRepository
+            .getByIdWithAll(personEvaluatedDetailsId)
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(
+                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                        "Los detalles de la persona evaluada con ID " + personEvaluatedDetailsId + " no fueron encontrados."
+                    )
+                );
+                return null;
+            });
+
+        Long batteryRecordId = details.getBatteryManagementRecord().getId();
+
+        boolean hasIntralaboralRecords = questionnaireManagementRecordQueryRepository
+            .existsByBatteryManagementRecordIdAndQuestionnaireAbbreviationIn(
+                batteryRecordId,
+                java.util.List.of("ILA", "ILB")
+            );
+
+        if (hasIntralaboralRecords) {
+            resultFormatter.throwBusinessRuleViolation(
+                ErrorCode.PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED.getCode(),
+                ErrorCode.PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED.getMessageKey()
+            );
+            return;
+        }
+        personEvaluatedDetailsCommandRepository.deleteById(personEvaluatedDetailsId);
+
+        boolean hasAnyQuestionnaireRecords = questionnaireManagementRecordQueryRepository
+            .existsByBatteryManagementRecordId(batteryRecordId);
+
+        if (!hasAnyQuestionnaireRecords) {
+
+            BatteryManagementRecord record = batteryManagementRecordQueryRepository
+                .getBatteryManagementRecordById(batteryRecordId)
+                .orElseGet(() -> {
+                    resultFormatter.throwEntityNotFound(
+                        ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                        String.format(
+                            ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                            "El registro de gestión de batería con ID " + batteryRecordId + " no fue encontrado."
+                        )
+                    );
+                    return null;
+                });
+
+            BatteryManagementRecordStatus createdStatus = batteryManagementRecordStatusQueryRepository
+                .getStatusByName("Creado")
+                .orElseGet(() -> {
+                    resultFormatter.throwEntityNotFound(
+                        ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                        String.format(
+                            ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                            "El estado 'Creado' no fue encontrado."
+                        )
+                    );
+                    return null;
+                });
+
+            record.setStatus(createdStatus);
+
+            batteryManagementRecordCommandRepository
+                .updateBatteryManagementRecord(record)
+                .orElseGet(() -> {
+                    resultFormatter.throwEntityCreationFailed(
+                        ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
+                        String.format(
+                            ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(),
+                            "No se pudo actualizar el estado del registro de gestión de batería con ID " + batteryRecordId
+                        )
+                    );
+                    return null;
+                });
+        }
     }
 
     /* ========================== Helpers de resolución ========================== */

@@ -195,4 +195,68 @@ public class QuestionQueryController {
 
         return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
     }
+
+    /**
+     * Obtiene las preguntas asociadas a un cuestionario por su ID.
+     *
+     * @param questionnaireId identificador del cuestionario para el cual se desean obtener las preguntas.
+     * @param request objeto de solicitud HTTP para construir la respuesta adecuada.
+     * @return {@link ResponseEntity} con un {@link ApiResponse} que contiene la lista de preguntas asociadas al cuestionario especificado.
+     */
+    @Operation(
+        summary = "Listar preguntas por ID de Cuestionario",
+        description = "Retorna la lista de preguntas pertenecientes al cuestionario especificado por su ID."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Consulta exitosa",
+            content = @Content(schema = @Schema(implementation = QuestionListApiResponse.class))
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Cuestionario no encontrado o sin preguntas",
+            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+        )
+    })
+    @GetMapping("/by-questionnaire/{questionnaireId}")
+    public ResponseEntity<ApiResponse<List<QuestionResponseDTO>>> getByQuestionnaireId(
+        @PathVariable Long questionnaireId,
+        HttpServletRequest request) {
+
+        List<QuestionResponseDTO> response = questionQueryHandler.getByQuestionnaireId(questionnaireId);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
+    }
+
+    /**
+     * Obtiene las preguntas asociadas a un cuestionario por su abreviatura.
+     *
+     * @param abbreviation abreviatura del cuestionario para el cual se desean obtener las preguntas.
+     * @param request objeto de solicitud HTTP para construir la respuesta adecuada.
+     * @return {@link ResponseEntity} con un {@link ApiResponse} que contiene la lista de preguntas asociadas al cuestionario especificado.
+     */
+    @Operation(
+        summary = "Listar preguntas por Abreviatura de Cuestionario",
+        description = "Retorna la lista de preguntas pertenecientes al cuestionario especificado por su abreviatura (ej: ILA, EXT)."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Consulta exitosa",
+            content = @Content(schema = @Schema(implementation = QuestionListApiResponse.class))
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Cuestionario no encontrado o sin preguntas",
+            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+        )
+    })
+    @GetMapping("/by-questionnaire-abbr/{abbreviation}")
+    public ResponseEntity<ApiResponse<List<QuestionResponseDTO>>> getByQuestionnaireAbbreviation(
+        @PathVariable String abbreviation,
+        HttpServletRequest request) {
+
+        List<QuestionResponseDTO> response = questionQueryHandler.getByQuestionnaireAbbreviation(abbreviation);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
+    }
 }

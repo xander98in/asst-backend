@@ -37,14 +37,15 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
      * @return true si existe un registro de detalles, false en caso contrario
      */
     @Query("""
-       SELECT CASE WHEN COUNT(d) > 0 THEN TRUE ELSE FALSE END
+
+        SELECT CASE WHEN COUNT(d) > 0 THEN TRUE ELSE FALSE END
        FROM PersonEvaluatedDetailsEntity d
        WHERE d.batteryManagementRecord.id = :batteryManagementRecordId
        """)
-    boolean existsByPersonEvaluatedIdQuery(@Param("batteryManagementRecordId") Long batteryManagementRecordId);
+    boolean existsByBatteryManagementRecordId(@Param("batteryManagementRecordId") Long batteryManagementRecordId);
 
     /**
-     * Variante JPQL para obtener detalles por ID de persona evaluada.
+     * Variante JPQL para obtener detalles por ID de registro de gestión de batería. (sin forzar carga de relaciones)
      *
      * @param batteryManagementRecordId ID del registro de gestión de batería
      * @return Detalles de la persona evaluada envueltos en un Optional
@@ -54,11 +55,11 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
        FROM PersonEvaluatedDetailsEntity d
        WHERE d.batteryManagementRecord.id = :batteryManagementRecordId
        """)
-    Optional<PersonEvaluatedDetailsEntity> findByPersonEvaluatedIdQuery(@Param("batteryManagementRecordId") Long batteryManagementRecordId);
+    Optional<PersonEvaluatedDetailsEntity> findByBatteryManagementRecordIdQuery(@Param("batteryManagementRecordId") Long batteryManagementRecordId);
 
     /**
-     * Variante JPQL con JOIN FETCH para traer TODA la información, incluyendo
-     * los departamentos de las ciudades (residencia/trabajo).
+     * Variante JPQL con JOIN FETCH para traer TODA la información, incluyendo los departamentos
+     * de las ciudades (residencia/trabajo) a partir del ID del detalle de persona evaluada.
      *
      * @param id ID del detalle de persona evaluada
      * @return Detalles completos de la persona evaluada
@@ -66,7 +67,7 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
     @Query("""
            SELECT d
            FROM PersonEvaluatedDetailsEntity d
-           LEFT JOIN FETCH d.batteryManagementRecord p
+           LEFT JOIN FETCH d.batteryManagementRecord r
            LEFT JOIN FETCH d.civilStatus cs
            LEFT JOIN FETCH d.educationLevel el
            LEFT JOIN FETCH d.residenceCity rc
@@ -84,15 +85,15 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
     Optional<PersonEvaluatedDetailsEntity> findByIdWithAll(@Param("id") Long id);
 
     /**
-     * Variante JPQL con JOIN FETCH para traer por ID de persona evaluada.
+     * Variante JPQL con JOIN FETCH para traer por ID de registro de gestión de batería
      *
-     * @param personEvaluatedId ID de la persona evaluada
+     * @param batteryManagementRecordId ID de la persona evaluada
      * @return Detalles completos de la persona evaluada
      */
     @Query("""
            SELECT d
            FROM PersonEvaluatedDetailsEntity d
-           LEFT JOIN FETCH d.batteryManagementRecord p
+           LEFT JOIN FETCH d.batteryManagementRecord r
            LEFT JOIN FETCH d.civilStatus cs
            LEFT JOIN FETCH d.educationLevel el
            LEFT JOIN FETCH d.residenceCity rc
@@ -105,9 +106,9 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
            LEFT JOIN FETCH d.contractType ct
            LEFT JOIN FETCH d.salaryType st
            LEFT JOIN FETCH d.gender g
-           WHERE p.id = :personEvaluatedId
+           WHERE r.id = :batteryManagementRecordId
            """)
-    Optional<PersonEvaluatedDetailsEntity> findByPersonEvaluatedIdWithAll(@Param("personEvaluatedId") Long personEvaluatedId);
+    Optional<PersonEvaluatedDetailsEntity> findByBatteryManagementRecordIdWithAll(@Param("batteryManagementRecordId") Long batteryManagementRecordId);
 
     /**
      * Obtiene el nombre del área de trabajo por ID de registro de gestión de batería.
@@ -169,30 +170,34 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
        """)
     Optional<PersonEvaluatedDetailsEntity> findDetailsWithRecordAndPersonByBatteryManagementRecordId(@Param("recordId") Long recordId);
 
-
     /**
-     * ------------
-     * r e v i s a r
-     * -----------
+     * Variante JPQL con JOIN FETCH para traer toda la información, incluyendo el registro de gestión de batería
+     * y la persona evaluada, a partir del ID del detalle de persona evaluada.
+     *
+     * @param id ID del detalle de persona evaluada
+     * @return Detalles completos de la persona evaluada
      */
     @Query("""
        SELECT d
        FROM PersonEvaluatedDetailsEntity d
-       LEFT JOIN FETCH d.gender g
-       LEFT JOIN FETCH d.civilStatus cs
-       LEFT JOIN FETCH d.educationLevel el
+       JOIN FETCH d.batteryManagementRecord r
+       JOIN FETCH r.personEvaluated p
+       JOIN FETCH p.identificationType
+       JOIN FETCH r.status
+       LEFT JOIN FETCH d.gender
+       LEFT JOIN FETCH d.civilStatus
+       LEFT JOIN FETCH d.educationLevel
        LEFT JOIN FETCH d.residenceCity rc
-       LEFT JOIN FETCH rc.department rcd
-       LEFT JOIN FETCH d.socioeconomicLevel sl
-       LEFT JOIN FETCH d.housingType ht
+       LEFT JOIN FETCH rc.department
+       LEFT JOIN FETCH d.socioeconomicLevel
+       LEFT JOIN FETCH d.housingType
        LEFT JOIN FETCH d.workCity wc
-       LEFT JOIN FETCH wc.department wcd
-       LEFT JOIN FETCH d.jobPositionType jpt
-       LEFT JOIN FETCH d.contractType ct
-       LEFT JOIN FETCH d.salaryType st
-       WHERE d.batteryManagementRecord.id = :recordId
-   """)
-    Optional<PersonEvaluatedDetailsEntity> findByBatteryManagementRecordIdWithAllExceptRecordBattery(
-        @Param("recordId") Long recordId
-    );
+       LEFT JOIN FETCH wc.department
+       LEFT JOIN FETCH d.jobPositionType
+       LEFT JOIN FETCH d.contractType
+       LEFT JOIN FETCH d.salaryType
+       WHERE d.id = :id
+       """)
+    Optional<PersonEvaluatedDetailsEntity> findDetailsWithRecordAndPersonById(@Param("id") Long id);
+
 }

@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * DTO de respuesta para representar los metadatos del detalle de persona evaluada.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,6 +22,12 @@ public class PersonEvaluatedDetailsMetaResponseDTO {
 
     @Schema(example = "15", description = "ID del registro de gestión de baterías asociado")
     private Long batteryManagementRecordId;
+
+    @Schema(example = "3", description = "ID del tipo de cargo laboral")
+    private Long jobPositionTypeId;
+
+    @Schema(example = "Analista de Datos", description = "Nombre del tipo de cargo laboral")
+    private String jobPositionTypeName;
 
     @Schema(example = "2026-01-25T10:30:00", description = "Fecha de creación del detalle")
     private LocalDateTime createdAt;

@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.query;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedDetailsMetaResponseDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedDetailsResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.mappers.PersonEvaluatedDetailsMapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.PersonEvaluatedDetailsQueryCUInputPort;
@@ -32,5 +33,17 @@ public class PersonEvaluatedDetailsQueryHandlerImpl implements PersonEvaluatedDe
     public PersonEvaluatedDetailsMetaResponseDTO getMetaByBatteryManagementRecordId(Long batteryManagementRecordId) {
         PersonEvaluatedDetails details = personEvaluatedDetailsQueryCUInputPort.getMetaByBatteryManagementRecordId(batteryManagementRecordId);
         return personEvaluatedDetailsMapper.toMetaResponseDTO(details);
+    }
+
+    /**
+     * Obtiene los detalles completos de una persona evaluada por su ID.
+     *
+     * @param personEvaluatedDetailsId ID del detalle de la persona evaluada
+     * @return DTO con los detalles de la persona evaluada
+     */
+    @Override
+    public PersonEvaluatedDetailsResponseDTO getPersonEvaluatedDetailsById(Long personEvaluatedDetailsId) {
+        PersonEvaluatedDetails details = personEvaluatedDetailsQueryCUInputPort.getPersonEvaluatedDetailsById(personEvaluatedDetailsId);
+        return personEvaluatedDetailsMapper.toResponseDTO(details);
     }
 }

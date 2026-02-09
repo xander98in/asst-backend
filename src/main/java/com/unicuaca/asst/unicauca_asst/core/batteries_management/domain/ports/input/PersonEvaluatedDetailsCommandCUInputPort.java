@@ -24,8 +24,22 @@ public interface PersonEvaluatedDetailsCommandCUInputPort {
      * y delegar la persistencia en los puertos de salida correspondientes.</p>
      *
      * @param personEvaluatedDetails el objeto {@link PersonEvaluatedDetails} que contiene los datos a crear
-     * @return la entidad {@link PersonEvaluatedDetails} creada, incluyendo su ID generado u otros datos resultantes del proceso
      */
-    PersonEvaluatedDetails createPersonEvaluatedDetails(PersonEvaluatedDetails personEvaluatedDetails);
+    void createPersonEvaluatedDetails(PersonEvaluatedDetails personEvaluatedDetails);
+
+    /**
+     * Actualiza los detalles de una persona evaluada por su ID.
+     *
+     * @param id ID del detalle
+     * @param personEvaluatedDetails datos a actualizar
+     */
+    void updatePersonEvaluatedDetails(Long id, PersonEvaluatedDetails personEvaluatedDetails);
+
+    /**
+     * Elimina los detalles de una persona evaluada por su ID.
+     *
+     * @param personEvaluatedDetailsId ID del detalle a eliminar
+     */
+    void deletePersonEvaluatedDetails(Long personEvaluatedDetailsId);
 
 }

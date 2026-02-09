@@ -56,8 +56,31 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
         return PersonEvaluatedDetails.builder()
             .id(details.getId())
             .batteryManagementRecord(record)
+            .jobPositionType(details.getJobPositionType())
             .createdAt(details.getCreatedAt())
             .updatedAt(details.getUpdatedAt())
             .build();
+    }
+
+    /**
+     * Obtiene los detalles completos de una persona evaluada por el ID del detalle.
+     *
+     * @param personEvaluatedDetailsId ID del detalle de la persona evaluada
+     * @return PersonEvaluatedDetails (modelo dominio)
+     */
+    @Override
+    public PersonEvaluatedDetails getPersonEvaluatedDetailsById(Long personEvaluatedDetailsId) {
+        return personEvaluatedDetailsQueryRepository
+            .getByIdWithAll(personEvaluatedDetailsId)
+            .orElseGet(() -> {
+                this.resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(
+                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                        "El detalle de persona evaluada con ID " + personEvaluatedDetailsId + " no fue encontrado."
+                    )
+                );
+                return null; // requerido por el compilador; nunca se ejecuta
+            });
     }
 }

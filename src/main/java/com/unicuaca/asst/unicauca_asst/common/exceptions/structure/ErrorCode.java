@@ -59,7 +59,7 @@ public enum ErrorCode {
     PERSON_EVALUATED_DETAILS_DUPLICATE("ASST-BUS-0006", "El registro de detalles para el registro de gestión de batería con ID %s ya existe."),
     PERSON_WITH_BATTERY_RECORD("ASST-BUS-0007", "No se puede eliminar la persona evaluada, porque tiene registros de gestión de baterías asociados."),
     DELETE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0008", "No se puede eliminar el registro de gestión de batería en estado %s."),
-
+    PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED("ASST-BUS-0009", "No es posible eliminar, porque el registro de gestión de batería ya tiene cuestionarios intralaborales (ILA/ILB) asociados."),
     /**
      * Errores relacionados con mapeo y dependencias.
      */

@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.command;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedDetailsCreateRequestDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedDetailsUpdateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedDetailsResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.mappers.PersonEvaluatedDetailsMapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;
@@ -30,13 +31,32 @@ public class PersonEvaluatedDetailsCommandHandlerImpl implements PersonEvaluated
      * Registra los detalles de una persona evaluada en el sistema.
      *
      * @param dto datos de entrada validados para la creación
-     * @return DTO de respuesta con la información creada y enriquecida desde el dominio
      */
     @Override
-    public PersonEvaluatedDetailsResponseDTO createPersonEvaluatedDetails(PersonEvaluatedDetailsCreateRequestDTO dto) {
+    public void createPersonEvaluatedDetails(PersonEvaluatedDetailsCreateRequestDTO dto) {
         PersonEvaluatedDetails personEvaluatedDetails = personEvaluatedDetailsMapper.toDomain(dto);
-        PersonEvaluatedDetails createdDetails = personEvaluatedDetailsCommandCUInputPort.createPersonEvaluatedDetails(personEvaluatedDetails);
-        System.out.println("\n\ncreatePersonEvaluatedDetails method called with DTO: " + createdDetails);
-        return null;
+        personEvaluatedDetailsCommandCUInputPort.createPersonEvaluatedDetails(personEvaluatedDetails);
+    }
+
+    /**
+     * Actualiza los detalles de una persona evaluada en el sistema.
+     *
+     * @param personEvaluatedDetailsId ID del registro a actualizar
+     * @param dto datos de entrada validados para la actualizacióN
+     */
+    @Override
+    public void updatePersonEvaluatedDetails(Long personEvaluatedDetailsId, PersonEvaluatedDetailsUpdateRequestDTO dto) {
+        PersonEvaluatedDetails personEvaluatedDetails = personEvaluatedDetailsMapper.toDomain(dto);
+        personEvaluatedDetailsCommandCUInputPort.updatePersonEvaluatedDetails(personEvaluatedDetailsId, personEvaluatedDetails);
+    }
+
+    /**
+     * Elimina los detalles de una persona evaluada del sistema.
+     *
+     * @param personEvaluatedDetailsId ID del registro a eliminar
+     */
+    @Override
+    public void deletePersonEvaluatedDetails(Long personEvaluatedDetailsId) {
+        personEvaluatedDetailsCommandCUInputPort.deletePersonEvaluatedDetails(personEvaluatedDetailsId);
     }
 }

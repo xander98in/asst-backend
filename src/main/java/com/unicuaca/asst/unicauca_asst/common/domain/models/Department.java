@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class Department {
 
     private Long id;
@@ -25,6 +26,7 @@ public class Department {
      * Nota: Mantener con cuidado para evitar ciclos al mapear/serializar.
      */
     @Builder.Default
+    @ToString.Exclude
     private Set<City> cities = new HashSet<>();
 
     // Helpers opcionales para mantener consistencia en el dominio (si los usas)

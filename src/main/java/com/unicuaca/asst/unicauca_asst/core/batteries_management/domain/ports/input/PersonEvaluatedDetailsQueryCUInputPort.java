@@ -15,4 +15,12 @@ public interface PersonEvaluatedDetailsQueryCUInputPort {
      * @return PersonEvaluatedDetails (con id, createdAt, updatedAt)
      */
     PersonEvaluatedDetails getMetaByBatteryManagementRecordId(Long batteryManagementRecordId);
+
+    /**
+     * Obtiene los detalles completos de una persona evaluada por el ID del detalle.
+     *
+     * @param personEvaluatedDetailsId ID del detalle de la persona evaluada
+     * @return PersonEvaluatedDetails (modelo dominio)
+     */
+    PersonEvaluatedDetails getPersonEvaluatedDetailsById(Long personEvaluatedDetailsId);
 }
