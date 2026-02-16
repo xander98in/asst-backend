@@ -43,4 +43,12 @@ public interface QuestionnaireManagementRecordQueryRepository {
         String questionnaireAbbreviation
     );
 
+    /**
+     * Obtiene un registro de gestión de cuestionario por su ID,
+     * cargando todas sus relaciones (Batería, Cuestionario, Estado).
+     *
+     * @param id Identificador único del registro.
+     * @return Optional con el modelo de dominio completo.
+     */
+    Optional<QuestionnaireManagementRecord> findByIdWithAll(Long id);
 }

@@ -71,4 +71,16 @@ public class QuestionnaireManagementRecordQueryRepositoryImpl implements Questio
             .findByBatteryManagementRecordIdAndQuestionnaireAbbreviationWithAll(batteryManagementRecordId, questionnaireAbbreviation)
             .map(mapper::toDomain);
     }
+
+    /**
+     * Busca un registro de gestión de cuestionario por su ID, incluyendo todas las relaciones necesarias.
+     *
+     * @param id ID del registro de gestión de cuestionario.
+     * @return Un {@link Optional} que contiene el registro encontrado, o vacío si no existe.
+     */
+    @Override
+    public Optional<QuestionnaireManagementRecord> findByIdWithAll(Long id) {
+        return questionnaireManagementRecordSpringJpaRepository.findByIdWithAll(id)
+            .map(mapper::toDomain);
+    }
 }

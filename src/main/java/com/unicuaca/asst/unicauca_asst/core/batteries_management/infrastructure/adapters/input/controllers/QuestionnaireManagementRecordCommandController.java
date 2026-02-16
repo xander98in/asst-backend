@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers;
 
+import com.unicuaca.asst.unicauca_asst.common.docs.VoidApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ import lombok.RequiredArgsConstructor;
  */
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/asst/questionnaire-management-records")
+@RequestMapping("/asst/questionnaire-management-record")
 @RequiredArgsConstructor
 public class QuestionnaireManagementRecordCommandController {
 
@@ -53,7 +54,7 @@ public class QuestionnaireManagementRecordCommandController {
             responseCode = "201",
             description = "Registro de gestión de cuestionario creado con éxito",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = VoidApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(

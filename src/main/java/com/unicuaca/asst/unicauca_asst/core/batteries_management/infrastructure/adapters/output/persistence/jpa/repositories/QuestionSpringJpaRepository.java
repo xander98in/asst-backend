@@ -23,7 +23,7 @@ public interface QuestionSpringJpaRepository extends JpaRepository<QuestionEntit
 
     /**
      * Obtiene una pregunta por su ID sin hacer fetch explícito del cuestionario.
-     * (Equivalente a {@link #findById(Long)} heredado de JpaRepository).
+     * (Equivalente a findById(Long) heredado de JpaRepository).
      *
      * @param id identificador de la pregunta.
      * @return pregunta encontrada o vacío si no existe.

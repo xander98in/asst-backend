@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,10 @@ import java.util.List;
  * <p>
  * Actúa como adaptador de entrada, delegando en {@link QuestionnaireQueryHandler} las operaciones de solo lectura.
  */
+@Tag(
+    name = "Cuestionarios",
+    description = "Operaciones de consulta (lectura) sobre el catálogo de cuestionarios disponibles en el sistema."
+)
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/questionnaires")

@@ -28,6 +28,7 @@ public enum ErrorCode {
     FORBIDDEN("ASST-SEC-0002", "Acceso denegado."),
     INVALID_CREDENTIALS("ASST-SEC-0003", "Credenciales inválidas."),
     USER_DISABLED("ASST-SEC-0004", "El usuario no ha sido verificado."),
+
     /**
      * Errores relacionados con la base de datos y persistencia.
      */
@@ -60,6 +61,13 @@ public enum ErrorCode {
     PERSON_WITH_BATTERY_RECORD("ASST-BUS-0007", "No se puede eliminar la persona evaluada, porque tiene registros de gestión de baterías asociados."),
     DELETE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0008", "No se puede eliminar el registro de gestión de batería en estado %s."),
     PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED("ASST-BUS-0009", "No es posible eliminar, porque el registro de gestión de batería ya tiene cuestionarios intralaborales (ILA/ILB) asociados."),
+
+    EMPTY_LIST_OF_RESPONSES("ASST-BUS-0010", "No se han proporcionado respuestas para procesar."),
+    DIFFERENT_RECORD_IDS_IN_RESPONSES("ASST-BUS-0011", "Se intentaron procesar respuestas pertenecientes a diferentes registros de gestión en un mismo lote."),
+    QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE("ASST-BUS-0012", "La pregunta con ID %d no pertenece al cuestionario del registro actual."),
+    QUESTION_ANSWERED_ALREADY("ASST-BUS-0013", "La pregunta con ID %d ya ha sido respondida para este registro."),
+    DUPLICATE_QUESTION_IN_BATCH("ASST-BUS-0014", "La lista contiene preguntas duplicadas. No se puede responder la misma pregunta dos veces o más en el mismo lote."),
+
     /**
      * Errores relacionados con mapeo y dependencias.
      */
