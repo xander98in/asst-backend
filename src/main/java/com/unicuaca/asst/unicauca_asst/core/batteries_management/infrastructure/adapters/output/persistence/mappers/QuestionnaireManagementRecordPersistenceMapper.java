@@ -2,6 +2,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecord;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.QuestionnaireManagementRecordEntity;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -29,4 +30,15 @@ public interface QuestionnaireManagementRecordPersistenceMapper {
     @Mapping(target = "questionnaire", source = "questionnaire")
     @Mapping(target = "status", source = "status")
     QuestionnaireManagementRecord toDomain(QuestionnaireManagementRecordEntity entity);
+
+    /**
+     * Convierte el dominio a entidad.
+     * Al usar InheritInverseConfiguration, MapStruct intentará usar los mappers
+     * definidos en 'uses' para convertir las relaciones completas
+     * (Domain -> Entity) y no solo los IDs.
+     */
+    @InheritInverseConfiguration
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    QuestionnaireManagementRecordEntity toEntity(QuestionnaireManagementRecord domain);
 }

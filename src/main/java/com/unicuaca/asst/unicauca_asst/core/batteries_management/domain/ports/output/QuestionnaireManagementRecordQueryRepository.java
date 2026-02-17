@@ -3,6 +3,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.o
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecord;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -51,4 +52,24 @@ public interface QuestionnaireManagementRecordQueryRepository {
      * @return Optional con el modelo de dominio completo.
      */
     Optional<QuestionnaireManagementRecord> findByIdWithAll(Long id);
+
+    /**
+     * Verifica si existe un registro de gestión de cuestionario específico
+     * para una batería y un cuestionario dados (por sus IDs).
+     *
+     * @param batteryId ID del registro de gestión de batería.
+     * @param questionnaireId ID del cuestionario.
+     * @return true si ya existe, false si no.
+     */
+    boolean existsByBatteryManagementRecordIdAndQuestionnaireId(Long batteryId, Long questionnaireId);
+
+    /**
+     * Obtiene la lista de abreviaturas de los cuestionarios asociados a una batería
+     * que se encuentren en un estado específico (ej: "Diligenciado").
+     *
+     * @param batteryId ID del registro de gestión de batería.
+     * @param statusName Nombre del estado a filtrar (ej: "Diligenciado").
+     * @return Lista de strings con las abreviaturas (ej: ["ILA", "EXT"]).
+     */
+    List<String> findAbbreviationsByBatteryIdAndStatusName(Long batteryId, String statusName);
 }

@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -172,5 +173,32 @@ public interface QuestionnaireManagementRecordSpringJpaRepository extends JpaRep
     Optional<QuestionnaireManagementRecordEntity> findByBatteryManagementRecordIdAndQuestionnaireAbbreviationWithAll(
         @Param("batteryManagementRecordId") Long batteryManagementRecordId,
         @Param("abbreviation") String abbreviation
+    );
+
+    /**
+     * Verifica existencia por los IDs de las relaciones.
+     * Spring Data JPA genera la query automáticamente por el nombre del método.
+     */
+    boolean existsByBatteryManagementRecord_IdAndQuestionnaire_Id(Long batteryId, Long questionnaireId);
+
+    /**
+     * Obtiene la lista de abreviaturas de los cuestionarios asociados a una batería
+     * que se encuentren en un estado específico (ej: "Diligenciado").
+     *
+     * @param batteryId ID del registro de gestión de batería.
+     * @param statusName Nombre del estado (por ejemplo: "Diligenciado").
+     * @return Lista de abreviaturas de cuestionarios que cumplen los criterios.
+     */
+    @Query("""
+        SELECT q.abbreviation
+        FROM QuestionnaireManagementRecordEntity r
+        JOIN r.questionnaire q
+        JOIN r.status s
+        WHERE r.batteryManagementRecord.id = :batteryId
+          AND s.name = :statusName
+    """)
+    List<String> findAbbreviationsByBatteryIdAndStatusName(
+        @Param("batteryId") Long batteryId,
+        @Param("statusName") String statusName
     );
 }

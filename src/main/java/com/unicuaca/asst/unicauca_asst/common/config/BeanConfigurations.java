@@ -148,13 +148,30 @@ public class BeanConfigurations {
     }
 
 
+    /**
+     * Crea una instancia de QuestionnaireResponseCommandService.
+     * Implementa la lógica de negocio para manejar las respuestas a los cuestionarios, incluyendo validaciones,
+     * reglas de negocio y orquestación de llamadas a los repositorios necesarios para procesar las respuestas.
+     *
+     * @param questionnaireManagementRecordQueryRepository
+     * @param questionQueryRepository
+     * @param answerOptionQueryRepository
+     * @param questionnaireResponseQueryRepository
+     * @param questionnaireResponseCommandRepository
+     * @param resultFormatterOutputPort
+     * @return QuestionnaireResponseCommandService
+     */
     @Bean
     public QuestionnaireResponseCommandService questionnaireResponseCommandService(
         QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository,
         QuestionQueryRepository questionQueryRepository,
         AnswerOptionQueryRepository answerOptionQueryRepository,
         QuestionnaireResponseQueryRepository questionnaireResponseQueryRepository,
+        QuestionnaireManagementRecordStatusQueryRepository questionnaireManagementRecordStatusQueryRepository,
+        BatteryManagementRecordStatusQueryRepository batteryManagementRecordStatusQueryRepository,
+        BatteryManagementRecordCommandRepository batteryManagementRecordCommandRepository,
         QuestionnaireResponseCommandRepository questionnaireResponseCommandRepository,
+        QuestionnaireManagementRecordCommandRepository questionnaireManagementRecordCommandRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
         return new QuestionnaireResponseCommandService(
@@ -162,7 +179,31 @@ public class BeanConfigurations {
             questionQueryRepository,
             answerOptionQueryRepository,
             questionnaireResponseQueryRepository,
+            questionnaireManagementRecordStatusQueryRepository,
+           batteryManagementRecordStatusQueryRepository,
+            batteryManagementRecordCommandRepository,
             questionnaireResponseCommandRepository,
-            resultFormatterOutputPort);
+            questionnaireManagementRecordCommandRepository,
+            resultFormatterOutputPort
+        );
+    }
+
+    @Bean
+    public QuestionnaireManagementRecordCommandService questionnaireManagementRecordCommandService(
+        BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository,
+        QuestionnaireQueryRepository questionnaireQueryRepository,
+        QuestionnaireManagementRecordStatusQueryRepository questionnaireManagementRecordStatusQueryRepository,
+        QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository,
+        QuestionnaireManagementRecordCommandRepository questionnaireManagementRecordCommandRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new QuestionnaireManagementRecordCommandService(
+            batteryManagementRecordQueryRepository,
+            questionnaireQueryRepository,
+            questionnaireManagementRecordStatusQueryRepository,
+            questionnaireManagementRecordQueryRepository,
+            questionnaireManagementRecordCommandRepository,
+            resultFormatterOutputPort
+        );
     }
 }

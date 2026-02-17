@@ -59,4 +59,12 @@ public interface QuestionnaireQueryRepository {
      * @return {@code true} si existe un cuestionario con ese nombre, {@code false} en caso contrario.
      */
     boolean existsByName(String name);
+
+    /**
+     * Obtiene un cuestionario a partir de su identificador único.
+     *
+     * @param id Identificador del cuestionario.
+     * @return un {@link Optional} que contiene el cuestionario encontrado, o vacío si no existe.
+     */
+    Optional<Questionnaire> getById(Long id);
 }

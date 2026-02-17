@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -82,5 +83,32 @@ public class QuestionnaireManagementRecordQueryRepositoryImpl implements Questio
     public Optional<QuestionnaireManagementRecord> findByIdWithAll(Long id) {
         return questionnaireManagementRecordSpringJpaRepository.findByIdWithAll(id)
             .map(mapper::toDomain);
+    }
+
+    /**
+     * Verifica si existe un registro de gestión de cuestionario específico
+     * para una batería y un cuestionario dados (por sus IDs).
+     *
+     * @param batteryId ID del registro de gestión de batería.
+     * @param questionnaireId ID del cuestionario.
+     * @return true si ya existe, false si no.
+     */
+    @Override
+    public boolean existsByBatteryManagementRecordIdAndQuestionnaireId(Long batteryId, Long questionnaireId) {
+        return questionnaireManagementRecordSpringJpaRepository.existsByBatteryManagementRecord_IdAndQuestionnaire_Id(batteryId, questionnaireId);
+    }
+
+    /**
+     * Obtiene la lista de abreviaturas de los cuestionarios asociados a una batería
+     * que se encuentren en un estado específico (ej: "Diligenciado").
+     *
+     * @param batteryId ID del registro de gestión de batería.
+     * @param statusName Nombre del estado (por ejemplo: "Diligenciado").
+     * @return Lista de abreviaturas de cuestionarios que cumplen los criterios.
+     */
+    @Override
+    public List<String> findAbbreviationsByBatteryIdAndStatusName(Long batteryId, String statusName) {
+        return questionnaireManagementRecordSpringJpaRepository
+            .findAbbreviationsByBatteryIdAndStatusName(batteryId, statusName);
     }
 }

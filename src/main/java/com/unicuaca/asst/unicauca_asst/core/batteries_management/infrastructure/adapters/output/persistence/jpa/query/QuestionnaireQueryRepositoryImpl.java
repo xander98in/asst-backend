@@ -99,4 +99,16 @@ public class QuestionnaireQueryRepositoryImpl implements QuestionnaireQueryRepos
     public boolean existsByName(String name) {
         return questionnaireJpaRepository.existsByName(name);
     }
+
+    /**
+     * Busca un cuestionario por su identificador único.
+     *
+     * @param id Identificador del cuestionario a buscar.
+     * @return un {@link Optional} con el cuestionario encontrado, o vacío si no existe.
+     */
+    @Override
+    public Optional<Questionnaire> getById(Long id) {
+        return questionnaireJpaRepository.findById(id)
+            .map(questionnaireMapper::toDomain);
+    }
 }

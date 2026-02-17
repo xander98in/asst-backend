@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Controlador REST para gestionar la recepción de respuestas de los cuestionarios.
- * * Forma parte de la capa de entrada (Input Adapter).
- * Recibe un lote (batch) de respuestas y delega el procesamiento al Handler.
+ *
+ * Forma parte de la capa de entrada (Input Adapter).
+ * Delega la orquestación al {@link QuestionnaireResponseCommandHandler}.
  */
 @Tag(
     name = "Respuestas de cuestionarios",

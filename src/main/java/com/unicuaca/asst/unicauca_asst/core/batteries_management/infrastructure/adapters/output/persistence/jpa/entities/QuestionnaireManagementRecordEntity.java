@@ -35,7 +35,7 @@ import lombok.Setter;
 @Table(name = "registros_gestion_cuestionarios")
 public class QuestionnaireManagementRecordEntity extends AuditableEntity {
 
-   /**
+    /**
      * Identificador único del registro de gestión de cuestionario.
      */
     @Id

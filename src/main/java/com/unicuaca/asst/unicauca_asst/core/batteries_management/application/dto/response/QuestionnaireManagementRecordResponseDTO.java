@@ -17,30 +17,33 @@ import java.time.LocalDateTime;
 @Builder
 public class QuestionnaireManagementRecordResponseDTO {
 
-    @Schema(example = "20", description = "ID del registro de gestión de cuestionario")
+    @Schema(description = "ID único del registro de gestión de cuestionario", example = "1")
     private Long id;
 
-    @Schema(example = "2026-02-02T10:30:00", description = "Fecha de creación")
-    private LocalDateTime createdAt;
-
-    @Schema(example = "2026-02-03T08:10:00", description = "Fecha de última actualización")
-    private LocalDateTime updatedAt;
-
-    @Schema(example = "2", description = "ID del estado del registro de gestión de cuestionario")
-    private Long statusId;
-
-    @Schema(example = "Creado", description = "Nombre del estado del registro de gestión de cuestionario")
-    private String statusName;
-
-    @Schema(example = "15", description = "ID del registro de gestión de baterías asociado")
+    @Schema(description = "ID del registro de gestión de baterías asociado", example = "100")
     private Long batteryManagementRecordId;
 
-    @Schema(example = "1", description = "ID del cuestionario asociado")
+    @Schema(description = "ID del estado del registro", example = "5")
+    private Long statusId;
+
+    @Schema(description = "Nombre del estado del registro", example = "CREADO")
+    private String statusName;
+
+    @Schema(description = "ID del cuestionario asociado", example = "50")
     private Long questionnaireId;
 
-    @Schema(example = "ILA", description = "Abreviatura del cuestionario")
+    @Schema(description = "Nombre del cuestionario", example = "Cuestionario de Estrés")
+    private String questionnaireName;
+
+    @Schema(description = "Abreviatura del cuestionario", example = "EST")
     private String questionnaireAbbreviation;
 
-    @Schema(example = "Cuestionario de Factores de Riesgo Psicosocial Intralaboral – Forma A", description = "Nombre del cuestionario")
-    private String questionnaireName;
+    @Schema(description = "Descripción del cuestionario", example = "Evalúa nivel de estrés...")
+    private String questionnaireDescription;
+
+    @Schema(description = "Fecha y hora de creación del registro")
+    private LocalDateTime createdAt;
+
+    @Schema(description = "Fecha y hora de la última actualización")
+    private LocalDateTime updatedAt;
 }

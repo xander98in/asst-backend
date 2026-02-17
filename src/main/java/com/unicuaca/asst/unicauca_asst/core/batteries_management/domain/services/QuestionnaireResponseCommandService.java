@@ -2,10 +2,10 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.service
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.AnswerOption;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Question;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecord;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireResponse;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.*;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.BatteryManagementRecordStatusCode;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.QuestionnaireEnum;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.QuestionnaireManagementRecordStatusEnum;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.QuestionnaireResponseCommandCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
 import lombok.RequiredArgsConstructor;
@@ -28,22 +28,26 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
     private final QuestionQueryRepository questionQueryRepository;
     private final AnswerOptionQueryRepository answerOptionQueryRepository;
     private final QuestionnaireResponseQueryRepository questionnaireResponseQueryRepository;
+    private final QuestionnaireManagementRecordStatusQueryRepository questionnaireManagementRecordStatusQueryRepository;
+    private final BatteryManagementRecordStatusQueryRepository batteryManagementRecordStatusQueryRepository;
+    private final BatteryManagementRecordCommandRepository batteryManagementRecordCommandRepository;
     private final QuestionnaireResponseCommandRepository questionnaireResponseCommandRepository;
+    private final QuestionnaireManagementRecordCommandRepository questionnaireManagementRecordCommandRepository;
     private final ResultFormatterOutputPort resultFormatter;
 
     @Override
     public void createQuestionnaireResponseBatch(List<QuestionnaireResponse> responses) {
 
-        // 1. Validar lista vacía
+        // Validar lista vacía
         if (responses == null || responses.isEmpty()) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.EMPTY_LIST_OF_RESPONSES.getCode(),
                 ErrorCode.EMPTY_LIST_OF_RESPONSES.getMessageKey()
             );
-            return; // Detiene la ejecución (aunque el throw ya debería hacerlo)
+            return;
         }
 
-        // 2. Obtener ID de referencia y validar consistencia
+        // Obtener ID de referencia y validar consistencia
         Long recordIdRef = responses.get(0).getQuestionnaireManagementRecord().getId();
 
         // Regla de Negocio: Todos los elementos deben pertenecer al mismo ID de registro
@@ -71,8 +75,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             );
         }
 
-        // 3. Buscar el Registro de Gestión de Cuestionario (con relaciones)
-        // Si no existe, lanza excepción de Entidad No Encontrada
+        // Buscar el Registro de Gestión de Cuestionario (con relaciones)
         QuestionnaireManagementRecord managementRecord = questionnaireManagementRecordQueryRepository.findByIdWithAll(recordIdRef)
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
@@ -82,10 +85,10 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 return null;
             });
 
-        // 4. Iterar, Validar y Enriquecer cada respuesta
+        // Iterar, Validar y Enriquecer cada respuesta
         responses.forEach(response -> {
 
-            // A. Obtener la Pregunta completa (con su cuestionario)
+            // Obtener la Pregunta completa (con su cuestionario)
             Long questionId = response.getQuestion().getId();
             Question question = questionQueryRepository.getQuestionByIdWithQuestionnaire(questionId)
                 .orElseGet(() -> {
@@ -104,7 +107,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 );
             }
 
-            // B. Obtener la Opción de Respuesta por valor
+            // Obtener la Opción de Respuesta por valor
             Integer answerValue = response.getAnswerOption().getValue();
             AnswerOption answerOption = answerOptionQueryRepository.getAnswerOptionByValue(answerValue)
                 .orElseGet(() -> {
@@ -115,7 +118,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                     return null;
                 });
 
-            // C. Verificar Duplicidad (Regla de Negocio)
+            // Verificar Duplicidad (Regla de Negocio)
             boolean alreadyAnswered = questionnaireResponseQueryRepository.existsByRecordIdAndQuestionId(recordIdRef, questionId);
 
             if (alreadyAnswered) {
@@ -125,12 +128,79 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 );
             }
 
-            // D. Setear la información completa en el objeto de dominio (Hydration)
+            // Setear la información completa en el objeto de dominio (Hydration)
             response.setQuestionnaireManagementRecord(managementRecord);
             response.setQuestion(question);
             response.setAnswerOption(answerOption);
         });
 
+        // Persistir todas las respuestas (Batch)
         questionnaireResponseCommandRepository.saveAll(responses);
+
+        // =================================================================================
+        // Actualizar el estado del Registro de Gestión a "DILIGENCIADO"
+        // =================================================================================
+
+        // Obtener el nombre del estado desde el Enum
+        String targetStatusName = QuestionnaireManagementRecordStatusEnum.DILIGENCIADO.getName();
+
+        // Buscar el objeto Estado en la base de datos
+        QuestionnaireManagementRecordStatus diligenciadoStatus = questionnaireManagementRecordStatusQueryRepository
+            .getQuestionnaireManagementRecordStatusByName(targetStatusName)
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                        "El estado '" + targetStatusName + "' no se encuentra configurado en el sistema.")
+                );
+                return null;
+            });
+
+        managementRecord.setStatus(diligenciadoStatus);
+        questionnaireManagementRecordCommandRepository.save(managementRecord);
+
+        // =================================================================================
+        // Verificar completitud y actualizar estado de la Batería
+        // =================================================================================
+
+        Long batteryId = managementRecord.getBatteryManagementRecord().getId();
+        String statusDiligenciado = QuestionnaireManagementRecordStatusEnum.DILIGENCIADO.getName();
+
+        // Obtener qué cuestionarios de esta batería ya están "Diligenciados"
+        List<String> completedAbbreviations = questionnaireManagementRecordQueryRepository
+            .findAbbreviationsByBatteryIdAndStatusName(batteryId, statusDiligenciado);
+
+        // Evaluar Reglas de Negocio
+        boolean hasExt = completedAbbreviations.contains(QuestionnaireEnum.EXT.getAbbreviation());
+        boolean hasEst = completedAbbreviations.contains(QuestionnaireEnum.EST.getAbbreviation());
+        boolean hasIla = completedAbbreviations.contains(QuestionnaireEnum.ILA.getAbbreviation());
+        boolean hasIlb = completedAbbreviations.contains(QuestionnaireEnum.ILB.getAbbreviation());
+
+        // Debe tener EXT + EST + (ILA ó ILB). Total 3.
+        boolean isBatteryComplete = hasExt && hasEst && (hasIla || hasIlb) && completedAbbreviations.size() == 3;
+
+        // Determinar el nuevo estado de la batería
+        String targetBatteryStatusName;
+        if (isBatteryComplete) {
+            targetBatteryStatusName = BatteryManagementRecordStatusCode.COMPLETED.getDescription(); // "Diligenciado"
+        } else {
+            targetBatteryStatusName = BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription(); // "En diligenciamiento"
+        }
+
+        // Actualizar el estado de la Batería
+        BatteryManagementRecord batteryRecord = managementRecord.getBatteryManagementRecord();
+        BatteryManagementRecordStatus newStatus = batteryManagementRecordStatusQueryRepository
+            .getStatusByName(targetBatteryStatusName)
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    "El estado de batería '" + targetBatteryStatusName + "' no existe."
+                );
+                return null;
+            });
+
+        batteryRecord.setStatus(newStatus);
+        // Usamos el puerto de comando de Batería
+        batteryManagementRecordCommandRepository.updateBatteryManagementRecord(batteryRecord);
     }
 }

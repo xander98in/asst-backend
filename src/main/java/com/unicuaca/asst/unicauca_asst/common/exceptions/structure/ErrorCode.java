@@ -68,6 +68,8 @@ public enum ErrorCode {
     QUESTION_ANSWERED_ALREADY("ASST-BUS-0013", "La pregunta con ID %d ya ha sido respondida para este registro."),
     DUPLICATE_QUESTION_IN_BATCH("ASST-BUS-0014", "La lista contiene preguntas duplicadas. No se puede responder la misma pregunta dos veces o más en el mismo lote."),
 
+    QUESTIONNAIRE_RECORD_ALREADY_EXISTS("ASST-BUS-0015", "El registro de gestión de cuestionario para la batería con ID %s y cuestionario: %s ya existe."),
+
     /**
      * Errores relacionados con mapeo y dependencias.
      */
