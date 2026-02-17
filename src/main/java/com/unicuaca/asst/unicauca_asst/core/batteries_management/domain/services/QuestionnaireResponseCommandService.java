@@ -203,4 +203,127 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
         // Usamos el puerto de comando de Batería
         batteryManagementRecordCommandRepository.updateBatteryManagementRecord(batteryRecord);
     }
+
+    /**
+     * Actualiza un batch de respuestas de cuestionario existentes asociadas a un mismo registro de
+     * gestión de cuestionarios.
+     *
+     * @param responses Lista de respuestas a actualizar.
+     */
+    @Override
+    public void updateQuestionnaireResponseBatch(List<QuestionnaireResponse> responses) {
+
+        // Validar lista vacía
+        if (responses == null || responses.isEmpty()) {
+            resultFormatter.throwBusinessRuleViolation(
+                ErrorCode.EMPTY_LIST_OF_RESPONSES.getCode(),
+                ErrorCode.EMPTY_LIST_OF_RESPONSES.getMessageKey()
+            );
+            return;
+        }
+
+        // Obtener ID de referencia y validar consistencia del Registro de Gestión en el input
+        Long recordIdRef = responses.get(0).getQuestionnaireManagementRecord().getId();
+
+        // Regla de Negocio: Todos los elementos deben pertenecer al mismo ID de registro
+        boolean allSameRecordId = responses.stream()
+            .map(r -> r.getQuestionnaireManagementRecord().getId())
+            .allMatch(id -> Objects.equals(id, recordIdRef));
+
+        if (!allSameRecordId) {
+            resultFormatter.throwBusinessRuleViolation(
+                ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getCode(),
+                ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getMessageKey()
+            );
+        }
+
+        // Regla de Negocio: No debe haber preguntas duplicadas en el batch de actualización
+        long uniqueQuestionsCount = responses.stream()
+            .map(r -> r.getQuestion().getId())
+            .distinct()
+            .count();
+
+        if (uniqueQuestionsCount != responses.size()) {
+            resultFormatter.throwBusinessRuleViolation(
+                ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getCode(),
+                ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getMessageKey()
+            );
+        }
+
+        // Buscar y Validar existencia del Registro de Gestión de Cuestionario
+        questionnaireManagementRecordQueryRepository.findById(recordIdRef)
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + recordIdRef + " no existe.")
+                );
+                return null;
+            });
+
+        // Procesar cada actualización
+        responses.forEach(inputResponse -> {
+
+            Long responseId = inputResponse.getId();
+
+            // Obtener la Respuesta Existente de la BD (con todas sus relaciones)
+            QuestionnaireResponse existingResponse = questionnaireResponseQueryRepository.getByIdWithAllRelations(responseId)
+                .orElseGet(() -> {
+                    resultFormatter.throwEntityNotFound(
+                        ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La respuesta con ID " + responseId + " no existe.")
+                    );
+                    return null;
+                });
+
+            // Verificar que la respuesta que recuperamos de BD realmente pertenece al registro de gestión que estamos procesando.
+            if (!existingResponse.getQuestionnaireManagementRecord().getId().equals(recordIdRef)) {
+                resultFormatter.throwBusinessRuleViolation(
+                    ErrorCode.RESPONSE_BELONGS_TO_OTHER_RECORD.getCode(),
+                    String.format(ErrorCode.RESPONSE_BELONGS_TO_OTHER_RECORD.getMessageKey(), responseId, recordIdRef)
+                );
+            }
+
+            // Validar consistencia de la pregunta; aseguramos que el front no mandó un ID de respuesta con un ID de pregunta que no cuadra.
+            if (!existingResponse.getQuestion().getId().equals(inputResponse.getQuestion().getId())) {
+                resultFormatter.throwBusinessRuleViolation(
+                    ErrorCode.RESPONSE_QUESTION_MISMATCH.getCode(),
+                    String.format(ErrorCode.RESPONSE_QUESTION_MISMATCH.getMessageKey(), responseId)
+                );
+            }
+
+            // Obtener la nueva Opción de Respuesta por valor
+            Integer newValue = inputResponse.getAnswerOption().getValue();
+
+            // Optimización: Si el valor es el mismo, no hacemos nada (evita queries innecesarios de AnswerOption)
+            if (!Objects.equals(existingResponse.getAnswerOption().getValue(), newValue)) {
+
+                AnswerOption newAnswerOption = answerOptionQueryRepository.getAnswerOptionByValue(newValue)
+                    .orElseGet(() -> {
+                        resultFormatter.throwEntityNotFound(
+                            ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                            String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La opción de respuesta con valor " + newValue + " no existe.")
+                        );
+                        return null;
+                    });
+
+                // Actualizar el objeto de dominio existente (Managed Entity)
+                existingResponse.setAnswerOption(newAnswerOption);
+
+                // Actualizamos el objeto de entrada con la data real para el saveAll final
+                inputResponse.setQuestionnaireManagementRecord(existingResponse.getQuestionnaireManagementRecord());
+                inputResponse.setQuestion(existingResponse.getQuestion());
+                inputResponse.setAnswerOption(newAnswerOption);
+                inputResponse.setCreatedAt(existingResponse.getCreatedAt());
+            } else {
+                // Si el valor es igual, igual debemos hidratar el objeto para que el saveAll no falle por nulos
+                inputResponse.setQuestionnaireManagementRecord(existingResponse.getQuestionnaireManagementRecord());
+                inputResponse.setQuestion(existingResponse.getQuestion());
+                inputResponse.setAnswerOption(existingResponse.getAnswerOption());
+                inputResponse.setCreatedAt(existingResponse.getCreatedAt());
+            }
+        });
+
+        // Persistir los cambios
+        questionnaireResponseCommandRepository.saveAll(responses);
+    }
 }

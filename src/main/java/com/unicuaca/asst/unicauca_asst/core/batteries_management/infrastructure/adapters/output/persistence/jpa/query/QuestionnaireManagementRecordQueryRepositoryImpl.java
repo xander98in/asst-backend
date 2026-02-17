@@ -111,4 +111,16 @@ public class QuestionnaireManagementRecordQueryRepositoryImpl implements Questio
         return questionnaireManagementRecordSpringJpaRepository
             .findAbbreviationsByBatteryIdAndStatusName(batteryId, statusName);
     }
+
+    /**
+     * Busca un registro de gestión de cuestionario por su ID.
+     *
+     * @param id ID del registro de gestión de cuestionario.
+     * @return Un {@link Optional} que contiene el registro encontrado, o vacío si no existe.
+     */
+    @Override
+    public Optional<QuestionnaireManagementRecord> findById(Long id) {
+        return questionnaireManagementRecordSpringJpaRepository.findById(id)
+            .map(mapper::toDomain);
+    }
 }

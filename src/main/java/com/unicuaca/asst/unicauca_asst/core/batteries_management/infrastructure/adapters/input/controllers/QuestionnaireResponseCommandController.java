@@ -7,6 +7,7 @@ import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
 import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.command.QuestionnaireResponseCommandHandler;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireResponseBatchCreateRequestDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireResponseBatchUpdateRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -103,6 +104,63 @@ public class QuestionnaireResponseCommandController {
             "/asst/questionnaire-response/batch-create",
             SuccessCode.CREATED,
             "Respuestas del cuestionario registradas con éxito.",
+            null
+        );
+    }
+
+    /**
+     * Actualiza un lote de respuestas existentes para un registro de gestión de cuestionario específico.
+     *
+     * @param dto DTO con el ID del registro y la lista de respuestas a actualizar.
+     * @param request Objeto HttpServletRequest.
+     * @return Respuesta 200 OK.
+     */
+    @Operation(
+        summary = "Actualizar respuestas de cuestionario (Batch)",
+        description = "Actualiza un conjunto de respuestas existentes para un registro de gestión de cuestionario específico."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Respuestas actualizadas con éxito",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = VoidApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Datos inválidos",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Recurso no encontrado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        )
+    })
+    @PutMapping("/batch-update")
+    public ResponseEntity<ApiResponse<Void>> updateBatch(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "DTO con la información de actualización.",
+            required = true,
+            content = @Content(schema = @Schema(implementation = QuestionnaireResponseBatchUpdateRequestDTO.class))
+        )
+        @Valid @RequestBody QuestionnaireResponseBatchUpdateRequestDTO dto,
+        HttpServletRequest request
+    ) {
+        questionnaireResponseCommandHandler.updateQuestionnaireResponseBatch(dto);
+
+        return ResponseUtil.ok(
+            request,
+            SuccessCode.UPDATED,
+            "Respuestas del cuestionario actualizadas con éxito.",
             null
         );
     }

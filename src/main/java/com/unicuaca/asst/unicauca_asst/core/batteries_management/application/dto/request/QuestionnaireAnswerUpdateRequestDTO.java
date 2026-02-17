@@ -13,19 +13,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO que representa una respuesta individual dentro de un lote de respuestas.
- * Contiene el ID de la pregunta y el valor seleccionado.
+ * DTO que representa una respuesta individual a actualizar dentro de un lote.
+ * Contiene el ID de la respuesta existente, el ID de la pregunta y el nuevo valor.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@GroupSequence({FirstGroup.class, SecondGroup.class, QuestionnaireAnswerRequestDTO.class})
-@Schema(description = "Objeto que representa una respuesta individual a una pregunta")
-public class QuestionnaireAnswerRequestDTO {
+@GroupSequence({FirstGroup.class, SecondGroup.class, QuestionnaireAnswerUpdateRequestDTO.class})
+@Schema(description = "Objeto que representa una respuesta individual a actualizar")
+public class QuestionnaireAnswerUpdateRequestDTO {
 
     /**
-     * ID de la pregunta que se está respondiendo.
+     * ID único del registro de respuesta (QuestionnaireResponse) que se va a actualizar.
+     */
+    @NotNull(message = "{questionnaireResponse.id.notNull}", groups = FirstGroup.class)
+    @Positive(message = "{questionnaireResponse.id.positive}", groups = SecondGroup.class)
+    @Schema(description = "ID único del registro de la respuesta a actualizar", example = "501")
+    private Long id;
+
+    /**
+     * ID de la pregunta asociada.
+     * Aunque el ID de respuesta ya identifica el registro, el ID de pregunta sirve para validaciones de consistencia.
      */
     @NotNull(message = "{questionnaireResponse.questionId.notNull}", groups = FirstGroup.class)
     @Positive(message = "{questionnaireResponse.questionId.positive}", groups = SecondGroup.class)
@@ -33,11 +42,10 @@ public class QuestionnaireAnswerRequestDTO {
     private Long questionId;
 
     /**
-     * Valor numérico de la respuesta seleccionada.
-     * Se valida que no sea nulo y que sea positivo o cero.
+     * Nuevo valor numérico de la respuesta seleccionada.
      */
     @NotNull(message = "{questionnaireResponse.value.notNull}", groups = FirstGroup.class)
     @Min(value = 0, message = "{questionnaireResponse.value.min}", groups = SecondGroup.class)
-    @Schema(description = "Valor numérico de la opción seleccionada", example = "5")
+    @Schema(description = "Nuevo valor numérico de la opción seleccionada", example = "4")
     private Integer value;
 }

@@ -67,8 +67,9 @@ public enum ErrorCode {
     QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE("ASST-BUS-0012", "La pregunta con ID %d no pertenece al cuestionario del registro actual."),
     QUESTION_ANSWERED_ALREADY("ASST-BUS-0013", "La pregunta con ID %d ya ha sido respondida para este registro."),
     DUPLICATE_QUESTION_IN_BATCH("ASST-BUS-0014", "La lista contiene preguntas duplicadas. No se puede responder la misma pregunta dos veces o más en el mismo lote."),
-
-    QUESTIONNAIRE_RECORD_ALREADY_EXISTS("ASST-BUS-0015", "El registro de gestión de cuestionario para la batería con ID %s y cuestionario: %s ya existe."),
+    RESPONSE_BELONGS_TO_OTHER_RECORD("ASST-BUS-0015", "La respuesta con ID %d no pertenece al registro de gestión de cuestionario ID %d."),
+    RESPONSE_QUESTION_MISMATCH("ASST-BUS-0016", "El ID de pregunta proporcionado no coincide con el almacenado en la respuesta ID: %d"),
+    QUESTIONNAIRE_RECORD_ALREADY_EXISTS("ASST-BUS-0016", "El registro de gestión de cuestionario para la batería con ID %s y cuestionario: %s ya existe."),
 
     /**
      * Errores relacionados con mapeo y dependencias.

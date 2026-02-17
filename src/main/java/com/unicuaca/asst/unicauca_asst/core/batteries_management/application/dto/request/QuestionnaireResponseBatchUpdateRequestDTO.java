@@ -16,29 +16,27 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * DTO para la creación masiva de respuestas de un cuestionario.
- * <p>
- * Agrupa múltiples respuestas bajo un mismo registro de gestión de cuestionario.
+ * DTO para la actualización masiva de respuestas de un cuestionario.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@GroupSequence({FirstGroup.class, SecondGroup.class, QuestionnaireResponseBatchCreateRequestDTO.class})
+@GroupSequence({FirstGroup.class, SecondGroup.class, QuestionnaireResponseBatchUpdateRequestDTO.class})
 @Schema(
-    description = "Solicitud para registrar un lote de respuestas de un cuestionario",
+    description = "Solicitud para actualizar un lote de respuestas existentes",
     example = """
     {
       "questionnaireManagementRecordId": 123,
       "answers": [
-        { "questionId": 10, "value": 5 },
-        { "questionId": 11, "value": 3 },
-        { "questionId": 12, "value": 1 }
+        { "id": 501, "questionId": 10, "value": 4 },
+        { "id": 502, "questionId": 11, "value": 2 },
+        { "id": 503, "questionId": 12, "value": 0 }
       ]
     }
     """
 )
-public class QuestionnaireResponseBatchCreateRequestDTO {
+public class QuestionnaireResponseBatchUpdateRequestDTO {
 
     /**
      * ID del registro de gestión de cuestionario al que pertenecen estas respuestas.
@@ -49,12 +47,12 @@ public class QuestionnaireResponseBatchCreateRequestDTO {
     private Long questionnaireManagementRecordId;
 
     /**
-     * Lista de respuestas individuales.
-     * La anotación @Valid es crucial para que Spring valide cada objeto QuestionnaireAnswerRequestDTO dentro de la lista.
+     * Lista de respuestas individuales a actualizar.
+     * La anotación @Valid es crucial para que Spring valide cada objeto QuestionnaireAnswerUpdateRequestDTO dentro de la lista.
      */
     @NotNull(message = "{questionnaireResponse.answers.notNull}", groups = FirstGroup.class)
     @NotEmpty(message = "{questionnaireResponse.answers.notEmpty}", groups = SecondGroup.class)
     @Valid
-    @Schema(description = "Lista de respuestas individuales")
-    private List<QuestionnaireAnswerCreateRequestDTO> answers;
+    @Schema(description = "Lista de respuestas a actualizar")
+    private List<QuestionnaireAnswerUpdateRequestDTO> answers;
 }

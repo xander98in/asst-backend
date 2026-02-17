@@ -17,4 +17,11 @@ public interface QuestionnaireResponseCommandCUInputPort {
      * @param responses Lista de modelos de dominio con las respuestas a guardar.
      */
     void createQuestionnaireResponseBatch(List<QuestionnaireResponse> responses);
+
+    /**
+     * Procesa y actualiza un lote de respuestas de cuestionario existentes asociadas a un registro de gestión de cuestionario.
+     *
+     * @param responses Lista de modelos de dominio con las respuestas a actualizar.
+     */
+    void updateQuestionnaireResponseBatch(List<QuestionnaireResponse> responses);
 }

@@ -72,4 +72,13 @@ public interface QuestionnaireManagementRecordQueryRepository {
      * @return Lista de strings con las abreviaturas (ej: ["ILA", "EXT"]).
      */
     List<String> findAbbreviationsByBatteryIdAndStatusName(Long batteryId, String statusName);
+
+    /**
+     * Busca un registro de gestión de cuestionario por su ID.
+     * Útil para validaciones de existencia rápidas.
+     *
+     * @param id Identificador único del registro.
+     * @return Optional con el modelo de dominio.
+     */
+    Optional<QuestionnaireManagementRecord> findById(Long id);
 }

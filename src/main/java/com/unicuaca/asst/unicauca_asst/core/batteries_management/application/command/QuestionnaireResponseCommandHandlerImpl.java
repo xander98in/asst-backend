@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.command;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireResponseBatchCreateRequestDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireResponseBatchUpdateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.mappers.QuestionnaireResponseMapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireResponse;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.QuestionnaireResponseCommandCUInputPort;
@@ -31,5 +32,16 @@ public class QuestionnaireResponseCommandHandlerImpl implements QuestionnaireRes
     public void createQuestionnaireResponseBatch(QuestionnaireResponseBatchCreateRequestDTO dto) {
         List<QuestionnaireResponse> domainResponses = questionnaireResponseMapper.toDomainList(dto);
         questionnaireResponseCommandCUInputPort.createQuestionnaireResponseBatch(domainResponses);
+    }
+
+    /**
+     * Procesa la actualización masiva de respuestas asociadas a un registro de gestión de cuestionario.
+     *
+     * @param dto datos de entrada validados.
+     */
+    @Override
+    public void updateQuestionnaireResponseBatch(QuestionnaireResponseBatchUpdateRequestDTO dto) {
+        List<QuestionnaireResponse> domainResponses = questionnaireResponseMapper.toDomainListForUpdate(dto);
+        questionnaireResponseCommandCUInputPort.updateQuestionnaireResponseBatch(domainResponses);
     }
 }

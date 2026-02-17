@@ -1,7 +1,9 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.mappers;
 
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireAnswerRequestDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireAnswerCreateRequestDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireAnswerUpdateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireResponseBatchCreateRequestDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireResponseBatchUpdateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.AnswerOption;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Question;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecord;
@@ -27,9 +29,7 @@ public interface QuestionnaireResponseMapper {
         if (dto == null || dto.getAnswers() == null) {
             return List.of();
         }
-
-        // Iteramos sobre cada respuesta "hija" y la convertimos,
-        // pasando el ID del "padre" como contexto.
+        // Iteramos sobre cada respuesta "hija" y la convertimos, pasando el ID del "padre" como contexto.
         return dto.getAnswers().stream()
             .map(answerDto -> toDomain(answerDto, dto.getQuestionnaireManagementRecordId()))
             .toList();
@@ -37,11 +37,12 @@ public interface QuestionnaireResponseMapper {
 
     /**
      * Convierte una respuesta individual (DTO hijo) en un modelo de dominio.
-     * * @param answerDto DTO con questionId y value.
+     *
+     * @param answerDto DTO con questionId y value.
      * @param recordId ID del registro de gestión (viene del DTO padre).
      * @return Objeto de dominio completo.
      */
-    @Mapping(target = "id", ignore = true) // Es nuevo, no tiene ID aún
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     // 1. Mapeo del Registro de Gestión (Solo ID)
@@ -50,7 +51,37 @@ public interface QuestionnaireResponseMapper {
     @Mapping(target = "question", expression = "java(buildQuestion(answerDto.getQuestionId()))")
     // 3. Mapeo de la Opción de Respuesta (Solo Value)
     @Mapping(target = "answerOption", expression = "java(buildAnswerOption(answerDto.getValue()))")
-    QuestionnaireResponse toDomain(QuestionnaireAnswerRequestDTO answerDto, Long recordId);
+    QuestionnaireResponse toDomain(QuestionnaireAnswerCreateRequestDTO answerDto, Long recordId);
+
+    /**
+     * Convierte el DTO batch de actualización a una lista de modelos de dominio.
+     *
+     * @param dto DTO con el ID del registro y la lista de respuestas a actualizar (cada una con su ID).
+     * @return Lista de modelos de dominio listos para ser procesados en la actualización.
+     */
+    default List<QuestionnaireResponse> toDomainListForUpdate(QuestionnaireResponseBatchUpdateRequestDTO dto) {
+        if (dto == null || dto.getAnswers() == null) {
+            return List.of();
+        }
+        return dto.getAnswers().stream()
+            .map(answerDto -> toDomainForUpdate(answerDto, dto.getQuestionnaireManagementRecordId()))
+            .toList();
+    }
+
+    /**
+     * Mapea un item de actualización al dominio.
+     *
+     * @param answerDto DTO con ID de la respuesta, questionId y value.
+     * @param recordId ID del registro de gestión (viene del DTO padre).
+     * @return Objeto de dominio completo con ID para actualización.
+     */
+    @Mapping(target = "id", source = "answerDto.id") // ID de la respuesta
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "questionnaireManagementRecord", expression = "java(buildRecord(recordId))")
+    @Mapping(target = "question", expression = "java(buildQuestion(answerDto.getQuestionId()))")
+    @Mapping(target = "answerOption", expression = "java(buildAnswerOption(answerDto.getValue()))")
+    QuestionnaireResponse toDomainForUpdate(QuestionnaireAnswerUpdateRequestDTO answerDto, Long recordId);
 
     // --- Métodos Helper para construir los objetos anidados ---
 
@@ -66,7 +97,6 @@ public interface QuestionnaireResponseMapper {
 
     default AnswerOption buildAnswerOption(Integer value) {
         if (value == null) return null;
-        // Nota: Mapeamos al campo 'value', los demás (id, text, order) quedan nulos
         return AnswerOption.builder().value(value).build();
     }
 
