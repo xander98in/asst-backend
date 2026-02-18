@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +24,10 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Controlador REST para consultas relacionadas con los registros de gestión de cuestionarios.
  */
+@Tag(
+    name = "Consulta de registros de cuestionarios",
+    description = "Endpoints para consultar registros de gestión de cuestionarios."
+)
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/questionnaire-management-record")

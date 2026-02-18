@@ -4,6 +4,8 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireAnswerUpdateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireResponseBatchCreateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireResponseBatchUpdateRequestDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.QuestionnaireAnswerResponseDTO;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.QuestionnaireResponseBatchResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.AnswerOption;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Question;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecord;
@@ -82,6 +84,54 @@ public interface QuestionnaireResponseMapper {
     @Mapping(target = "question", expression = "java(buildQuestion(answerDto.getQuestionId()))")
     @Mapping(target = "answerOption", expression = "java(buildAnswerOption(answerDto.getValue()))")
     QuestionnaireResponse toDomainForUpdate(QuestionnaireAnswerUpdateRequestDTO answerDto, Long recordId);
+
+    /**
+     * Convierte una lista de respuestas del dominio en un DTO Batch estructurado.
+     * Toma la información del padre del primer elemento de la lista.
+     *
+     * @param domainList Lista de respuestas del dominio.
+     * @return DTO estructurado con cabecera y lista de respuestas.
+     */
+    default QuestionnaireResponseBatchResponseDTO toBatchResponseDTO(List<QuestionnaireResponse> domainList) {
+        if (domainList == null || domainList.isEmpty()) {
+            return null;
+        }
+
+        QuestionnaireResponse first = domainList.get(0);
+        QuestionnaireManagementRecord record = first.getQuestionnaireManagementRecord();
+
+        return QuestionnaireResponseBatchResponseDTO.builder()
+            .id(record.getId())
+            .batteryManagementRecordId(record.getBatteryManagementRecord().getId())
+            .statusId(record.getStatus().getId())
+            .statusName(record.getStatus().getName())
+            .questionnaireId(record.getQuestionnaire().getId())
+            .questionnaireName(record.getQuestionnaire().getName())
+            .questionnaireAbbreviation(record.getQuestionnaire().getAbbreviation())
+            .questionnaireDescription(record.getQuestionnaire().getDescription())
+            .createdAt(record.getCreatedAt())
+            .updatedAt(record.getUpdatedAt())
+            .answers(toAnswerResponseList(domainList))
+            .build();
+    }
+
+    /**
+     * Convierte una lista de dominios en lista de DTOs hijos.
+     */
+    List<QuestionnaireAnswerResponseDTO> toAnswerResponseList(List<QuestionnaireResponse> list);
+
+    /**
+     * Convierte una respuesta individual de dominio a DTO hijo.
+     */
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "questionId", source = "question.id")
+    @Mapping(target = "questionText", source = "question.text")
+    @Mapping(target = "questionOrder", source = "question.order")
+    @Mapping(target = "answerOptionId", source = "answerOption.id")
+    @Mapping(target = "answerOptionText", source = "answerOption.text")
+    @Mapping(target = "answerOptionValue", source = "answerOption.value")
+    @Mapping(target = "answerOptionOrder", source = "answerOption.order")
+    QuestionnaireAnswerResponseDTO toAnswerResponseDTO(QuestionnaireResponse domain);
 
     // --- Métodos Helper para construir los objetos anidados ---
 

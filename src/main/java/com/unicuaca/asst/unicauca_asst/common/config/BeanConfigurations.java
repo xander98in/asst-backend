@@ -212,4 +212,17 @@ public class BeanConfigurations {
             resultFormatterOutputPort
         );
     }
+
+    @Bean
+    public QuestionnaireResponseQueryService questionnaireResponseQueryService(
+        QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository,
+        QuestionnaireResponseQueryRepository questionnaireResponseQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new QuestionnaireResponseQueryService(
+            questionnaireManagementRecordQueryRepository,
+            questionnaireResponseQueryRepository,
+            resultFormatterOutputPort
+        );
+    }
 }

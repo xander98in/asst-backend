@@ -2,6 +2,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.o
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireResponse;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -39,4 +40,13 @@ public interface QuestionnaireResponseQueryRepository {
      * @return true si la respuesta ya existe, false en caso contrario.
      */
     boolean existsByRecordIdAndQuestionId(Long recordId, Long questionId);
+
+    /**
+     * Obtiene la lista completa de respuestas para un registro de gestión de cuestionario dado,
+     * incluyendo todas sus relaciones cargadas.
+     *
+     * @param recordId ID del registro de gestión.
+     * @return Lista de respuestas del dominio.
+     */
+    List<QuestionnaireResponse> findAllByRecordIdWithAllRelations(Long recordId);
 }

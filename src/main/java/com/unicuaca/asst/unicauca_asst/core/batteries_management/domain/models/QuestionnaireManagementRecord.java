@@ -5,7 +5,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /**
- * Representa un registro de gestión de cuestionarios, inluyecndo información sobre su
+ * Representa un registro de gestión de cuestionarios, incluyecndo información sobre su
  * estado y asociación con registros de gestión de baterías y cuestionarios.
  */
 @Getter

@@ -81,4 +81,12 @@ public interface QuestionnaireManagementRecordQueryRepository {
      * @return Optional con el modelo de dominio.
      */
     Optional<QuestionnaireManagementRecord> findById(Long id);
+
+    /**
+    * Verifica si existe un registro de gestión de cuestionario por su ID.
+    *
+    * @param id Identificador único del registro.
+    * @return {@code true} si existe, {@code false} en caso contrario.
+    */
+    boolean existsById(Long id);
 }

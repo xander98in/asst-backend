@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
  * Delega la orquestación al {@link QuestionnaireResponseCommandHandler}.
  */
 @Tag(
-    name = "Respuestas de cuestionarios",
+    name = "Gestión de respuestas de cuestionarios",
     description = "Endpoints para gestionar respuestas de cuestionarios."
 )
 @CrossOrigin(origins = "http://localhost:4200")

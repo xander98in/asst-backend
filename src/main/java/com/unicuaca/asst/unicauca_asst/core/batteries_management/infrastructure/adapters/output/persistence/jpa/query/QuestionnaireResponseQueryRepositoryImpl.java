@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -61,5 +62,20 @@ public class QuestionnaireResponseQueryRepositoryImpl implements QuestionnaireRe
     @Override
     public boolean existsByRecordIdAndQuestionId(Long recordId, Long questionId) {
         return repository.existsByQuestionnaireManagementRecord_IdAndQuestion_Id(recordId, questionId);
+    }
+
+    /**
+     * Obtiene todas las respuestas asociadas a un registro de gestión de cuestionario,
+     * cargando todas sus relaciones de forma ansiosa (eager).
+     *
+     * @param recordId ID del registro de gestión de cuestionario.
+     * @return Lista de respuestas con sus relaciones completas.
+     */
+    @Override
+    public List<QuestionnaireResponse> findAllByRecordIdWithAllRelations(Long recordId) {
+        return repository.findAllByQuestionnaireManagementRecordIdWithAll(recordId)
+            .stream()
+            .map(mapper::toDomain)
+            .toList();
     }
 }

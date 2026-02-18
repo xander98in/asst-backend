@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -106,4 +107,22 @@ public interface QuestionnaireResponseSpringJpaRepository extends JpaRepository<
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM QuestionnaireResponseEntity r WHERE r.questionnaireManagementRecord.id = :recordId")
     void deleteByQuestionnaireManagementRecord_Id(@Param("recordId") Long recordId);
+
+    /**
+     * Obtiene todas las respuestas de un registro de gestión de cuestionario específico, cargando
+     * las relaciones (Pregunta, Opción de respuesta) ansiosamente para optimizar la lectura.
+     *
+     * @param recordId ID del registro de gestión de cuestionario.
+     * @return Lista de entidades de respuesta.
+     */
+    @Query("""
+           SELECT r
+           FROM QuestionnaireResponseEntity r
+           JOIN FETCH r.question q
+           JOIN FETCH r.answerOption ao
+           JOIN FETCH r.questionnaireManagementRecord qmr
+           WHERE qmr.id = :recordId
+           ORDER BY q.order ASC
+           """)
+    List<QuestionnaireResponseEntity> findAllByQuestionnaireManagementRecordIdWithAll(@Param("recordId") Long recordId);
 }

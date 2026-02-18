@@ -123,4 +123,15 @@ public class QuestionnaireManagementRecordQueryRepositoryImpl implements Questio
         return questionnaireManagementRecordSpringJpaRepository.findById(id)
             .map(mapper::toDomain);
     }
+
+    /**
+     * Verifica si existe un registro de gestión de cuestionario por su ID.
+     *
+     * @param id ID del registro de gestión de cuestionario.
+     * @return {@code true} si existe, {@code false} en caso contrario.
+     */
+    @Override
+    public boolean existsById(Long id) {
+        return questionnaireManagementRecordSpringJpaRepository.existsById(id);
+    }
 }
