@@ -14,4 +14,11 @@ public interface QuestionnaireManagementRecordCommandRepository {
      * @return El modelo de dominio persistido con el ID generado y fechas de auditoría.
      */
     QuestionnaireManagementRecord save(QuestionnaireManagementRecord record);
+
+    /**
+     * Elimina un registro de gestión de cuestionario por su ID.
+     *
+     * @param id Identificador del registro.
+     */
+    void deleteById(Long id);
 }

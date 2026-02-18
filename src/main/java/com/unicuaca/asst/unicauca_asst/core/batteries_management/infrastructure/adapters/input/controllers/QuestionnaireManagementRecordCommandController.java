@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers;
 
+import com.unicuaca.asst.unicauca_asst.common.docs.VoidApiResponse;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.QuestionnaireManagementRecordResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers.docs.QuestionnaireManagementRecordApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -97,6 +98,59 @@ public class QuestionnaireManagementRecordCommandController {
             SuccessCode.CREATED,
             "Registro de gestión de cuestionario creado con éxito.",
             response
+        );
+    }
+
+    /**
+     * Elimina un registro de gestión de cuestionario por su ID.
+     * También elimina en cascada todas las respuestas asociadas.
+     *
+     * @param id ID del registro de gestión de cuestionario a eliminar.
+     * @param request Objeto HttpServletRequest para la respuesta.
+     * @return Respuesta 200 OK si la eliminación fue exitosa.
+     */
+    @Operation(
+        summary = "Eliminar registro de gestión de cuestionario",
+        description = "Elimina un registro de gestión de cuestionario y todas sus respuestas asociadas."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Registro eliminado con éxito",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = VoidApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "El registro no existe",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "409",
+            description = "Conflicto al intentar eliminar (reglas de negocio)",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        )
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> delete(
+        @Schema(description = "ID del registro de gestión de cuestionario a eliminar", example = "1")
+        @PathVariable Long id,
+        HttpServletRequest request
+    ) {
+        questionnaireManagementRecordCommandHandler.deleteQuestionnaireManagementRecord(id);
+        return ResponseUtil.ok(
+            request,
+            SuccessCode.DELETED,
+            "Registro de gestión de cuestionario eliminado con éxito.",
+            null
         );
     }
 

@@ -36,4 +36,14 @@ public class QuestionnaireManagementRecordCommandRepositoryImpl implements Quest
         QuestionnaireManagementRecordEntity savedEntity = jpaRepository.save(entity);
         return mapper.toDomain(savedEntity);
     }
+
+    /**
+     * Elimina un registro de gestión de cuestionario por su ID.
+     *
+     * @param id Identificador del registro.
+     */
+    @Override
+    public void deleteById(Long id) {
+        jpaRepository.deleteById(id);
+    }
 }

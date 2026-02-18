@@ -2,6 +2,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.QuestionnaireResponseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -95,4 +96,14 @@ public interface QuestionnaireResponseSpringJpaRepository extends JpaRepository<
         @Param("recordId") Long recordId,
         @Param("questionId") Long questionId
     );
+
+    /**
+     * Elimina masivamente todas las respuestas de un registro de gestión.
+     * Usa @Modifying para optimizar el rendimiento (1 sola consulta).
+     *
+     * @param recordId ID del registro de gestión de cuestionario.
+     */
+    @Modifying(clearAutomatically = true)
+    @Query("DELETE FROM QuestionnaireResponseEntity r WHERE r.questionnaireManagementRecord.id = :recordId")
+    void deleteByQuestionnaireManagementRecord_Id(@Param("recordId") Long recordId);
 }

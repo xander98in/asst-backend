@@ -15,4 +15,11 @@ public interface QuestionnaireResponseCommandRepository {
      * @param responses Lista de modelos de dominio completamente validados y enriquecidos.
      */
     void saveAll(List<QuestionnaireResponse> responses);
+
+    /**
+     * Elimina todas las respuestas asociadas a un registro de gestión de cuestionario.
+     *
+     * @param recordId ID del registro de gestión de cuestionario.
+     */
+    void deleteByQuestionnaireManagementRecordId(Long recordId);
 }

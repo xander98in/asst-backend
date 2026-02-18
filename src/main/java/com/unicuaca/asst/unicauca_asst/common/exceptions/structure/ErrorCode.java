@@ -70,7 +70,7 @@ public enum ErrorCode {
     RESPONSE_BELONGS_TO_OTHER_RECORD("ASST-BUS-0015", "La respuesta con ID %d no pertenece al registro de gestión de cuestionario ID %d."),
     RESPONSE_QUESTION_MISMATCH("ASST-BUS-0016", "El ID de pregunta proporcionado no coincide con el almacenado en la respuesta ID: %d"),
     QUESTIONNAIRE_RECORD_ALREADY_EXISTS("ASST-BUS-0016", "El registro de gestión de cuestionario para la batería con ID %s y cuestionario: %s ya existe."),
-
+    QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED("ASST-BUS-0017", "No se puede eliminar el registro de gestión de cuestionario porque se encuentra en estado '%s'."),
     /**
      * Errores relacionados con mapeo y dependencias.
      */

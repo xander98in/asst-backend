@@ -17,4 +17,11 @@ public interface QuestionnaireManagementRecordCommandHandler {
      */
     QuestionnaireManagementRecordResponseDTO createQuestionnaireManagementRecord(QuestionnaireManagementRecordCreateRequestDTO dto);
 
+    /**
+     * Elimina un registro de gestión de cuestionario por su ID.
+     * También se encarga de eliminar en cascada las respuestas asociadas a este registro de gestión de cuestionario, si existen.
+     *
+     * @param id identificador del registro a eliminar.
+     */
+    void deleteQuestionnaireManagementRecord(Long id);
 }

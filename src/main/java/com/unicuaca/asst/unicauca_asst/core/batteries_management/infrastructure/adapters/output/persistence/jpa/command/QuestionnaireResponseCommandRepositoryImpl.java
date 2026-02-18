@@ -36,4 +36,14 @@ public class QuestionnaireResponseCommandRepositoryImpl implements Questionnaire
         List<QuestionnaireResponseEntity> entities = questionnaireResponsePersistenceMapper.toEntityList(responses);
         questionnaireResponseSpringJpaRepository.saveAll(entities);
     }
+
+    /**
+     * Elimina todas las respuestas asociadas a un registro de gestión de cuestionario.
+     *
+     * @param recordId ID del registro de gestión de cuestionario.
+     */
+    @Override
+    public void deleteByQuestionnaireManagementRecordId(Long recordId) {
+        questionnaireResponseSpringJpaRepository.deleteByQuestionnaireManagementRecord_Id(recordId);
+    }
 }

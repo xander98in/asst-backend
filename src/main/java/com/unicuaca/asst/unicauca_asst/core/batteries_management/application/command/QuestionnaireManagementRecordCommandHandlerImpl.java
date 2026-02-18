@@ -40,4 +40,15 @@ public class QuestionnaireManagementRecordCommandHandlerImpl implements Question
         QuestionnaireManagementRecord domainResponse = inputPort.createQuestionnaireManagementRecord(domainRequest);
         return mapper.toResponseDTO(domainResponse);
     }
+
+    /**
+     * Procesa la eliminación de un registro de gestión de cuestionario por su ID.
+     * También se encarga de eliminar en cascada las respuestas asociadas a este registro de gestión de cuestionario, si existen.
+     *
+     * @param id identificador del registro a eliminar.
+     */
+    @Override
+    public void deleteQuestionnaireManagementRecord(Long id) {
+        inputPort.deleteQuestionnaireManagementRecord(id);
+    }
 }

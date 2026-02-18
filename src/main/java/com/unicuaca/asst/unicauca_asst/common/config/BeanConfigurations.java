@@ -194,7 +194,10 @@ public class BeanConfigurations {
         QuestionnaireQueryRepository questionnaireQueryRepository,
         QuestionnaireManagementRecordStatusQueryRepository questionnaireManagementRecordStatusQueryRepository,
         QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository,
+        BatteryManagementRecordStatusQueryRepository batteryManagementRecordStatusQueryRepository,
+        QuestionnaireResponseCommandRepository questionnaireResponseCommandRepository,
         QuestionnaireManagementRecordCommandRepository questionnaireManagementRecordCommandRepository,
+        BatteryManagementRecordCommandRepository batteryManagementRecordCommandRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
         return new QuestionnaireManagementRecordCommandService(
@@ -202,7 +205,10 @@ public class BeanConfigurations {
             questionnaireQueryRepository,
             questionnaireManagementRecordStatusQueryRepository,
             questionnaireManagementRecordQueryRepository,
+            batteryManagementRecordStatusQueryRepository,
+            questionnaireResponseCommandRepository,
             questionnaireManagementRecordCommandRepository,
+            batteryManagementRecordCommandRepository,
             resultFormatterOutputPort
         );
     }
