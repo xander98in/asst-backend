@@ -19,12 +19,19 @@ public class BatteryManagementRecordCommandRepositoryImpl implements BatteryMana
     private final BatteryManagementRecordSpringJpaRepository batteryManagementRecordSpringJpaRepository;
     private final BatteryManagementRecordPersistenceMapper batteryManagementRecordPersistenceMapper;
 
+    /**
+     * Guarda un nuevo registro de gestión de baterías en la base de datos.
+     *
+     * @param record El registro de gestión de baterías a guardar.
+     * @return Un {@link Optional} que contiene el registro guardado, o vacío si no se pudo guardar.
+     */
     @Override
     public Optional<BatteryManagementRecord> saveBatteryManagementRecord(BatteryManagementRecord record) {
         BatteryManagementRecordEntity entity = batteryManagementRecordPersistenceMapper.toEntity(record);
         BatteryManagementRecordEntity saved = batteryManagementRecordSpringJpaRepository.save(entity);
         BatteryManagementRecordEntity loaded = batteryManagementRecordSpringJpaRepository.findByIdWithRelations(saved.getId())
                 .orElse(saved);
+        System.out.println("Saved BatteryManagementRecordEntity: " + saved.getCreatedAt());
         return Optional.of(batteryManagementRecordPersistenceMapper.toDomain(loaded));
     }
 

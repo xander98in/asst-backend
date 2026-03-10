@@ -83,7 +83,15 @@ public interface QuestionnaireManagementRecordQueryRepository {
     Optional<QuestionnaireManagementRecord> findById(Long id);
 
     /**
-    * Verifica si existe un registro de gestión de cuestionario por su ID.
+     * Obtiene todos los registros de gestión de cuestionarios asociados a un registro de gestión de baterías específico.
+     *
+     * @param batteryId ID del registro de gestión de baterías.
+     * @return Lista de registros encontrados.
+     */
+    List<QuestionnaireManagementRecord> findAllByBatteryManagementRecordId(Long batteryId);
+
+    /**
+     * Verifica si existe un registro de gestión de cuestionario por su ID.
     *
     * @param id Identificador único del registro.
     * @return {@code true} si existe, {@code false} en caso contrario.

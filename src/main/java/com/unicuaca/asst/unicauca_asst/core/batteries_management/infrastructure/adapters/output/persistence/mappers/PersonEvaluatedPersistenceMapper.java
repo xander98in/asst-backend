@@ -17,7 +17,8 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
     uses = {
         IdentificationTypePersistenceMapper.class,
         StatusPersonEvaluatedPersistenceMapper.class
-    }
+    },
+    builder = @org.mapstruct.Builder(disableBuilder = true)
 )
 public interface PersonEvaluatedPersistenceMapper {
 
@@ -35,6 +36,8 @@ public interface PersonEvaluatedPersistenceMapper {
     @Mapping(target = "birthYear", source = "birthYear")
     @Mapping(target = "email", source = "email")
     @Mapping(target = "status", source = "status")
+    @Mapping(target = "createdAt", source = "createdAt")
+    @Mapping(target = "updatedAt", source = "updatedAt")
     PersonEvaluated toDomain(PersonEvaluatedEntity entity);
 
     /**

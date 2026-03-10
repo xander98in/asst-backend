@@ -18,4 +18,12 @@ public interface BatteryManagementRecordCommandHandler {
      * @param recordId ID del registro de gestión de baterías a eliminar.
      */
     void deleteBatteryManagementRecord(Long recordId);
+
+    /**
+     * Cierra un registro de gestión de baterías por su ID.
+     *
+     * @param recordId ID del registro de gestión de baterías a cerrar.
+     * @return El DTO del registro de gestión de baterías cerrado.
+     */
+    BatteryManagementRecordResponseDTO closeBatteryManagementRecord(Long recordId);
 }

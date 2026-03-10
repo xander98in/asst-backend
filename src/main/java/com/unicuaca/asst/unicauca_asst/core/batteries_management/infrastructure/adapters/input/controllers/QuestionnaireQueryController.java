@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers;
 
+import com.unicuaca.asst.unicauca_asst.common.docs.ErrorResponseApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
 import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
@@ -49,7 +50,18 @@ public class QuestionnaireQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionnaireListApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionnaireListApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "No se encontraron cuestionarios",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping
@@ -73,12 +85,18 @@ public class QuestionnaireQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionnaireApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionnaireApiResponse.class)
+            )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Cuestionario no encontrado",
-            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping("/{abbreviation}")

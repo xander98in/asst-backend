@@ -13,6 +13,10 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Servicio de consulta para personas evaluadas.
+ * Implementa las operaciones definidas en el puerto de entrada {@link PersonEvaluatedQueryCUInputPort}.
+ */
 @RequiredArgsConstructor
 public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputPort {
 
@@ -59,6 +63,43 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
                 return null;
             });
         return personEvaluatedQueryRepository.queryByIdentity(identificationType, identificationNumber, page, size, Sort.by(Sort.Direction.DESC, "id"));
+    }
+
+    /**
+     * Lista personas evaluadas de forma paginada.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @return una página de personas evaluadas
+     */
+    @Override
+    public Page<PersonEvaluated> listPaginatedPersons(Integer page, Integer size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        return personEvaluatedQueryRepository.findAllPaged(page, size, sort);
+    }
+
+    /**
+     * Lista personas evaluadas de forma paginada filtrando por término de búsqueda (identificación, nombre o apellido).
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param searchTerm término de búsqueda
+     * @return una página de personas evaluadas
+     */
+    @Override
+    public Page<PersonEvaluated> listPaginatedWithSearchTerm(Integer page, Integer size, String searchTerm) {
+        String normalizedTerm = normalizeTerm(searchTerm);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        return personEvaluatedQueryRepository.findAllWithSearchTermPaged(normalizedTerm, page, size, sort);
+    }
+
+    /**
+     * Normaliza el término de búsqueda: trim + convierte vacío a null.
+     */
+    private String normalizeTerm(String term) {
+        if (term == null) return null;
+        String normalized = term.trim();
+        return normalized.isBlank() ? null : normalized;
     }
 
 }

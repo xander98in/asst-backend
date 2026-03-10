@@ -39,6 +39,87 @@ public interface BatteryManagementRecordSpringJpaRepository extends JpaRepositor
     boolean existsByPersonEvaluatedId(Long personId);
 
     /**
+     * Verifica si existe un registro de gestión de baterías asociado a una persona evaluada específica y en alguno de los estados indicados.
+     *
+     * @param personId el ID de la persona evaluada
+     * @param statusNames lista de nombres de estados
+     * @return true si existe un registro asociado con alguno de los estados, false en caso contrario
+     */
+    boolean existsByPersonEvaluatedIdAndStatusNameIn(Long personId, List<String> statusNames);
+
+    /**
+     * Lista registros de gestión de baterías paginados por su nombre de estado,
+     * ordenados por fecha de creación DESC y cargando relaciones principales.
+     *
+     * @param statusName nombre del estado a filtrar (ej: "Cerrado")
+     * @param pageable paginación + orden
+     */
+    @Query(
+        value = """
+            SELECT r
+            FROM BatteryManagementRecordEntity r
+            JOIN FETCH r.personEvaluated p
+            JOIN FETCH p.identificationType it
+            JOIN FETCH r.status s
+            WHERE LOWER(s.name) = LOWER(:statusName)
+            """,
+        countQuery = """
+            SELECT COUNT(r)
+            FROM BatteryManagementRecordEntity r
+            JOIN r.personEvaluated p
+            JOIN p.identificationType it
+            JOIN r.status s
+            WHERE LOWER(s.name) = LOWER(:statusName)
+            """
+    )
+    Page<BatteryManagementRecordEntity> listPagedByStatus(@Param("statusName") String statusName, Pageable pageable);
+
+    /**
+     * Lista registros de gestión de baterías paginados por un estado específico y filtrando por término de búsqueda.
+     *
+     * @param statusName nombre del estado a filtrar
+     * @param term término de búsqueda (identificación o área)
+     * @param pageable paginación + orden
+     */
+    @Query(
+        value = """
+        SELECT DISTINCT r
+        FROM BatteryManagementRecordEntity r
+        JOIN FETCH r.personEvaluated p
+        JOIN FETCH p.identificationType it
+        JOIN FETCH r.status s
+        LEFT JOIN PersonEvaluatedDetailsEntity d
+               ON d.batteryManagementRecord = r
+        WHERE LOWER(s.name) = LOWER(:statusName)
+          AND (
+                :term IS NULL OR :term = ''
+                OR p.identificationNumber LIKE CONCAT(:term, '%')
+                OR LOWER(d.workAreaName) LIKE CONCAT('%', LOWER(:term), '%')
+          )
+        """,
+        countQuery = """
+        SELECT COUNT(DISTINCT r)
+        FROM BatteryManagementRecordEntity r
+        JOIN r.personEvaluated p
+        JOIN p.identificationType it
+        JOIN r.status s
+        LEFT JOIN PersonEvaluatedDetailsEntity d
+               ON d.batteryManagementRecord = r
+        WHERE LOWER(s.name) = LOWER(:statusName)
+          AND (
+                :term IS NULL OR :term = ''
+                OR p.identificationNumber LIKE CONCAT(:term, '%')
+                OR LOWER(d.workAreaName) LIKE CONCAT('%', LOWER(:term), '%')
+          )
+        """
+    )
+    Page<BatteryManagementRecordEntity> listPagedByStatusWithSearchTerm(
+        @Param("statusName") String statusName,
+        @Param("term") String term,
+        Pageable pageable
+    );
+
+    /**
      * Lista registros de gestión de baterías paginados, excluyendo el estado "Cerrado",
      * ordenados por fecha de creación DESC y cargando relaciones principales.
      *

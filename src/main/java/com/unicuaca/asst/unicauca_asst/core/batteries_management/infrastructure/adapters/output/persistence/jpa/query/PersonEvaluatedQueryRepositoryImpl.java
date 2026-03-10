@@ -113,6 +113,35 @@ public class PersonEvaluatedQueryRepositoryImpl implements PersonEvaluatedQueryR
     }
 
     /**
+     * Lista todas las personas evaluadas de forma paginada.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param sort criterio de ordenamiento
+     * @return una página de personas evaluadas
+     */
+    @Override
+    public Page<PersonEvaluated> findAllPaged(Integer page, Integer size, Sort sort) {
+        return this.personEvaluatedJpaRepository.findAllWithRelations(PageRequest.of(page, size, sort))
+            .map(this.personEvaluatedBDMapper::toDomain);
+    }
+
+    /**
+     * Lista personas evaluadas de forma paginada filtrando por término de búsqueda (identificación, nombre o apellido).
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param searchTerm término de búsqueda
+     * @param sort criterio de ordenamiento
+     * @return una página de personas evaluadas
+     */
+    @Override
+    public Page<PersonEvaluated> findAllWithSearchTermPaged(String searchTerm, Integer page, Integer size, Sort sort) {
+        return this.personEvaluatedJpaRepository.findAllWithSearchTerm(searchTerm, PageRequest.of(page, size, sort))
+            .map(this.personEvaluatedBDMapper::toDomain);
+    }
+
+    /**
      * Consulta un estado de persona evaluada por su nombre.
      *
      * @param name el nombre del estado a buscar

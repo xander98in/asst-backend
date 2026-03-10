@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 /**
  * Representa a una persona evaluada en el proceso de riesgo psicosocial.
  * Incluye datos personales y su tipo de documento y sexo.
@@ -20,6 +22,8 @@ import lombok.ToString;
 public class PersonEvaluated {
 
     private Long id;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private IdentificationType identificationType;
     private String identificationNumber;
     private String firstName;

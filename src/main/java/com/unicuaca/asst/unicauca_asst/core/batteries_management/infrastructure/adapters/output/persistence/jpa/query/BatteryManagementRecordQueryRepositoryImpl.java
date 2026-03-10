@@ -85,6 +85,52 @@ public class BatteryManagementRecordQueryRepositoryImpl implements BatteryManage
     }
 
     /**
+     * Verifica si una persona evaluada tiene al menos un registro de gestión de batería en alguno de los estados proporcionados.
+     *
+     * @param personEvaluatedId identificador de la persona evaluada
+     * @param statusNames lista de nombres de estados a buscar
+     * @return {@code true} si existe al menos un registro en alguno de los estados, {@code false} en caso contrario
+     */
+    @Override
+    public boolean existsByPersonEvaluatedIdAndStatusNameIn(Long personEvaluatedId, List<String> statusNames) {
+        return batteryManagementRecordSpringJpaRepository.existsByPersonEvaluatedIdAndStatusNameIn(personEvaluatedId, statusNames);
+    }
+
+    /**
+     * Lista registros de gestión de baterías de forma paginada por su nombre de estado.
+     *
+     * @param statusName nombre del estado a filtrar (ej: "Cerrado")
+     * @param page número de página (0-indexed)
+     * @param size tamaño de la página
+     * @param sort criterios de ordenamiento
+     * @return una página de registros de gestión de baterías con el estado especificado
+     */
+    @Override
+    public Page<BatteryManagementRecord> listPagedByStatus(String statusName, Integer page, Integer size, Sort sort) {
+        return batteryManagementRecordSpringJpaRepository
+            .listPagedByStatus(statusName, PageRequest.of(page, size, sort))
+            .map(batteryManagementRecordPersistenceMapper::toDomain);
+    }
+
+    /**
+     * Lista registros de gestión de baterías de forma paginada por su nombre de estado y filtrando por término de búsqueda
+     * en número de identificación o nombre del área de trabajo.
+     *
+     * @param statusName nombre del estado a filtrar (ej: "Cerrado")
+     * @param searchTerm término de búsqueda para filtrar por número de identificación o nombre del área de trabajo (opcional)
+     * @param page número de página (0-indexed)
+     * @param size tamaño de la página
+     * @param sort criterios de ordenamiento
+     * @return una página de registros de gestión de baterías con el estado especificado y que coinciden con el término de búsqueda
+     */
+    @Override
+    public Page<BatteryManagementRecord> listPagedByStatusWithSearchTerm(String statusName, String searchTerm, Integer page, Integer size, Sort sort) {
+        return batteryManagementRecordSpringJpaRepository
+            .listPagedByStatusWithSearchTerm(statusName, searchTerm, PageRequest.of(page, size, sort))
+            .map(batteryManagementRecordPersistenceMapper::toDomain);
+    }
+
+    /**
      * Lista registros de gestión de baterías de forma paginada,
      * excluyendo los que tengan el estado indicado (ej: "Cerrado").
      *

@@ -60,7 +60,7 @@ public class BatteryManagementRecordCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "409",
-            description = "La persona ya tiene un registro",
+            description = "Conflicto al crear el registro (por ejemplo, ya existe un registro para la persona evaluada)",
             content = @Content(
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
@@ -127,4 +127,54 @@ public class BatteryManagementRecordCommandController {
         return ResponseUtil.ok(request, SuccessCode.DELETED, "Registro de gestión de baterías eliminado exitosamente", null);
     }
 
+    /**
+     * Cierra un registro de gestión de baterías a partir de su ID, cambiando su estado a 'Cerrado'.
+     *
+     * @param recordId ID del registro de gestión de baterías a cerrar.
+     * @param request  Objeto HttpServletRequest para construir la URL del recurso actualizado.
+     * @return Respuesta con el objeto actualizado y estado HTTP 200 (OK).
+     */
+    @Operation(
+        summary = "Cerrar registro de gestión de baterías",
+        description = "Cambia el estado de un registro de gestión de baterías a 'Cerrado' a partir de su ID."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Registro de gestión de baterías cerrado exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = BatteryManagementRecordApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Registro de gestión de baterías no encontrado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Solicitud inválida",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        )
+    })
+    @PatchMapping(value = "/close/{recordId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse<BatteryManagementRecordResponseDTO>> closeBatteryManagementRecord(
+        @PathVariable @Positive @Min(1) Long recordId,
+        HttpServletRequest request
+    ) {
+        BatteryManagementRecordResponseDTO dto = batteryManagementRecordCommandHandler.closeBatteryManagementRecord(recordId);
+        return ResponseUtil.ok(
+            request,
+            SuccessCode.UPDATED,
+            "Registro de gestión de baterías cerrado exitosamente",
+            dto
+        );
+    }
 }

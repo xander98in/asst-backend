@@ -2,17 +2,15 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.service
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecordStatus;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.StatusPersonEvaluated;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.*;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.BatteryManagementRecordStatusCode;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.QuestionnaireManagementRecordStatusEnum;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.StatusPersonEvaluatedEnum;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.BatteryManagementRecordCommandCUInputPort;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordCommandRepository;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordQueryRepository;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedCommandRepository;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class BatteryManagementRecordCommandService implements BatteryManagementRecordCommandCUInputPort {
@@ -21,6 +19,9 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
     private final BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository;
     private final PersonEvaluatedQueryRepository personEvaluatedQueryRepository;
     private final PersonEvaluatedCommandRepository personEvaluatedCommandRepository;
+    private final QuestionnaireManagementRecordCommandRepository questionnaireManagementRecordCommandRepository;
+    private final QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository;
+    private final QuestionnaireManagementRecordStatusQueryRepository questionnaireManagementRecordStatusQueryRepository;
     private final ResultFormatterOutputPort resultFormatterOutputPort;
 
     /**
@@ -61,7 +62,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                     );
                     return null;
                 });
-            StatusPersonEvaluated statusPersonEvaluated = personEvaluatedQueryRepository.getStatusPersonEvaluatedByName("Con registro")
+            StatusPersonEvaluated statusPersonEvaluated = personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(StatusPersonEvaluatedEnum.WITH_RECORD.getDescription())
                 .orElseGet(() -> {
                     this.resultFormatterOutputPort.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
@@ -129,19 +130,116 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                 return null;
             });
 
-        System.out.println("Battery management record eliminado: " + batteryManagementRecord);
         BatteryManagementRecordStatus status = batteryManagementRecord.getStatus();
-        System.out.println("Estado del registro: " + status.getName());
 
-        if(status.getName().equals(BatteryManagementRecordStatusCode.CREATED.getDescription())) {
+        if (status.getName().equals(BatteryManagementRecordStatusCode.CREATED.getDescription())) {
             batteryManagementRecordCommandRepository.deleteBatteryManagementRecordById(id);
-            return;
-        }
-        else {
+
+            // Se obtiene la persona evaluada asociada al registro eliminado
+            PersonEvaluated personEvaluated = batteryManagementRecord.getPersonEvaluated();
+
+            if (personEvaluated != null) {
+                // Se consulta si la persona tiene otros registros en estado 'Creado', 'En diligenciamiento' o 'Diligenciado'
+                boolean hasOtherActiveRecords = batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+                    personEvaluated.getId(),
+                    List.of(
+                        BatteryManagementRecordStatusCode.CREATED.getDescription(),
+                        BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription(),
+                        BatteryManagementRecordStatusCode.COMPLETED.getDescription()
+                    )
+                );
+
+                String targetStatusName = hasOtherActiveRecords
+                    ? StatusPersonEvaluatedEnum.WITH_RECORD.getDescription()
+                    : StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription();
+
+                // Si el estado actual es diferente al objetivo, se actualiza
+                if (!personEvaluated.getStatus().getName().equals(targetStatusName)) {
+                    StatusPersonEvaluated newStatus = personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(targetStatusName)
+                        .orElseGet(() -> {
+                            this.resultFormatterOutputPort.throwEntityNotFound(
+                                ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + targetStatusName + "' no fue encontrado.")
+                            );
+                            return null;
+                        });
+
+                    personEvaluated.setStatus(newStatus);
+                    personEvaluatedCommandRepository.updatePersonEvaluated(personEvaluated);
+                }
+            }
+        } else {
             this.resultFormatterOutputPort.throwBusinessRuleViolation(
                 ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD.getCode(),
-                String.format(ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), "'Creado'")
+                String.format(ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), status.getName())
             );
         }
+    }
+
+    /**
+     * Cierra un registro de gestión de baterías por su ID.
+     *
+     * @param recordId ID del registro de gestión de baterías a cerrar.
+     * @return El registro de gestión de baterías cerrado.
+     */
+    @Override
+    public BatteryManagementRecord closeBatteryManagementRecord(Long recordId) {
+        // Obtener el registro de gestión de baterías
+        BatteryManagementRecord record = batteryManagementRecordQueryRepository.getBatteryManagementRecordById(recordId)
+            .orElseGet(() -> {
+                this.resultFormatterOutputPort.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de baterías con ID " + recordId + " no fue encontrado.")
+                );
+                return null;
+            });
+
+        // 2. Verificar que el estado actual sea 'Diligenciado'
+        if (!record.getStatus().getName().equals(BatteryManagementRecordStatusCode.COMPLETED.getDescription())) {
+            this.resultFormatterOutputPort.throwBusinessRuleViolation(
+                ErrorCode.CLOSE_BATTERY_MANAGEMENT_RECORD.getCode(),
+                String.format(ErrorCode.CLOSE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), "'" + record.getStatus().getName() + "'")
+            );
+        }
+
+        // Obtener el estado 'Cerrado' para cuestionarios
+        QuestionnaireManagementRecordStatus closedQuestionnaireStatus = questionnaireManagementRecordStatusQueryRepository
+            .getQuestionnaireManagementRecordStatusByName(QuestionnaireManagementRecordStatusEnum.CERRADO.getName())
+            .orElseGet(() -> {
+                this.resultFormatterOutputPort.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado 'Cerrado' para registros de cuestionarios no fue encontrado.")
+                );
+                return null;
+            });
+
+        // Actualizar todos los registros de cuestionarios asociados a 'Cerrado'
+        List<QuestionnaireManagementRecord> questionnaires = questionnaireManagementRecordQueryRepository.findAllByBatteryManagementRecordId(recordId);
+        questionnaires.forEach(q -> {
+            q.setStatus(closedQuestionnaireStatus);
+            questionnaireManagementRecordCommandRepository.save(q);
+        });
+
+        // Obtener el estado 'Cerrado' para el registro de gestión de batería
+        BatteryManagementRecordStatus closedBatteryStatus = batteryManagementRecordQueryRepository
+            .getBatteryManagementRecordStatudByName(BatteryManagementRecordStatusCode.CLOSED.getDescription())
+            .orElseGet(() -> {
+                this.resultFormatterOutputPort.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado 'Cerrado' para registros de gestión de batería no fue encontrado.")
+                );
+                return null;
+            });
+
+        // Actualizar el estado del registro de batería a 'Cerrado'
+        record.setStatus(closedBatteryStatus);
+        return batteryManagementRecordCommandRepository.saveBatteryManagementRecord(record)
+            .orElseGet(() -> {
+                this.resultFormatterOutputPort.throwEntityCreationFailed(
+                    ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
+                    String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "No fue posible cerrar el registro de gestión de batería.")
+                );
+                return null;
+            });
     }
 }

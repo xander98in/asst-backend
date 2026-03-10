@@ -73,6 +73,27 @@ public interface PersonEvaluatedQueryRepository {
     Page<PersonEvaluated> queryByIdentity(IdentificationType identificationType, String identificationNumber, Integer page, Integer size, Sort sort);
 
     /**
+     * Lista todas las personas evaluadas de forma paginada.
+     *
+     * @param page número de página
+     * @param size tamaño de página
+     * @param sort criterio de ordenamiento
+     * @return una página de personas evaluadas
+     */
+    Page<PersonEvaluated> findAllPaged(Integer page, Integer size, Sort sort);
+
+    /**
+     * Lista personas evaluadas de forma paginada filtrando por término de búsqueda (identificación, nombre o apellido).
+     *
+     * @param searchTerm término de búsqueda
+     * @param page       número de página
+     * @param size       tamaño de página
+     * @param sort       criterio de ordenamiento
+     * @return una página de personas evaluadas
+     */
+    Page<PersonEvaluated> findAllWithSearchTermPaged(String searchTerm, Integer page, Integer size, Sort sort);
+
+    /**
      * Consulta un estado de persona evaluada por su nombre.
      *
      * @param name el nombre del estado a buscar

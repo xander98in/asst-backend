@@ -25,4 +25,23 @@ public interface PersonEvaluatedQueryCUInputPort {
      */
     Page<PersonEvaluated> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size);
 
+    /**
+     * Lista todas las personas evaluadas de forma paginada.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @return una página de personas evaluadas
+     */
+    Page<PersonEvaluated> listPaginatedPersons(Integer page, Integer size);
+
+    /**
+     * Lista personas evaluadas de forma paginada filtrando por término de búsqueda.
+     *
+     * @param page       número de página (0-indexado)
+     * @param size       cantidad de registros por página
+     * @param searchTerm término de búsqueda (identificación, nombre o apellido)
+     * @return una página de personas evaluadas
+     */
+    Page<PersonEvaluated> listPaginatedWithSearchTerm(Integer page, Integer size, String searchTerm);
+
 }

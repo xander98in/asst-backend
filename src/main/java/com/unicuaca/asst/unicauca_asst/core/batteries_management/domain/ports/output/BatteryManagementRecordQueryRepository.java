@@ -55,12 +55,43 @@ public interface BatteryManagementRecordQueryRepository {
      *
      * @param personEvaluatedId identificador de la persona evaluada
      * @return {@code true} si existe al menos un registro, {@code false} si no
-     */
-    boolean existsByPersonEvaluatedId(Long personEvaluatedId);
+      */
+     boolean existsByPersonEvaluatedId(Long personEvaluatedId);
 
     /**
-     * Lista registros de gestión de baterías de forma paginada,
-     * excluyendo los que tengan el estado indicado (ej: "Cerrado").
+     * Verifica si una persona evaluada tiene al menos un registro de gestión de batería en alguno de los estados proporcionados.
+     *
+     * @param personEvaluatedId identificador de la persona evaluada
+     * @param statusNames lista de nombres de estados a buscar
+     * @return {@code true} si existe al menos un registro en alguno de los estados, {@code false} en caso contrario
+     */
+    boolean existsByPersonEvaluatedIdAndStatusNameIn(Long personEvaluatedId, List<String> statusNames);
+
+    /**
+     * Lista registros de gestión de baterías de forma paginada por su nombre de estado.
+     *
+     * @param statusName nombre del estado a filtrar
+     * @param page número de página (0-indexado)
+     * @param size tamaño de página
+     * @param sort criterio de ordenamiento
+     * @return una página de {@link BatteryManagementRecord}
+     */
+    Page<BatteryManagementRecord> listPagedByStatus(String statusName, Integer page, Integer size, Sort sort);
+
+    /**
+     * Lista registros de gestión de baterías de forma paginada por su nombre de estado y término de búsqueda.
+     *
+     * @param statusName nombre del estado a filtrar
+     * @param searchTerm término de búsqueda (identificación o área)
+     * @param page número de página
+     * @param size tamaño de página
+     * @param sort criterio de ordenamiento
+     * @return una página de {@link BatteryManagementRecord}
+     */
+    Page<BatteryManagementRecord> listPagedByStatusWithSearchTerm(String statusName, String searchTerm, Integer page, Integer size, Sort sort);
+
+    /**
+     * Lista registros de gestión de baterías de forma paginada, excluyendo los que tengan el estado indicado (ej: "Cerrado").
      *
      * @param excludedStatus nombre del estado a excluir
      * @param page número de página (0-indexado)
@@ -84,8 +115,7 @@ public interface BatteryManagementRecordQueryRepository {
     Page<BatteryManagementRecord> listPaginatedByIdentificationPrefix(String excludedStatus, String identificationNumberPrefix, Integer page, Integer size, Sort sort);
 
     /**
-     * Lista registros de gestión de baterías paginados, excluyendo un estado específico
-     * y filtrando por término de búsqueda en número de identificación o nombre del área de trabajo,
+     * Lista registros de gestión de baterías paginados, excluyendo un estado específico y filtrando por término de búsqueda en número de identificación o nombre del área de trabajo,
      * ordenados según el criterio proporcionado.
      *
      * @param excludedStatus nombre del estado a excluir

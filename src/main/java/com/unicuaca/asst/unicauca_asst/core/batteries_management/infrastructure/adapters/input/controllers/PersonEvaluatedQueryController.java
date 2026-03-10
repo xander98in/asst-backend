@@ -138,4 +138,113 @@ public class PersonEvaluatedQueryController {
         Page<PersonEvaluatedInformationResponseDTO> response = personEvaluatedQueryHandler.queryByIdentity(abbreviation, identificationNumber, page, size);
         return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
     }
+
+    /**
+     * Endpoint para listar personas evaluadas de forma paginada.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param request solicitud HTTP entrante
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una página de
+     *         {@link PersonEvaluatedInformationResponseDTO}
+     */
+    @Operation(
+        summary = "Listar personas evaluadas de forma paginada",
+        description = "Retorna una lista paginada de todas las personas evaluadas registradas en el sistema."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Consulta exitosa",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = PersonEvaluatedInformationListApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Parámetros inválidos",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        )
+    })
+    @GetMapping("/list-paged")
+    public ResponseEntity<ApiResponse<Page<PersonEvaluatedInformationResponseDTO>>> listPaged(
+        @Parameter(description = "Página (0-indexado)", example = "0")
+        @RequestParam(defaultValue = "0") Integer page,
+
+        @Parameter(description = "Cantidad de registros por página", example = "10")
+        @RequestParam(defaultValue = "10") Integer size,
+        HttpServletRequest request
+    ) {
+        Page<PersonEvaluatedInformationResponseDTO> response = personEvaluatedQueryHandler.listPaginatedPersons(page, size);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
+    }
+
+    /**
+     * Endpoint para listar personas evaluadas de forma paginada filtrando por término de búsqueda.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param searchTerm término de búsqueda (identificación, nombre o apellido)
+     * @param request solicitud HTTP entrante
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una página de
+     *         {@link PersonEvaluatedInformationResponseDTO}
+     */
+    @Operation(
+        summary = "Listar personas evaluadas paginadas con término de búsqueda",
+        description = "Retorna una lista paginada de personas evaluadas filtradas por término de búsqueda en " +
+            "número de identificación, nombre o apellido."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Consulta exitosa",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = PersonEvaluatedInformationListApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Parámetros inválidos",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        )
+    })
+    @GetMapping("/list-paged-filtered")
+    public ResponseEntity<ApiResponse<Page<PersonEvaluatedInformationResponseDTO>>> listPagedFiltered(
+        @Parameter(description = "Página (0-indexado)", example = "0")
+        @RequestParam(defaultValue = "0") Integer page,
+
+        @Parameter(description = "Cantidad de registros por página", example = "10")
+        @RequestParam(defaultValue = "10") Integer size,
+
+        @Parameter(description = "Término de búsqueda para filtrar (número de identificación, nombre o apellido)", example = "Juan o 12345")
+        @RequestParam(required = false) String searchTerm,
+        HttpServletRequest request
+    ) {
+        Page<PersonEvaluatedInformationResponseDTO> response = personEvaluatedQueryHandler.listPaginatedWithSearchTerm(page, size, searchTerm);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
+    }
 }

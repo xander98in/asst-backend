@@ -5,6 +5,7 @@ import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecordInformation;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.BatteryManagementRecordStatusCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.BatteryManagementRecordQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordQueryRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedDetailsQueryRepository;
@@ -82,6 +83,49 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
 
         Page<BatteryManagementRecord> recordPage = recordQueryRepository.listPagedExcludingStatusWithSearchTerm(
             "Cerrado",
+            normalizedTerm,
+            page,
+            size,
+            Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        return mapToInformationPage(recordPage);
+    }
+
+    /**
+     * Lista registros de gestión de baterías de forma paginada que tienen el estado "Cerrado".
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @return una página de {@link BatteryManagementRecordInformation}
+     */
+    @Override
+    public Page<BatteryManagementRecordInformation> listPaginatedClosedRecords(Integer page, Integer size) {
+        Page<BatteryManagementRecord> recordPage = recordQueryRepository.listPagedByStatus(
+            BatteryManagementRecordStatusCode.CLOSED.getDescription(),
+            page,
+            size,
+            Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        return mapToInformationPage(recordPage);
+    }
+
+    /**
+     * Lista registros de gestión de baterías de forma paginada que tienen el estado "Cerrado",
+     * filtrando por término de búsqueda en número de identificación o nombre del área de trabajo.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param searchTerm término de búsqueda para filtrar (opcional)
+     * @return una página de {@link BatteryManagementRecordInformation}
+     */
+    @Override
+    public Page<BatteryManagementRecordInformation> listPaginatedClosedRecordsWithSearchTerm(Integer page, Integer size, String searchTerm) {
+        String normalizedTerm = normalizeTerm(searchTerm);
+
+        Page<BatteryManagementRecord> recordPage = recordQueryRepository.listPagedByStatusWithSearchTerm(
+            BatteryManagementRecordStatusCode.CLOSED.getDescription(),
             normalizedTerm,
             page,
             size,

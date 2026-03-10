@@ -42,11 +42,11 @@ public class BatteryManagementRecordQueryController {
     /**
      * Endpoint para listar registros de gestión de baterías de forma paginada. (Excepto el estado "Cerrado")
      *
-     * @param page número de página (0-indexado)
-     * @param size cantidad de registros por página
+     * @param page    número de página (0-indexado)
+     * @param size    cantidad de registros por página
      * @param request solicitud HTTP entrante
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una página de
-     *         {@link BatteryManagementRecordInformationResponseDTO}
+     * {@link BatteryManagementRecordInformationResponseDTO}
      */
     @Operation(
         summary = "Listar registros de gestión de baterías paginados",
@@ -97,12 +97,12 @@ public class BatteryManagementRecordQueryController {
      * Endpoint para listar registros de gestión de baterías de forma paginada,
      * filtrando por prefijo de identificación. (Excepto el estado "Cerrado")
      *
-     * @param page número de página (0-indexado)
-     * @param size cantidad de registros por página
-     * @param term prefijo del número de identificación para filtrar (opcional)
+     * @param page    número de página (0-indexado)
+     * @param size    cantidad de registros por página
+     * @param term    prefijo del número de identificación para filtrar (opcional)
      * @param request solicitud HTTP entrante
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una página de
-     *         {@link BatteryManagementRecordInformationResponseDTO}
+     * {@link BatteryManagementRecordInformationResponseDTO}
      */
     @Operation(
         summary = "Listar registros de gestión de baterías paginados por prefijo de identificación",
@@ -159,12 +159,12 @@ public class BatteryManagementRecordQueryController {
      * filtrando por término de búsqueda en número de identificación o nombre del área de trabajo.
      * (Excepto el estado "Cerrado")
      *
-     * @param page número de página (0-indexado)
-     * @param size cantidad de registros por página
+     * @param page       número de página (0-indexado)
+     * @param size       cantidad de registros por página
      * @param searchTerm término de búsqueda para filtrar (opcional)
-     * @param request solicitud HTTP entrante
+     * @param request    solicitud HTTP entrante
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una página de
-     *         {@link BatteryManagementRecordInformationResponseDTO}
+     * {@link BatteryManagementRecordInformationResponseDTO}
      */
     @Operation(
         summary = "Listar registros de gestión de baterías paginados con término de búsqueda",
@@ -215,6 +215,122 @@ public class BatteryManagementRecordQueryController {
         return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
     }
 
+    /**                                                                                                                                                                                                 
+     * Endpoint para listar registros de gestión de baterías de forma paginada que tienen el estado "Cerrado".                                                                                          
+     *                                                                                                                                                                                                  
+     * @param page número de página (0-indexado)                                                                                                                                                        
+     * @param size cantidad de registros por página                                                                                                                                                     
+     * @param request solicitud HTTP entrante                                                                                                                                                          
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una página de                                                                                                         
+     *         {@link BatteryManagementRecordInformationResponseDTO}                                                                                                                                    
+     */                                                                                                                                                                                                 
+    @Operation(                                                                                                                                                                                         
+        summary = "Listar registros de gestión de baterías paginados con estado 'Cerrado'",                                                                                                             
+        description = "Retorna una lista paginada de registros de gestión de baterías que tienen el estado 'Cerrado'," +                                                                                
+            " ordenados por fecha de creación de forma descendente."                                                                                                                                    
+    )                                                                                                                                                                                                   
+    @ApiResponses({                                                                                                                                                                                     
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(                                                                                                                                           
+            responseCode = "200",                                                                                                                                                                       
+            description = "Consulta exitosa (puede retornar página vacía)",                                                                                                                             
+            content = @Content(                                                                                                                                                                         
+                mediaType = "application/json",                                                                                                                                                         
+                schema = @Schema(implementation = BatteryManagementRecordInformationPageApiResponse.class)                                                                                              
+            )                                                                                                                                                                                           
+        ),                                                                                                                                                                                              
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(                                                                                                                                           
+            responseCode = "400",                                                                                                                                                                       
+            description = "Parámetros inválidos",                                                                                                                                                       
+            content = @Content(                                                                                                                                                                         
+                mediaType = "application/json",                                                                                                                                                         
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)                                                                                                                       
+            )                                                                                                                                                                                           
+        ),                                                                                                                                                                                              
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(                                                                                                                                           
+            responseCode = "500",                                                                                                                                                                       
+            description = "Error interno del servidor",                                                                                                                                                 
+            content = @Content(                                                                                                                                                                         
+                mediaType = "application/json",                                                                                                                                                         
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)                                                                                                                       
+            )                                                                                                                                                                                           
+        )                                                                                                                                                                                               
+    })                                                                                                                                                                                                  
+    @GetMapping("/list-paged-closed")                                                                                                                                                                   
+    public ResponseEntity<ApiResponse<Page<BatteryManagementRecordInformationResponseDTO>>> listPagedClosed(                                                                                            
+        @Parameter(description = "Página (0-indexado)", example = "0")                                                                                                                                  
+        @RequestParam(defaultValue = "0") Integer page,                                                                                                                                                 
+                                                                                                                                                                                                        
+        @Parameter(description = "Cantidad de registros por página", example = "10")                                                                                                                    
+        @RequestParam(defaultValue = "10") Integer size,                                                                                                                                                
+                                                                                                                                                                                                        
+        HttpServletRequest request                                                                                                                                                                      
+    ) {                                                                                                                                                                                                 
+        Page<BatteryManagementRecordInformationResponseDTO> response =                                                                                                                                  
+            batteryManagementRecordQueryHandler.listPaginatedClosedRecords(page, size);                                                                                                                 
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);                                                                                                           
+    }
+
+    /**
+     * Endpoint para listar registros de gestión de baterías de forma paginada que tienen el estado "Cerrado",
+     * filtrando por término de búsqueda en número de identificación o nombre del área de trabajo.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param searchTerm término de búsqueda para filtrar (opcional)
+     * @param request solicitud HTTP entrante
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una página de
+     *         {@link BatteryManagementRecordInformationResponseDTO}
+     */
+    @Operation(                                                                                                            
+        summary = "Listar registros de gestión de baterías cerrados con término de búsqueda",                              
+        description = "Retorna una lista paginada de registros de gestión de baterías con estado 'Cerrado' " +             
+            "filtrados por término de búsqueda en número de identificación o nombre del área de trabajo. " +               
+            "Ordenados por fecha de creación de forma descendente."                                                        
+    )                                                                                                                      
+    @ApiResponses({                                                                                                        
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(                                                              
+            responseCode = "200",                                                                                          
+            description = "Consulta exitosa (puede retornar página vacía)",                                                
+            content = @Content(                                                                                            
+                mediaType = "application/json",                                                                            
+                schema = @Schema(implementation = BatteryManagementRecordInformationPageApiResponse.class)                 
+            )                                                                                                              
+        ),                                                                                                                 
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(                                                              
+            responseCode = "400",                                                                                          
+            description = "Parámetros inválidos",                                                                          
+            content = @Content(                                                                                            
+                mediaType = "application/json",                                                                            
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)                                          
+            )                                                                                                              
+        ),                                                                                                                 
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(                                                              
+            responseCode = "500",                                                                                          
+            description = "Error interno del servidor",                                                                    
+            content = @Content(                                                                                            
+                mediaType = "application/json",                                                                                                                                                         
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)                                                                                                                       
+                )                                                                                                                                                                                           
+            )                                                                                                                                                                                               
+        })                                                                                                                                                                                                  
+        @GetMapping("/list-paged-closed-filtered")                                                                                                                                                          
+        public ResponseEntity<ApiResponse<Page<BatteryManagementRecordInformationResponseDTO>>> listPagedClosedWithSearchTerm(                                                                              
+            @Parameter(description = "Página (0-indexado)", example = "0")
+            @RequestParam(defaultValue = "0") Integer page,
+
+            @Parameter(description = "Cantidad de registros por página", example = "10")
+            @RequestParam(defaultValue = "10") Integer size,
+
+            @Parameter(description = "Término de búsqueda para filtrar", example = "12345 o Área de Trabajo")
+            @RequestParam(required = false) String searchTerm,
+
+            HttpServletRequest request
+    ) {
+        Page<BatteryManagementRecordInformationResponseDTO> response =
+        batteryManagementRecordQueryHandler.listPaginatedClosedRecordsWithSearchTerm(page, size, searchTerm);
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);   
+    }
+    
     /**
      * Endpoint para obtener la información detallada de un registro de gestión de baterías por su ID.
      *

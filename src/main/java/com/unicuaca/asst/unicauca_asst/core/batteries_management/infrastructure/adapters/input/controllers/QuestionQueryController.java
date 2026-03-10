@@ -60,7 +60,18 @@ public class QuestionQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionListApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionListApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "No se encontraron preguntas",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping
@@ -82,7 +93,18 @@ public class QuestionQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionWithQuestionnaireListApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionWithQuestionnaireListApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "No se encontraron preguntas",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping("/with-questionnaire")
@@ -109,12 +131,18 @@ public class QuestionQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionApiResponse.class)
+            )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Pregunta no encontrada",
-            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping("/{id}")
@@ -140,12 +168,18 @@ public class QuestionQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionWithQuestionnaireApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionWithQuestionnaireApiResponse.class)
+            )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Pregunta no encontrada",
-            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping("/{id}/with-questionnaire")
@@ -176,12 +210,18 @@ public class QuestionQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionWithQuestionnaireApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionWithQuestionnaireApiResponse.class)
+            )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Pregunta no encontrada",
-            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping("/by-order/{questionnaireId}/{order}")
@@ -211,12 +251,18 @@ public class QuestionQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionListApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionListApiResponse.class)
+            )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Cuestionario no encontrado o sin preguntas",
-            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping("/by-questionnaire/{questionnaireId}")
@@ -243,12 +289,18 @@ public class QuestionQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionListApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionListApiResponse.class)
+            )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Cuestionario no encontrado o sin preguntas",
-            content = @Content(schema = @Schema(implementation = ErrorResponseApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping("/by-questionnaire-abbr/{abbreviation}")

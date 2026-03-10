@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * DTO que representa la información de una persona evaluada en una lista.
  */
@@ -38,4 +40,10 @@ public class PersonEvaluatedInformationResponseDTO {  //a
 
     @Schema(example = "Con registro", description = "Estado de la persona evaluada")
     private String status;
+
+    @Schema(example = "2024-01-01T12:00:00", description = "Fecha y hora de creación del registro")
+    private LocalDateTime createdAt;
+
+    @Schema(example = "2024-01-02T12:00:00", description = "Fecha y hora de la última actualización del registro")
+    private LocalDateTime updatedAt;
 }

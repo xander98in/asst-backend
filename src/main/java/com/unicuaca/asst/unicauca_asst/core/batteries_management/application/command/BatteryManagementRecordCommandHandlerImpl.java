@@ -37,4 +37,16 @@ public class BatteryManagementRecordCommandHandlerImpl implements BatteryManagem
     public void deleteBatteryManagementRecord(Long recordId) {
         batteryManagementRecordCommandCUInputPort.deleteBatteryManagementRecord(recordId);
     }
+
+    /**
+     * Cierra un registro de gestión de baterías por su ID.
+     *
+     * @param recordId ID del registro de gestión de baterías a cerrar.
+     * @return El DTO del registro de gestión de baterías cerrado.
+     */
+    @Override
+    public BatteryManagementRecordResponseDTO closeBatteryManagementRecord(Long recordId) {
+        BatteryManagementRecord record = batteryManagementRecordCommandCUInputPort.closeBatteryManagementRecord(recordId);
+        return batteryManagementRecordMapper.toResponseDTO(record);
+    }
 }

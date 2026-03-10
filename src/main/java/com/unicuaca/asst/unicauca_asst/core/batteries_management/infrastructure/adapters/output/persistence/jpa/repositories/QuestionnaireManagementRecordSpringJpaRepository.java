@@ -182,6 +182,14 @@ public interface QuestionnaireManagementRecordSpringJpaRepository extends JpaRep
     boolean existsByBatteryManagementRecord_IdAndQuestionnaire_Id(Long batteryId, Long questionnaireId);
 
     /**
+     * Obtiene todos los registros de gestión de cuestionarios asociados a un registro de gestión de batería.
+     *
+     * @param batteryId ID del registro de gestión de batería.
+     * @return Lista de entidades de registro de gestión de cuestionario.
+     */
+    List<QuestionnaireManagementRecordEntity> findAllByBatteryManagementRecord_Id(Long batteryId);
+
+    /**
      * Obtiene la lista de abreviaturas de los cuestionarios asociados a una batería
      * que se encuentren en un estado específico (ej: "Diligenciado").
      *

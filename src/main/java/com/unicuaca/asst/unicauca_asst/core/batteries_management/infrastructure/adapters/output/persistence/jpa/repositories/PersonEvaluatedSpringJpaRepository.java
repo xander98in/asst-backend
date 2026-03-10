@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.PersonEvaluatedEntity;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Repositorio JPA para la entidad {@link PersonEvaluatedEntity}.
@@ -69,10 +70,43 @@ public interface PersonEvaluatedSpringJpaRepository extends JpaRepository<Person
      * @return una página de personas evaluadas
      */
     @Query("SELECT p FROM PersonEvaluatedEntity p " +
-            "JOIN p.identificationType it " +
+            "JOIN FETCH p.identificationType it " +
             "WHERE it.abbreviation = :abbreviation " +
             "AND p.identificationNumber LIKE CONCAT(:identificationNumber, '%')")
     Page<PersonEvaluatedEntity> queryByIdentity(String abbreviation, String identificationNumber, Pageable pageable);
+
+    /**
+     * Recupera todas las personas evaluadas de forma paginada cargando sus relaciones.
+     *
+     * @param pageable objeto de paginación
+     * @return página de personas evaluadas
+     */
+    @Query(value = "SELECT p FROM PersonEvaluatedEntity p " +
+            "JOIN FETCH p.identificationType " +
+            "JOIN FETCH p.status",
+            countQuery = "SELECT COUNT(p) FROM PersonEvaluatedEntity p")
+    Page<PersonEvaluatedEntity> findAllWithRelations(Pageable pageable);
+
+    /**
+     * Recupera personas evaluadas filtradas por término de búsqueda (identificación, nombre o apellido).
+     *
+     * @param term     término de búsqueda
+     * @param pageable objeto de paginación
+     * @return página de personas evaluadas filtradas
+     */
+    @Query(value = "SELECT p FROM PersonEvaluatedEntity p " +
+            "JOIN FETCH p.identificationType " +
+            "JOIN FETCH p.status " +
+            "WHERE (:term IS NULL OR :term = '' " +
+            "OR p.identificationNumber LIKE CONCAT(:term, '%') " +
+            "OR LOWER(p.firstName) LIKE CONCAT('%', LOWER(:term), '%') " +
+            "OR LOWER(p.lastName) LIKE CONCAT('%', LOWER(:term), '%'))",
+            countQuery = "SELECT COUNT(p) FROM PersonEvaluatedEntity p " +
+                    "WHERE (:term IS NULL OR :term = '' " +
+                    "OR p.identificationNumber LIKE CONCAT(:term, '%') " +
+                    "OR LOWER(p.firstName) LIKE CONCAT('%', LOWER(:term), '%') " +
+                    "OR LOWER(p.lastName) LIKE CONCAT('%', LOWER(:term), '%'))")
+    Page<PersonEvaluatedEntity> findAllWithSearchTerm(@Param("term") String term, Pageable pageable);
 
     /**
      * Verifica si existe una persona evaluada con el mismo tipo y número de identificación, excluyendo un ID específico.

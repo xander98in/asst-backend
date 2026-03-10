@@ -18,4 +18,12 @@ public interface BatteryManagementRecordCommandCUInputPort {
      * @param id ID del registro de gestión de baterías a eliminar.
      */
     void deleteBatteryManagementRecord(Long id);
+
+    /**
+     * Cierra un registro de gestión de baterías por su ID.
+     *
+     * @param recordId ID del registro de gestión de baterías a cerrar.
+     * @return El registro de gestión de baterías cerrado.
+     */
+    BatteryManagementRecord closeBatteryManagementRecord(Long recordId);
 }

@@ -2,6 +2,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 
 import java.util.List;
 
+import com.unicuaca.asst.unicauca_asst.common.docs.ErrorResponseApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,7 +56,18 @@ public class QuestionnaireManagementRecordStatusQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionnaireManagementRecordStatusListApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionnaireManagementRecordStatusListApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "No se encontraron estados",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping
@@ -79,12 +91,18 @@ public class QuestionnaireManagementRecordStatusQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionnaireManagementRecordStatusApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionnaireManagementRecordStatusApiResponse.class)
+            )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Estado no encontrado",
-            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping("/{id}")
@@ -112,12 +130,18 @@ public class QuestionnaireManagementRecordStatusQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Consulta exitosa",
-            content = @Content(schema = @Schema(implementation = QuestionnaireManagementRecordStatusApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = QuestionnaireManagementRecordStatusApiResponse.class)
+            )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Estado no encontrado",
-            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
         )
     })
     @GetMapping("/by-name/{name}")

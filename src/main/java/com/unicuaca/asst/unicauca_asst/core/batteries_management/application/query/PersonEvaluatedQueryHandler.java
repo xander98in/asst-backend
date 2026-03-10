@@ -29,4 +29,23 @@ public interface PersonEvaluatedQueryHandler {
      */
     Page<PersonEvaluatedInformationResponseDTO> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size);
 
+    /**
+     * Lista personas evaluadas de forma paginada.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @return una página de {@link PersonEvaluatedInformationResponseDTO}
+     */
+    Page<PersonEvaluatedInformationResponseDTO> listPaginatedPersons(Integer page, Integer size);
+
+    /**
+     * Lista personas evaluadas de forma paginada filtrando por término de búsqueda (identificación, nombre o apellido).
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param searchTerm término de búsqueda
+     * @return una página de {@link PersonEvaluatedInformationResponseDTO}
+     */
+    Page<PersonEvaluatedInformationResponseDTO> listPaginatedWithSearchTerm(Integer page, Integer size, String searchTerm);
+
 }

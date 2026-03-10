@@ -50,9 +50,19 @@ public class BeanConfigurations {
         BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository,
         PersonEvaluatedQueryRepository personEvaluatedQueryRepository,
         PersonEvaluatedCommandRepository personEvaluatedCommandRepository,
+        QuestionnaireManagementRecordCommandRepository questionnaireManagementRecordCommandRepository,
+        QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository,
+        QuestionnaireManagementRecordStatusQueryRepository questionnaireManagementRecordStatusQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort) {
-        return new BatteryManagementRecordCommandService(batteryManagementRecordCommandRepository,
-            batteryManagementRecordQueryRepository, personEvaluatedQueryRepository, personEvaluatedCommandRepository, resultFormatterOutputPort);
+        return new BatteryManagementRecordCommandService(
+            batteryManagementRecordCommandRepository,
+            batteryManagementRecordQueryRepository,
+            personEvaluatedQueryRepository,
+            personEvaluatedCommandRepository,
+            questionnaireManagementRecordCommandRepository,
+            questionnaireManagementRecordQueryRepository,
+            questionnaireManagementRecordStatusQueryRepository,
+            resultFormatterOutputPort);
     }
 
     @Bean

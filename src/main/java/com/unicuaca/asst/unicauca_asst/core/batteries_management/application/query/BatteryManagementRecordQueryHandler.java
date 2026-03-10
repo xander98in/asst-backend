@@ -40,6 +40,26 @@ public interface BatteryManagementRecordQueryHandler {
     Page<BatteryManagementRecordInformationResponseDTO> listPagedWithSearchTerm(Integer page, Integer size, String term);
 
     /**
+     * Lista registros de gestión de baterías de forma paginada que tienen el estado "Cerrado".
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @return una página de {@link BatteryManagementRecordInformationResponseDTO}
+     */
+    Page<BatteryManagementRecordInformationResponseDTO> listPaginatedClosedRecords(Integer page, Integer size);
+
+    /**
+     * Lista registros de gestión de baterías de forma paginada que tienen el estado "Cerrado",
+     * filtrando por término de búsqueda.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param term término de búsqueda (identificación o área)
+     * @return una página de {@link BatteryManagementRecordInformationResponseDTO}
+     */
+    Page<BatteryManagementRecordInformationResponseDTO> listPaginatedClosedRecordsWithSearchTerm(Integer page, Integer size, String term);
+
+    /**
      * Obtiene la información detallada de un registro de gestión de baterías por su ID.
      *
      * @param id ID del registro de gestión de baterías

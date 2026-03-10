@@ -58,4 +58,37 @@ public class PersonEvaluatedQueryHandlerImpl implements PersonEvaluatedQueryHand
         return new PageImpl<>(dtoList, personEvaluatedPage.getPageable(), personEvaluatedPage.getTotalElements());
     }
 
+    /**
+     * Lista personas evaluadas de forma paginada.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @return una página de {@link PersonEvaluatedInformationResponseDTO}
+     */
+    @Override
+    public Page<PersonEvaluatedInformationResponseDTO> listPaginatedPersons(Integer page, Integer size) {
+        Page<PersonEvaluated> personEvaluatedPage = personEvaluatedQueryCUInputPort.listPaginatedPersons(page, size);
+        List<PersonEvaluatedInformationResponseDTO> dtoList = personEvaluatedPage.stream()
+            .map(personEvaluatedMapper::toInformationListResponseDTO)
+            .toList();
+        return new PageImpl<>(dtoList, personEvaluatedPage.getPageable(), personEvaluatedPage.getTotalElements());
+    }
+
+    /**
+     * Lista personas evaluadas de forma paginada filtrando por término de búsqueda (identificación, nombre o apellido).
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param searchTerm término de búsqueda
+     * @return una página de {@link PersonEvaluatedInformationResponseDTO}
+     */
+    @Override
+    public Page<PersonEvaluatedInformationResponseDTO> listPaginatedWithSearchTerm(Integer page, Integer size, String searchTerm) {
+        Page<PersonEvaluated> personEvaluatedPage = personEvaluatedQueryCUInputPort.listPaginatedWithSearchTerm(page, size, searchTerm);
+        List<PersonEvaluatedInformationResponseDTO> dtoList = personEvaluatedPage.stream()
+            .map(personEvaluatedMapper::toInformationListResponseDTO)
+            .toList();
+        return new PageImpl<>(dtoList, personEvaluatedPage.getPageable(), personEvaluatedPage.getTotalElements());
+    }
+
 }

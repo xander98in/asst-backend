@@ -72,5 +72,7 @@ public interface PersonEvaluatedMapper {
     @Mapping(target = "lastName", source = "lastName")
     @Mapping(target = "birthYear", source = "birthYear")
     @Mapping(target = "status", source = "status.name")
+    @Mapping(target = "createdAt", source = "createdAt")
+    @Mapping(target = "updatedAt", source = "updatedAt")
     PersonEvaluatedInformationResponseDTO toInformationListResponseDTO(PersonEvaluated personEvaluated);
 }

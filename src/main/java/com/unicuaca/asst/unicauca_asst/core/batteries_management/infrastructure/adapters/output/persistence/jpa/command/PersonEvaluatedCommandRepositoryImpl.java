@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class PersonCommandRepositoryImpl implements PersonEvaluatedCommandRepository {
+public class PersonEvaluatedCommandRepositoryImpl implements PersonEvaluatedCommandRepository {
 
     private final PersonEvaluatedSpringJpaRepository personEvaluatedJpaRepository;
     private final PersonEvaluatedPersistenceMapper personEvaluatedDBMapper;

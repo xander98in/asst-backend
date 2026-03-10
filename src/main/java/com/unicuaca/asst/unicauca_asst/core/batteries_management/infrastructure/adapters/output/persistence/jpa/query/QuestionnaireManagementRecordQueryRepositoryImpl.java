@@ -125,6 +125,20 @@ public class QuestionnaireManagementRecordQueryRepositoryImpl implements Questio
     }
 
     /**
+     * Obtiene todos los registros de gestión de cuestionarios asociados a un registro de gestión de baterías específico.
+     *
+     * @param batteryId ID del registro de gestión de baterías.
+     * @return Lista de registros encontrados.
+     */
+    @Override
+    public List<QuestionnaireManagementRecord> findAllByBatteryManagementRecordId(Long batteryId) {
+        return questionnaireManagementRecordSpringJpaRepository.findAllByBatteryManagementRecord_Id(batteryId)
+            .stream()
+            .map(mapper::toDomain)
+            .toList();
+    }
+
+    /**
      * Verifica si existe un registro de gestión de cuestionario por su ID.
      *
      * @param id ID del registro de gestión de cuestionario.

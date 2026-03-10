@@ -86,6 +86,46 @@ public class BatteryManagementRecordQueryHandlerImpl implements BatteryManagemen
     }
 
     /**
+     * Lista registros de gestión de baterías de forma paginada que tienen el estado "Cerrado".
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @return una página de {@link BatteryManagementRecordInformationResponseDTO}
+     */
+    @Override
+    public Page<BatteryManagementRecordInformationResponseDTO> listPaginatedClosedRecords(Integer page, Integer size) {
+        Page<BatteryManagementRecordInformation> infoPage =
+            batteryManagementRecordQueryCUInputPort.listPaginatedClosedRecords(page, size);
+
+        var dtoList = infoPage.getContent().stream()
+            .map(batteryManagementRecordMapper::toInformationResponseDTO)
+            .toList();
+
+        return new PageImpl<>(dtoList, infoPage.getPageable(), infoPage.getTotalElements());
+    }
+
+    /**
+     * Lista registros de gestión de baterías de forma paginada que tienen el estado "Cerrado",
+     * filtrando por término de búsqueda.
+     *
+     * @param page número de página (0-indexado)
+     * @param size cantidad de registros por página
+     * @param term término de búsqueda para filtrar por número de identificación o nombre del área de trabajo (opcional)
+     * @return una página de {@link BatteryManagementRecordInformationResponseDTO}
+     */
+    @Override
+    public Page<BatteryManagementRecordInformationResponseDTO> listPaginatedClosedRecordsWithSearchTerm(Integer page, Integer size, String term) {
+        Page<BatteryManagementRecordInformation> infoPage =
+            batteryManagementRecordQueryCUInputPort.listPaginatedClosedRecordsWithSearchTerm(page, size, term);
+
+        var dtoList = infoPage.getContent().stream()
+            .map(batteryManagementRecordMapper::toInformationResponseDTO)
+            .toList();
+
+        return new PageImpl<>(dtoList, infoPage.getPageable(), infoPage.getTotalElements());
+    }
+
+    /**
      * Obtiene la información detallada de un registro de gestión de baterías por su ID.
      *
      * @param id ID del registro de gestión de baterías

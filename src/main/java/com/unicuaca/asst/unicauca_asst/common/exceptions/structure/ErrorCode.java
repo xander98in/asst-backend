@@ -71,6 +71,7 @@ public enum ErrorCode {
     RESPONSE_QUESTION_MISMATCH("ASST-BUS-0016", "El ID de pregunta proporcionado no coincide con el almacenado en la respuesta ID: %d"),
     QUESTIONNAIRE_RECORD_ALREADY_EXISTS("ASST-BUS-0016", "El registro de gestión de cuestionario para la batería con ID %s y cuestionario: %s ya existe."),
     QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED("ASST-BUS-0017", "No se puede eliminar el registro de gestión de cuestionario porque se encuentra en estado '%s'."),
+    CLOSE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0018", "No se puede cerrar el registro de gestión de batería en estado %s. Solo los registros en estado 'Diligenciado' pueden ser cerrados."),
     /**
      * Errores relacionados con mapeo y dependencias.
      */
