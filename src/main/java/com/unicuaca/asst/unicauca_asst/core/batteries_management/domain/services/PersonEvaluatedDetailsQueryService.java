@@ -28,8 +28,6 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
     @Override
     public PersonEvaluatedDetails getMetaByBatteryManagementRecordId(Long batteryManagementRecordId) {
 
-        System.out.println("[PersonEvaluatedDetailsQueryService] getMetaByBatteryManagementRecordId -> recordId=" + batteryManagementRecordId);
-
         BatteryManagementRecord record = batteryManagementRecordQueryRepository
             .getBatteryManagementRecordById(batteryManagementRecordId)
             .orElseGet(() -> {
@@ -38,7 +36,8 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
                     String.format(
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El registro de gestión de baterías con ID " + batteryManagementRecordId + " no fue encontrado."
-                    )
+                    ),
+                    "El registro de gestión de baterías no fue encontrado."
                 );
                 return null;
             });
@@ -47,8 +46,9 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
             .getByBatteryManagementRecordId(record.getId())
             .orElseGet(() -> {
                 this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.PERSON_EVALUATED_DETAIL_NOT_FOUNDS.getCode(),
-                    String.format(ErrorCode.PERSON_EVALUATED_DETAIL_NOT_FOUNDS.getMessageKey(), batteryManagementRecordId)
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El detalle de la persona evaluada para el registro de gestión de batería con ID " + batteryManagementRecordId + " no fue encontrado."),
+                    "No se encontraron los detalles de la persona evaluada para este registro."
                 );
                 return null;
             });
@@ -78,7 +78,8 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
                     String.format(
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El detalle de persona evaluada con ID " + personEvaluatedDetailsId + " no fue encontrado."
-                    )
+                    ),
+                    "Los detalles de la persona evaluada no fueron encontrados."
                 );
                 return null; // requerido por el compilador; nunca se ejecuta
             });

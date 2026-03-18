@@ -1,6 +1,5 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services;
 
-import java.util.Collections;
 import java.util.List;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
@@ -39,7 +38,9 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
                             ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                            String.format("La pregunta con ID %d no fue encontrada.", id)
+                            String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                                "La pregunta con ID " + id + " no fue encontrada."),
+                            "La pregunta no fue encontrada."
                     );
                     return null; // requerido por el compilador
                 });
@@ -58,7 +59,9 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
                             ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                            String.format("La pregunta con ID %d no fue encontrada.", id)
+                            String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                                "La pregunta con ID " + id + " no fue encontrada."),
+                            "La pregunta no fue encontrada."
                     );
                     return null;
                 });
@@ -99,11 +102,9 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
                             ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                            String.format(
-                                "No se encontró una pregunta con orden %d en el cuestionario con ID %d.",
-                                order,
-                                questionnaireId
-                            )
+                            String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                                "No se encontró una pregunta con orden " + order + " en el cuestionario con ID " + questionnaireId + "."),
+                            "La pregunta no fue encontrada en el cuestionario indicado."
                     );
                     return null;
                 });
@@ -120,7 +121,9 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
         if (!questionnaireQueryRepository.existsById(questionnaireId)) {
             resultFormatter.throwEntityNotFound(
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format("El cuestionario con ID %d no existe.", questionnaireId)
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                    "El cuestionario con ID " + questionnaireId + " no existe."),
+                "El cuestionario no fue encontrado."
             );
             return null; // requerido por el compilador, aunque no se alcanzará debido a la excepción lanzada
         }
@@ -138,7 +141,9 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
         if (!questionnaireQueryRepository.existsByAbbreviation(abbreviation)) {
             resultFormatter.throwEntityNotFound(
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format("El cuestionario con abreviatura '%s' no existe.", abbreviation)
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                    "El cuestionario con abreviatura '" + abbreviation + "' no existe."),
+                "El cuestionario no fue encontrado."
             );
             return null; // requerido por el compilador, aunque no se alcanzará debido a la excepción lanzada
         }

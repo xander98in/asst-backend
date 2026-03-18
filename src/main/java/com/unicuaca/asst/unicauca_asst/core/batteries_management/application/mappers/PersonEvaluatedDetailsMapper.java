@@ -100,6 +100,8 @@ public interface PersonEvaluatedDetailsMapper {
     @Mapping(source = "contractTypeId", target = "contractType")
     @Mapping(source = "dailyWorkHours", target = "dailyWorkHours")
     @Mapping(source = "salaryTypeId", target = "salaryType")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     PersonEvaluatedDetails toDomain(PersonEvaluatedDetailsCreateRequestDTO dto);
 
     @Mapping(target = "id", ignore = true)
@@ -120,6 +122,9 @@ public interface PersonEvaluatedDetailsMapper {
     @Mapping(source = "contractTypeId", target = "contractType")
     @Mapping(source = "dailyWorkHours", target = "dailyWorkHours")
     @Mapping(source = "salaryTypeId", target = "salaryType")
+    @Mapping(target = "batteryManagementRecord", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     PersonEvaluatedDetails toDomain(PersonEvaluatedDetailsUpdateRequestDTO dto);
 
     // ---------- Helpers (MapStruct los usa por firma) ----------

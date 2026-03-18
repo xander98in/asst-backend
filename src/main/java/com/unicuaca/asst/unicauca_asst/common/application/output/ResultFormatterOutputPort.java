@@ -27,12 +27,30 @@ public interface ResultFormatterOutputPort {
     void throwEntityAlreadyExists(String errorCode, String message);
 
     /**
+     * Lanza una excepción cuando una entidad que se intenta crear ya existe.
+     *
+     * @param errorCode   código de error específico para trazabilidad
+     * @param message     mensaje descriptivo del conflicto
+     * @param userMessage mensaje amigable destinado al usuario final
+     */
+    void throwEntityAlreadyExists(String errorCode, String message, String userMessage);
+
+    /**
      * Lanza una excepción cuando no se encuentra una entidad esperada.
      *
      * @param errorCode código estructurado del error
      * @param message mensaje explicativo del error
      */
     void throwEntityNotFound(String errorCode, String message);
+
+    /**
+     * Lanza una excepción cuando no se encuentra una entidad esperada.
+     *
+     * @param errorCode   código estructurado del error
+     * @param message     mensaje explicativo del error
+     * @param userMessage mensaje amigable destinado al usuario final
+     */
+    void throwEntityNotFound(String errorCode, String message, String userMessage);
 
     /**
      * Lanza una excepción cuando se viola una regla de negocio.
@@ -50,6 +68,15 @@ public interface ResultFormatterOutputPort {
     void throwBusinessRuleViolation(String errorCode, String message);
 
     /**
+     * Lanza una excepción cuando se viola una regla de negocio.
+     *
+     * @param errorCode   código de error específico para trazabilidad
+     * @param message     mensaje descriptivo del error
+     * @param userMessage mensaje amigable destinado al usuario final
+     */
+    void throwBusinessRuleViolation(String errorCode, String message, String userMessage);
+
+    /**
      * Lanza una excepción cuando falla la creación de una entidad.
      *
      * @param errorCode código de error específico para trazabilidad
@@ -58,10 +85,28 @@ public interface ResultFormatterOutputPort {
     void throwEntityCreationFailed(String errorCode, String message);
 
     /**
+     * Lanza una excepción cuando falla la creación de una entidad.
+     *
+     * @param errorCode   código de error específico para trazabilidad
+     * @param message     mensaje descriptivo del error
+     * @param userMessage mensaje amigable destinado al usuario final
+     */
+    void throwEntityCreationFailed(String errorCode, String message, String userMessage);
+
+    /**
      * Lanza una excepción cuando se encuentra que un catálogo está vacío.
      *
      * @param errorCode código de error específico para trazabilidad
      * @param message mensaje descriptivo del error
      */
     void throwCatalogEmptyException(String errorCode, String message);
+
+    /**
+     * Lanza una excepción cuando se encuentra que un catálogo está vacío.
+     *
+     * @param errorCode   código de error específico para trazabilidad
+     * @param message     mensaje descriptivo del error
+     * @param userMessage mensaje amigable destinado al usuario final
+     */
+    void throwCatalogEmptyException(String errorCode, String message, String userMessage);
 }

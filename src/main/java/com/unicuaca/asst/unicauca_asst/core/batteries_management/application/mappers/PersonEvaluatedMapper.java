@@ -39,6 +39,8 @@ public interface PersonEvaluatedMapper {
     @Mapping(target = "email", source = "email")
     @Mapping(target = "identificationType", expression = "java(new IdentificationType(null, null, dto.getIdentificationType()))")
     @Mapping(target = "status", expression = "java(null)")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     PersonEvaluated toDomain(PersonEvaluatedCreateRequestDTO dto);
 
     /**
@@ -56,6 +58,8 @@ public interface PersonEvaluatedMapper {
     @Mapping(target = "birthYear", source = "dto.birthYear")
     @Mapping(target = "email", source = "dto.email")
     @Mapping(target = "status", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     PersonEvaluated toDomain(Long id, PersonEvaluatedUpdateRequestDTO dto);
 
     /**

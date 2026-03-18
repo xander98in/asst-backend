@@ -61,7 +61,7 @@ public class QuestionnaireResponseCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
-            description = "Datos de entrada inválidos (IDs nulos, valores fuera de rango, lista vacía)",
+            description = "Solicitud inválida o regla de negocio violada",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -69,15 +69,15 @@ public class QuestionnaireResponseCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Registro de gestión o Pregunta no encontrada",
+            description = "Registro de gestión, pregunta u opción de respuesta no encontrada",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "409",
-            description = "Conflicto (ej. la pregunta ya fue respondida anteriormente)",
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -130,7 +130,7 @@ public class QuestionnaireResponseCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
-            description = "Datos inválidos",
+            description = "Solicitud inválida o regla de negocio violada",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -138,7 +138,15 @@ public class QuestionnaireResponseCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Recurso no encontrado",
+            description = "Registro de gestión, respuesta u opción de respuesta no encontrada",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)

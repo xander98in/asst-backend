@@ -42,7 +42,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
         if (responses == null || responses.isEmpty()) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.EMPTY_LIST_OF_RESPONSES.getCode(),
-                ErrorCode.EMPTY_LIST_OF_RESPONSES.getMessageKey()
+                ErrorCode.EMPTY_LIST_OF_RESPONSES.getMessageKey(),
+                "No se han proporcionado respuestas para procesar."
             );
             return;
         }
@@ -58,7 +59,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
         if (!allSameRecordId) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getCode(),
-                ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getMessageKey()
+                ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getMessageKey(),
+                "Las respuestas deben pertenecer al mismo registro de gestión."
             );
         }
 
@@ -71,7 +73,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
         if (uniqueQuestionsCount != responses.size()) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getCode(),
-                ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getMessageKey()
+                ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getMessageKey(),
+                "No se puede responder la misma pregunta más de una vez en el mismo lote."
             );
         }
 
@@ -80,7 +83,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + recordIdRef + " no existe.")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + recordIdRef + " no existe."),
+                    "El registro de gestión de cuestionario no fue encontrado."
                 );
                 return null;
             });
@@ -94,7 +98,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La pregunta con ID " + questionId + " no existe.")
+                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La pregunta con ID " + questionId + " no existe."),
+                        "La pregunta indicada no fue encontrada."
                     );
                     return null;
                 });
@@ -103,7 +108,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             if (!question.getQuestionnaire().getId().equals(managementRecord.getQuestionnaire().getId())) {
                 resultFormatter.throwBusinessRuleViolation(
                     ErrorCode.QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE.getCode(),
-                    String.format(ErrorCode.QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE.getMessageKey(), questionId)
+                    String.format(ErrorCode.QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE.getMessageKey(), questionId),
+                    "La pregunta no pertenece al cuestionario del registro actual."
                 );
             }
 
@@ -113,7 +119,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La opción de respuesta con valor " + answerValue + " no existe.")
+                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La opción de respuesta con valor " + answerValue + " no existe."),
+                        "La opción de respuesta seleccionada no es válida."
                     );
                     return null;
                 });
@@ -123,8 +130,9 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
 
             if (alreadyAnswered) {
                 resultFormatter.throwBusinessRuleViolation(
-                    ErrorCode.QUESTION_ANSWERED_ALREADY.getCode(), // O usa un código específico como DUPLICATE_RESPONSE
-                    String.format(ErrorCode.QUESTION_ANSWERED_ALREADY.getMessageKey(), questionId)
+                    ErrorCode.QUESTION_ANSWERED_ALREADY.getCode(),
+                    String.format(ErrorCode.QUESTION_ANSWERED_ALREADY.getMessageKey(), questionId),
+                    "La pregunta ya ha sido respondida para este registro."
                 );
             }
 
@@ -151,7 +159,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El estado '" + targetStatusName + "' no se encuentra configurado en el sistema.")
+                        "El estado '" + targetStatusName + "' no se encuentra configurado en el sistema."),
+                    "No fue posible completar la operación. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -194,7 +203,9 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    "El estado de batería '" + targetBatteryStatusName + "' no existe."
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                        "El estado de batería '" + targetBatteryStatusName + "' no existe."),
+                    "No fue posible completar la operación. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -217,7 +228,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
         if (responses == null || responses.isEmpty()) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.EMPTY_LIST_OF_RESPONSES.getCode(),
-                ErrorCode.EMPTY_LIST_OF_RESPONSES.getMessageKey()
+                ErrorCode.EMPTY_LIST_OF_RESPONSES.getMessageKey(),
+                "No se han proporcionado respuestas para procesar."
             );
             return;
         }
@@ -233,7 +245,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
         if (!allSameRecordId) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getCode(),
-                ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getMessageKey()
+                ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getMessageKey(),
+                "Las respuestas deben pertenecer al mismo registro de gestión."
             );
         }
 
@@ -246,7 +259,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
         if (uniqueQuestionsCount != responses.size()) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getCode(),
-                ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getMessageKey()
+                ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getMessageKey(),
+                "No se puede responder la misma pregunta más de una vez en el mismo lote."
             );
         }
 
@@ -255,7 +269,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + recordIdRef + " no existe.")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + recordIdRef + " no existe."),
+                    "El registro de gestión de cuestionario no fue encontrado."
                 );
                 return null;
             });
@@ -270,7 +285,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La respuesta con ID " + responseId + " no existe.")
+                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La respuesta con ID " + responseId + " no existe."),
+                        "La respuesta indicada no fue encontrada."
                     );
                     return null;
                 });
@@ -279,7 +295,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             if (!existingResponse.getQuestionnaireManagementRecord().getId().equals(recordIdRef)) {
                 resultFormatter.throwBusinessRuleViolation(
                     ErrorCode.RESPONSE_BELONGS_TO_OTHER_RECORD.getCode(),
-                    String.format(ErrorCode.RESPONSE_BELONGS_TO_OTHER_RECORD.getMessageKey(), responseId, recordIdRef)
+                    String.format(ErrorCode.RESPONSE_BELONGS_TO_OTHER_RECORD.getMessageKey(), responseId, recordIdRef),
+                    "La respuesta no pertenece al registro de gestión indicado."
                 );
             }
 
@@ -287,7 +304,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             if (!existingResponse.getQuestion().getId().equals(inputResponse.getQuestion().getId())) {
                 resultFormatter.throwBusinessRuleViolation(
                     ErrorCode.RESPONSE_QUESTION_MISMATCH.getCode(),
-                    String.format(ErrorCode.RESPONSE_QUESTION_MISMATCH.getMessageKey(), responseId)
+                    String.format(ErrorCode.RESPONSE_QUESTION_MISMATCH.getMessageKey(), responseId),
+                    "La pregunta proporcionada no coincide con la almacenada en la respuesta."
                 );
             }
 
@@ -301,7 +319,8 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                     .orElseGet(() -> {
                         resultFormatter.throwEntityNotFound(
                             ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                            String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La opción de respuesta con valor " + newValue + " no existe.")
+                            String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La opción de respuesta con valor " + newValue + " no existe."),
+                            "La opción de respuesta seleccionada no es válida."
                         );
                         return null;
                     });

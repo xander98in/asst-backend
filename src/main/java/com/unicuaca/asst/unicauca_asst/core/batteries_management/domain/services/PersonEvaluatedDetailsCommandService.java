@@ -10,6 +10,8 @@ import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecordStatus;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.BatteryManagementRecordStatusCode;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.QuestionnaireEnum;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.PersonEvaluatedDetailsCommandCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
 
@@ -42,15 +44,14 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
     @Override
     public void createPersonEvaluatedDetails(PersonEvaluatedDetails personEvaluatedDetails) {
 
-        System.out.println("\n\n\nDtos recibidos en el servicio: " + personEvaluatedDetails + "\n\n");
-
         personEvaluatedDetails.setBatteryManagementRecord(resolveBatteryRecord(personEvaluatedDetails.getBatteryManagementRecord()));
 
         Long bmrId = personEvaluatedDetails.getBatteryManagementRecord().getId();
         if (personEvaluatedDetailsQueryRepository.existsByBatteryManagementRecordId(bmrId)) {
-            resultFormatter.throwBusinessRuleViolation(
-                ErrorCode.PERSON_EVALUATED_DETAILS_DUPLICATE.getCode(),
-                String.format(ErrorCode.PERSON_EVALUATED_DETAILS_DUPLICATE.getMessageKey(), bmrId)
+            resultFormatter.throwEntityAlreadyExists(
+                ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
+                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "El registro de detalles para el registro de gestión de batería con ID " + bmrId + " ya existe."),
+                "Ya existen detalles registrados para este registro de gestión de baterías."
             );
         }
 
@@ -70,14 +71,13 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
         personEvaluatedDetails.setContractType(resolveContractType(personEvaluatedDetails.getContractType()));
         personEvaluatedDetails.setSalaryType(resolveSalaryType(personEvaluatedDetails.getSalaryType()));
 
-        System.out.println("\n\n\nDtos validados y completos en el servicio: " + personEvaluatedDetails + "\n\n");
-
         personEvaluatedDetailsCommandRepository
             .savePersonEvaluatedDetails(personEvaluatedDetails)
             .orElseGet(() -> {
                 resultFormatter.throwEntityCreationFailed(
                     ErrorCode.ENTITY_CREATION_ERROR.getCode(),
-                    String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "Los detalles de la persona evaluada no se crearon correctamente.")
+                    String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "Los detalles de la persona evaluada no se crearon correctamente."),
+                    "No fue posible crear los detalles de la persona evaluada. Por favor, intente más tarde."
                 );
                 return null; // requerido por el compilador
             });
@@ -90,20 +90,22 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                     String.format(
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El registro de gestión de batería con ID " + bmrId + " no fue encontrado."
-                    )
+                    ),
+                    "No fue posible crear los detalles de la persona evaluada. Por favor, intente más tarde."
                 );
                 return null;
             });
 
         BatteryManagementRecordStatus createdStatus = batteryManagementRecordStatusQueryRepository
-            .getStatusByName("En diligenciamiento")
+            .getStatusByName(BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription())
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El estado 'En diligenciamiento' no fue encontrado."
-                    )
+                        "El estado '" + BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription() + "' no fue encontrado."
+                    ),
+                    "No fue posible crear los detalles de la persona evaluada. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -118,7 +120,8 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                     String.format(
                         ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(),
                         "No se pudo actualizar el estado del registro de gestión de batería con ID " + bmrId
-                    )
+                    ),
+                    "No fue posible crear los detalles de la persona evaluada. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -141,7 +144,8 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                     String.format(
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "Los detalles de la persona evaluada con ID " + id + " no fueron encontrados."
-                    )
+                    ),
+                    "Los detalles de la persona evaluada no fueron encontrados."
                 );
                 return null;
             });
@@ -172,7 +176,8 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
             .orElseGet(() -> {
                 resultFormatter.throwEntityCreationFailed(
                     ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
-                    String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "Los detalles de la persona evaluada no se actualizaron correctamente.")
+                    String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "Los detalles de la persona evaluada no se actualizaron correctamente."),
+                    "No fue posible actualizar los detalles de la persona evaluada. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -194,7 +199,8 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                     String.format(
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "Los detalles de la persona evaluada con ID " + personEvaluatedDetailsId + " no fueron encontrados."
-                    )
+                    ),
+                    "Los detalles de la persona evaluada no fueron encontrados."
                 );
                 return null;
             });
@@ -204,13 +210,14 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
         boolean hasIntralaboralRecords = questionnaireManagementRecordQueryRepository
             .existsByBatteryManagementRecordIdAndQuestionnaireAbbreviationIn(
                 batteryRecordId,
-                java.util.List.of("ILA", "ILB")
+                java.util.List.of(QuestionnaireEnum.ILA.getAbbreviation(), QuestionnaireEnum.ILB.getAbbreviation())
             );
 
         if (hasIntralaboralRecords) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED.getCode(),
-                ErrorCode.PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED.getMessageKey()
+                ErrorCode.PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED.getMessageKey(),
+                "No es posible eliminar los detalles porque el registro ya tiene cuestionarios intralaborales asociados."
             );
             return;
         }
@@ -229,20 +236,22 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                         String.format(
                             ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                             "El registro de gestión de batería con ID " + batteryRecordId + " no fue encontrado."
-                        )
+                        ),
+                        "No fue posible completar la eliminación. Por favor, intente más tarde."
                     );
                     return null;
                 });
 
             BatteryManagementRecordStatus createdStatus = batteryManagementRecordStatusQueryRepository
-                .getStatusByName("Creado")
+                .getStatusByName(BatteryManagementRecordStatusCode.CREATED.getDescription())
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
                         String.format(
                             ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                            "El estado 'Creado' no fue encontrado."
-                        )
+                            "El estado '" + BatteryManagementRecordStatusCode.CREATED.getDescription() + "' no fue encontrado."
+                        ),
+                        "No fue posible completar la eliminación. Por favor, intente más tarde."
                     );
                     return null;
                 });
@@ -257,7 +266,8 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                         String.format(
                             ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(),
                             "No se pudo actualizar el estado del registro de gestión de batería con ID " + batteryRecordId
-                        )
+                        ),
+                        "No fue posible completar la eliminación. Por favor, intente más tarde."
                     );
                     return null;
                 });
@@ -418,7 +428,8 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
         return fetcher.get().orElseGet(() -> {
             resultFormatter.throwEntityNotFound(
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), notFoundMsg)
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), notFoundMsg),
+                "Uno de los valores seleccionados no es válido. Verifique los campos del formulario."
             );
             return null; // requerido por el compilador
         });
@@ -440,7 +451,8 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
         if (id == null) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.BAD_REQUEST.getCode(),
-                String.format("El %s es obligatorio y debe contener un ID.", nombre)
+                String.format("El %s es obligatorio y debe contener un ID.", nombre),
+                "Uno de los campos obligatorios no fue proporcionado correctamente."
             );
             return null; // requerido por el compilador
         }

@@ -21,8 +21,6 @@ public interface QuestionnaireManagementRecordStatusQueryCUInputPort {
      *
      * @param id identificador del estado
      * @return el {@link QuestionnaireManagementRecordStatus} encontrado
-     * @throws com.unicuaca.asst.unicauca_asst.common.exceptions.BusinessException
-     *         si el estado no existe (delegado al {@code ResultFormatterOutputPort})
      */
     QuestionnaireManagementRecordStatus getQuestionnaireManagementRecordStatusById(Long id);
 
@@ -31,8 +29,6 @@ public interface QuestionnaireManagementRecordStatusQueryCUInputPort {
      *
      * @param name nombre del estado
      * @return el {@link QuestionnaireManagementRecordStatus} encontrado
-     * @throws com.unicuaca.asst.unicauca_asst.common.exceptions.BusinessException
-     *         si el estado no existe (delegado al {@code ResultFormatterOutputPort})
      */
     QuestionnaireManagementRecordStatus getQuestionnaireManagementRecordStatusByName(String name);
 

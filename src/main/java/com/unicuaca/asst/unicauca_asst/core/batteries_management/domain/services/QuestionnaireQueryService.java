@@ -47,7 +47,8 @@ public class QuestionnaireQueryService implements QuestionnaireQueryCUInputPort 
                     String.format(
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El cuestionario con abreviatura '" + abbreviation + "' no fue encontrado."
-                    )
+                    ),
+                    "El cuestionario no fue encontrado."
                 );
                 return null; // requerido por el compilador; nunca se ejecuta
             });

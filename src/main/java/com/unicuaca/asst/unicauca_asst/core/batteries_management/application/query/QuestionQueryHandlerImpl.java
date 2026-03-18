@@ -1,6 +1,5 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.query;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Component;

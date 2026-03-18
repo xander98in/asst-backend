@@ -46,6 +46,11 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
         throw new EntityAlreadyExistsException(errorCode, message);
     }
 
+    @Override
+    public void throwEntityAlreadyExists(String errorCode, String message, String userMessage) {
+        throw new EntityAlreadyExistsException(errorCode, message, userMessage);
+    }
+
     /**
      * Lanza una excepción cuando no se encuentra una entidad esperada.
      *
@@ -54,7 +59,12 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
      */
     @Override
     public void throwEntityNotFound(String errorCode, String message) {
-        throw new EntityNotFoundPersException(errorCode ,message);
+        throw new EntityNotFoundPersException(errorCode, message);
+    }
+
+    @Override
+    public void throwEntityNotFound(String errorCode, String message, String userMessage) {
+        throw new EntityNotFoundPersException(errorCode, message, userMessage);
     }
 
     /**
@@ -65,6 +75,16 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
     @Override
     public void throwBusinessRuleViolation(String message) {
         throw new UnsupportedOperationException("Unimplemented method 'throwBusinessRuleViolation'");
+    }
+
+    @Override
+    public void throwBusinessRuleViolation(String errorCode, String message) {
+        throw new BusinessRuleViolationException(errorCode, message);
+    }
+
+    @Override
+    public void throwBusinessRuleViolation(String errorCode, String message, String userMessage) {
+        throw new BusinessRuleViolationException(errorCode, message, userMessage);
     }
 
     /**
@@ -78,6 +98,11 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
         throw new EntityCreationException(errorCode, message);
     }
 
+    @Override
+    public void throwEntityCreationFailed(String errorCode, String message, String userMessage) {
+        throw new EntityCreationException(errorCode, message, userMessage);
+    }
+
     /**
      * Lanza una excepción cuando se intenta acceder a un catálogo que está vacío.
      *
@@ -89,14 +114,8 @@ public class ResultFormatterImpl implements ResultFormatterOutputPort{
         throw new CatalogEmptyException(errorCode, message);
     }
 
-    /**
-     * Lanza una excepción cuando se viola una regla de negocio del sistema.
-     *
-     * @param errorCode código de error personalizado
-     * @param message mensaje explicativo del error
-     */
     @Override
-    public void throwBusinessRuleViolation(String errorCode, String message) {
-        throw new BusinessRuleViolationException(errorCode, message);
+    public void throwCatalogEmptyException(String errorCode, String message, String userMessage) {
+        throw new CatalogEmptyException(errorCode, message, userMessage);
     }
 }

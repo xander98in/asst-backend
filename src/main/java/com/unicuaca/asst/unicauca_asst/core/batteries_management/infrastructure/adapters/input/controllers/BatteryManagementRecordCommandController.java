@@ -46,29 +46,41 @@ public class BatteryManagementRecordCommandController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "201",
-            description = "Registro de gestión de baterías creado exitosamente",
+            description = "Registro de gestión de baterías creado con éxito",
             content = @Content(
+                mediaType = "application/json",
                 schema = @Schema(implementation = BatteryManagementRecordApiResponse.class)
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "404",
-            description = "Persona evaluada no encontrada",
-            content = @Content(
-                schema = @Schema(implementation = ErrorResponseApiResponse.class)
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "409",
-            description = "Conflicto al crear el registro (por ejemplo, ya existe un registro para la persona evaluada)",
-            content = @Content(
-                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Solicitud inválida",
             content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Persona evaluada o estado no encontrado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "409",
+            description = "Ya existe un registro de gestión de baterías para la persona evaluada",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
+            content = @Content(
+                mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
@@ -95,23 +107,31 @@ public class BatteryManagementRecordCommandController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Registro eliminado exitosamente",
+            description = "Registro de gestión de baterías eliminado con éxito",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = VoidApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "404",
-            description = "Registro no encontrado",
+            responseCode = "400",
+            description = "Solicitud inválida o regla de negocio violada",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Parámetros inválidos",
+            responseCode = "404",
+            description = "Registro de gestión de baterías no encontrado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -141,10 +161,18 @@ public class BatteryManagementRecordCommandController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Registro de gestión de baterías cerrado exitosamente",
+            description = "Registro de gestión de baterías cerrado con éxito",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = BatteryManagementRecordApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Solicitud inválida o regla de negocio violada",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -156,8 +184,8 @@ public class BatteryManagementRecordCommandController {
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Solicitud inválida",
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)

@@ -36,7 +36,8 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
             .orElseGet(() -> {
                 this.resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona con ID " + id + " no fue encontrada.")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona con ID " + id + " no fue encontrada."),
+                    "La persona evaluada no fue encontrada."
                 );
                 return null; // nunca se ejecuta, pero requerido por el compilador
             });
@@ -58,7 +59,8 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
             .orElseGet(() -> {
                 this.resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de identificación con abreviatura " + abbreviation + " no fue encontrado.")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de identificación con abreviatura " + abbreviation + " no fue encontrado."),
+                    "El tipo de identificación seleccionado no es válido."
                 );
                 return null;
             });

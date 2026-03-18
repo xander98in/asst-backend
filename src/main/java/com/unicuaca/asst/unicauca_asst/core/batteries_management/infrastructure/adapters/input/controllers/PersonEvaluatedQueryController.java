@@ -59,15 +59,31 @@ public class PersonEvaluatedQueryController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Persona encontrada",
+            description = "Consulta exitosa",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = PersonEvaluatedInformationApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Solicitud inválida",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Persona no encontrada",
+            description = "Persona evaluada no encontrada",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -105,7 +121,15 @@ public class PersonEvaluatedQueryController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
-            description = "Parámetros inválidos",
+            description = "Solicitud inválida",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Tipo de identificación no encontrado",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -163,7 +187,7 @@ public class PersonEvaluatedQueryController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
-            description = "Parámetros inválidos",
+            description = "Solicitud inválida",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -217,7 +241,7 @@ public class PersonEvaluatedQueryController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
-            description = "Parámetros inválidos",
+            description = "Solicitud inválida",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)

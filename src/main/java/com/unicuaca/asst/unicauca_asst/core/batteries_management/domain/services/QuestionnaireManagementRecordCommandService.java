@@ -47,7 +47,8 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El registro de gestión de batería con ID " + batteryId + " no existe.")
+                        "El registro de gestión de batería con ID " + batteryId + " no existe."),
+                    "El registro de gestión de baterías no fue encontrado."
                 );
                 return null;
             });
@@ -60,16 +61,19 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El cuestionario con ID " + questionnaireId + " no existe.")
+                        "El cuestionario con ID " + questionnaireId + " no existe."),
+                    "El cuestionario seleccionado no fue encontrado."
                 );
                 return null;
             });
 
         // Validar si YA EXISTE el registro (Regla de Negocio)
-        if (questionnaireManagementRecordQueryRepository.existsByBatteryManagementRecordIdAndQuestionnaireId(batteryId, questionnaireId)) {
+        if (questionnaireManagementRecordQueryRepository
+            .existsByBatteryManagementRecordIdAndQuestionnaireId(batteryId, questionnaireId)) {
             resultFormatter.throwEntityAlreadyExists(
-                ErrorCode.QUESTIONNAIRE_RECORD_ALREADY_EXISTS.getCode(),
-                String.format(ErrorCode.QUESTIONNAIRE_RECORD_ALREADY_EXISTS.getMessageKey(), batteryId, questionnaire.getName())
+                ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
+                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "El registro de gestión de cuestionario para la batería con ID " + batteryId + " y cuestionario: " + questionnaire.getName() + " ya existe."),
+                "Ya existe un registro de gestión para este cuestionario en la batería seleccionada."
             );
         }
 
@@ -82,7 +86,8 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El estado inicial '" + initialStatusName + "' no se encuentra configurado en el sistema.")
+                        "El estado inicial '" + initialStatusName + "' no se encuentra configurado en el sistema."),
+                    "No fue posible crear el registro. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -111,7 +116,8 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + id + " no existe.")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + id + " no existe."),
+                    "El registro de gestión de cuestionario no fue encontrado."
                 );
                 return null;
             });
@@ -120,7 +126,8 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
         if (QuestionnaireManagementRecordStatusEnum.CERRADO.getName().equals(recordToDelete.getStatus().getName())) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED.getCode(),
-                String.format(ErrorCode.QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED.getMessageKey(), recordToDelete.getStatus().getName())
+                String.format(ErrorCode.QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED.getMessageKey(), recordToDelete.getStatus().getName()),
+                "No se puede eliminar el registro porque se encuentra cerrado."
             );
         }
 
@@ -158,7 +165,15 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
 
         // Actualizar Batería
         BatteryManagementRecord batteryRecord = batteryManagementRecordQueryRepository.getBatteryManagementRecordById(batteryId)
-            .orElseThrow(() -> new RuntimeException("Error de integridad: Batería no encontrada"));
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                        "Error de integridad: El registro de gestión de batería con ID " + batteryId + " no fue encontrado tras eliminar el cuestionario."),
+                    "No fue posible completar la operación. Por favor, intente más tarde."
+                );
+                return null;
+            });
 
         // Optimización: Solo actualizar si el estado cambia
         if (!batteryRecord.getStatus().getName().equals(targetBatteryStatusName)) {
@@ -167,7 +182,9 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        "El estado de batería '" + targetBatteryStatusName + "' no existe."
+                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                            "El estado de batería '" + targetBatteryStatusName + "' no existe."),
+                        "No fue posible completar la operación. Por favor, intente más tarde."
                     );
                     return null;
                 });

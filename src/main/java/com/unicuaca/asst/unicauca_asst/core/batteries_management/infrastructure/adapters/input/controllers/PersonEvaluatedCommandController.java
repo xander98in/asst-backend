@@ -57,7 +57,15 @@ public class PersonEvaluatedCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
-            description = "Datos inválidos proporcionados para la creación",
+            description = "Solicitud inválida",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Tipo de identificación o estado no encontrado",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -65,7 +73,15 @@ public class PersonEvaluatedCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "409",
-            description = "Conflicto al crear la entidad",
+            description = "Ya existe una persona con la misma identificación o correo electrónico",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -92,7 +108,7 @@ public class PersonEvaluatedCommandController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Persona evaluada actualizada correctamente",
+            description = "Persona evaluada actualizada con éxito",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = PersonEvaluatedApiResponse.class)
@@ -100,7 +116,7 @@ public class PersonEvaluatedCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
-            description = "Datos inválidos proporcionados para la actualización",
+            description = "Solicitud inválida",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -108,7 +124,7 @@ public class PersonEvaluatedCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Entidad no encontrada para el ID proporcionado",
+            description = "Persona evaluada o tipo de identificación no encontrado",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -116,7 +132,15 @@ public class PersonEvaluatedCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "409",
-            description = "Conflicto al actualizar la entidad",
+            description = "Ya existe una persona con la misma identificación o correo electrónico",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -136,23 +160,31 @@ public class PersonEvaluatedCommandController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Persona evaluada eliminada correctamente",
+            description = "Persona evaluada eliminada con éxito",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = VoidApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "404",
-            description = "Entidad no encontrada para el ID proporcionado",
+            responseCode = "400",
+            description = "Solicitud inválida o regla de negocio violada",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "409",
-            description = "Conflicto al eliminar la entidad",
+            responseCode = "404",
+            description = "Persona evaluada no encontrada",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)

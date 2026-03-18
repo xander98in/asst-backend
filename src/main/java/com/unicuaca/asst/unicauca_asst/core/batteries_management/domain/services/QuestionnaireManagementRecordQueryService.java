@@ -32,7 +32,8 @@ public class QuestionnaireManagementRecordQueryService implements QuestionnaireM
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "No se encontró un registro de gestión de cuestionario para el recordId "
                             + batteryManagementRecordId + " y el cuestionario " + questionnaireAbbreviation
-                    )
+                    ),
+                    "El registro de gestión de cuestionario no fue encontrado."
                 );
                 return null;
             });

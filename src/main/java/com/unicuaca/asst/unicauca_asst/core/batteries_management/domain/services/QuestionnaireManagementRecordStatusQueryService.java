@@ -29,14 +29,13 @@ public class QuestionnaireManagementRecordStatusQueryService implements Question
      *
      * @param id identificador del estado
      * @return el {@link QuestionnaireManagementRecordStatus} encontrado
-     * @throws com.unicuaca.asst.unicauca_asst.common.exceptions.BusinessException
-     *         si el estado no existe (delegado al {@code ResultFormatterOutputPort})
      */
     @Override
     public QuestionnaireManagementRecordStatus getQuestionnaireManagementRecordStatusById(Long id) {
         return fetchOrThrow(
             () -> questionnaireManagementRecordStatusQueryRepository.getQuestionnaireManagementRecordStatusById(id),
-            String.format("El estado de registro de gestión de cuestionarios con ID %d no fue encontrado.", id)
+            String.format("El estado de registro de gestión de cuestionarios con ID %d no fue encontrado.", id),
+            "El estado del registro de gestión de cuestionario no fue encontrado."
         );
     }
 
@@ -45,14 +44,13 @@ public class QuestionnaireManagementRecordStatusQueryService implements Question
      *
      * @param name nombre del estado
      * @return el {@link QuestionnaireManagementRecordStatus} encontrado
-     * @throws com.unicuaca.asst.unicauca_asst.common.exceptions.BusinessException
-     *         si el estado no existe (delegado al {@code ResultFormatterOutputPort})
      */
     @Override
     public QuestionnaireManagementRecordStatus getQuestionnaireManagementRecordStatusByName(String name) {
         return fetchOrThrow(
             () -> questionnaireManagementRecordStatusQueryRepository.getQuestionnaireManagementRecordStatusByName(name),
-            String.format("El estado de registro de gestión de cuestionarios con nombre '%s' no fue encontrado.", name)
+            String.format("El estado de registro de gestión de cuestionarios con nombre '%s' no fue encontrado.", name),
+            "El estado del registro de gestión de cuestionario no fue encontrado."
         );
     }
 
@@ -70,14 +68,16 @@ public class QuestionnaireManagementRecordStatusQueryService implements Question
      * Helper genérico para obtener un recurso o lanzar excepción estandarizada.
      *
      * @param fetcher     supplier que obtiene el Optional del recurso
-     * @param notFoundMsg mensaje específico cuando no existe
+     * @param notFoundMsg mensaje técnico cuando no existe
+     * @param userMessage mensaje para el usuario final
      * @return recurso resuelto
      */
-    private <T> T fetchOrThrow(Supplier<Optional<T>> fetcher, String notFoundMsg) {
+    private <T> T fetchOrThrow(Supplier<Optional<T>> fetcher, String notFoundMsg, String userMessage) {
         return fetcher.get().orElseGet(() -> {
             resultFormatter.throwEntityNotFound(
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), notFoundMsg)
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), notFoundMsg),
+                userMessage
             );
             return null; // requerido por el compilador
         });

@@ -28,9 +28,11 @@ public enum ErrorCode {
     FORBIDDEN("ASST-SEC-0002", "Acceso denegado."),
     INVALID_CREDENTIALS("ASST-SEC-0003", "Credenciales inválidas."),
     USER_DISABLED("ASST-SEC-0004", "El usuario no ha sido verificado."),
-
     /**
-     * Errores relacionados con la base de datos y persistencia.
+     * Errores de infraestructura de base de datos y persistencia.
+     * Solo para errores que el desarrollador no controla (BD caída, timeout, SQL inválido).
+     * Estos errores se capturan en el RestApiExceptionHandler a partir de excepciones
+     * lanzadas por Spring/Hibernate, no desde la lógica de dominio.
      */
     DATA_ERROR("ASST-DAT-0000", "Error de conflicto en datos."),
     DB_TIMEOUT("ASST-DAT-0001", "Tiempo de espera de base de datos."),
@@ -38,11 +40,6 @@ public enum ErrorCode {
     DATA_ACCESS("ASST-DAT-0003", "Error accediendo a la base de datos."),
     SQL_GRAMMAR("ASST-DAT-0004", "Error de sintaxis SQL."),
     TRANSACTION_ERROR("ASST-DAT-0005", "Error de transacción."),
-    ENTITY_ALREADY_EXISTS("ASST-DAT-0006", "La entidad ya existe. %s"),
-    ENTITY_NOT_FOUND("ASST-DAT-0007", "Entidad no encontrada. %s"),
-    ENTITY_CREATION_ERROR("ASST-DAT-0008", "Error al crear la entidad. %s"),
-    ENTITY_UPDATE_ERROR("ASST-DAT-0009", "Error al actualizar la entidad. %s"),
-    PERSON_EVALUATED_DETAIL_NOT_FOUNDS("ASST-DAT-0010", "El detalle de la persona evaluada para el registro de gestión de batería con ID %s no fue encontrado."),
     /**
      * Errores relacionados con catálogos.
      */
@@ -50,28 +47,31 @@ public enum ErrorCode {
     CATALOG_EMPTY("ASST-CAT-0001", "El catálogo de %s está vacio. Debe existir al menos un registro."),
     CATALOG_UNAVAILABLE("ASST-CAT-0002", "Catálogo no disponible temporalmente."),
     /**
-     * Errores específicos de reglas de negocio.
+     * Errores de reglas de negocio — operaciones genéricas de dominio.
+     * Se usan como plantilla reutilizable para cualquier entidad del sistema.
+     * El contexto específico (qué entidad, qué ocurrió) se proporciona mediante
+     * el message (técnico) y el userMessage (usuario final) de la excepción.
      */
     BUSINESS_RULE_VIOLATION("ASST-BUS-0001", "Regla de negocio violada"),
-    STATE_NOT_FOUND("ASST-BUS-0002", "El estado %s no fue encontrado."),
-    PERSON_EVALUATED_NOT_FOUND("ASST-BUS-0003", "La persona evaluada con ID %s no fue encontrada."),
-    BATTERY_RECORD_DUPLICATE("ASST-BUS-0004", "La persona evaluada con ID %s ya tiene un registro de gestión de baterías."),
-    EMAIL_ALREADY_EXISTS("ASST-BUS-0005", "Correo ya registrado. %s"),
-    PERSON_EVALUATED_DETAILS_DUPLICATE("ASST-BUS-0006", "El registro de detalles para el registro de gestión de batería con ID %s ya existe."),
-    PERSON_WITH_BATTERY_RECORD("ASST-BUS-0007", "No se puede eliminar la persona evaluada, porque tiene registros de gestión de baterías asociados."),
-    DELETE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0008", "No se puede eliminar el registro de gestión de batería en estado %s."),
-    PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED("ASST-BUS-0009", "No es posible eliminar, porque el registro de gestión de batería ya tiene cuestionarios intralaborales (ILA/ILB) asociados."),
-
-    EMPTY_LIST_OF_RESPONSES("ASST-BUS-0010", "No se han proporcionado respuestas para procesar."),
-    DIFFERENT_RECORD_IDS_IN_RESPONSES("ASST-BUS-0011", "Se intentaron procesar respuestas pertenecientes a diferentes registros de gestión en un mismo lote."),
-    QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE("ASST-BUS-0012", "La pregunta con ID %d no pertenece al cuestionario del registro actual."),
-    QUESTION_ANSWERED_ALREADY("ASST-BUS-0013", "La pregunta con ID %d ya ha sido respondida para este registro."),
-    DUPLICATE_QUESTION_IN_BATCH("ASST-BUS-0014", "La lista contiene preguntas duplicadas. No se puede responder la misma pregunta dos veces o más en el mismo lote."),
-    RESPONSE_BELONGS_TO_OTHER_RECORD("ASST-BUS-0015", "La respuesta con ID %d no pertenece al registro de gestión de cuestionario ID %d."),
-    RESPONSE_QUESTION_MISMATCH("ASST-BUS-0016", "El ID de pregunta proporcionado no coincide con el almacenado en la respuesta ID: %d"),
-    QUESTIONNAIRE_RECORD_ALREADY_EXISTS("ASST-BUS-0016", "El registro de gestión de cuestionario para la batería con ID %s y cuestionario: %s ya existe."),
-    QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED("ASST-BUS-0017", "No se puede eliminar el registro de gestión de cuestionario porque se encuentra en estado '%s'."),
-    CLOSE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0018", "No se puede cerrar el registro de gestión de batería en estado %s. Solo los registros en estado 'Diligenciado' pueden ser cerrados."),
+    ENTITY_NOT_FOUND("ASST-BUS-0002", "Entidad no encontrada. %s"),
+    ENTITY_ALREADY_EXISTS("ASST-BUS-0003", "La entidad ya existe. %s"),
+    ENTITY_CREATION_ERROR("ASST-BUS-0004", "Error al crear la entidad. %s"),
+    ENTITY_UPDATE_ERROR("ASST-BUS-0005", "Error al actualizar la entidad. %s"),
+    /**
+     * Errores de reglas de negocio — específicos del dominio.
+     */
+    PERSON_WITH_BATTERY_RECORD("ASST-BUS-0006", "No se puede eliminar la persona evaluada, porque tiene registros de gestión de baterías asociados."),
+    DELETE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0007", "No se puede eliminar el registro de gestión de batería en estado %s."),
+    PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED("ASST-BUS-0008", "No es posible eliminar, porque el registro de gestión de batería ya tiene cuestionarios intralaborales (ILA/ILB) asociados."),
+    EMPTY_LIST_OF_RESPONSES("ASST-BUS-0009", "No se han proporcionado respuestas para procesar."),
+    DIFFERENT_RECORD_IDS_IN_RESPONSES("ASST-BUS-0010", "Se intentaron procesar respuestas pertenecientes a diferentes registros de gestión en un mismo lote."),
+    QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE("ASST-BUS-0011", "La pregunta con ID %d no pertenece al cuestionario del registro actual."),
+    QUESTION_ANSWERED_ALREADY("ASST-BUS-0012", "La pregunta con ID %d ya ha sido respondida para este registro."),
+    DUPLICATE_QUESTION_IN_BATCH("ASST-BUS-0013", "La lista contiene preguntas duplicadas. No se puede responder la misma pregunta dos veces o más en el mismo lote."),
+    RESPONSE_BELONGS_TO_OTHER_RECORD("ASST-BUS-0014", "La respuesta con ID %d no pertenece al registro de gestión de cuestionario ID %d."),
+    RESPONSE_QUESTION_MISMATCH("ASST-BUS-0015", "El ID de pregunta proporcionado no coincide con el almacenado en la respuesta ID: %d"),
+    QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED("ASST-BUS-0016", "No se puede eliminar el registro de gestión de cuestionario porque se encuentra en estado '%s'."),
+    CLOSE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0017", "No se puede cerrar el registro de gestión de batería en estado %s. Solo los registros en estado 'Diligenciado' pueden ser cerrados."),
     /**
      * Errores relacionados con mapeo y dependencias.
      */

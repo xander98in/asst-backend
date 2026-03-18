@@ -15,6 +15,8 @@ public class EntityAlreadyExistsException extends RuntimeException {
     private final String code;
     /** Mensaje legible del error. */
     private final String message;
+    /** Mensaje amigable destinado al usuario final. */
+    private final String userMessage;
 
     /**
      * Constructor que recibe un {@link ErrorCode} predefinido y un mensaje
@@ -27,6 +29,7 @@ public class EntityAlreadyExistsException extends RuntimeException {
         super(message);
         this.code = code.getCode();
         this.message = code.getMessageKey();
+        this.userMessage = null;
     }
 
     /**
@@ -39,6 +42,7 @@ public class EntityAlreadyExistsException extends RuntimeException {
         super(message);
         this.code = ErrorCode.ENTITY_ALREADY_EXISTS.getCode();
         this.message = ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey();
+        this.userMessage = null;
     }
 
     /**
@@ -47,10 +51,24 @@ public class EntityAlreadyExistsException extends RuntimeException {
      * @param code    código de error personalizado
      * @param message mensaje detallado del error
      */
-    public  EntityAlreadyExistsException(String code, String message) {
+    public EntityAlreadyExistsException(String code, String message) {
         super(message);
         this.code = code;
         this.message = message;
+        this.userMessage = null;
     }
 
+    /**
+     * Constructor que recibe un código, mensaje técnico y mensaje de usuario.
+     *
+     * @param code        código de error personalizado
+     * @param message     mensaje técnico del error
+     * @param userMessage mensaje amigable destinado al usuario final
+     */
+    public EntityAlreadyExistsException(String code, String message, String userMessage) {
+        super(message);
+        this.code = code;
+        this.message = message;
+        this.userMessage = userMessage;
+    }
 }

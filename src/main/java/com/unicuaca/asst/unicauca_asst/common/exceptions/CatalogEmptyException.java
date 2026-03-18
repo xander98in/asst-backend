@@ -15,6 +15,8 @@ public class CatalogEmptyException extends RuntimeException {
     private final String code;
     /** Mensaje legible del error. */
     private final String message;
+    /** Mensaje amigable destinado al usuario final. */
+    private final String userMessage;
 
     /**
      * Constructor que inicializa la excepción con un código de error predefinido.
@@ -25,6 +27,7 @@ public class CatalogEmptyException extends RuntimeException {
         super(code.getMessageKey());
         this.code = code.getCode();
         this.message = code.getMessageKey();
+        this.userMessage = null;
     }
 
     /**
@@ -36,6 +39,7 @@ public class CatalogEmptyException extends RuntimeException {
         super(message);
         this.code = ErrorCode.CATALOG_EMPTY.getCode();
         this.message = ErrorCode.CATALOG_EMPTY.getMessageKey();
+        this.userMessage = null;
     }
 
     /**
@@ -48,5 +52,20 @@ public class CatalogEmptyException extends RuntimeException {
         super(message);
         this.code = code;
         this.message = message;
+        this.userMessage = null;
+    }
+
+    /**
+     * Constructor que inicializa la excepción con un código, mensaje técnico y mensaje de usuario.
+     *
+     * @param code        el código funcional del error
+     * @param message     el mensaje técnico del error
+     * @param userMessage mensaje amigable destinado al usuario final
+     */
+    public CatalogEmptyException(String code, String message, String userMessage) {
+        super(message);
+        this.code = code;
+        this.message = message;
+        this.userMessage = userMessage;
     }
 }

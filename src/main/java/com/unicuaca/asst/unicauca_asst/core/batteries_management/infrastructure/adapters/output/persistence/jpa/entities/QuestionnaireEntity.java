@@ -60,6 +60,7 @@ public class QuestionnaireEntity {
      * Relación uno-a-muchos:
      * un cuestionario puede tener muchas preguntas asociadas.
      */
+    @Builder.Default
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionEntity> questions = new ArrayList<>();
 

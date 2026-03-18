@@ -32,5 +32,6 @@ public interface QuestionnairePersistenceMapper {
      * @return entidad de base de datos
      */
     @InheritInverseConfiguration
+    @Mapping(target = "questions", ignore = true)
     QuestionnaireEntity toEntity(Questionnaire domain);
 }

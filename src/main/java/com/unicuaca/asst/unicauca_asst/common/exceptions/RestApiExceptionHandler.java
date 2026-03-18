@@ -46,9 +46,6 @@ import jakarta.validation.ConstraintViolationException;
 @RestControllerAdvice
 public class RestApiExceptionHandler {
 
-    /* @Autowired
-    private MessageSource messageSource; */
-
     /**
      * Maneja la excepción {@link EntityNotFoundPersException} cuando una entidad solicitada no existe.
      *
@@ -58,9 +55,11 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(EntityNotFoundPersException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityNotFoundException(HttpServletRequest req, EntityNotFoundPersException ex) {
+        String userMsg = ex.getUserMessage() != null ? ex.getUserMessage() : "No se encontró la información solicitada.";
         var details = ErrorUtils.of(
             ex.getCode(),
             ex.getMessage(),
+            userMsg,
             req.getMethod()
         );
 
@@ -83,9 +82,11 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(BusinessRuleViolationException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleBusinessRuleViolationException(HttpServletRequest req, BusinessRuleViolationException ex) {
+        String userMsg = ex.getUserMessage() != null ? ex.getUserMessage() : "La operación no pudo completarse debido a una regla de negocio.";
         var details = ErrorUtils.of(
             ex.getCode(),
             ex.getMessage(),
+            userMsg,
             req.getMethod()
         );
 
@@ -108,9 +109,11 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityAlreadyExistsException(HttpServletRequest req, EntityAlreadyExistsException ex) {
+        String userMsg = ex.getUserMessage() != null ? ex.getUserMessage() : "El registro que intenta crear ya existe en el sistema.";
         var details = ErrorUtils.of(
             ex.getCode(),
             ex.getMessage(),
+            userMsg,
             req.getMethod()
         );
         return ResponseUtil.error(
@@ -131,9 +134,11 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(EntityCreationException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityCreationException(HttpServletRequest req, EntityCreationException ex) {
+        String userMsg = ex.getUserMessage() != null ? ex.getUserMessage() : "Se presentó un error al intentar crear el registro.";
         var details = ErrorUtils.of(
             ex.getCode(),
             ex.getMessage(),
+            userMsg,
             req.getMethod()
         );
 
@@ -165,12 +170,9 @@ public class RestApiExceptionHandler {
             fieldErrors.put(field, message);
         });
 
-        // Resolver mensajes desde el archivo error-messages.properties
-        //String internalMessage = messageSource.getMessage("error.validation.fields", null, req.getLocale());
-        //String clientMessage = messageSource.getMessage("error.validation.client", null, req.getLocale());
-
         var details = ErrorUtils.createError(
             ErrorCode.FIELD_VALIDATION,
+            "Existen errores de validación en el formulario.",
             req.getMethod(),
             fieldErrors
         );
@@ -196,9 +198,11 @@ public class RestApiExceptionHandler {
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleCatalogEmpty(
             HttpServletRequest req, CatalogEmptyException ex) {
 
+        String userMsg = ex.getUserMessage() != null ? ex.getUserMessage() : "El catálogo solicitado no tiene información disponible.";
         var details = ErrorUtils.of(
             ex.getCode(),
             ex.getMessage(),
+            userMsg,
             req.getMethod()
         );
 
@@ -210,12 +214,6 @@ public class RestApiExceptionHandler {
             details
         );
     }
-
-    /**
-     * ------------------------------------------------------
-     * Sección de manejo de excepciones relacionadas con la base de datos y otras más excepciones
-     * ------------------------------------------------------
-     */
 
     /**
      * Maneja {@link QueryTimeoutException} cuando una consulta a la base
@@ -231,6 +229,7 @@ public class RestApiExceptionHandler {
 
         var details = ErrorUtils.createSimpleError(
             ErrorCode.DB_TIMEOUT,
+            "La base de datos tardó demasiado en responder.",
             req.getMethod()
         );
 
@@ -267,6 +266,7 @@ public class RestApiExceptionHandler {
 
         var details = ErrorUtils.createSimpleError(
             ErrorCode.DB_UNAVAILABLE,
+            "El servicio de datos no está disponible temporalmente.",
             req.getMethod()
         );
 
@@ -297,6 +297,7 @@ public class RestApiExceptionHandler {
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleSqlGrammar(HttpServletRequest req, Exception ex) {
         var details = ErrorUtils.createSimpleError(
             ErrorCode.SQL_GRAMMAR,
+            "Error interno al procesar los datos.",
             req.getMethod()
         );
 
@@ -323,6 +324,7 @@ public class RestApiExceptionHandler {
 
         var details = ErrorUtils.createSimpleError(
             ErrorCode.DATA_ACCESS,
+            "Se presentow un problema al acceder a la información.",
             req.getMethod()
         );
 
@@ -353,6 +355,7 @@ public class RestApiExceptionHandler {
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleBadRequest(HttpServletRequest req, Exception ex) {
         var details = ErrorUtils.createSimpleError(
             ErrorCode.BAD_REQUEST,
+            "La solicitud enviada no es válida.",
             req.getMethod()
         );
 
@@ -379,6 +382,7 @@ public class RestApiExceptionHandler {
 
         var details = ErrorUtils.createSimpleError(
             ErrorCode.METHOD_NOT_ALLOWED,
+            "El método HTTP no está permitido para esta operación.",
             req.getMethod()
         );
 
@@ -405,6 +409,7 @@ public class RestApiExceptionHandler {
 
         var details = ErrorUtils.createSimpleError(
             ErrorCode.UNSUPPORTED_MEDIA_TYPE,
+            "El tipo de contenido no es compatible.",
             req.getMethod()
         );
 
@@ -432,6 +437,7 @@ public class RestApiExceptionHandler {
 
         var details = ErrorUtils.createSimpleError(
             ErrorCode.NOT_ACCEPTABLE,
+            "No se puede generar la respuesta en el formato solicitado.",
             req.getMethod()
         );
 
@@ -443,39 +449,6 @@ public class RestApiExceptionHandler {
             details
         );
     }
-
-    // --- Seguridad: 401 / 403
-    /* @ExceptionHandler(org.springframework.security.core.AuthenticationException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleUnauthorized(
-            HttpServletRequest req, org.springframework.security.core.AuthenticationException ex) {
-
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.UNAUTHORIZED.getCode(),
-                ErrorCode.UNAUTHORIZED.getMessageKey(),
-                HttpStatus.UNAUTHORIZED.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
-
-        return ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
-            .body(ApiResponse.error(ErrorCode.UNAUTHORIZED.getMessageKey(), HttpStatus.UNAUTHORIZED, error));
-    } */
-
-    /* @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleForbidden(
-            HttpServletRequest req, org.springframework.security.access.AccessDeniedException ex) {
-
-        ErrorResponse<Void> error = ErrorUtils.createSimpleError(
-                ErrorCode.FORBIDDEN.getCode(),
-                ErrorCode.FORBIDDEN.getMessageKey(),
-                HttpStatus.FORBIDDEN.value())
-            .setUrl(req.getRequestURL().toString())
-            .setMethod(req.getMethod());
-
-        return ResponseEntity
-            .status(HttpStatus.FORBIDDEN)
-            .body(ApiResponse.error(ErrorCode.FORBIDDEN.getMessageKey(), HttpStatus.FORBIDDEN, error));
-    } */
 
     /**
      * Maneja la ausencia de beans en el contexto de Spring (p. ej., cuando un mapper
@@ -493,6 +466,7 @@ public class RestApiExceptionHandler {
 
         var details = ErrorUtils.createSimpleError(
             ErrorCode.MAPPER_ERROR,
+            "Error de configuración interna del servidor.",
             req.getMethod()
         );
 
@@ -525,6 +499,7 @@ public class RestApiExceptionHandler {
         var details = ErrorUtils.of(
             ErrorCode.GENERIC_ERROR.getCode(),
             ex.getMessage(),
+            "Ocurrió un error inesperado. Por favor, intente más tarde.",
             req.getMethod()
         );
 
@@ -536,5 +511,4 @@ public class RestApiExceptionHandler {
             details
         );
     }
-
 }

@@ -37,7 +37,7 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
     @Override
     public Page<BatteryManagementRecordInformation> listPaginatedRecords(Integer page, Integer size) {
         Page<BatteryManagementRecord> recordPage = recordQueryRepository.listPagedExcludingStatus(
-            "Cerrado", page, size, Sort.by(Sort.Direction.DESC, "createdAt")
+            BatteryManagementRecordStatusCode.CLOSED.getDescription(), page, size, Sort.by(Sort.Direction.DESC, "createdAt")
         );
 
         return mapToInformationPage(recordPage);
@@ -57,7 +57,7 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
         String normalizedTerm = normalizeTerm(term);
 
         Page<BatteryManagementRecord> recordPage = recordQueryRepository.listPaginatedByIdentificationPrefix(
-            "Cerrado",
+            BatteryManagementRecordStatusCode.CLOSED.getDescription(),
             normalizedTerm,
             page,
             size,
@@ -82,7 +82,7 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
         String normalizedTerm = normalizeTerm(searchTerm);
 
         Page<BatteryManagementRecord> recordPage = recordQueryRepository.listPagedExcludingStatusWithSearchTerm(
-            "Cerrado",
+            BatteryManagementRecordStatusCode.CLOSED.getDescription(),
             normalizedTerm,
             page,
             size,
@@ -148,7 +148,8 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
                 resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El registro de gestión de baterías con ID " + id + " no fue encontrado.")
+                        "El registro de gestión de baterías con ID " + id + " no fue encontrado."),
+                    "El registro de gestión de baterías no fue encontrado."
                 );
                 return null;
             });

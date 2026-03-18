@@ -28,54 +28,70 @@ public final class ErrorUtils {
     /**
      * Crea un {@link ErrorResponse} simple (sin datos adicionales).
      *
-     * @param error  código de error de la aplicación.
-     * @param method método HTTP que provocó el error (GET/POST/PUT/DELETE).
-     * @param params parámetros opcionales para formatear la plantilla del mensaje.
+     * @param error       código de error de la aplicación.
+     * @param userMessage mensaje amigable para el usuario final.
+     * @param method      método HTTP que provocó el error (GET/POST/PUT/DELETE).
+     * @param params      parámetros opcionales para formatear la plantilla del mensaje técnico.
      */
-    public static ErrorResponse<Void> createSimpleError(ErrorCode error, String method, Object... params) {
+    public static ErrorResponse<Void> createSimpleError(ErrorCode error, String userMessage, String method, Object... params) {
         return ErrorResponse.<Void>builder()
             .errorCode(error.getCode())
             .message(formatMessage(error, params))
+            .userMessage(userMessage)
             .method(method)
             .build();
     }
 
     /**
-     * Crea un {@link ErrorResponse} genérico con datos adicionales (por ejemplo, mapa de errores de validación).
-     *
-     * @param error  código de error de la aplicación.
-     * @param method método HTTP que provocó el error.
-     * @param data   datos adicionales (p. ej., Map&lt;String, String&gt; con errores por campo).
-     * @param params parámetros opcionales para formatear la plantilla del mensaje.
+     * Sobrecarga de {@link #createSimpleError} que usa el mensaje del {@link ErrorCode} como mensaje de usuario.
      */
-    public static <T> ErrorResponse<T> createError(ErrorCode error, String method, T data, Object... params) {
+    public static ErrorResponse<Void> createSimpleError(ErrorCode error, String method, Object... params) {
+        return createSimpleError(error, error.getMessageKey(), method, params);
+    }
+
+    /**
+     * Crea un {@link ErrorResponse} genérico con datos adicionales.
+     *
+     * @param error       código de error de la aplicación.
+     * @param userMessage mensaje amigable para el usuario final.
+     * @param method      método HTTP que provocó el error.
+     * @param data        datos adicionales.
+     * @param params      parámetros opcionales para formatear la plantilla del mensaje técnico.
+     */
+    public static <T> ErrorResponse<T> createError(ErrorCode error, String userMessage, String method, T data, Object... params) {
         return ErrorResponse.<T>builder()
             .errorCode(error.getCode())
             .message(formatMessage(error, params))
+            .userMessage(userMessage)
             .method(method)
             .data(data)
             .build();
+    }
+
+    /**
+     * Sobrecarga de {@link #createError} que usa el mensaje del {@link ErrorCode} como mensaje de usuario.
+     */
+    public static <T> ErrorResponse<T> createError(ErrorCode error, String method, T data, Object... params) {
+        return createError(error, error.getMessageKey(), method, data, params);
     }
 
     // ---------- Atajos frecuentes ----------
 
     /**
      * Atajo para errores de validación por campos.
-     *
-     * @param fieldErrors mapa campo → mensaje de error.
-     * @param method      método HTTP de la solicitud.
      */
     public static ErrorResponse<Map<String, String>> fieldValidation(Map<String, String> fieldErrors, String method) {
-        return createError(ErrorCode.FIELD_VALIDATION, method, fieldErrors);
+        return createError(ErrorCode.FIELD_VALIDATION, ErrorCode.FIELD_VALIDATION.getMessageKey(), method, fieldErrors);
     }
 
     /**
-     * Crea un error a partir de un código y mensaje arbitrarios (cuando no hay un {@link ErrorCode} adecuado).
+     * Crea un error a partir de un código y mensaje arbitrarios.
      */
-    public static ErrorResponse<Void> of(String errorCode, String message, String method) {
+    public static ErrorResponse<Void> of(String errorCode, String message, String userMessage, String method) {
         return ErrorResponse.<Void>builder()
             .errorCode(errorCode)
             .message(message)
+            .userMessage(userMessage)
             .method(method)
             .build();
     }

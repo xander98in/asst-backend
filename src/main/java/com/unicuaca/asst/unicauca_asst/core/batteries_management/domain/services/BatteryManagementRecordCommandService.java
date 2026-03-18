@@ -41,11 +41,13 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             .build();
 
         // Se busca el estado "Creado" para asignarlo al registro de gestión de baterías
-        BatteryManagementRecordStatus batteryManagementRecordStatus = batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(BatteryManagementRecordStatusCode.CREATED.getDescription())
+        BatteryManagementRecordStatus batteryManagementRecordStatus = batteryManagementRecordQueryRepository
+            .getBatteryManagementRecordStatudByName(BatteryManagementRecordStatusCode.CREATED.getDescription())
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado 'Creado' no fue encontrado")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + BatteryManagementRecordStatusCode.CREATED.getDescription() + "' no fue encontrado."),
+                    "No fue posible crear el registro de gestión de baterías. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -58,15 +60,18 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                 .orElseGet(() -> {
                     this.resultFormatterOutputPort.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " no fue encontrada")
+                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " no fue encontrada"),
+                        "La persona evaluada no fue encontrada."
                     );
                     return null;
                 });
-            StatusPersonEvaluated statusPersonEvaluated = personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(StatusPersonEvaluatedEnum.WITH_RECORD.getDescription())
+            StatusPersonEvaluated statusPersonEvaluated = personEvaluatedQueryRepository
+                .getStatusPersonEvaluatedByName(StatusPersonEvaluatedEnum.WITH_RECORD.getDescription())
                 .orElseGet(() -> {
                     this.resultFormatterOutputPort.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado 'Con registro' no fue encontrado.")
+                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + StatusPersonEvaluatedEnum.WITH_RECORD.getDescription() + "' no fue encontrado."),
+                        "No fue posible crear el registro de gestión de baterías. Por favor, intente más tarde."
                     );
                     return null;
                 });
@@ -78,18 +83,19 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                     .orElseGet(() -> {
                         this.resultFormatterOutputPort.throwEntityCreationFailed(
                             ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
-                            String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "La persona con ID " + identificationNumber + " no se actualizó correctamente.")
+                            String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "La persona con ID " + identificationNumber + " no se actualizó correctamente."),
+                            "No fue posible crear el registro de gestión de baterías. Por favor, intente más tarde."
                         );
                         return null;
                     });
             }
-            System.out.println("Persona evaluada encontrada: " + personEvaluated);
             record.setPersonEvaluated(personEvaluated);
         }
         else {
             this.resultFormatterOutputPort.throwEntityNotFound(
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " no fue encontrada")
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " no fue encontrada"),
+                "La persona evaluada no fue encontrada."
             );
         }
 
@@ -97,7 +103,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
         if (batteryManagementRecordQueryRepository.existsByPersonEvaluatedId(personEvaluatedId)) {
             this.resultFormatterOutputPort.throwEntityAlreadyExists(
                 ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
-                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " ya tiene un registro de gestión de baterías.")
+                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " ya tiene un registro de gestión de baterías."),
+                "La persona evaluada ya tiene un registro de gestión de baterías asociado."
             );
         }
 
@@ -106,7 +113,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityCreationFailed(
                     ErrorCode.ENTITY_CREATION_ERROR.getCode(),
-                    String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "No fue posible crear el registro de gestión de baterías.")
+                    String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "No fue posible crear el registro de gestión de baterías."),
+                    "No fue posible crear el registro de gestión de baterías. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -125,7 +133,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de baterías con ID " + id + " no fue encontrado.")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de baterías con ID " + id + " no fue encontrado."),
+                    "El registro de gestión de baterías no fue encontrado."
                 );
                 return null;
             });
@@ -159,7 +168,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                         .orElseGet(() -> {
                             this.resultFormatterOutputPort.throwEntityNotFound(
                                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + targetStatusName + "' no fue encontrado.")
+                                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + targetStatusName + "' no fue encontrado."),
+                                "No fue posible completar la eliminación del registro. Por favor, intente más tarde."
                             );
                             return null;
                         });
@@ -171,7 +181,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
         } else {
             this.resultFormatterOutputPort.throwBusinessRuleViolation(
                 ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD.getCode(),
-                String.format(ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), status.getName())
+                String.format(ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), status.getName()),
+                "Solo se pueden eliminar registros de gestión de baterías en estado 'Creado'."
             );
         }
     }
@@ -189,7 +200,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de baterías con ID " + recordId + " no fue encontrado.")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de baterías con ID " + recordId + " no fue encontrado."),
+                    "El registro de gestión de baterías no fue encontrado."
                 );
                 return null;
             });
@@ -198,7 +210,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
         if (!record.getStatus().getName().equals(BatteryManagementRecordStatusCode.COMPLETED.getDescription())) {
             this.resultFormatterOutputPort.throwBusinessRuleViolation(
                 ErrorCode.CLOSE_BATTERY_MANAGEMENT_RECORD.getCode(),
-                String.format(ErrorCode.CLOSE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), "'" + record.getStatus().getName() + "'")
+                String.format(ErrorCode.CLOSE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), "'" + record.getStatus().getName() + "'"),
+                "Solo se pueden cerrar registros de gestión de baterías en estado 'Diligenciado'."
             );
         }
 
@@ -208,7 +221,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado 'Cerrado' para registros de cuestionarios no fue encontrado.")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + QuestionnaireManagementRecordStatusEnum.CERRADO.getName() + "' para registros de cuestionarios no fue encontrado."),
+                    "No fue posible cerrar el registro de gestión de baterías. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -226,7 +240,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado 'Cerrado' para registros de gestión de batería no fue encontrado.")
+                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + BatteryManagementRecordStatusCode.CLOSED.getDescription() + "' para registros de gestión de batería no fue encontrado."),
+                    "No fue posible cerrar el registro de gestión de baterías. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -237,7 +252,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityCreationFailed(
                     ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
-                    String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "No fue posible cerrar el registro de gestión de batería.")
+                    String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "No fue posible cerrar el registro de gestión de batería."),
+                    "No fue posible cerrar el registro de gestión de baterías. Por favor, intente más tarde."
                 );
                 return null;
             });

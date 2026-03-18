@@ -58,16 +58,24 @@ public class QuestionnaireResponseQueryController {
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "404",
-            description = "Registro de gestión no encontrado o sin respuestas",
+            responseCode = "400",
+            description = "Solicitud inválida",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "ID inválido",
+            responseCode = "404",
+            description = "Registro de gestión de cuestionario no encontrado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)

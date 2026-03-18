@@ -57,6 +57,7 @@ public class QuestionnaireManagementRecordCommandController {
             responseCode = "201",
             description = "Registro de gestión de cuestionario creado con éxito",
             content = @Content(
+                mediaType = "application/json",
                 schema = @Schema(implementation = QuestionnaireManagementRecordApiResponse.class)
             )
         ),
@@ -70,7 +71,23 @@ public class QuestionnaireManagementRecordCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Recurso asociado no encontrado",
+            description = "Registro de gestión de batería o cuestionario no encontrado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "409",
+            description = "Ya existe un registro de gestión para este cuestionario en la batería",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -116,23 +133,31 @@ public class QuestionnaireManagementRecordCommandController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Registro eliminado con éxito",
+            description = "Registro de gestión de cuestionario eliminado con éxito",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = VoidApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "404",
-            description = "El registro no existe",
+            responseCode = "400",
+            description = "Solicitud inválida o regla de negocio violada",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "409",
-            description = "Conflicto al intentar eliminar (reglas de negocio)",
+            responseCode = "404",
+            description = "Registro de gestión de cuestionario no encontrado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)

@@ -46,7 +46,7 @@ public class PersonEvaluatedDetailsCommandController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "201",
-            description = "Detalles creados con éxito",
+            description = "Detalles de persona evaluada creados con éxito",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = VoidApiResponse.class)
@@ -62,7 +62,23 @@ public class PersonEvaluatedDetailsCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Persona evaluada no encontrada",
+            description = "Registro de gestión de batería o estado no encontrado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "409",
+            description = "Ya existen detalles para esta persona evaluada en el registro de batería",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -95,7 +111,7 @@ public class PersonEvaluatedDetailsCommandController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Detalles actualizados con éxito",
+            description = "Detalles de persona evaluada actualizados con éxito",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = VoidApiResponse.class)
@@ -111,15 +127,15 @@ public class PersonEvaluatedDetailsCommandController {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Detalle no encontrado",
+            description = "Detalle de persona evaluada no encontrado",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "409",
-            description = "Conflicto al actualizar",
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
@@ -149,23 +165,31 @@ public class PersonEvaluatedDetailsCommandController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Detalles eliminados con éxito",
+            description = "Detalles de persona evaluada eliminados con éxito",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = VoidApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "404",
-            description = "Detalle no encontrado",
+            responseCode = "400",
+            description = "Solicitud inválida o regla de negocio violada",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "409",
-            description = "Conflicto al eliminar",
+            responseCode = "404",
+            description = "Detalle de persona evaluada no encontrado",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Error interno del servidor",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponseApiResponse.class)

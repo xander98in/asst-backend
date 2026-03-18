@@ -31,10 +31,16 @@ public class ErrorResponse<T> {
     private String errorCode;
 
     /**
-     * Mensaje descriptivo del error ocurrido.
+     * Mensaje descriptivo técnico del error ocurrido.
      */
-    @Schema(example = "Recurso no encontrado", description = "Mensaje descriptivo del error ocurrido")
+    @Schema(example = "Recurso no encontrado", description = "Mensaje descriptivo técnico del error ocurrido")
     private String message;
+
+    /**
+     * Mensaje amigable destinado al usuario final (frontend).
+     */
+    @Schema(example = "Lo sentimos, el recurso solicitado no existe.", description = "Mensaje amigable destinado al usuario final")
+    private String userMessage;
 
     /**
      * Método HTTP de la petición que generó el error.
