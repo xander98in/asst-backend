@@ -36,7 +36,7 @@ public class QuestionnaireResponseQueryService implements QuestionnaireResponseQ
                     resultFormatter.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
                         String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + recordId + " no existe."),
-                        "El registro de gestión de cuestionario no fue encontrado."
+                        "No se pudo encontrar el proceso de evaluación actual para recuperar sus respuestas. Por favor, intente de nuevo."
                     );
                     return null;
                 });

@@ -40,7 +40,7 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                             ErrorCode.ENTITY_NOT_FOUND.getCode(),
                             String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                                 "La pregunta con ID " + id + " no fue encontrada."),
-                            "La pregunta no fue encontrada."
+                            "No se pudo encontrar la información de la pregunta solicitada."
                     );
                     return null; // requerido por el compilador
                 });
@@ -61,7 +61,7 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                             ErrorCode.ENTITY_NOT_FOUND.getCode(),
                             String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                                 "La pregunta con ID " + id + " no fue encontrada."),
-                            "La pregunta no fue encontrada."
+                            "No se pudo encontrar la información detallada de la pregunta solicitada."
                     );
                     return null;
                 });
@@ -104,7 +104,7 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                             ErrorCode.ENTITY_NOT_FOUND.getCode(),
                             String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                                 "No se encontró una pregunta con orden " + order + " en el cuestionario con ID " + questionnaireId + "."),
-                            "La pregunta no fue encontrada en el cuestionario indicado."
+                            "No se pudo localizar la pregunta en la posición solicitada dentro de este cuestionario."
                     );
                     return null;
                 });
@@ -123,7 +123,7 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
                 String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                     "El cuestionario con ID " + questionnaireId + " no existe."),
-                "El cuestionario no fue encontrado."
+                "No se encontró el cuestionario asociado a las preguntas solicitadas. Por favor, verifique la información."
             );
             return null; // requerido por el compilador, aunque no se alcanzará debido a la excepción lanzada
         }
@@ -143,7 +143,7 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
                 String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                     "El cuestionario con abreviatura '" + abbreviation + "' no existe."),
-                "El cuestionario no fue encontrado."
+                "No se encontró el cuestionario indicado para recuperar sus preguntas. Por favor, verifique la abreviatura."
             );
             return null; // requerido por el compilador, aunque no se alcanzará debido a la excepción lanzada
         }

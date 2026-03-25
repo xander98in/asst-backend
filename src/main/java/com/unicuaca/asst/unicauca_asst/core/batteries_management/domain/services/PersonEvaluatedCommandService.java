@@ -53,7 +53,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de identificación con abreviatura " + personEvaluated.getIdentificationType().getAbbreviation() + " no fue encontrado."),
-                    "El tipo de identificación seleccionado no es válido."
+                    "El tipo de identificación seleccionado no es válido o no se encuentra registrado en el sistema."
                 );
                 return null;
             });
@@ -64,14 +64,14 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
             this.resultFormatter.throwEntityAlreadyExists(
                 ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
                 String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "La persona con identificación: " + personEvaluated.getIdentificationNumber() + " se encuentra registrada."),
-                "Ya existe una persona registrada con ese número de identificación."
+                "No es posible completar el registro porque ya existe una persona con el número de identificación proporcionado."
             );
         }
         if (personEvaluatedQueryRepository.existsByEmail(personEvaluated.getEmail())) {
             resultFormatter.throwEntityAlreadyExists(
                 ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
                 String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "El correo " + personEvaluated.getEmail() + " ya está registrado."),
-                "El correo electrónico ingresado ya se encuentra registrado."
+                "El correo electrónico ingresado ya se encuentra vinculado a otra persona evaluada."
             );
         }
 
@@ -80,7 +80,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription() + "' no fue encontrado."),
-                    "No fue posible crear la persona evaluada. Por favor, intente más tarde."
+                    "Lo sentimos, no fue posible procesar el registro en este momento. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -91,7 +91,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
                 resultFormatter.throwEntityCreationFailed(
                     ErrorCode.ENTITY_CREATION_ERROR.getCode(),
                     String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "La persona no se creó correctamente"),
-                    "No fue posible crear la persona evaluada. Por favor, intente más tarde."
+                    "Ha ocurrido un error inesperado al intentar crear el registro de la persona. Por favor, intente nuevamente."
                 );
                 return null; // nunca se ejecuta, pero requerido por el compilador
             });
@@ -116,7 +116,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
             this.resultFormatter.throwEntityNotFound(
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
                 String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona con ID " + id + " no existe."),
-                "La persona evaluada no fue encontrada."
+                "No se pudo encontrar la información de la persona evaluada para realizar la actualización."
             );
         }
 
@@ -125,7 +125,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
                 this.resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de identificación con abreviatura " + personEvaluated.getIdentificationType().getAbbreviation() + " no fue encontrado."),
-                    "El tipo de identificación seleccionado no es válido."
+                    "El tipo de identificación seleccionado no es válido para la actualización."
                 );
                 return null;
             });
@@ -135,7 +135,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
             this.resultFormatter.throwEntityAlreadyExists(
                 ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
                 String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "La persona con identificación: " + personEvaluated.getIdentificationNumber() + " ya se encuentra registrada."),
-                "Ya existe otra persona registrada con ese número de identificación."
+                "No se puede actualizar el registro: el número de identificación ya pertenece a otra persona."
             );
         }
 
@@ -143,7 +143,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
             this.resultFormatter.throwEntityAlreadyExists(
                 ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
                 String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "El correo " + personEvaluated.getEmail() + " ya está registrado por otra persona."),
-                "El correo electrónico ingresado ya está registrado por otra persona."
+                "No se puede actualizar el correo: la dirección ingresada ya está siendo utilizada por otra persona."
             );
         }
         // Actualizar y retornar
@@ -152,7 +152,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
                 resultFormatter.throwEntityCreationFailed(
                     ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
                     String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "La persona con ID " + id + " no se actualizó correctamente."),
-                    "No fue posible actualizar la persona evaluada. Por favor, intente más tarde."
+                    "Ha ocurrido un error al intentar actualizar los datos de la persona. Por favor, intente nuevamente."
                 );
                 return null;
             });
@@ -170,7 +170,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
             resultFormatter.throwEntityNotFound(
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
                 String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona con ID " + id + " no existe."),
-                "La persona evaluada no fue encontrada."
+                "La persona que intenta eliminar no existe en el sistema."
             );
         }
 
@@ -179,7 +179,7 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.PERSON_WITH_BATTERY_RECORD.getCode(),
                 ErrorCode.PERSON_WITH_BATTERY_RECORD.getMessageKey(),
-                "No se puede eliminar la persona evaluada porque tiene registros de gestión de baterías asociados."
+                "No es posible eliminar a la persona evaluada porque cuenta con registros históricos de baterías asociados."
             );
         }
 

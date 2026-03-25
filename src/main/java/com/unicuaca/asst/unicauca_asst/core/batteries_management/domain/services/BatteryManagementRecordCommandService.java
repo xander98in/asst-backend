@@ -47,7 +47,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + BatteryManagementRecordStatusCode.CREATED.getDescription() + "' no fue encontrado."),
-                    "No fue posible crear el registro de gestión de baterías. Por favor, intente más tarde."
+                    "No fue posible iniciar el proceso de evaluación debido a un error de configuración del sistema. Por favor, contacte soporte."
                 );
                 return null;
             });
@@ -61,7 +61,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                     this.resultFormatterOutputPort.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
                         String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " no fue encontrada"),
-                        "La persona evaluada no fue encontrada."
+                        "No se pudo encontrar el registro de la persona seleccionada para iniciar el proceso de evaluación."
                     );
                     return null;
                 });
@@ -71,7 +71,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                     this.resultFormatterOutputPort.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
                         String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + StatusPersonEvaluatedEnum.WITH_RECORD.getDescription() + "' no fue encontrado."),
-                        "No fue posible crear el registro de gestión de baterías. Por favor, intente más tarde."
+                        "Ocurrió un error al intentar vincular la persona al nuevo proceso. Por favor, intente más tarde."
                     );
                     return null;
                 });
@@ -84,7 +84,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                         this.resultFormatterOutputPort.throwEntityCreationFailed(
                             ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
                             String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "La persona con ID " + identificationNumber + " no se actualizó correctamente."),
-                            "No fue posible crear el registro de gestión de baterías. Por favor, intente más tarde."
+                            "No fue posible actualizar el estado de la persona evaluada. El proceso no pudo iniciarse."
                         );
                         return null;
                     });
@@ -95,7 +95,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             this.resultFormatterOutputPort.throwEntityNotFound(
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
                 String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " no fue encontrada"),
-                "La persona evaluada no fue encontrada."
+                "La persona evaluada seleccionada no existe en el sistema."
             );
         }
 
@@ -104,7 +104,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             this.resultFormatterOutputPort.throwEntityAlreadyExists(
                 ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
                 String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " ya tiene un registro de gestión de baterías."),
-                "La persona evaluada ya tiene un registro de gestión de baterías asociado."
+                "No se puede iniciar un nuevo proceso porque la persona ya tiene un registro de gestión de baterías activo."
             );
         }
 
@@ -114,7 +114,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                 this.resultFormatterOutputPort.throwEntityCreationFailed(
                     ErrorCode.ENTITY_CREATION_ERROR.getCode(),
                     String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "No fue posible crear el registro de gestión de baterías."),
-                    "No fue posible crear el registro de gestión de baterías. Por favor, intente más tarde."
+                    "Ha ocurrido un problema al intentar generar el nuevo registro de batería. Por favor, inténtelo de nuevo."
                 );
                 return null;
             });
@@ -134,7 +134,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de baterías con ID " + id + " no fue encontrado."),
-                    "El registro de gestión de baterías no fue encontrado."
+                    "El registro de gestión de baterías que intenta eliminar no existe o ya ha sido removido."
                 );
                 return null;
             });
@@ -169,7 +169,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                             this.resultFormatterOutputPort.throwEntityNotFound(
                                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
                                 String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + targetStatusName + "' no fue encontrado."),
-                                "No fue posible completar la eliminación del registro. Por favor, intente más tarde."
+                                "El registro fue eliminado, pero ocurrió un error al intentar actualizar el estado de la persona evaluada."
                             );
                             return null;
                         });
@@ -182,7 +182,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             this.resultFormatterOutputPort.throwBusinessRuleViolation(
                 ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD.getCode(),
                 String.format(ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), status.getName()),
-                "Solo se pueden eliminar registros de gestión de baterías en estado 'Creado'."
+                "No es posible eliminar este registro porque ya se encuentra en una etapa avanzada del proceso (solo se pueden eliminar registros en estado '" + BatteryManagementRecordStatusCode.CREATED.getDescription() + "')."
             );
         }
     }
@@ -201,7 +201,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de baterías con ID " + recordId + " no fue encontrado."),
-                    "El registro de gestión de baterías no fue encontrado."
+                    "No se pudo encontrar el registro de gestión de baterías solicitado para su cierre."
                 );
                 return null;
             });
@@ -211,7 +211,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             this.resultFormatterOutputPort.throwBusinessRuleViolation(
                 ErrorCode.CLOSE_BATTERY_MANAGEMENT_RECORD.getCode(),
                 String.format(ErrorCode.CLOSE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), "'" + record.getStatus().getName() + "'"),
-                "Solo se pueden cerrar registros de gestión de baterías en estado 'Diligenciado'."
+                "Para finalizar el proceso, la batería debe estar en estado '" + BatteryManagementRecordStatusCode.COMPLETED.getDescription() + "'. Verifique que todos los cuestionarios hayan sido completados."
             );
         }
 
@@ -222,7 +222,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + QuestionnaireManagementRecordStatusEnum.CERRADO.getName() + "' para registros de cuestionarios no fue encontrado."),
-                    "No fue posible cerrar el registro de gestión de baterías. Por favor, intente más tarde."
+                    "No fue posible completar el cierre debido a un error en la configuración de estados. Por favor, contacte soporte."
                 );
                 return null;
             });
@@ -241,7 +241,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                 this.resultFormatterOutputPort.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + BatteryManagementRecordStatusCode.CLOSED.getDescription() + "' para registros de gestión de batería no fue encontrado."),
-                    "No fue posible cerrar el registro de gestión de baterías. Por favor, intente más tarde."
+                    "Error al intentar cambiar el estado de la batería a '" + BatteryManagementRecordStatusCode.CLOSED.getDescription() + "'. Por favor, intente de nuevo."
                 );
                 return null;
             });
@@ -253,7 +253,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                 this.resultFormatterOutputPort.throwEntityCreationFailed(
                     ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
                     String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "No fue posible cerrar el registro de gestión de batería."),
-                    "No fue posible cerrar el registro de gestión de baterías. Por favor, intente más tarde."
+                    "Ha ocurrido un error al intentar finalizar el proceso de evaluación. Por favor, intente nuevamente."
                 );
                 return null;
             });

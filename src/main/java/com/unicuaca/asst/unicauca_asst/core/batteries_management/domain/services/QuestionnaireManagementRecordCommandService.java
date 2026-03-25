@@ -48,7 +48,7 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El registro de gestión de batería con ID " + batteryId + " no existe."),
-                    "El registro de gestión de baterías no fue encontrado."
+                    "No se pudo encontrar el proceso de evaluación solicitado para asignar el cuestionario."
                 );
                 return null;
             });
@@ -62,7 +62,7 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El cuestionario con ID " + questionnaireId + " no existe."),
-                    "El cuestionario seleccionado no fue encontrado."
+                    "El cuestionario seleccionado no es válido o no se encuentra disponible en el sistema."
                 );
                 return null;
             });
@@ -73,7 +73,7 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
             resultFormatter.throwEntityAlreadyExists(
                 ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
                 String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "El registro de gestión de cuestionario para la batería con ID " + batteryId + " y cuestionario: " + questionnaire.getName() + " ya existe."),
-                "Ya existe un registro de gestión para este cuestionario en la batería seleccionada."
+                "Este cuestionario ya ha sido asignado previamente a la batería de pruebas actual."
             );
         }
 
@@ -87,7 +87,7 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El estado inicial '" + initialStatusName + "' no se encuentra configurado en el sistema."),
-                    "No fue posible crear el registro. Por favor, intente más tarde."
+                    "Lo sentimos, no fue posible asignar el cuestionario debido a un error de configuración. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -117,7 +117,7 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + id + " no existe."),
-                    "El registro de gestión de cuestionario no fue encontrado."
+                    "El cuestionario que intenta eliminar no se encuentra registrado en el sistema."
                 );
                 return null;
             });
@@ -127,7 +127,7 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED.getCode(),
                 String.format(ErrorCode.QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED.getMessageKey(), recordToDelete.getStatus().getName()),
-                "No se puede eliminar el registro porque se encuentra cerrado."
+                "No es posible eliminar el registro porque ya ha sido finalizado y se encuentra en estado '" + QuestionnaireManagementRecordStatusEnum.CERRADO.getName() + "'."
             );
         }
 
@@ -170,7 +170,7 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "Error de integridad: El registro de gestión de batería con ID " + batteryId + " no fue encontrado tras eliminar el cuestionario."),
-                    "No fue posible completar la operación. Por favor, intente más tarde."
+                    "Se eliminó el cuestionario, pero ocurrió un error al intentar sincronizar el estado del proceso. Por favor, contacte soporte."
                 );
                 return null;
             });
@@ -184,7 +184,7 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
                         String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                             "El estado de batería '" + targetBatteryStatusName + "' no existe."),
-                        "No fue posible completar la operación. Por favor, intente más tarde."
+                        "Error al intentar actualizar el estado general de la evaluación. Por favor, intente más tarde."
                     );
                     return null;
                 });

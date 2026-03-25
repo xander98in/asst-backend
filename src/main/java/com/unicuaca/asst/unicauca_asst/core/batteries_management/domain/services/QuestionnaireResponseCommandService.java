@@ -43,7 +43,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.EMPTY_LIST_OF_RESPONSES.getCode(),
                 ErrorCode.EMPTY_LIST_OF_RESPONSES.getMessageKey(),
-                "No se han proporcionado respuestas para procesar."
+                "No se han detectado respuestas para guardar. Por favor, asegúrese de completar el cuestionario antes de enviar."
             );
             return;
         }
@@ -60,7 +60,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getCode(),
                 ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getMessageKey(),
-                "Las respuestas deben pertenecer al mismo registro de gestión."
+                "Se ha detectado una inconsistencia técnica en las respuestas enviadas. Por favor, recargue la página e intente de nuevo."
             );
         }
 
@@ -74,7 +74,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getCode(),
                 ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getMessageKey(),
-                "No se puede responder la misma pregunta más de una vez en el mismo lote."
+                "Se han detectado múltiples respuestas para una misma pregunta. Por favor, verifique su selección."
             );
         }
 
@@ -84,7 +84,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + recordIdRef + " no existe."),
-                    "El registro de gestión de cuestionario no fue encontrado."
+                    "No se pudo encontrar el registro del cuestionario actual. Es posible que la sesión haya expirado."
                 );
                 return null;
             });
@@ -99,7 +99,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                     resultFormatter.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
                         String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La pregunta con ID " + questionId + " no existe."),
-                        "La pregunta indicada no fue encontrada."
+                        "Una de las preguntas enviadas no es válida o no existe en el cuestionario actual."
                     );
                     return null;
                 });
@@ -109,7 +109,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 resultFormatter.throwBusinessRuleViolation(
                     ErrorCode.QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE.getCode(),
                     String.format(ErrorCode.QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE.getMessageKey(), questionId),
-                    "La pregunta no pertenece al cuestionario del registro actual."
+                    "Se ha detectado una pregunta que no corresponde a este cuestionario. Por favor, intente de nuevo."
                 );
             }
 
@@ -120,7 +120,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                     resultFormatter.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
                         String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La opción de respuesta con valor " + answerValue + " no existe."),
-                        "La opción de respuesta seleccionada no es válida."
+                        "Una de las opciones de respuesta seleccionadas no es válida. Por favor, marque una de las opciones permitidas."
                     );
                     return null;
                 });
@@ -132,7 +132,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 resultFormatter.throwBusinessRuleViolation(
                     ErrorCode.QUESTION_ANSWERED_ALREADY.getCode(),
                     String.format(ErrorCode.QUESTION_ANSWERED_ALREADY.getMessageKey(), questionId),
-                    "La pregunta ya ha sido respondida para este registro."
+                    "El cuestionario ya contiene respuestas registradas para algunas preguntas. Por favor, utilice la opción de actualizar si desea realizar cambios."
                 );
             }
 
@@ -160,7 +160,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El estado '" + targetStatusName + "' no se encuentra configurado en el sistema."),
-                    "No fue posible completar la operación. Por favor, intente más tarde."
+                    "Las respuestas se guardaron, pero ocurrió un error al actualizar el estado del cuestionario a 'Diligenciado'."
                 );
                 return null;
             });
@@ -205,7 +205,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El estado de batería '" + targetBatteryStatusName + "' no existe."),
-                    "No fue posible completar la operación. Por favor, intente más tarde."
+                    "Las respuestas se guardaron, pero no fue posible actualizar el estado general del proceso de evaluación."
                 );
                 return null;
             });
@@ -229,7 +229,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.EMPTY_LIST_OF_RESPONSES.getCode(),
                 ErrorCode.EMPTY_LIST_OF_RESPONSES.getMessageKey(),
-                "No se han proporcionado respuestas para procesar."
+                "No se han proporcionado cambios para actualizar en las respuestas."
             );
             return;
         }
@@ -246,7 +246,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getCode(),
                 ErrorCode.DIFFERENT_RECORD_IDS_IN_RESPONSES.getMessageKey(),
-                "Las respuestas deben pertenecer al mismo registro de gestión."
+                "Se ha detectado una inconsistencia técnica al intentar actualizar. Por favor, recargue el cuestionario."
             );
         }
 
@@ -260,7 +260,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getCode(),
                 ErrorCode.DUPLICATE_QUESTION_IN_BATCH.getMessageKey(),
-                "No se puede responder la misma pregunta más de una vez en el mismo lote."
+                "Se han detectado múltiples respuestas para la misma pregunta en el lote de actualización."
             );
         }
 
@@ -270,7 +270,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + recordIdRef + " no existe."),
-                    "El registro de gestión de cuestionario no fue encontrado."
+                    "No se pudo encontrar el registro del cuestionario solicitado para su actualización."
                 );
                 return null;
             });
@@ -286,7 +286,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                     resultFormatter.throwEntityNotFound(
                         ErrorCode.ENTITY_NOT_FOUND.getCode(),
                         String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La respuesta con ID " + responseId + " no existe."),
-                        "La respuesta indicada no fue encontrada."
+                        "No se pudo encontrar una de las respuestas previas para su actualización. Por favor, intente de nuevo."
                     );
                     return null;
                 });
@@ -296,7 +296,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 resultFormatter.throwBusinessRuleViolation(
                     ErrorCode.RESPONSE_BELONGS_TO_OTHER_RECORD.getCode(),
                     String.format(ErrorCode.RESPONSE_BELONGS_TO_OTHER_RECORD.getMessageKey(), responseId, recordIdRef),
-                    "La respuesta no pertenece al registro de gestión indicado."
+                    "Se ha producido un error de seguridad: una de las respuestas no pertenece al cuestionario actual."
                 );
             }
 
@@ -305,7 +305,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 resultFormatter.throwBusinessRuleViolation(
                     ErrorCode.RESPONSE_QUESTION_MISMATCH.getCode(),
                     String.format(ErrorCode.RESPONSE_QUESTION_MISMATCH.getMessageKey(), responseId),
-                    "La pregunta proporcionada no coincide con la almacenada en la respuesta."
+                    "Inconsistencia de datos detectada: la pregunta no coincide con la respuesta almacenada."
                 );
             }
 
@@ -320,7 +320,7 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                         resultFormatter.throwEntityNotFound(
                             ErrorCode.ENTITY_NOT_FOUND.getCode(),
                             String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La opción de respuesta con valor " + newValue + " no existe."),
-                            "La opción de respuesta seleccionada no es válida."
+                            "Una de las nuevas opciones seleccionadas no es válida. Por favor, revise sus respuestas."
                         );
                         return null;
                     });

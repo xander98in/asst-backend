@@ -35,7 +35,7 @@ public class QuestionnaireManagementRecordStatusQueryService implements Question
         return fetchOrThrow(
             () -> questionnaireManagementRecordStatusQueryRepository.getQuestionnaireManagementRecordStatusById(id),
             String.format("El estado de registro de gestión de cuestionarios con ID %d no fue encontrado.", id),
-            "El estado del registro de gestión de cuestionario no fue encontrado."
+            "No se pudo encontrar la información del estado del cuestionario solicitado. Por favor, intente más tarde."
         );
     }
 
@@ -50,7 +50,7 @@ public class QuestionnaireManagementRecordStatusQueryService implements Question
         return fetchOrThrow(
             () -> questionnaireManagementRecordStatusQueryRepository.getQuestionnaireManagementRecordStatusByName(name),
             String.format("El estado de registro de gestión de cuestionarios con nombre '%s' no fue encontrado.", name),
-            "El estado del registro de gestión de cuestionario no fue encontrado."
+            "No fue posible identificar el estado del cuestionario con el nombre proporcionado."
         );
     }
 

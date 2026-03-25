@@ -37,7 +37,7 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El registro de gestión de baterías con ID " + batteryManagementRecordId + " no fue encontrado."
                     ),
-                    "El registro de gestión de baterías no fue encontrado."
+                    "No se pudo identificar el proceso de evaluación solicitado. Por favor, verifique la información."
                 );
                 return null;
             });
@@ -48,7 +48,7 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
                 this.resultFormatter.throwEntityNotFound(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El detalle de la persona evaluada para el registro de gestión de batería con ID " + batteryManagementRecordId + " no fue encontrado."),
-                    "No se encontraron los detalles de la persona evaluada para este registro."
+                    "No se encontró información sociodemográfica registrada para este proceso de evaluación."
                 );
                 return null;
             });
@@ -79,7 +79,7 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El detalle de persona evaluada con ID " + personEvaluatedDetailsId + " no fue encontrado."
                     ),
-                    "Los detalles de la persona evaluada no fueron encontrados."
+                    "La información sociodemográfica solicitada no se encuentra disponible en el sistema."
                 );
                 return null; // requerido por el compilador; nunca se ejecuta
             });

@@ -51,7 +51,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
             resultFormatter.throwEntityAlreadyExists(
                 ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
                 String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "El registro de detalles para el registro de gestión de batería con ID " + bmrId + " ya existe."),
-                "Ya existen detalles registrados para este registro de gestión de baterías."
+                "No es posible registrar los detalles porque ya existe información sociodemográfica asociada a este proceso de evaluación."
             );
         }
 
@@ -77,7 +77,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                 resultFormatter.throwEntityCreationFailed(
                     ErrorCode.ENTITY_CREATION_ERROR.getCode(),
                     String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "Los detalles de la persona evaluada no se crearon correctamente."),
-                    "No fue posible crear los detalles de la persona evaluada. Por favor, intente más tarde."
+                    "Lo sentimos, ha ocurrido un error al intentar guardar la información sociodemográfica. Por favor, intente nuevamente."
                 );
                 return null; // requerido por el compilador
             });
@@ -91,7 +91,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El registro de gestión de batería con ID " + bmrId + " no fue encontrado."
                     ),
-                    "No fue posible crear los detalles de la persona evaluada. Por favor, intente más tarde."
+                    "No se pudo completar el registro debido a un problema con el estado del proceso actual. Por favor, contacte soporte."
                 );
                 return null;
             });
@@ -105,7 +105,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El estado '" + BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription() + "' no fue encontrado."
                     ),
-                    "No fue posible crear los detalles de la persona evaluada. Por favor, intente más tarde."
+                    "No fue posible actualizar el estado de la evaluación. Por favor, intente más tarde."
                 );
                 return null;
             });
@@ -121,7 +121,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                         ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(),
                         "No se pudo actualizar el estado del registro de gestión de batería con ID " + bmrId
                     ),
-                    "No fue posible crear los detalles de la persona evaluada. Por favor, intente más tarde."
+                    "La información se guardó, pero no fue posible actualizar el estado del proceso. Por favor, verifique."
                 );
                 return null;
             });
@@ -145,7 +145,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "Los detalles de la persona evaluada con ID " + id + " no fueron encontrados."
                     ),
-                    "Los detalles de la persona evaluada no fueron encontrados."
+                    "No se pudo encontrar la información sociodemográfica solicitada para su actualización."
                 );
                 return null;
             });
@@ -177,7 +177,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                 resultFormatter.throwEntityCreationFailed(
                     ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
                     String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "Los detalles de la persona evaluada no se actualizaron correctamente."),
-                    "No fue posible actualizar los detalles de la persona evaluada. Por favor, intente más tarde."
+                    "Ha ocurrido un error inesperado al intentar actualizar la información. Por favor, intente de nuevo en unos momentos."
                 );
                 return null;
             });
@@ -200,7 +200,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "Los detalles de la persona evaluada con ID " + personEvaluatedDetailsId + " no fueron encontrados."
                     ),
-                    "Los detalles de la persona evaluada no fueron encontrados."
+                    "La información sociodemográfica que intenta eliminar no existe."
                 );
                 return null;
             });
@@ -217,7 +217,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED.getCode(),
                 ErrorCode.PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED.getMessageKey(),
-                "No es posible eliminar los detalles porque el registro ya tiene cuestionarios intralaborales asociados."
+                "No es posible eliminar los datos sociodemográficos porque ya existen cuestionarios vinculados a este proceso de evaluación."
             );
             return;
         }
@@ -237,7 +237,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                             ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                             "El registro de gestión de batería con ID " + batteryRecordId + " no fue encontrado."
                         ),
-                        "No fue posible completar la eliminación. Por favor, intente más tarde."
+                        "No fue posible completar la eliminación debido a un error de sincronización. Por favor, contacte soporte."
                     );
                     return null;
                 });
@@ -251,7 +251,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                             ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                             "El estado '" + BatteryManagementRecordStatusCode.CREATED.getDescription() + "' no fue encontrado."
                         ),
-                        "No fue posible completar la eliminación. Por favor, intente más tarde."
+                        "La eliminación se realizó, pero ocurrió un error al restaurar el estado inicial del proceso."
                     );
                     return null;
                 });
@@ -267,7 +267,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                             ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(),
                             "No se pudo actualizar el estado del registro de gestión de batería con ID " + batteryRecordId
                         ),
-                        "No fue posible completar la eliminación. Por favor, intente más tarde."
+                        "Los datos fueron eliminados, pero el estado del proceso no pudo ser actualizado correctamente."
                     );
                     return null;
                 });
@@ -429,7 +429,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
             resultFormatter.throwEntityNotFound(
                 ErrorCode.ENTITY_NOT_FOUND.getCode(),
                 String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), notFoundMsg),
-                "Uno de los valores seleccionados no es válido. Verifique los campos del formulario."
+                "Uno de los valores seleccionados (género, ciudad, nivel educativo, etc.) no es válido o ya no está disponible."
             );
             return null; // requerido por el compilador
         });
@@ -452,7 +452,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.BAD_REQUEST.getCode(),
                 String.format("El %s es obligatorio y debe contener un ID.", nombre),
-                "Uno de los campos obligatorios no fue proporcionado correctamente."
+                "Faltan datos obligatorios para completar el registro sociodemográfico. Por favor, asegúrese de completar todos los campos requeridos."
             );
             return null; // requerido por el compilador
         }

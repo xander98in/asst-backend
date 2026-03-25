@@ -48,7 +48,7 @@ public class QuestionnaireQueryService implements QuestionnaireQueryCUInputPort 
                         ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El cuestionario con abreviatura '" + abbreviation + "' no fue encontrado."
                     ),
-                    "El cuestionario no fue encontrado."
+                    "No se pudo encontrar la información del cuestionario solicitado. Por favor, verifique la abreviatura e intente de nuevo."
                 );
                 return null; // requerido por el compilador; nunca se ejecuta
             });

@@ -149,7 +149,7 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
                         "El registro de gestión de baterías con ID " + id + " no fue encontrado."),
-                    "El registro de gestión de baterías no fue encontrado."
+                    "No se pudo encontrar la información del registro de gestión de baterías solicitado. Por favor, intente de nuevo."
                 );
                 return null;
             });

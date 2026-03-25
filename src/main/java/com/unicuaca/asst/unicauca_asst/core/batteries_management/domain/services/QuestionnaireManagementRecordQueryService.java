@@ -33,7 +33,7 @@ public class QuestionnaireManagementRecordQueryService implements QuestionnaireM
                         "No se encontró un registro de gestión de cuestionario para el recordId "
                             + batteryManagementRecordId + " y el cuestionario " + questionnaireAbbreviation
                     ),
-                    "El registro de gestión de cuestionario no fue encontrado."
+                    "No se pudo encontrar el acceso al cuestionario solicitado para este proceso de evaluación. Por favor, verifique la información."
                 );
                 return null;
             });
