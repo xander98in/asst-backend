@@ -17,8 +17,10 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 /**
- * Servicio de consulta para registros de gestión de baterías.
- * Implementa las operaciones definidas en el puerto de entrada {@link BatteryManagementRecordQueryCUInputPort}.
+ * Servicio de dominio para la consulta de registros de gestión de baterías.
+ * 
+ * <p>Implementa la lógica para listar y obtener información detallada de los procesos de evaluación.
+ * Utiliza i18n para los mensajes de error técnicos y de usuario, garantizando trazabilidad y claridad.</p>
  */
 @RequiredArgsConstructor
 public class BatteryManagementRecordQueryService implements BatteryManagementRecordQueryCUInputPort {
@@ -39,7 +41,6 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
         Page<BatteryManagementRecord> recordPage = recordQueryRepository.listPagedExcludingStatus(
             BatteryManagementRecordStatusCode.CLOSED.getDescription(), page, size, Sort.by(Sort.Direction.DESC, "createdAt")
         );
-
         return mapToInformationPage(recordPage);
     }
 
@@ -55,7 +56,6 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
     @Override
     public Page<BatteryManagementRecordInformation> listPaginatedByIdentificationPrefix(Integer page, Integer size, String term) {
         String normalizedTerm = normalizeTerm(term);
-
         Page<BatteryManagementRecord> recordPage = recordQueryRepository.listPaginatedByIdentificationPrefix(
             BatteryManagementRecordStatusCode.CLOSED.getDescription(),
             normalizedTerm,
@@ -63,7 +63,6 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
             size,
             Sort.by(Sort.Direction.DESC, "createdAt")
         );
-
         return mapToInformationPage(recordPage);
     }
 
@@ -80,7 +79,6 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
     @Override
     public Page<BatteryManagementRecordInformation> listPaginatedWithSearchTerm(Integer page, Integer size, String searchTerm) {
         String normalizedTerm = normalizeTerm(searchTerm);
-
         Page<BatteryManagementRecord> recordPage = recordQueryRepository.listPagedExcludingStatusWithSearchTerm(
             BatteryManagementRecordStatusCode.CLOSED.getDescription(),
             normalizedTerm,
@@ -88,7 +86,6 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
             size,
             Sort.by(Sort.Direction.DESC, "createdAt")
         );
-
         return mapToInformationPage(recordPage);
     }
 
@@ -107,7 +104,6 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
             size,
             Sort.by(Sort.Direction.DESC, "createdAt")
         );
-
         return mapToInformationPage(recordPage);
     }
 
@@ -123,7 +119,6 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
     @Override
     public Page<BatteryManagementRecordInformation> listPaginatedClosedRecordsWithSearchTerm(Integer page, Integer size, String searchTerm) {
         String normalizedTerm = normalizeTerm(searchTerm);
-
         Page<BatteryManagementRecord> recordPage = recordQueryRepository.listPagedByStatusWithSearchTerm(
             BatteryManagementRecordStatusCode.CLOSED.getDescription(),
             normalizedTerm,
@@ -131,25 +126,23 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
             size,
             Sort.by(Sort.Direction.DESC, "createdAt")
         );
-
         return mapToInformationPage(recordPage);
     }
 
     /**
-     * Obtiene la información detallada de un registro de gestión de baterías por su ID.
+     * Obtiene la información enriquecida de un proceso de evaluación por su ID.
      *
-     * @param id ID del registro de gestión de baterías
-     * @return DTO con la información detallada del registro
+     * @param id identificador único del registro de batería
+     * @return información detallada que incluye datos de la persona y su área de trabajo
      */
     @Override
     public BatteryManagementRecordInformation getRecordInformationById(Long id) {
         BatteryManagementRecord record = recordQueryRepository.getBatteryManagementRecordById(id)
             .orElseGet(() -> {
                 resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El registro de gestión de baterías con ID " + id + " no fue encontrado."),
-                    "No se pudo encontrar la información del registro de gestión de baterías solicitado. Por favor, intente de nuevo."
+                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                    "user.battery.query_not_found",
+                    id
                 );
                 return null;
             });
@@ -173,14 +166,14 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
     }
 
     /**
-     * Centraliza el mapeo: Page<BatteryManagementRecord> -> Page<BatteryManagementRecordInformation>
+     * Mapea y enriquece una página de registros con información sociodemográfica adicional.
+     * @param recordPage página de registros de gestión de baterías obtenida del repositorio
+     * @return página de información enriquecida para cada registro, lista para ser presentada al usuario
      */
     private Page<BatteryManagementRecordInformation> mapToInformationPage(Page<BatteryManagementRecord> recordPage) {
-
         List<BatteryManagementRecordInformation> content =
             recordPage.getContent().stream()
                 .map(record -> {
-
                     String workArea = detailsQueryRepository
                         .getWorkAreaNameByBatteryManagementRecordId(record.getId())
                         .orElse(null);
@@ -200,15 +193,13 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
                 })
                 .toList();
 
-        return new PageImpl<>(
-            content,
-            recordPage.getPageable(),
-            recordPage.getTotalElements()
-        );
+        return new PageImpl<>(content, recordPage.getPageable(), recordPage.getTotalElements());
     }
 
     /**
-     * Normaliza el término de búsqueda: trim + convierte vacío a null.
+     * Limpia y normaliza el término de búsqueda.
+     * @param term término de búsqueda ingresado por el usuario, que puede ser nulo o contener solo espacios
+     * @return el término normalizado (sin espacios al inicio o al final), o null si el término es nulo o solo espacios
      */
     private String normalizeTerm(String term) {
         if (term == null) return null;

@@ -10,7 +10,11 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import lombok.RequiredArgsConstructor;
 
 /**
- * Servicio de consulta para detalles de personas evaluadas.
+ * Servicio de dominio para la consulta de información sociodemográfica de personas evaluadas.
+ * 
+ * <p>Esta clase permite recuperar la metadata y los detalles completos asociados a un proceso
+ * de evaluación. Utiliza internacionalización (i18n) para reportar fallos de búsqueda de forma 
+ * consistente y profesional.</p>
  */
 @RequiredArgsConstructor
 public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetailsQueryCUInputPort {
@@ -20,35 +24,37 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
-     * Obtiene metadata del detalle de una persona evaluada asociado a un registro de gestión de bateria.
+     * Recupera la metadata básica del detalle sociodemográfico asociado a una batería.
+     * 
+     * <p>Se utiliza principalmente para verificar la existencia de información previa y 
+     * obtener identificadores necesarios para el flujo de navegación.</p>
      *
-     * @param batteryManagementRecordId ID del registro de gestión de batería
-     * @return instancia de {@link PersonEvaluatedDetails}
+     * @param batteryManagementRecordId identificador del registro de gestión de batería (BMR)
+     * @return objeto con la metadata esencial (ID, fechas, tipos de cargo)
      */
     @Override
     public PersonEvaluatedDetails getMetaByBatteryManagementRecordId(Long batteryManagementRecordId) {
 
+        // Validación de existencia de la batería
         BatteryManagementRecord record = batteryManagementRecordQueryRepository
             .getBatteryManagementRecordById(batteryManagementRecordId)
             .orElseGet(() -> {
                 this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(
-                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El registro de gestión de baterías con ID " + batteryManagementRecordId + " no fue encontrado."
-                    ),
-                    "No se pudo identificar el proceso de evaluación solicitado. Por favor, verifique la información."
+                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                    "user.person_evaluated_details.battery_not_found",
+                    batteryManagementRecordId
                 );
                 return null;
             });
 
+        // Consulta de detalles vinculados a la batería
         PersonEvaluatedDetails details = personEvaluatedDetailsQueryRepository
             .getByBatteryManagementRecordId(record.getId())
             .orElseGet(() -> {
                 this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El detalle de la persona evaluada para el registro de gestión de batería con ID " + batteryManagementRecordId + " no fue encontrado."),
-                    "No se encontró información sociodemográfica registrada para este proceso de evaluación."
+                    ErrorCode.PERSON_DETAILS_NOT_FOUND,
+                    "user.person_evaluated_details.query_by_record_not_found",
+                    batteryManagementRecordId
                 );
                 return null;
             });
@@ -63,10 +69,10 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
     }
 
     /**
-     * Obtiene los detalles completos de una persona evaluada por el ID del detalle.
+     * Obtiene los detalles sociodemográficos completos por su identificador único.
      *
-     * @param personEvaluatedDetailsId ID del detalle de la persona evaluada
-     * @return PersonEvaluatedDetails (modelo dominio)
+     * @param personEvaluatedDetailsId identificador único de los detalles
+     * @return objeto con la información sociodemográfica completa e hidratada
      */
     @Override
     public PersonEvaluatedDetails getPersonEvaluatedDetailsById(Long personEvaluatedDetailsId) {
@@ -74,14 +80,11 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
             .getByIdWithAll(personEvaluatedDetailsId)
             .orElseGet(() -> {
                 this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(
-                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El detalle de persona evaluada con ID " + personEvaluatedDetailsId + " no fue encontrado."
-                    ),
-                    "La información sociodemográfica solicitada no se encuentra disponible en el sistema."
+                    ErrorCode.PERSON_DETAILS_NOT_FOUND,
+                    "user.person_evaluated_details.query_not_found",
+                    personEvaluatedDetailsId
                 );
-                return null; // requerido por el compilador; nunca se ejecuta
+                return null;
             });
     }
 }

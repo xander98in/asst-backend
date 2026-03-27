@@ -13,8 +13,10 @@ public class BusinessRuleViolationException extends RuntimeException {
     private final String code;
     /** Mensaje legible del error. */
     private final String message;
-    /** Mensaje amigable destinado al usuario final. */
+    /** Mensaje amigable o clave de traducción destinado al usuario final. */
     private final String userMessage;
+    /** Argumentos para el mensaje dinámico. */
+    private final Object[] args;
 
     /**
      * Constructor que inicializa la excepción con un código y mensaje personalizado.
@@ -27,6 +29,7 @@ public class BusinessRuleViolationException extends RuntimeException {
         this.code = code;
         this.message = message;
         this.userMessage = null;
+        this.args = null;
     }
 
     /**
@@ -41,5 +44,22 @@ public class BusinessRuleViolationException extends RuntimeException {
         this.code = code;
         this.message = message;
         this.userMessage = userMessage;
+        this.args = null;
+    }
+
+    /**
+     * Constructor completo para soporte de i18n con argumentos.
+     *
+     * @param code        código de error
+     * @param message     mensaje técnico
+     * @param userMessage clave de traducción
+     * @param args        argumentos dinámicos
+     */
+    public BusinessRuleViolationException(String code, String message, String userMessage, Object[] args) {
+        super(message);
+        this.code = code;
+        this.message = message;
+        this.userMessage = userMessage;
+        this.args = args;
     }
 }

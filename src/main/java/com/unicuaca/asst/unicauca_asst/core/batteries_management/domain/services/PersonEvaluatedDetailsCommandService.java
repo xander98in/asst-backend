@@ -18,11 +18,11 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import lombok.RequiredArgsConstructor;
 
 /**
- * Implementación del caso de uso para operaciones que gestiona la creación de detalles
- * adicionales de una persona evaluada.
+ * Servicio de dominio para la gestión de comandos de detalles sociodemográficos.
  * 
- * Esta clase pertenece a la capa de dominio y orquesta la lógica de negocio para la creación de detalles
- * de persona evaluada.
+ * <p>Maneja la persistencia y validación de la información sociodemográfica de las personas evaluadas.
+ * Coordina la resolución de catálogos y sincroniza el estado del proceso de evaluación (Batería)
+ * tras cada operación.</p>
  */
 @RequiredArgsConstructor
 public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDetailsCommandCUInputPort {
@@ -37,9 +37,9 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
-     * Crea los detalles de una persona evaluada.
+     * Crea un nuevo registro de detalles sociodemográficos para una batería.
      * 
-     * @param personEvaluatedDetails el objeto {@link PersonEvaluatedDetails} que contiene los datos a crear
+     * @param personEvaluatedDetails datos a crear
      */
     @Override
     public void createPersonEvaluatedDetails(PersonEvaluatedDetails personEvaluatedDetails) {
@@ -49,144 +49,62 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
         Long bmrId = personEvaluatedDetails.getBatteryManagementRecord().getId();
         if (personEvaluatedDetailsQueryRepository.existsByBatteryManagementRecordId(bmrId)) {
             resultFormatter.throwEntityAlreadyExists(
-                ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
-                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "El registro de detalles para el registro de gestión de batería con ID " + bmrId + " ya existe."),
-                "No es posible registrar los detalles porque ya existe información sociodemográfica asociada a este proceso de evaluación."
+                ErrorCode.PERSON_DETAILS_ALREADY_EXISTS,
+                "user.person_evaluated_details.already_exists",
+                bmrId
             );
         }
 
-        personEvaluatedDetails.setGender(resolveGender(personEvaluatedDetails.getGender()));
-        personEvaluatedDetails.setCivilStatus(resolveCivilStatus(personEvaluatedDetails.getCivilStatus()));
-        personEvaluatedDetails.setEducationLevel(resolveEducationLevel(personEvaluatedDetails.getEducationLevel()));
-        personEvaluatedDetails.setProfession(normalizeText(personEvaluatedDetails.getProfession()));
-        personEvaluatedDetails.setResidenceCity(resolveCity(personEvaluatedDetails.getResidenceCity(), "residencia"));
-        personEvaluatedDetails.setSocioeconomicLevel(resolveSocioeconomicLevel(personEvaluatedDetails.getSocioeconomicLevel()));
-        personEvaluatedDetails.setHousingType(resolveHousingType(personEvaluatedDetails.getHousingType()));
-        personEvaluatedDetails.setWorkCity(resolveCity(personEvaluatedDetails.getWorkCity(), "trabajo"));
-        personEvaluatedDetails.setYearsAtCompany(normalizeText(personEvaluatedDetails.getYearsAtCompany()));
-        personEvaluatedDetails.setJobTitle(normalizeText(personEvaluatedDetails.getJobTitle()));
-        personEvaluatedDetails.setJobPositionType(resolveJobPositionType(personEvaluatedDetails.getJobPositionType()));
-        personEvaluatedDetails.setYearsInPosition(normalizeText(personEvaluatedDetails.getYearsInPosition()));
-        personEvaluatedDetails.setWorkAreaName(normalizeText(personEvaluatedDetails.getWorkAreaName()));
-        personEvaluatedDetails.setContractType(resolveContractType(personEvaluatedDetails.getContractType()));
-        personEvaluatedDetails.setSalaryType(resolveSalaryType(personEvaluatedDetails.getSalaryType()));
+        hydrateDetails(personEvaluatedDetails);
 
         personEvaluatedDetailsCommandRepository
             .savePersonEvaluatedDetails(personEvaluatedDetails)
             .orElseGet(() -> {
                 resultFormatter.throwEntityCreationFailed(
-                    ErrorCode.ENTITY_CREATION_ERROR.getCode(),
-                    String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "Los detalles de la persona evaluada no se crearon correctamente."),
-                    "Lo sentimos, ha ocurrido un error al intentar guardar la información sociodemográfica. Por favor, intente nuevamente."
-                );
-                return null; // requerido por el compilador
-            });
-
-        BatteryManagementRecord record = batteryManagementRecordQueryRepository
-            .getBatteryManagementRecordById(bmrId)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(
-                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El registro de gestión de batería con ID " + bmrId + " no fue encontrado."
-                    ),
-                    "No se pudo completar el registro debido a un problema con el estado del proceso actual. Por favor, contacte soporte."
+                    ErrorCode.ENTITY_CREATION_ERROR,
+                    "user.person_evaluated_details.creation_failed",
+                    bmrId
                 );
                 return null;
             });
 
-        BatteryManagementRecordStatus createdStatus = batteryManagementRecordStatusQueryRepository
-            .getStatusByName(BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription())
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(
-                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El estado '" + BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription() + "' no fue encontrado."
-                    ),
-                    "No fue posible actualizar el estado de la evaluación. Por favor, intente más tarde."
-                );
-                return null;
-            });
-
-        record.setStatus(createdStatus);
-
-        batteryManagementRecordCommandRepository
-            .updateBatteryManagementRecord(record)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityCreationFailed(
-                    ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
-                    String.format(
-                        ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(),
-                        "No se pudo actualizar el estado del registro de gestión de batería con ID " + bmrId
-                    ),
-                    "La información se guardó, pero no fue posible actualizar el estado del proceso. Por favor, verifique."
-                );
-                return null;
-            });
+        syncBatteryToInProcessing(bmrId);
     }
 
     /**
-     * Actualiza los detalles de una persona evaluada por su ID.
-     *
-     * @param id ID del detalle
-     * @param personEvaluatedDetails datos a actualizar
+     * Actualiza la información sociodemográfica existente.
      */
     @Override
     public void updatePersonEvaluatedDetails(Long id, PersonEvaluatedDetails personEvaluatedDetails) {
-        // Validar que existe el detalle
         PersonEvaluatedDetails existing = personEvaluatedDetailsQueryRepository
             .getByIdWithAll(id)
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(
-                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "Los detalles de la persona evaluada con ID " + id + " no fueron encontrados."
-                    ),
-                    "No se pudo encontrar la información sociodemográfica solicitada para su actualización."
+                    ErrorCode.PERSON_DETAILS_NOT_FOUND,
+                    "user.person_evaluated_details.update_not_found",
+                    id
                 );
                 return null;
             });
 
-        // Resolver catálogos (igual que create)
         personEvaluatedDetails.setBatteryManagementRecord(existing.getBatteryManagementRecord());
-        personEvaluatedDetails.setGender(resolveGender(personEvaluatedDetails.getGender()));
-        personEvaluatedDetails.setCivilStatus(resolveCivilStatus(personEvaluatedDetails.getCivilStatus()));
-        personEvaluatedDetails.setEducationLevel(resolveEducationLevel(personEvaluatedDetails.getEducationLevel()));
-        personEvaluatedDetails.setProfession(normalizeText(personEvaluatedDetails.getProfession()));
-        personEvaluatedDetails.setResidenceCity(resolveCity(personEvaluatedDetails.getResidenceCity(), "residencia"));
-        personEvaluatedDetails.setSocioeconomicLevel(resolveSocioeconomicLevel(personEvaluatedDetails.getSocioeconomicLevel()));
-        personEvaluatedDetails.setHousingType(resolveHousingType(personEvaluatedDetails.getHousingType()));
-        personEvaluatedDetails.setWorkCity(resolveCity(personEvaluatedDetails.getWorkCity(), "trabajo"));
-        personEvaluatedDetails.setYearsAtCompany(normalizeText(personEvaluatedDetails.getYearsAtCompany()));
-        personEvaluatedDetails.setJobTitle(normalizeText(personEvaluatedDetails.getJobTitle()));
-        personEvaluatedDetails.setJobPositionType(resolveJobPositionType(personEvaluatedDetails.getJobPositionType()));
-        personEvaluatedDetails.setYearsInPosition(normalizeText(personEvaluatedDetails.getYearsInPosition()));
-        personEvaluatedDetails.setWorkAreaName(normalizeText(personEvaluatedDetails.getWorkAreaName()));
-        personEvaluatedDetails.setContractType(resolveContractType(personEvaluatedDetails.getContractType()));
-        personEvaluatedDetails.setSalaryType(resolveSalaryType(personEvaluatedDetails.getSalaryType()));
-        // Asegurar ID a actualizar y preservar createdAt si lo manejas en dominio (opcional)
+        hydrateDetails(personEvaluatedDetails);
         personEvaluatedDetails.setId(existing.getId());
 
-        // Persistir
         personEvaluatedDetailsCommandRepository
             .updatePersonEvaluatedDetails(id, personEvaluatedDetails)
             .orElseGet(() -> {
                 resultFormatter.throwEntityCreationFailed(
-                    ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
-                    String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "Los detalles de la persona evaluada no se actualizaron correctamente."),
-                    "Ha ocurrido un error inesperado al intentar actualizar la información. Por favor, intente de nuevo en unos momentos."
+                    ErrorCode.ENTITY_UPDATE_ERROR,
+                    "user.person_evaluated_details.update_failed",
+                    id
                 );
                 return null;
             });
     }
 
     /**
-     * Elimina los detalles de una persona evaluada por su ID.
-     *
-     * @param personEvaluatedDetailsId ID del detalle a eliminar
+     * Elimina los detalles sociodemográficos.
      */
     @Override
     public void deletePersonEvaluatedDetails(Long personEvaluatedDetailsId) {
@@ -194,13 +112,10 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
         PersonEvaluatedDetails details = personEvaluatedDetailsQueryRepository
             .getByIdWithAll(personEvaluatedDetailsId)
             .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(
-                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "Los detalles de la persona evaluada con ID " + personEvaluatedDetailsId + " no fueron encontrados."
-                    ),
-                    "La información sociodemográfica que intenta eliminar no existe."
+                this.resultFormatter.throwEntityNotFound(
+                    ErrorCode.PERSON_DETAILS_NOT_FOUND,
+                    "user.person_evaluated_details.delete_not_found",
+                    personEvaluatedDetailsId
                 );
                 return null;
             });
@@ -215,66 +130,116 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
 
         if (hasIntralaboralRecords) {
             resultFormatter.throwBusinessRuleViolation(
-                ErrorCode.PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED.getCode(),
-                ErrorCode.PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED.getMessageKey(),
-                "No es posible eliminar los datos sociodemográficos porque ya existen cuestionarios vinculados a este proceso de evaluación."
+                ErrorCode.PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED,
+                "user.person_evaluated_details.delete_not_allowed",
+                batteryRecordId
             );
             return;
         }
+
         personEvaluatedDetailsCommandRepository.deleteById(personEvaluatedDetailsId);
+        syncBatteryAfterDetailsDelete(batteryRecordId);
+    }
 
-        boolean hasAnyQuestionnaireRecords = questionnaireManagementRecordQueryRepository
-            .existsByBatteryManagementRecordId(batteryRecordId);
+    /* ========================== Helpers de Hidratación ========================== */
 
-        if (!hasAnyQuestionnaireRecords) {
+    /**
+     * Hidratación de campos relacionados con catálogos y normalización de texto.
+     *
+     * <p>Este método centraliza la lógica de resolución de catálogos y normalización de campos
+     * para asegurar consistencia en la creación y actualización de detalles sociodemográficos.</p>
+     *
+     * @param details el objeto de detalles a hidratar
+     */
+    private void hydrateDetails(PersonEvaluatedDetails details) {
+        details.setGender(resolveGender(details.getGender()));
+        details.setCivilStatus(resolveCivilStatus(details.getCivilStatus()));
+        details.setEducationLevel(resolveEducationLevel(details.getEducationLevel()));
+        details.setProfession(normalizeText(details.getProfession()));
+        details.setResidenceCity(resolveCity(details.getResidenceCity(), "residencia"));
+        details.setSocioeconomicLevel(resolveSocioeconomicLevel(details.getSocioeconomicLevel()));
+        details.setHousingType(resolveHousingType(details.getHousingType()));
+        details.setWorkCity(resolveCity(details.getWorkCity(), "trabajo"));
+        details.setYearsAtCompany(normalizeText(details.getYearsAtCompany()));
+        details.setJobTitle(normalizeText(details.getJobTitle()));
+        details.setJobPositionType(resolveJobPositionType(details.getJobPositionType()));
+        details.setYearsInPosition(normalizeText(details.getYearsInPosition()));
+        details.setWorkAreaName(normalizeText(details.getWorkAreaName()));
+        details.setContractType(resolveContractType(details.getContractType()));
+        details.setSalaryType(resolveSalaryType(details.getSalaryType()));
+    }
 
+    /**
+     * Sincroniza el estado del registro de gestión de batería a "En Proceso" tras la creación o actualización de detalles.
+     *
+     * <p>Este método asegura que el proceso de evaluación avance al estado correcto una vez que se han registrado los detalles sociodemográficos.</p>
+     *
+     * @param bmrId el ID del registro de gestión de batería a sincronizar
+     */
+    private void syncBatteryToInProcessing(Long bmrId) {
+        BatteryManagementRecord record = batteryManagementRecordQueryRepository
+            .getBatteryManagementRecordById(bmrId)
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                    "user.person_evaluated_details.battery_not_found",
+                    bmrId
+                );
+                return null;
+            });
+
+        BatteryManagementRecordStatus status = batteryManagementRecordStatusQueryRepository
+            .getStatusByName(BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription())
+            .orElseGet(() -> {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.BATTERY_STATUS_NOT_FOUND,
+                    "user.person_evaluated_details.sync_status_not_found",
+                    BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription()
+                );
+                return null;
+            });
+
+        record.setStatus(status);
+        batteryManagementRecordCommandRepository.updateBatteryManagementRecord(record);
+    }
+
+    /**
+     * Sincroniza el estado del registro de gestión de batería a "Creado" tras la eliminación de detalles, si no hay cuestionarios asociados.
+     *
+     * <p>Este método asegura que el proceso de evaluación retroceda al estado inicial si se eliminan los detalles sociodemográficos y no hay cuestionarios respondidos.</p>
+     *
+     * @param bmrId el ID del registro de gestión de batería a sincronizar
+     */
+    private void syncBatteryAfterDetailsDelete(Long bmrId) {
+        if (!questionnaireManagementRecordQueryRepository.existsByBatteryManagementRecordId(bmrId)) {
             BatteryManagementRecord record = batteryManagementRecordQueryRepository
-                .getBatteryManagementRecordById(batteryRecordId)
+                .getBatteryManagementRecordById(bmrId)
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
-                        ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(
-                            ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                            "El registro de gestión de batería con ID " + batteryRecordId + " no fue encontrado."
-                        ),
-                        "No fue posible completar la eliminación debido a un error de sincronización. Por favor, contacte soporte."
+                        ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                        "user.person_evaluated_details.battery_not_found",
+                        bmrId
                     );
                     return null;
                 });
 
-            BatteryManagementRecordStatus createdStatus = batteryManagementRecordStatusQueryRepository
+            BatteryManagementRecordStatus status = batteryManagementRecordStatusQueryRepository
                 .getStatusByName(BatteryManagementRecordStatusCode.CREATED.getDescription())
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
-                        ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(
-                            ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                            "El estado '" + BatteryManagementRecordStatusCode.CREATED.getDescription() + "' no fue encontrado."
-                        ),
-                        "La eliminación se realizó, pero ocurrió un error al restaurar el estado inicial del proceso."
+                        ErrorCode.BATTERY_STATUS_NOT_FOUND,
+                        "user.person_evaluated_details.sync_status_failed",
+                        BatteryManagementRecordStatusCode.CREATED.getDescription()
                     );
                     return null;
                 });
 
-            record.setStatus(createdStatus);
-
-            batteryManagementRecordCommandRepository
-                .updateBatteryManagementRecord(record)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityCreationFailed(
-                        ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
-                        String.format(
-                            ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(),
-                            "No se pudo actualizar el estado del registro de gestión de batería con ID " + batteryRecordId
-                        ),
-                        "Los datos fueron eliminados, pero el estado del proceso no pudo ser actualizado correctamente."
-                    );
-                    return null;
-                });
+            record.setStatus(status);
+            batteryManagementRecordCommandRepository.updateBatteryManagementRecord(record);
         }
     }
 
-    /* ========================== Helpers de resolución ========================== */
+    /* ========================== Helpers de Resolución ========================== */
 
     /**
      * Resuelve y valida un registro de gestión de batería.
@@ -284,10 +249,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private BatteryManagementRecord resolveBatteryRecord(BatteryManagementRecord input) {
         Long id = safeId(input, input::getId, "registro de gestión de batería");
-        return fetchOrThrow(
-            () -> batteryManagementRecordQueryRepository.getBatteryManagementRecordById(id),
-            String.format("El registro de gestión de batería con ID %d no fue encontrado.", id)
-        );
+        return fetchOrThrow(() -> batteryManagementRecordQueryRepository.getBatteryManagementRecordById(id), "registro de gestión de batería", id);
     }
 
     /**
@@ -298,10 +260,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private Gender resolveGender(Gender input) {
         Long id = safeId(input, input::getId, "género");
-        return fetchOrThrow(
-            () -> catalogQueryRepository.getGenderById(id),
-            String.format("El género con ID %d no fue encontrado.", id)
-        );
+        return fetchOrThrow(() -> catalogQueryRepository.getGenderById(id), "género", id);
     }
 
     /**
@@ -312,10 +271,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private CivilStatus resolveCivilStatus(CivilStatus input) {
         Long id = safeId(input, input::getId, "estado civil");
-        return fetchOrThrow(
-            () -> catalogQueryRepository.getCivilStatusById(id),
-            String.format("El estado civil con ID %d no fue encontrado.", id)
-        );
+        return fetchOrThrow(() -> catalogQueryRepository.getCivilStatusById(id), "estado civil", id);
     }
 
     /**
@@ -326,10 +282,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private EducationLevel resolveEducationLevel(EducationLevel input) {
         Long id = safeId(input, input::getId, "nivel de educación");
-        return fetchOrThrow(
-            () -> catalogQueryRepository.getEducationLevelById(id),
-            String.format("El nivel de educación con ID %d no fue encontrado.", id)
-        );
+        return fetchOrThrow(() -> catalogQueryRepository.getEducationLevelById(id), "nivel de educación", id);
     }
 
     /**
@@ -341,10 +294,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private City resolveCity(City input, String contexto) {
         Long id = safeId(input, input::getId, "ciudad de " + contexto);
-        return fetchOrThrow(
-            () -> catalogQueryRepository.getCityById(id),
-            String.format("La ciudad de %s con ID %d no fue encontrada.", contexto, id)
-        );
+        return fetchOrThrow(() -> catalogQueryRepository.getCityById(id), "ciudad de " + contexto, id);
     }
 
     /**
@@ -355,10 +305,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private SocioeconomicLevel resolveSocioeconomicLevel(SocioeconomicLevel input) {
         Long id = safeId(input, input::getId, "nivel socioeconómico");
-        return fetchOrThrow(
-            () -> catalogQueryRepository.getSocioeconomicLevelById(id),
-            String.format("El nivel socioeconómico con ID %d no fue encontrado.", id)
-        );
+        return fetchOrThrow(() -> catalogQueryRepository.getSocioeconomicLevelById(id), "nivel socioeconómico", id);
     }
 
     /**
@@ -369,10 +316,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private HousingType resolveHousingType(HousingType input) {
         Long id = safeId(input, input::getId, "tipo de vivienda");
-        return fetchOrThrow(
-            () -> catalogQueryRepository.getHousingTypeById(id),
-            String.format("El tipo de vivienda con ID %d no fue encontrado.", id)
-        );
+        return fetchOrThrow(() -> catalogQueryRepository.getHousingTypeById(id), "tipo de vivienda", id);
     }
 
     /**
@@ -383,10 +327,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private JobPositionType resolveJobPositionType(JobPositionType input) {
         Long id = safeId(input, input::getId, "tipo de cargo");
-        return fetchOrThrow(
-            () -> catalogQueryRepository.getJobPositionTypeById(id),
-            String.format("El tipo de cargo con ID %d no fue encontrado.", id)
-        );
+        return fetchOrThrow(() -> catalogQueryRepository.getJobPositionTypeById(id), "tipo de cargo", id);
     }
 
     /**
@@ -397,10 +338,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private ContractType resolveContractType(ContractType input) {
         Long id = safeId(input, input::getId, "tipo de contrato");
-        return fetchOrThrow(
-            () -> catalogQueryRepository.getContractTypeById(id),
-            String.format("El tipo de contrato con ID %d no fue encontrado.", id)
-        );
+        return fetchOrThrow(() -> catalogQueryRepository.getContractTypeById(id), "tipo de contrato", id);
     }
 
     /**
@@ -411,27 +349,27 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private SalaryType resolveSalaryType(SalaryType input) {
         Long id = safeId(input, input::getId, "tipo de salario");
-        return fetchOrThrow(
-            () -> catalogQueryRepository.getSalaryTypeById(id),
-            String.format("El tipo de salario con ID %d no fue encontrado.", id)
-        );
+        return fetchOrThrow(() -> catalogQueryRepository.getSalaryTypeById(id), "tipo de salario", id);
     }
 
     /**
-     * Helper genérico para obtener un recurso o lanzar excepción estandarizada.
+     * Helper genérico para resolver una entidad a partir de un fetcher que devuelve un Optional.
+     * Si el Optional está vacío, lanza una excepción de entidad no encontrada con i18n.
      *
-     * @param fetcher      supplier que obtiene el Optional del recurso
-     * @param notFoundMsg  mensaje específico cuando no existe
-     * @return recurso resuelto
+     * @param fetcher función que realiza la consulta y devuelve un Optional con la entidad
+     * @param recurso nombre del recurso para mensajes de error (ej. "género", "ciudad de residencia")
+     * @param id identificador del recurso para mensajes de error
+     * @return la entidad resuelta o null si no se encuentra (la excepción ya se lanza en ese caso)
      */
-    private <T> T fetchOrThrow(Supplier<Optional<T>> fetcher, String notFoundMsg) {
+    private <T> T fetchOrThrow(Supplier<Optional<T>> fetcher, String recurso, Long id) {
         return fetcher.get().orElseGet(() -> {
             resultFormatter.throwEntityNotFound(
-                ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), notFoundMsg),
-                "Uno de los valores seleccionados (género, ciudad, nivel educativo, etc.) no es válido o ya no está disponible."
+                ErrorCode.CATALOG_RESOURCE_NOT_FOUND,
+                "user.person_evaluated_details.catalog_invalid",
+                recurso,
+                id
             );
-            return null; // requerido por el compilador
+            return null;
         });
     }
 
@@ -447,28 +385,27 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private Long safeId(Object ref, Supplier<Long> idSupplier, String nombre) {
         Long id = (ref != null) ? idSupplier.get() : null;
-
         if (id == null) {
             resultFormatter.throwBusinessRuleViolation(
-                ErrorCode.BAD_REQUEST.getCode(),
-                String.format("El %s es obligatorio y debe contener un ID.", nombre),
-                "Faltan datos obligatorios para completar el registro sociodemográfico. Por favor, asegúrese de completar todos los campos requeridos."
+                ErrorCode.BAD_REQUEST,
+                "user.person_evaluated_details.required_fields_missing",
+                nombre
             );
-            return null; // requerido por el compilador
+            return null;
         }
-
         return id;
     }
 
-    /* ========================== Helpers de resolución ========================== */
-
     /**
-     * Normaliza un texto: elimina espacios y convierte la primera letra en mayúscula.
+     * Normaliza un texto aplicando trim y capitalización de la primera letra.
+     *
+     * <p>Este helper mejora la consistencia de los datos al almacenar textos con formato uniforme.</p>
+     *
+     * @param value el texto a normalizar
+     * @return el texto normalizado o el valor original si es null o blank
      */
     private String normalizeText(String value) {
-        if (value == null || value.isBlank()) {
-            return value;
-        }
+        if (value == null || value.isBlank()) return value;
         value = value.trim();
         return value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase();
     }

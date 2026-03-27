@@ -1,17 +1,16 @@
 package com.unicuaca.asst.unicauca_asst.common.exceptions;
 
-import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
-import org.hibernate.exception.JDBCConnectionException;
-import org.hibernate.exception.SQLGrammarException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.dao.QueryTimeoutException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.CannotCreateTransactionException;
@@ -32,6 +31,7 @@ import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Manejador global de excepciones para los controladores REST de la aplicación.
@@ -39,12 +39,46 @@ import jakarta.validation.ConstraintViolationException;
  * <p>Esta clase centraliza la gestión de errores lanzados desde cualquier capa del backend,
  * convirtiéndolos en respuestas estructuradas del tipo {@link ApiResponse} que encapsulan un {@link ErrorResponse}.
  * Esto garantiza consistencia, trazabilidad y claridad para el cliente consumidor de la API.</p>
- *
- * <p>Utiliza {@link ErrorUtils} para la creación fluida de errores enriquecidos, y hace uso de
- * {@link ErrorCode} como catálogo de errores definidos por la aplicación.</p>
  */
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class RestApiExceptionHandler {
+
+    private final MessageSource messageSource;
+
+    /**
+     * Resuelve un mensaje para el usuario a partir de una posible clave o mensaje directo.
+     *
+     * @param input clave de mensaje o mensaje directo
+     * @param args argumentos para el mensaje
+     * @param req solicitud actual para obtener el locale
+     * @param defaultMsg mensaje por defecto si la resolución falla
+     * @return el mensaje final traducido
+     */
+    private String resolveUserMessage(String input, Object[] args, HttpServletRequest req, String defaultMsg) {
+        if (input == null) return defaultMsg;
+        try {
+            return messageSource.getMessage(input, args, req.getLocale());
+        } catch (NoSuchMessageException e) {
+            // Si no es una clave válida, se asume que es un mensaje directo
+            return input;
+        }
+    }
+
+    /**
+     * Resuelve un mensaje técnico a partir de un ErrorCode.
+     *
+     * @param errorCode el código de error que contiene la clave técnica
+     * @param req solicitud actual
+     * @return el mensaje técnico traducido o el valor por defecto
+     */
+    private String resolveTechMessage(ErrorCode errorCode, HttpServletRequest req) {
+        try {
+            return messageSource.getMessage(errorCode.getMessageKey(), null, req.getLocale());
+        } catch (NoSuchMessageException e) {
+            return "Error interno del sistema";
+        }
+    }
 
     /**
      * Maneja la excepción {@link EntityNotFoundPersException} cuando una entidad solicitada no existe.
@@ -55,10 +89,13 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(EntityNotFoundPersException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityNotFoundException(HttpServletRequest req, EntityNotFoundPersException ex) {
-        String userMsg = ex.getUserMessage() != null ? ex.getUserMessage() : "No se encontró la información solicitada.";
+        String defaultMsg = resolveUserMessage("user.default.entity_not_found", null, req, "Registro no encontrado.");
+        String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
+        String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
+        
         var details = ErrorUtils.of(
             ex.getCode(),
-            ex.getMessage(),
+            techDetail,
             userMsg,
             req.getMethod()
         );
@@ -67,7 +104,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.DATA_ERROR.getCode(),
             HttpStatus.NOT_FOUND,
-            ErrorCode.DATA_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.DATA_ERROR, req),
             details
         );
     }
@@ -82,10 +119,13 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(BusinessRuleViolationException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleBusinessRuleViolationException(HttpServletRequest req, BusinessRuleViolationException ex) {
-        String userMsg = ex.getUserMessage() != null ? ex.getUserMessage() : "La operación no pudo completarse debido a una regla de negocio.";
+        String defaultMsg = resolveUserMessage("user.default.business_rule_violation", null, req, "Regla de negocio violada.");
+        String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
+        String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
+        
         var details = ErrorUtils.of(
             ex.getCode(),
-            ex.getMessage(),
+            techDetail,
             userMsg,
             req.getMethod()
         );
@@ -94,7 +134,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.BUSINESS_RULE_VIOLATION.getCode(),
             HttpStatus.BAD_REQUEST,
-            ErrorCode.BUSINESS_RULE_VIOLATION.getMessageKey(),
+            resolveTechMessage(ErrorCode.BUSINESS_RULE_VIOLATION, req),
             details
         );
     }
@@ -109,10 +149,13 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityAlreadyExistsException(HttpServletRequest req, EntityAlreadyExistsException ex) {
-        String userMsg = ex.getUserMessage() != null ? ex.getUserMessage() : "El registro que intenta crear ya existe en el sistema.";
+        String defaultMsg = resolveUserMessage("user.default.entity_already_exists", null, req, "Entidad existente.");
+        String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
+        String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
+        
         var details = ErrorUtils.of(
             ex.getCode(),
-            ex.getMessage(),
+            techDetail,
             userMsg,
             req.getMethod()
         );
@@ -120,7 +163,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.DATA_ERROR.getCode(),
             HttpStatus.CONFLICT,
-            ErrorCode.DATA_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.DATA_ERROR, req),
             details
         );
     }
@@ -134,10 +177,13 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(EntityCreationException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityCreationException(HttpServletRequest req, EntityCreationException ex) {
-        String userMsg = ex.getUserMessage() != null ? ex.getUserMessage() : "Se presentó un error al intentar crear el registro.";
+        String defaultMsg = resolveUserMessage("user.default.entity_creation_error", null, req, "Error al crear registro.");
+        String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
+        String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
+
         var details = ErrorUtils.of(
             ex.getCode(),
-            ex.getMessage(),
+            techDetail,
             userMsg,
             req.getMethod()
         );
@@ -146,7 +192,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.DATA_ERROR.getCode(),
             HttpStatus.INTERNAL_SERVER_ERROR,
-            ErrorCode.DATA_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.DATA_ERROR, req),
             details
         );
     }
@@ -170,18 +216,22 @@ public class RestApiExceptionHandler {
             fieldErrors.put(field, message);
         });
 
-        var details = ErrorUtils.createError(
-            ErrorCode.FIELD_VALIDATION,
-            "Existen errores de validación en el formulario.",
-            req.getMethod(),
-            fieldErrors
-        );
+        String userMsg = resolveUserMessage("user.generic.validation_error", null, req, "Error de validación.");
+        String techDetail = resolveTechMessage(ErrorCode.FIELD_VALIDATION, req);
+
+        var details = ErrorResponse.<Map<String, String>>builder()
+            .errorCode(ErrorCode.FIELD_VALIDATION.getCode())
+            .message(techDetail)
+            .userMessage(userMsg)
+            .method(req.getMethod())
+            .data(fieldErrors)
+            .build();
 
         return ResponseUtil.error(
             req,
             ErrorCode.VALIDATION_ERROR.getCode(),
             HttpStatus.BAD_REQUEST,
-            ErrorCode.VALIDATION_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.VALIDATION_ERROR, req),
             details
         );
     }
@@ -198,10 +248,13 @@ public class RestApiExceptionHandler {
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleCatalogEmpty(
             HttpServletRequest req, CatalogEmptyException ex) {
 
-        String userMsg = ex.getUserMessage() != null ? ex.getUserMessage() : "El catálogo solicitado no tiene información disponible.";
+        String defaultMsg = resolveUserMessage("user.default.catalog_empty", null, req, "Catálogo vacío.");
+        String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
+        String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
+        
         var details = ErrorUtils.of(
             ex.getCode(),
-            ex.getMessage(),
+            techDetail,
             userMsg,
             req.getMethod()
         );
@@ -210,7 +263,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.CATALOG_ERROR.getCode(),
             HttpStatus.NOT_FOUND,
-            ErrorCode.CATALOG_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.CATALOG_ERROR, req),
             details
         );
     }
@@ -224,12 +277,15 @@ public class RestApiExceptionHandler {
      * @return {@link ResponseEntity} con estado 504 y cuerpo estandarizado de error
      */
     @ExceptionHandler(QueryTimeoutException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleQueryTimeout(
-            HttpServletRequest req, QueryTimeoutException ex) {
+    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleQueryTimeout(HttpServletRequest req, QueryTimeoutException ex) {
 
-        var details = ErrorUtils.createSimpleError(
-            ErrorCode.DB_TIMEOUT,
-            "La base de datos tardó demasiado en responder.",
+        String userMsg = resolveUserMessage("user.generic.query_timeout", null, req, "Timeout en consulta.");
+        String techDetail = resolveTechMessage(ErrorCode.DB_TIMEOUT, req);
+
+        var details = ErrorUtils.of(
+            ErrorCode.DB_TIMEOUT.getCode(),
+            techDetail,
+            userMsg,
             req.getMethod()
         );
 
@@ -237,7 +293,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.DATA_ERROR.getCode(),
             HttpStatus.GATEWAY_TIMEOUT,
-            ErrorCode.DATA_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.DATA_ERROR, req),
             details
         );
     }
@@ -245,28 +301,23 @@ public class RestApiExceptionHandler {
     /**
      * Maneja errores cuando la base de datos no está disponible o no es posible abrir una transacción.
      *
-     * <p>Atrapa: {@link DataAccessResourceFailureException},
-     * {@link CannotCreateTransactionException},
-     * {@link JDBCConnectionException},
-     * {@link java.sql.SQLTransientConnectionException}.</p>
-     *
-     * <p>Responde con <b>503 Service Unavailable</b> y cuerpo:
      * @param req solicitud HTTP que originó la excepción
-     * @param ex  excepción de base de datos no disponible
-     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     * @param ex excepción de recurso de datos no disponible
+     * @return {@link ResponseEntity} con estado 503 y cuerpo estandarizado de error
      */
     @ExceptionHandler({
         DataAccessResourceFailureException.class,
-        CannotCreateTransactionException.class,
-        JDBCConnectionException.class,
-        java.sql.SQLTransientConnectionException.class
+        CannotCreateTransactionException.class
     })
-    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleDbUnavailable(
-            HttpServletRequest req, Exception ex) {
+    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleDbUnavailable(HttpServletRequest req, Exception ex) {
 
-        var details = ErrorUtils.createSimpleError(
-            ErrorCode.DB_UNAVAILABLE,
-            "El servicio de datos no está disponible temporalmente.",
+        String userMsg = resolveUserMessage("user.generic.db_unavailable", null, req, "Servicio no disponible.");
+        String techDetail = resolveTechMessage(ErrorCode.DB_UNAVAILABLE, req);
+
+        var details = ErrorUtils.of(
+            ErrorCode.DB_UNAVAILABLE.getCode(),
+            techDetail,
+            userMsg,
             req.getMethod()
         );
 
@@ -274,7 +325,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.DATA_ERROR.getCode(),
             HttpStatus.SERVICE_UNAVAILABLE,
-            ErrorCode.DATA_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.DATA_ERROR, req),
             details
         );
     }
@@ -282,22 +333,22 @@ public class RestApiExceptionHandler {
     /**
      * Maneja errores de sintaxis/uso de SQL (gramática SQL inválida).
      *
-     * <p>Atrapa: {@link InvalidDataAccessResourceUsageException},
-     * {@link SQLGrammarException},
-     * {@link java.sql.SQLSyntaxErrorException}.</p>
-     *
-     * <p>Responde con <b>500 Internal Server Error</b> y cuerpo:
-     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex excepción de uso de recurso de datos inválido, típicamente por errores en la consulta SQL
+     * @return {@link ResponseEntity} con estado 500 y cuerpo estandarizado de error
      */
     @ExceptionHandler({
-        InvalidDataAccessResourceUsageException.class,
-        SQLGrammarException.class,
-        SQLSyntaxErrorException.class
+        InvalidDataAccessResourceUsageException.class
     })
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleSqlGrammar(HttpServletRequest req, Exception ex) {
-        var details = ErrorUtils.createSimpleError(
-            ErrorCode.SQL_GRAMMAR,
-            "Error interno al procesar los datos.",
+
+        String userMsg = resolveUserMessage("user.generic.sql_grammar", null, req, "Error interno.");
+        String techDetail = resolveTechMessage(ErrorCode.SQL_GRAMMAR, req);
+
+        var details = ErrorUtils.of(
+            ErrorCode.SQL_GRAMMAR.getCode(),
+            techDetail,
+            userMsg,
             req.getMethod()
         );
 
@@ -305,7 +356,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.DATA_ERROR.getCode(),
             HttpStatus.INTERNAL_SERVER_ERROR,
-            ErrorCode.DATA_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.DATA_ERROR, req),
             details
         );
     }
@@ -313,18 +364,21 @@ public class RestApiExceptionHandler {
     /**
      * Maneja errores generales de acceso a datos (consultas, actualizaciones, etc.).
      *
-     * <p>Atrapa: {@link DataAccessException}.</p>
-     *
-     * <p>Responde con <b>500 Internal Server Error</b> y cuerpo:
-     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex excepción general de acceso a datos, que puede incluir errores de conexión, violaciones de integridad, etc.
+     * @return {@link ResponseEntity} con estado 500 y cuerpo estandarizado de error
      */
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleDataAccess(
             HttpServletRequest req, DataAccessException ex) {
 
-        var details = ErrorUtils.createSimpleError(
-            ErrorCode.DATA_ACCESS,
-            "Se presentow un problema al acceder a la información.",
+        String userMsg = resolveUserMessage("user.generic.data_access", null, req, "Error de acceso a datos.");
+        String techDetail = resolveTechMessage(ErrorCode.DATA_ACCESS, req);
+
+        var details = ErrorUtils.of(
+            ErrorCode.DATA_ACCESS.getCode(),
+            techDetail,
+            userMsg,
             req.getMethod()
         );
 
@@ -332,7 +386,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.DATA_ERROR.getCode(),
             HttpStatus.INTERNAL_SERVER_ERROR,
-            ErrorCode.DATA_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.DATA_ERROR, req),
             details
         );
     }
@@ -340,12 +394,9 @@ public class RestApiExceptionHandler {
     /**
      * Maneja solicitudes mal formadas o con parámetros inválidos.
      *
-     * <p>Atrapa: {@link MissingServletRequestParameterException},
-     * {@link MethodArgumentTypeMismatchException},
-     * {@link ConstraintViolationException}.</p>
-     *
-     * <p>Responde con <b>400 Bad Request</b> y cuerpo:
-     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex excepción que indica un error de sintaxis o tipo en los parámetros de la solicitud, como falta de parámetros requeridos o tipos incompatibles
+     * @return {@link ResponseEntity} con estado 400 y cuerpo estandarizado de error indicando el problema de la solicitud
      */
     @ExceptionHandler({
         MissingServletRequestParameterException.class,
@@ -353,9 +404,14 @@ public class RestApiExceptionHandler {
         ConstraintViolationException.class
     })
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleBadRequest(HttpServletRequest req, Exception ex) {
-        var details = ErrorUtils.createSimpleError(
-            ErrorCode.BAD_REQUEST,
-            "La solicitud enviada no es válida.",
+
+        String userMsg = resolveUserMessage("user.generic.bad_request", null, req, "Solicitud inválida.");
+        String techDetail = resolveTechMessage(ErrorCode.BAD_REQUEST, req);
+
+        var details = ErrorUtils.of(
+            ErrorCode.BAD_REQUEST.getCode(),
+            techDetail,
+            userMsg,
             req.getMethod()
         );
 
@@ -363,7 +419,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.VALIDATION_ERROR.getCode(),
             HttpStatus.BAD_REQUEST,
-            ErrorCode.VALIDATION_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.VALIDATION_ERROR, req),
             details
         );
     }
@@ -371,18 +427,21 @@ public class RestApiExceptionHandler {
     /**
      * Maneja invocaciones con un método HTTP no soportado por el endpoint.
      *
-     * <p>Atrapa: {@link HttpRequestMethodNotSupportedException}.</p>
-     *
-     * <p>Responde con <b>405 Method Not Allowed</b> y cuerpo:
-     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex excepción que indica que el método HTTP utilizado no es compatible con el endpoint solicitado, como usar POST en un endpoint que solo acepta GET
+     * @return {@link ResponseEntity} con estado 405 y cuerpo estandarizado de error indicando que el método no es permitido
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleMethodNotAllowed(
             HttpServletRequest req, HttpRequestMethodNotSupportedException ex) {
 
-        var details = ErrorUtils.createSimpleError(
-            ErrorCode.METHOD_NOT_ALLOWED,
-            "El método HTTP no está permitido para esta operación.",
+        String userMsg = resolveUserMessage("user.generic.method_not_allowed", null, req, "Método no permitido.");
+        String techDetail = resolveTechMessage(ErrorCode.METHOD_NOT_ALLOWED, req);
+
+        var details = ErrorUtils.of(
+            ErrorCode.METHOD_NOT_ALLOWED.getCode(),
+            techDetail,
+            userMsg,
             req.getMethod()
         );
 
@@ -390,7 +449,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.GENERIC_ERROR.getCode(),
             HttpStatus.METHOD_NOT_ALLOWED,
-            ErrorCode.GENERIC_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.GENERIC_ERROR, req),
             details
         );
     }
@@ -398,18 +457,21 @@ public class RestApiExceptionHandler {
     /**
      * Maneja peticiones con tipo de contenido no soportado por el servidor.
      *
-     * <p>Atrapa: {@link HttpMediaTypeNotSupportedException}.</p>
-     *
-     * <p>Responde con <b>415 Unsupported Media Type</b> y cuerpo:
-     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex excepción que indica que el tipo de contenido de la solicitud no es compatible con lo que el servidor puede procesar, como enviar JSON a un endpoint que solo acepta XML
+     * @return {@link ResponseEntity} con estado 415 y cuerpo estandarizado de error indicando que el tipo de contenido no es soportado
      */
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleUnsupportedMediaType(
             HttpServletRequest req, HttpMediaTypeNotSupportedException ex) {
 
-        var details = ErrorUtils.createSimpleError(
-            ErrorCode.UNSUPPORTED_MEDIA_TYPE,
-            "El tipo de contenido no es compatible.",
+        String userMsg = resolveUserMessage("user.generic.unsupported_media_type", null, req, "Tipo de contenido no soportado.");
+        String techDetail = resolveTechMessage(ErrorCode.UNSUPPORTED_MEDIA_TYPE, req);
+
+        var details = ErrorUtils.of(
+            ErrorCode.UNSUPPORTED_MEDIA_TYPE.getCode(),
+            techDetail,
+            userMsg,
             req.getMethod()
         );
 
@@ -417,27 +479,29 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.GENERIC_ERROR.getCode(),
             HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-            ErrorCode.GENERIC_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.GENERIC_ERROR, req),
             details
         );
     }
 
     /**
-     * Maneja solicitudes cuyo formato de respuesta solicitado por el cliente
-     * (header {@code Accept}) no es aceptable.
+     * Maneja solicitudes cuyo formato de respuesta solicitado por el cliente no es aceptable.
      *
-     * <p>Atrapa: {@link HttpMediaTypeNotAcceptableException}.</p>
-     *
-     * <p>Responde con <b>406 Not Acceptable</b> y cuerpo:
-     * {@code ApiResponse<ErrorResponse<Void>>}.</p>
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex excepción que indica que el formato de respuesta solicitado por el cliente (a través del encabezado Accept) no es compatible con lo que el servidor puede producir, como solicitar XML cuando el servidor solo puede producir JSON
+     * @return {@link ResponseEntity} con estado 406 y cuerpo estandarizado de error indicando que el formato solicitado no es aceptable
      */
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleNotAcceptable(
             HttpServletRequest req, HttpMediaTypeNotAcceptableException ex) {
 
-        var details = ErrorUtils.createSimpleError(
-            ErrorCode.NOT_ACCEPTABLE,
-            "No se puede generar la respuesta en el formato solicitado.",
+        String userMsg = resolveUserMessage("user.generic.not_acceptable", null, req, "Formato no aceptable.");
+        String techDetail = resolveTechMessage(ErrorCode.NOT_ACCEPTABLE, req);
+
+        var details = ErrorUtils.of(
+            ErrorCode.NOT_ACCEPTABLE.getCode(),
+            techDetail,
+            userMsg,
             req.getMethod()
         );
 
@@ -445,28 +509,29 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.GENERIC_ERROR.getCode(),
             HttpStatus.NOT_ACCEPTABLE,
-            ErrorCode.GENERIC_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.GENERIC_ERROR, req),
             details
         );
     }
 
     /**
-     * Maneja la ausencia de beans en el contexto de Spring (p. ej., cuando un mapper
-     * o componente requerido no está definido o no pudo inyectarse).
-     *
-     * <p>Atrapa: {@link NoSuchBeanDefinitionException}.</p>
+     * Maneja la ausencia de beans en el contexto de Spring.
      *
      * @param req solicitud HTTP que originó la excepción
-     * @param ex  excepción lanzada por Spring al no encontrar el bean
-     * @return {@link ResponseEntity} con estado 500 y cuerpo estandarizado de error
+     * @param ex excepción que indica que el contenedor de Spring no pudo encontrar un bean requerido para procesar la solicitud, lo que generalmente indica un error de configuración o una dependencia faltante
+     * @return {@link ResponseEntity} con estado 500 y cuerpo estandarizado de error indicando un problema de configuración interna del servidor
      */
     @ExceptionHandler(NoSuchBeanDefinitionException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleNoBean(
             HttpServletRequest req, NoSuchBeanDefinitionException ex) {
 
-        var details = ErrorUtils.createSimpleError(
-            ErrorCode.MAPPER_ERROR,
-            "Error de configuración interna del servidor.",
+        String userMsg = resolveUserMessage("user.generic.config_error", null, req, "Error de configuración.");
+        String techDetail = resolveTechMessage(ErrorCode.MAPPER_ERROR, req);
+
+        var details = ErrorUtils.of(
+            ErrorCode.MAPPER_ERROR.getCode(),
+            techDetail,
+            userMsg,
             req.getMethod()
         );
 
@@ -474,32 +539,31 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.MAPPER_ERROR.getCode(),
             HttpStatus.INTERNAL_SERVER_ERROR,
-            ErrorCode.MAPPER_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.MAPPER_ERROR, req),
             details
         );
     }
 
     /**
-     * Handler genérico para cualquier excepción no controlada por otros manejadores
-     * específicos del {@code @RestControllerAdvice}.
-     *
-     * <p>Responde con <b>500 Internal Server Error</b>. El cuerpo sigue el contrato:
-     * {@code ApiResponse<ErrorResponse<Void>>}. Para evitar filtrar detalles sensibles,
-     * se envía un mensaje genérico al cliente (puedes loguear {@code ex} para diagnóstico).</p>
+     * Handler genérico para cualquier excepción no controlada.
      *
      * @param req solicitud HTTP que originó la excepción
-     * @param ex  excepción no controlada
-     * @return {@link ResponseEntity} con estado 500 y cuerpo estandarizado de error
+     * @param ex excepción no controlada que se propagó hasta el controlador
+     * @return {@link ResponseEntity} con estado 500 y cuerpo estandarizado de error indicando un error interno del servidor
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleGeneric(
             HttpServletRequest req, Exception ex) {
 
         System.out.println("\n\n[ERROR] Excepción no controlada capturada por RestApiExceptionHandler:");
+        ex.printStackTrace();
+
+        String userMsg = resolveUserMessage("user.generic.error", null, req, "Error inesperado.");
+
         var details = ErrorUtils.of(
             ErrorCode.GENERIC_ERROR.getCode(),
             ex.getMessage(),
-            "Ocurrió un error inesperado. Por favor, intente más tarde.",
+            userMsg,
             req.getMethod()
         );
 
@@ -507,7 +571,7 @@ public class RestApiExceptionHandler {
             req,
             ErrorCode.GENERIC_ERROR.getCode(),
             HttpStatus.INTERNAL_SERVER_ERROR,
-            ErrorCode.GENERIC_ERROR.getMessageKey(),
+            resolveTechMessage(ErrorCode.GENERIC_ERROR, req),
             details
         );
     }

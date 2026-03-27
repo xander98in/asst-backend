@@ -13,9 +13,11 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 /**
- * Servicio de dominio para la gestión de registros de cuestionarios.
- * Implementa los casos de uso relacionados con la creación, actualización y eliminación de registros de gestión de cuestionarios.
- * Orquesta la lógica de negocio y las reglas de dominio para estas operaciones.
+ * Servicio de dominio para la gestión de registros de gestión de cuestionarios.
+ * 
+ * <p>Esta clase orquesta la vinculación de cuestionarios específicos a un proceso de evaluación (Batería).
+ * Maneja la creación inicial de registros de cuestionario, su eliminación controlada y la sincronización
+ * automática del estado de la batería basada en el progreso de sus cuestionarios.</p>
  */
 @RequiredArgsConstructor
 public class QuestionnaireManagementRecordCommandService implements QuestionnaireManagementRecordCommandCUInputPort {
@@ -39,116 +41,108 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
     @Override
     public QuestionnaireManagementRecord createQuestionnaireManagementRecord(QuestionnaireManagementRecord record) {
 
-        // Obtener y Validar el Registro de Gestión de Batería
         Long batteryId = record.getBatteryManagementRecord().getId();
 
+        // Validación de existencia de la batería contenedora
         BatteryManagementRecord batteryRecord = batteryManagementRecordQueryRepository.getBatteryManagementRecordById(batteryId)
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El registro de gestión de batería con ID " + batteryId + " no existe."),
-                    "No se pudo encontrar el proceso de evaluación solicitado para asignar el cuestionario."
+                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                    "user.questionnaire_management.battery_not_found",
+                    batteryId
                 );
                 return null;
             });
 
-        // Obtener y Validar el Cuestionario
+        // Validación de existencia del catálogo de cuestionario
         Long questionnaireId = record.getQuestionnaire().getId();
-
         Questionnaire questionnaire = questionnaireQueryRepository.getById(questionnaireId)
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El cuestionario con ID " + questionnaireId + " no existe."),
-                    "El cuestionario seleccionado no es válido o no se encuentra disponible en el sistema."
+                    ErrorCode.QUESTIONNAIRE_NOT_FOUND_BY_REF,
+                    "user.questionnaire_management.not_found",
+                    questionnaireId
                 );
                 return null;
             });
 
-        // Validar si YA EXISTE el registro (Regla de Negocio)
+        // Regla de Negocio: Evitar duplicidad de asignación
         if (questionnaireManagementRecordQueryRepository
             .existsByBatteryManagementRecordIdAndQuestionnaireId(batteryId, questionnaireId)) {
             resultFormatter.throwEntityAlreadyExists(
-                ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
-                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "El registro de gestión de cuestionario para la batería con ID " + batteryId + " y cuestionario: " + questionnaire.getName() + " ya existe."),
-                "Este cuestionario ya ha sido asignado previamente a la batería de pruebas actual."
+                ErrorCode.QUESTIONNAIRE_ALREADY_ASSIGNED,
+                "user.questionnaire_management.already_assigned",
+                questionnaire.getName()
             );
         }
 
-        // Obtener el Estado Inicial (CREADO) usando el Enum
+        // Resolución del estado inicial 'Creado' para el cuestionario
         String initialStatusName = QuestionnaireManagementRecordStatusEnum.CREADO.getName();
-
         QuestionnaireManagementRecordStatus initialStatus = questionnaireManagementRecordStatusQueryRepository
             .getQuestionnaireManagementRecordStatusByName(initialStatusName)
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El estado inicial '" + initialStatusName + "' no se encuentra configurado en el sistema."),
-                    "Lo sentimos, no fue posible asignar el cuestionario debido a un error de configuración. Por favor, intente más tarde."
+                    ErrorCode.QUESTIONNAIRE_MGMT_STATUS_NOT_FOUND,
+                    "user.questionnaire_management.config_error",
+                    initialStatusName
                 );
                 return null;
             });
 
-        // Hydration (Completar el objeto de dominio)
         record.setBatteryManagementRecord(batteryRecord);
         record.setQuestionnaire(questionnaire);
         record.setStatus(initialStatus);
 
-        // Persistencia. Al guardar, JPA retorna la entidad con ID generado.
-        // Como 'record' ya tenía las relaciones completas, el resultado también las tendrá.
         return questionnaireManagementRecordCommandRepository.save(record);
     }
 
     /**
-     * Elimina un registro de gestión de cuestionario por su ID.
-     * También se encarga de eliminar en cascada las respuestas asociadas a este registro de gestión de cuestionario, si existen.
+     * Elimina una vinculación de cuestionario y sincroniza el estado general de la batería.
      *
-     * @param id identificador del registro a eliminar.
+     * @param id identificador del registro de gestión de cuestionario a eliminar
      */
     @Override
     public void deleteQuestionnaireManagementRecord(Long id) {
 
-        // Buscar el registro completo (necesitamos la batería asociada)
         QuestionnaireManagementRecord recordToDelete = questionnaireManagementRecordQueryRepository.findByIdWithAll(id)
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + id + " no existe."),
-                    "El cuestionario que intenta eliminar no se encuentra registrado en el sistema."
+                    ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
+                    "user.questionnaire_management.delete_not_found",
+                    id
                 );
                 return null;
             });
 
-        // Validar Estado (Regla de Negocio): Si está CERRADO, no se puede eliminar.
+        // Regla de Negocio: No eliminar cuestionarios finalizados
         if (QuestionnaireManagementRecordStatusEnum.CERRADO.getName().equals(recordToDelete.getStatus().getName())) {
             resultFormatter.throwBusinessRuleViolation(
-                ErrorCode.QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED.getCode(),
-                String.format(ErrorCode.QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED.getMessageKey(), recordToDelete.getStatus().getName()),
-                "No es posible eliminar el registro porque ya ha sido finalizado y se encuentra en estado '" + QuestionnaireManagementRecordStatusEnum.CERRADO.getName() + "'."
+                ErrorCode.QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED,
+                "user.questionnaire_management.delete_not_allowed",
+                recordToDelete.getStatus().getName(), id
             );
         }
 
         Long batteryId = recordToDelete.getBatteryManagementRecord().getId();
-        //  Eliminar respuestas asociadas (Cascada)
         questionnaireResponseCommandRepository.deleteByQuestionnaireManagementRecordId(id);
-        // Eliminar el registro de gestión de cuestionario
         questionnaireManagementRecordCommandRepository.deleteById(id);
 
-        // =================================================================================
-        // Recalcular y Actualizar Estado de la Batería
-        // =================================================================================
+        // Recalculo dinámico del estado de la batería contenedora
+        syncBatteryStatus(batteryId);
+    }
 
-        // Al borrar un cuestionario, la batería podría dejar de estar "Diligenciada".
+    /**
+     * Sincroniza el estado de la batería basado en el progreso de sus cuestionarios vinculados.
+     *
+     * @param batteryId identificador de la batería a sincronizar
+     */
+    private void syncBatteryStatus(Long batteryId) {
         String statusDiligenciado = QuestionnaireManagementRecordStatusEnum.DILIGENCIADO.getName();
 
-        // Obtenemos la lista de cuestionarios completados que QUEDAN
         List<String> completedAbbreviations = questionnaireManagementRecordQueryRepository
             .findAbbreviationsByBatteryIdAndStatusName(batteryId, statusDiligenciado);
 
-        // Evaluar Reglas de Negocio (Misma lógica que en create/update)
+        // Reglas de negocio para determinar si la batería está completa (EXT + EST + (ILA ó ILB))
         boolean hasExt = completedAbbreviations.contains(QuestionnaireEnum.EXT.getAbbreviation());
         boolean hasEst = completedAbbreviations.contains(QuestionnaireEnum.EST.getAbbreviation());
         boolean hasIla = completedAbbreviations.contains(QuestionnaireEnum.ILA.getAbbreviation());
@@ -156,35 +150,28 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
 
         boolean isBatteryComplete = hasExt && hasEst && (hasIla || hasIlb) && completedAbbreviations.size() == 3;
 
-        String targetBatteryStatusName;
-        if (isBatteryComplete) {
-            targetBatteryStatusName = BatteryManagementRecordStatusCode.COMPLETED.getDescription();
-        } else {
-            targetBatteryStatusName = BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription();
-        }
+        String targetBatteryStatusName = isBatteryComplete 
+            ? BatteryManagementRecordStatusCode.COMPLETED.getDescription() 
+            : BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription();
 
-        // Actualizar Batería
         BatteryManagementRecord batteryRecord = batteryManagementRecordQueryRepository.getBatteryManagementRecordById(batteryId)
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "Error de integridad: El registro de gestión de batería con ID " + batteryId + " no fue encontrado tras eliminar el cuestionario."),
-                    "Se eliminó el cuestionario, pero ocurrió un error al intentar sincronizar el estado del proceso. Por favor, contacte soporte."
+                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                    "user.questionnaire_management.sync_battery_failed",
+                    batteryId
                 );
                 return null;
             });
 
-        // Optimización: Solo actualizar si el estado cambia
         if (!batteryRecord.getStatus().getName().equals(targetBatteryStatusName)) {
             BatteryManagementRecordStatus newStatus = batteryManagementRecordStatusQueryRepository
                 .getStatusByName(targetBatteryStatusName)
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
-                        ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                            "El estado de batería '" + targetBatteryStatusName + "' no existe."),
-                        "Error al intentar actualizar el estado general de la evaluación. Por favor, intente más tarde."
+                        ErrorCode.BATTERY_STATUS_NOT_FOUND,
+                        "user.questionnaire_management.sync_status_not_found",
+                        targetBatteryStatusName
                     );
                     return null;
                 });

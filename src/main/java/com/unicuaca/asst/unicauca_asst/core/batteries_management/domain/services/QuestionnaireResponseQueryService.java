@@ -11,7 +11,11 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 /**
- * Implementación del caso de uso para consultas sobre respuestas de cuestionarios.
+ * Servicio de dominio para la consulta de respuestas de cuestionarios.
+ * 
+ * <p>Implementa los casos de uso para recuperar las respuestas registradas en un proceso
+ * de evaluación. Garantiza que el registro de gestión exista antes de intentar recuperar
+ * la información mediante i18n.</p>
  */
 @RequiredArgsConstructor
 public class QuestionnaireResponseQueryService implements QuestionnaireResponseQueryCUInputPort {
@@ -21,31 +25,31 @@ public class QuestionnaireResponseQueryService implements QuestionnaireResponseQ
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
-     * Obtiene la lista completa de respuestas asociadas a un registro de gestión de cuestionario.
+     * Recupera todas las respuestas asociadas a un registro de gestión de cuestionario.
      *
-     * @param recordId ID del registro de gestión de cuestionario.
-     * @return Lista de respuestas del dominio.
+     * @param recordId identificador del registro de gestión
+     * @return lista de respuestas encontradas (puede ser vacía)
      */
     @Override
     public List<QuestionnaireResponse> getResponsesByQuestionnaireManagementRecordId(Long recordId) {
 
-        // Validar que el registro de gestión exista
+        // Validación de existencia del registro antes de la consulta
         if (!questionnaireManagementRecordQueryRepository.existsById(recordId)) {
-            questionnaireManagementRecordQueryRepository.findById(recordId)
-                .orElseThrow(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de cuestionario con ID " + recordId + " no existe."),
-                        "No se pudo encontrar el proceso de evaluación actual para recuperar sus respuestas. Por favor, intente de nuevo."
-                    );
-                    return null;
-                });
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
+                "user.responses.query_not_found",
+                recordId
+            );
+            return null;
         }
-        // Obtener las respuestas asociadas al registro de gestión de cuestionario
+
+        // Recuperación de respuestas con relaciones hidratadas
         List<QuestionnaireResponse> responses = questionnaireResponseQueryRepository.findAllByRecordIdWithAllRelations(recordId);
+        
         if (responses.isEmpty()) {
             return List.of();
         }
+        
         return responses;
     }
 }

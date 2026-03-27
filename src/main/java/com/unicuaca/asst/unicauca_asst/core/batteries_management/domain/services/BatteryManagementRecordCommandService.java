@@ -12,6 +12,13 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Servicio de dominio para la gestión de comandos de registros de batería.
+ * 
+ * <p>Esta clase orquesta el ciclo de vida completo de un proceso de evaluación (Batería),
+ * incluyendo su apertura, transición de estados, eliminación controlada y cierre definitivo.
+ * Garantiza la integridad referencial y la sincronización de estados con la persona evaluada.</p>
+ */
 @RequiredArgsConstructor
 public class BatteryManagementRecordCommandService implements BatteryManagementRecordCommandCUInputPort {
 
@@ -27,8 +34,8 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
     /**
      * Crea un nuevo registro de gestión de baterías para la persona evaluada indicada.
      *
-     * @param personEvaluatedId ID de la persona evaluada para la cual se crea el registro.
-     * @return El registro de gestión de baterías creado.
+     * @param personEvaluatedId identificador único de la persona evaluada
+     * @return el nuevo registro de batería persistido
      */
     @Override
     public BatteryManagementRecord createBatteryManagementRecord(Long personEvaluatedId) {
@@ -40,71 +47,68 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
             .personEvaluated(null)
             .build();
 
-        // Se busca el estado "Creado" para asignarlo al registro de gestión de baterías
-        BatteryManagementRecordStatus batteryManagementRecordStatus = batteryManagementRecordQueryRepository
+        // Resolución del estado inicial 'Creado'
+        BatteryManagementRecordStatus initialStatus = batteryManagementRecordQueryRepository
             .getBatteryManagementRecordStatudByName(BatteryManagementRecordStatusCode.CREATED.getDescription())
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + BatteryManagementRecordStatusCode.CREATED.getDescription() + "' no fue encontrado."),
-                    "No fue posible iniciar el proceso de evaluación debido a un error de configuración del sistema. Por favor, contacte soporte."
+                    ErrorCode.BATTERY_STATUS_NOT_FOUND,
+                    "user.battery.config_error",
+                    BatteryManagementRecordStatusCode.CREATED.getDescription()
                 );
                 return null;
             });
-        record.setStatus(batteryManagementRecordStatus);
+        record.setStatus(initialStatus);
 
-        // Se busca la persona evaluada por su ID se actualiza su estado a "Con registro" y se asigna al registro de gestión de baterías
-        PersonEvaluated personEvaluated = null;
+        // Validación y vinculación de la persona evaluada
         if(personEvaluatedQueryRepository.existsById(personEvaluatedId)) {
-            personEvaluated = personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId)
+            PersonEvaluated personEvaluated = personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId)
                 .orElseGet(() -> {
                     this.resultFormatterOutputPort.throwEntityNotFound(
-                        ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " no fue encontrada"),
-                        "No se pudo encontrar el registro de la persona seleccionada para iniciar el proceso de evaluación."
+                        ErrorCode.PERSON_NOT_FOUND,
+                        "user.battery.person_not_found",
+                        personEvaluatedId
                     );
                     return null;
                 });
-            StatusPersonEvaluated statusPersonEvaluated = personEvaluatedQueryRepository
+
+            // Actualización de estado de la persona para reflejar vinculación a proceso
+            StatusPersonEvaluated withRecordStatus = personEvaluatedQueryRepository
                 .getStatusPersonEvaluatedByName(StatusPersonEvaluatedEnum.WITH_RECORD.getDescription())
                 .orElseGet(() -> {
                     this.resultFormatterOutputPort.throwEntityNotFound(
-                        ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                        String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + StatusPersonEvaluatedEnum.WITH_RECORD.getDescription() + "' no fue encontrado."),
-                        "Ocurrió un error al intentar vincular la persona al nuevo proceso. Por favor, intente más tarde."
+                        ErrorCode.PERSON_STATUS_NOT_FOUND,
+                        "user.battery.sync_status_not_found",
+                        StatusPersonEvaluatedEnum.WITH_RECORD.getDescription()
                     );
                     return null;
                 });
 
-            if(personEvaluated != null) {
-                personEvaluated.setStatus(statusPersonEvaluated);
-                String identificationNumber = personEvaluated.getIdentificationNumber();
-                personEvaluated = personEvaluatedCommandRepository.updatePersonEvaluated(personEvaluated)
-                    .orElseGet(() -> {
-                        this.resultFormatterOutputPort.throwEntityCreationFailed(
-                            ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
-                            String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "La persona con ID " + identificationNumber + " no se actualizó correctamente."),
-                            "No fue posible actualizar el estado de la persona evaluada. El proceso no pudo iniciarse."
-                        );
-                        return null;
-                    });
-            }
+            personEvaluated.setStatus(withRecordStatus);
+            personEvaluated = personEvaluatedCommandRepository.updatePersonEvaluated(personEvaluated)
+                .orElseGet(() -> {
+                    this.resultFormatterOutputPort.throwEntityCreationFailed(
+                        ErrorCode.ENTITY_UPDATE_ERROR,
+                        "user.battery.status_update_failed",
+                        personEvaluatedId
+                    );
+                    return null;
+                });
             record.setPersonEvaluated(personEvaluated);
-        }
-        else {
+        } else {
             this.resultFormatterOutputPort.throwEntityNotFound(
-                ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " no fue encontrada"),
-                "La persona evaluada seleccionada no existe en el sistema."
+                ErrorCode.PERSON_NOT_FOUND,
+                "user.person.selected_not_exists",
+                personEvaluatedId
             );
         }
 
-        // Verifica si la persona evaluada ya tiene un registro de gestión de baterías
+        // Regla de Negocio: No permitir múltiples procesos activos simultáneos
         if (batteryManagementRecordQueryRepository.existsByPersonEvaluatedId(personEvaluatedId)) {
             this.resultFormatterOutputPort.throwEntityAlreadyExists(
-                ErrorCode.ENTITY_ALREADY_EXISTS.getCode(),
-                String.format(ErrorCode.ENTITY_ALREADY_EXISTS.getMessageKey(), "La persona evaluada con ID " + personEvaluatedId + " ya tiene un registro de gestión de baterías."),
-                "No se puede iniciar un nuevo proceso porque la persona ya tiene un registro de gestión de baterías activo."
+                ErrorCode.BATTERY_RECORD_ALREADY_EXISTS,
+                "user.battery.already_exists",
+                personEvaluatedId
             );
         }
 
@@ -112,150 +116,156 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
         return batteryManagementRecordCommandRepository.saveBatteryManagementRecord(record)
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityCreationFailed(
-                    ErrorCode.ENTITY_CREATION_ERROR.getCode(),
-                    String.format(ErrorCode.ENTITY_CREATION_ERROR.getMessageKey(), "No fue posible crear el registro de gestión de baterías."),
-                    "Ha ocurrido un problema al intentar generar el nuevo registro de batería. Por favor, inténtelo de nuevo."
+                    ErrorCode.ENTITY_CREATION_ERROR,
+                    "user.battery.creation_failed",
+                    personEvaluatedId
                 );
                 return null;
             });
     }
 
     /**
-     * Elimina un registro de gestión de baterías por su ID.
+     * Elimina un registro de gestión de batería siempre que el proceso no haya avanzado.
      *
-     * @param id ID del registro de gestión de baterías a eliminar.
+     * @param id identificador del registro de batería a eliminar
      */
     @Override
     public void deleteBatteryManagementRecord(Long id) {
 
-        BatteryManagementRecord batteryManagementRecord = this.batteryManagementRecordQueryRepository
+        BatteryManagementRecord batteryRecord = this.batteryManagementRecordQueryRepository
             .getBatteryManagementRecordById(id)
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de baterías con ID " + id + " no fue encontrado."),
-                    "El registro de gestión de baterías que intenta eliminar no existe o ya ha sido removido."
+                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                    "user.battery.delete_not_found",
+                    id
                 );
                 return null;
             });
 
-        BatteryManagementRecordStatus status = batteryManagementRecord.getStatus();
+        BatteryManagementRecordStatus status = batteryRecord.getStatus();
 
+        // Validación de estado habilitado para eliminación
         if (status.getName().equals(BatteryManagementRecordStatusCode.CREATED.getDescription())) {
             batteryManagementRecordCommandRepository.deleteBatteryManagementRecordById(id);
 
-            // Se obtiene la persona evaluada asociada al registro eliminado
-            PersonEvaluated personEvaluated = batteryManagementRecord.getPersonEvaluated();
-
+            PersonEvaluated personEvaluated = batteryRecord.getPersonEvaluated();
             if (personEvaluated != null) {
-                // Se consulta si la persona tiene otros registros en estado 'Creado', 'En diligenciamiento' o 'Diligenciado'
-                boolean hasOtherActiveRecords = batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
-                    personEvaluated.getId(),
-                    List.of(
-                        BatteryManagementRecordStatusCode.CREATED.getDescription(),
-                        BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription(),
-                        BatteryManagementRecordStatusCode.COMPLETED.getDescription()
-                    )
-                );
-
-                String targetStatusName = hasOtherActiveRecords
-                    ? StatusPersonEvaluatedEnum.WITH_RECORD.getDescription()
-                    : StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription();
-
-                // Si el estado actual es diferente al objetivo, se actualiza
-                if (!personEvaluated.getStatus().getName().equals(targetStatusName)) {
-                    StatusPersonEvaluated newStatus = personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(targetStatusName)
-                        .orElseGet(() -> {
-                            this.resultFormatterOutputPort.throwEntityNotFound(
-                                ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + targetStatusName + "' no fue encontrado."),
-                                "El registro fue eliminado, pero ocurrió un error al intentar actualizar el estado de la persona evaluada."
-                            );
-                            return null;
-                        });
-
-                    personEvaluated.setStatus(newStatus);
-                    personEvaluatedCommandRepository.updatePersonEvaluated(personEvaluated);
-                }
+                syncPersonStatusAfterDelete(personEvaluated);
             }
         } else {
             this.resultFormatterOutputPort.throwBusinessRuleViolation(
-                ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD.getCode(),
-                String.format(ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), status.getName()),
-                "No es posible eliminar este registro porque ya se encuentra en una etapa avanzada del proceso (solo se pueden eliminar registros en estado '" + BatteryManagementRecordStatusCode.CREATED.getDescription() + "')."
+                ErrorCode.DELETE_BATTERY_MANAGEMENT_RECORD,
+                "user.battery.delete_not_allowed",
+                status.getName(), id
             );
         }
     }
 
     /**
-     * Cierra un registro de gestión de baterías por su ID.
+     * Finaliza y cierra un registro de batería de forma definitiva.
      *
-     * @param recordId ID del registro de gestión de baterías a cerrar.
-     * @return El registro de gestión de baterías cerrado.
+     * @param recordId identificador del registro de batería
+     * @return el registro actualizado en estado final 'Cerrado'
      */
     @Override
     public BatteryManagementRecord closeBatteryManagementRecord(Long recordId) {
-        // Obtener el registro de gestión de baterías
         BatteryManagementRecord record = batteryManagementRecordQueryRepository.getBatteryManagementRecordById(recordId)
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El registro de gestión de baterías con ID " + recordId + " no fue encontrado."),
-                    "No se pudo encontrar el registro de gestión de baterías solicitado para su cierre."
+                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                    "user.battery.close_not_found",
+                    recordId
                 );
                 return null;
             });
 
-        // 2. Verificar que el estado actual sea 'Diligenciado'
+        // Verificación de integridad del proceso antes del cierre
         if (!record.getStatus().getName().equals(BatteryManagementRecordStatusCode.COMPLETED.getDescription())) {
             this.resultFormatterOutputPort.throwBusinessRuleViolation(
-                ErrorCode.CLOSE_BATTERY_MANAGEMENT_RECORD.getCode(),
-                String.format(ErrorCode.CLOSE_BATTERY_MANAGEMENT_RECORD.getMessageKey(), "'" + record.getStatus().getName() + "'"),
-                "Para finalizar el proceso, la batería debe estar en estado '" + BatteryManagementRecordStatusCode.COMPLETED.getDescription() + "'. Verifique que todos los cuestionarios hayan sido completados."
+                ErrorCode.CLOSE_BATTERY_MANAGEMENT_RECORD,
+                "user.battery.close_not_allowed",
+                record.getStatus().getName(), recordId
             );
         }
 
-        // Obtener el estado 'Cerrado' para cuestionarios
-        QuestionnaireManagementRecordStatus closedQuestionnaireStatus = questionnaireManagementRecordStatusQueryRepository
+        // Cierre en cascada de los cuestionarios asociados
+        QuestionnaireManagementRecordStatus closedStatus = questionnaireManagementRecordStatusQueryRepository
             .getQuestionnaireManagementRecordStatusByName(QuestionnaireManagementRecordStatusEnum.CERRADO.getName())
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + QuestionnaireManagementRecordStatusEnum.CERRADO.getName() + "' para registros de cuestionarios no fue encontrado."),
-                    "No fue posible completar el cierre debido a un error en la configuración de estados. Por favor, contacte soporte."
+                    ErrorCode.QUESTIONNAIRE_MGMT_STATUS_NOT_FOUND,
+                    "user.battery.close_config_error",
+                    QuestionnaireManagementRecordStatusEnum.CERRADO.getName()
                 );
                 return null;
             });
 
-        // Actualizar todos los registros de cuestionarios asociados a 'Cerrado'
         List<QuestionnaireManagementRecord> questionnaires = questionnaireManagementRecordQueryRepository.findAllByBatteryManagementRecordId(recordId);
         questionnaires.forEach(q -> {
-            q.setStatus(closedQuestionnaireStatus);
+            q.setStatus(closedStatus);
             questionnaireManagementRecordCommandRepository.save(q);
         });
 
-        // Obtener el estado 'Cerrado' para el registro de gestión de batería
+        // Actualización final del registro de batería
         BatteryManagementRecordStatus closedBatteryStatus = batteryManagementRecordQueryRepository
             .getBatteryManagementRecordStatudByName(BatteryManagementRecordStatusCode.CLOSED.getDescription())
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El estado '" + BatteryManagementRecordStatusCode.CLOSED.getDescription() + "' para registros de gestión de batería no fue encontrado."),
-                    "Error al intentar cambiar el estado de la batería a '" + BatteryManagementRecordStatusCode.CLOSED.getDescription() + "'. Por favor, intente de nuevo."
+                    ErrorCode.BATTERY_STATUS_NOT_FOUND,
+                    "user.battery.close_status_failed",
+                    BatteryManagementRecordStatusCode.CLOSED.getDescription()
                 );
                 return null;
             });
 
-        // Actualizar el estado del registro de batería a 'Cerrado'
         record.setStatus(closedBatteryStatus);
         return batteryManagementRecordCommandRepository.saveBatteryManagementRecord(record)
             .orElseGet(() -> {
                 this.resultFormatterOutputPort.throwEntityCreationFailed(
-                    ErrorCode.ENTITY_UPDATE_ERROR.getCode(),
-                    String.format(ErrorCode.ENTITY_UPDATE_ERROR.getMessageKey(), "No fue posible cerrar el registro de gestión de batería."),
-                    "Ha ocurrido un error al intentar finalizar el proceso de evaluación. Por favor, intente nuevamente."
+                    ErrorCode.ENTITY_UPDATE_ERROR,
+                    "user.battery.close_failed",
+                    recordId
                 );
                 return null;
             });
+    }
+
+    /**
+     * Coordina la actualización del estado de la persona evaluada tras la remoción de un proceso.
+     * 
+     * <p>Analiza si la persona cuenta con otros registros activos para decidir si el estado
+     * debe mantenerse en 'Con Registro' o restaurarse a 'Sin Registro'.</p>
+     *
+     * @param personEvaluated la persona evaluada a sincronizar
+     */
+    private void syncPersonStatusAfterDelete(PersonEvaluated personEvaluated) {
+        boolean hasOtherActiveRecords = batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+            personEvaluated.getId(),
+            List.of(
+                BatteryManagementRecordStatusCode.CREATED.getDescription(),
+                BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription(),
+                BatteryManagementRecordStatusCode.COMPLETED.getDescription()
+            )
+        );
+
+        String targetStatusName = hasOtherActiveRecords
+            ? StatusPersonEvaluatedEnum.WITH_RECORD.getDescription()
+            : StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription();
+
+        if (!personEvaluated.getStatus().getName().equals(targetStatusName)) {
+            StatusPersonEvaluated newStatus = personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(targetStatusName)
+                .orElseGet(() -> {
+                    this.resultFormatterOutputPort.throwEntityNotFound(
+                        ErrorCode.PERSON_STATUS_NOT_FOUND,
+                        "user.battery.sync_delete_error",
+                        targetStatusName
+                    );
+                    return null;
+                });
+
+            personEvaluated.setStatus(newStatus);
+            personEvaluatedCommandRepository.updatePersonEvaluated(personEvaluated);
+        }
     }
 }

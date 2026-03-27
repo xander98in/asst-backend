@@ -3,88 +3,99 @@ package com.unicuaca.asst.unicauca_asst.common.exceptions.structure;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Catálogo de códigos de error de la aplicación.
+ * Cada constante define un código único para trazabilidad y una clave de mensaje
+ * técnica para ser resuelta mediante internacionalización (i18n).
+ */
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
 
-    /**
-     * Errores genéricos del sistema.
-     */
-    GENERIC_ERROR("ASST-GEN-0001", "Error interno del servidor."),
-    METHOD_NOT_ALLOWED("ASST-GEN-0002", "Método HTTP no permitido."),
-    UNSUPPORTED_MEDIA_TYPE("ASST-GEN-0003", "Tipo de contenido no soportado."),
-    NOT_ACCEPTABLE("ASST-GEN-0004", "Formato de respuesta no aceptable."),
-    /**
-     * Errores relacionados con la validación de solicitudes.
-     */
-    VALIDATION_ERROR("ASST-VAL-0000", "Error genérico de validación."),
-    BAD_REQUEST("ASST-VAL-0001", "Solicitud inválida."),
-    FIELD_VALIDATION("ASST-VAL-0002", "Hay errores de validación en los campos."),
-    /**
-     * Errores de autenticación y autorización.
-     */
-    AUTHENTICATION_ERROR("ASST-SEC-0000", "Error genérico de autenticación."),
-    UNAUTHORIZED("ASST-SEC-0001", "No autenticado."),
-    FORBIDDEN("ASST-SEC-0002", "Acceso denegado."),
-    INVALID_CREDENTIALS("ASST-SEC-0003", "Credenciales inválidas."),
-    USER_DISABLED("ASST-SEC-0004", "El usuario no ha sido verificado."),
-    /**
-     * Errores de infraestructura de base de datos y persistencia.
-     * Solo para errores que el desarrollador no controla (BD caída, timeout, SQL inválido).
-     * Estos errores se capturan en el RestApiExceptionHandler a partir de excepciones
-     * lanzadas por Spring/Hibernate, no desde la lógica de dominio.
-     */
-    DATA_ERROR("ASST-DAT-0000", "Error de conflicto en datos."),
-    DB_TIMEOUT("ASST-DAT-0001", "Tiempo de espera de base de datos."),
-    DB_UNAVAILABLE("ASST-DAT-0002", "Servicio de datos no disponible."),
-    DATA_ACCESS("ASST-DAT-0003", "Error accediendo a la base de datos."),
-    SQL_GRAMMAR("ASST-DAT-0004", "Error de sintaxis SQL."),
-    TRANSACTION_ERROR("ASST-DAT-0005", "Error de transacción."),
-    /**
-     * Errores relacionados con catálogos.
-     */
-    CATALOG_ERROR("ASST-CAT-0000", "Error genérico de catálogo."),
-    CATALOG_EMPTY("ASST-CAT-0001", "El catálogo de %s está vacio. Debe existir al menos un registro."),
-    CATALOG_UNAVAILABLE("ASST-CAT-0002", "Catálogo no disponible temporalmente."),
-    /**
-     * Errores de reglas de negocio — operaciones genéricas de dominio.
-     * Se usan como plantilla reutilizable para cualquier entidad del sistema.
-     * El contexto específico (qué entidad, qué ocurrió) se proporciona mediante
-     * el message (técnico) y el userMessage (usuario final) de la excepción.
-     */
-    BUSINESS_RULE_VIOLATION("ASST-BUS-0001", "Regla de negocio violada"),
-    ENTITY_NOT_FOUND("ASST-BUS-0002", "Entidad no encontrada. %s"),
-    ENTITY_ALREADY_EXISTS("ASST-BUS-0003", "La entidad ya existe. %s"),
-    ENTITY_CREATION_ERROR("ASST-BUS-0004", "Error al crear la entidad. %s"),
-    ENTITY_UPDATE_ERROR("ASST-BUS-0005", "Error al actualizar la entidad. %s"),
-    /**
-     * Errores de reglas de negocio — específicos del dominio.
-     */
-    PERSON_WITH_BATTERY_RECORD("ASST-BUS-0006", "No se puede eliminar la persona evaluada, porque tiene registros de gestión de baterías asociados."),
-    DELETE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0007", "No se puede eliminar el registro de gestión de batería en estado %s."),
-    PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED("ASST-BUS-0008", "No es posible eliminar, porque el registro de gestión de batería ya tiene cuestionarios intralaborales (ILA/ILB) asociados."),
-    EMPTY_LIST_OF_RESPONSES("ASST-BUS-0009", "No se han proporcionado respuestas para procesar."),
-    DIFFERENT_RECORD_IDS_IN_RESPONSES("ASST-BUS-0010", "Se intentaron procesar respuestas pertenecientes a diferentes registros de gestión en un mismo lote."),
-    QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE("ASST-BUS-0011", "La pregunta con ID %d no pertenece al cuestionario del registro actual."),
-    QUESTION_ANSWERED_ALREADY("ASST-BUS-0012", "La pregunta con ID %d ya ha sido respondida para este registro."),
-    DUPLICATE_QUESTION_IN_BATCH("ASST-BUS-0013", "La lista contiene preguntas duplicadas. No se puede responder la misma pregunta dos veces o más en el mismo lote."),
-    RESPONSE_BELONGS_TO_OTHER_RECORD("ASST-BUS-0014", "La respuesta con ID %d no pertenece al registro de gestión de cuestionario ID %d."),
-    RESPONSE_QUESTION_MISMATCH("ASST-BUS-0015", "El ID de pregunta proporcionado no coincide con el almacenado en la respuesta ID: %d"),
-    QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED("ASST-BUS-0016", "No se puede eliminar el registro de gestión de cuestionario porque se encuentra en estado '%s'."),
-    CLOSE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0017", "No se puede cerrar el registro de gestión de batería en estado %s. Solo los registros en estado 'Diligenciado' pueden ser cerrados."),
-    /**
-     * Errores relacionados con mapeo y dependencias.
-     */
-    MAPPER_ERROR("ASST-0301", "Error de mapeo o dependencia no disponible");
+    /** Errores genéricos del sistema */
+    GENERIC_ERROR("ASST-GEN-0001", "tech.generic.error"),
+    METHOD_NOT_ALLOWED("ASST-GEN-0002", "tech.generic.method_not_allowed"),
+    UNSUPPORTED_MEDIA_TYPE("ASST-GEN-0003", "tech.generic.unsupported_media"),
+    NOT_ACCEPTABLE("ASST-GEN-0004", "tech.generic.not_acceptable"),
+    MAPPER_ERROR("ASST-0301", "tech.generic.mapper_error"),
 
-    /**
-     * Código único del error (para trazabilidad y estandarización).
-     */
+    /** Errores relacionados con la validación de solicitudes */
+    VALIDATION_ERROR("ASST-VAL-0000", "tech.validation.error"),
+    BAD_REQUEST("ASST-VAL-0001", "tech.validation.bad_request"),
+    FIELD_VALIDATION("ASST-VAL-0002", "tech.validation.fields"),
+
+    /** Errores de autenticación y autorización */
+    AUTHENTICATION_ERROR("ASST-SEC-0000", "tech.auth.error"),
+    UNAUTHORIZED("ASST-SEC-0001", "tech.unauthorized"),
+    FORBIDDEN("ASST-SEC-0002", "tech.forbidden"),
+    INVALID_CREDENTIALS("ASST-SEC-0003", "tech.invalid_credentials"),
+    USER_DISABLED("ASST-SEC-0004", "tech.user_disabled"),
+
+    /** Errores de infraestructura de base de datos y persistencia */
+    DATA_ERROR("ASST-DAT-0000", "tech.data.access_error"),
+    DB_TIMEOUT("ASST-DAT-0001", "tech.data.timeout"),
+    DB_UNAVAILABLE("ASST-DAT-0002", "tech.data.db_unavailable"),
+    DATA_ACCESS("ASST-DAT-0003", "tech.data.access_error"),
+    SQL_GRAMMAR("ASST-DAT-0004", "tech.data.sql_grammar"),
+    TRANSACTION_ERROR("ASST-DAT-0005", "tech.data.transaction_error"),
+
+    /** Errores relacionados con catálogos */
+    CATALOG_ERROR("ASST-CAT-0000", "tech.catalog.error"),
+    CATALOG_EMPTY("ASST-CAT-0001", "tech.catalog.empty"),
+
+    /** Dominio Genérico - Operaciones de CRUD básicas */
+    BUSINESS_RULE_VIOLATION("ASST-BUS-0001", "tech.business_rule_violation"),
+    ENTITY_NOT_FOUND("ASST-BUS-0002", "tech.entity.not_found"),
+    ENTITY_ALREADY_EXISTS("ASST-BUS-0003", "tech.entity.already_exists"),
+    ENTITY_CREATION_ERROR("ASST-BUS-0004", "tech.entity.creation_error"),
+    ENTITY_UPDATE_ERROR("ASST-BUS-0005", "tech.entity.update_error"),
+
+    /** Dominio Específico (Baterías) - Lógica de negocio compleja */
+    PERSON_WITH_BATTERY_RECORD("ASST-BUS-0006", "tech.person.has_records"),
+    DELETE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0007", "tech.battery.delete_not_allowed"),
+    PERSON_EVALUATED_DETAILS_DELETE_NOT_ALLOWED("ASST-BUS-0008", "tech.details.delete_not_allowed"),
+    EMPTY_LIST_OF_RESPONSES("ASST-BUS-0009", "tech.responses.empty_list"),
+    DIFFERENT_RECORD_IDS_IN_RESPONSES("ASST-BUS-0010", "tech.responses.inconsistent_batch"),
+    QUESTION_DOES_NOT_BELONG_TO_QUESTIONNAIRE("ASST-BUS-0011", "tech.questionnaire.not_found"),
+    QUESTION_ANSWERED_ALREADY("ASST-BUS-0012", "tech.responses.already_answered"),
+    DUPLICATE_QUESTION_IN_BATCH("ASST-BUS-0013", "tech.responses.duplicate_questions"),
+    RESPONSE_BELONGS_TO_OTHER_RECORD("ASST-BUS-0014", "tech.responses.security_error"),
+    RESPONSE_QUESTION_MISMATCH("ASST-BUS-0015", "tech.responses.data_mismatch"),
+    QUESTIONNAIRE_RECORD_DELETE_NOT_ALLOWED("ASST-BUS-0016", "tech.questionnaire.delete_not_allowed"),
+    CLOSE_BATTERY_MANAGEMENT_RECORD("ASST-BUS-0017", "tech.battery.close_not_allowed"),
+
+    /** Dominio Específico - Persona Evaluada (No Encontrado / Ya Existe) */
+    PERSON_NOT_FOUND("ASST-BUS-0018", "tech.person.not_found"),
+    PERSON_ID_TYPE_NOT_FOUND("ASST-BUS-0019", "tech.person.id_type_not_found"),
+    PERSON_STATUS_NOT_FOUND("ASST-BUS-0020", "tech.person.status_not_found"),
+    PERSON_IDENTIFICATION_EXISTS("ASST-BUS-0031", "tech.person.identification_exists"),
+    PERSON_EMAIL_EXISTS("ASST-BUS-0032", "tech.person.email_exists"),
+
+    /** Dominio Específico - Gestión de Baterías (No Encontrado / Ya Existe) */
+    BATTERY_RECORD_NOT_FOUND("ASST-BUS-0021", "tech.battery.record_not_found"),
+    BATTERY_STATUS_NOT_FOUND("ASST-BUS-0022", "tech.battery.status_not_found"),
+    BATTERY_RECORD_ALREADY_EXISTS("ASST-BUS-0033", "tech.battery.record_already_exists"),
+
+    /** Dominio Específico - Cuestionarios (No Encontrado / Ya Existe) */
+    QUESTIONNAIRE_NOT_FOUND_BY_REF("ASST-BUS-0023", "tech.questionnaire.not_found_by_ref"),
+    QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND("ASST-BUS-0024", "tech.questionnaire.record_not_found"),
+    QUESTIONNAIRE_MGMT_STATUS_NOT_FOUND("ASST-BUS-0025", "tech.questionnaire.status_not_found"),
+    QUESTIONNAIRE_ALREADY_ASSIGNED("ASST-BUS-0034", "tech.questionnaire.already_assigned"),
+
+    /** Dominio Específico - Preguntas y Respuestas (No Encontrado) */
+    QUESTION_NOT_FOUND("ASST-BUS-0026", "tech.question.not_found"),
+    RESPONSE_NOT_FOUND("ASST-BUS-0028", "tech.response.not_found"),
+    RESPONSE_OPTION_NOT_FOUND("ASST-BUS-0029", "tech.response.option_not_found"),
+
+    /** Dominio Específico - Detalles Sociodemográficos (No Encontrado / Ya Existe) */
+    PERSON_DETAILS_NOT_FOUND("ASST-BUS-0027", "tech.details.not_found"),
+    PERSON_DETAILS_ALREADY_EXISTS("ASST-BUS-0035", "tech.details.already_exists"),
+
+    /** Dominio Específico - Catálogos (No Encontrado) */
+    CATALOG_RESOURCE_NOT_FOUND("ASST-BUS-0030", "tech.catalog.resource_not_found");
+
+    /** Código único de error para trazabilidad. */
     private final String code;
-
-    /**
-     * Mensaje clave o descripción estándar del error.
-     * Puede ser traducido o utilizado como plantilla de respuesta.
-     */
+    /** Clave de mensaje para resolución i18n (tech.*). */
     private final String messageKey;
 }

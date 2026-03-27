@@ -14,8 +14,11 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import lombok.RequiredArgsConstructor;
 
 /**
- * Servicio de consulta para personas evaluadas.
- * Implementa las operaciones definidas en el puerto de entrada {@link PersonEvaluatedQueryCUInputPort}.
+ * Servicio de dominio para la consulta de información de personas evaluadas.
+ * 
+ * <p>Proporciona capacidades de búsqueda por identificador único, identidad (tipo y número) 
+ * y listados paginados con soporte para términos de búsqueda general. Implementa i18n
+ * para garantizar respuestas consistentes y profesionales.</p>
  */
 @RequiredArgsConstructor
 public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputPort {
@@ -25,42 +28,41 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
-     * Consulta una persona por su ID.
+     * Consulta una persona evaluada por su identificador único.
      *
-     * @param id el identificador de la persona
-     * @return una instancia del modelo de dominio {@link PersonEvaluated}
+     * @param id identificador único del registro
+     * @return la persona evaluada encontrada
      */
     @Override
     public PersonEvaluated getPersonEvaluatedById(Long id) {
         return personEvaluatedQueryRepository.getPersonEvaluatedById(id)
             .orElseGet(() -> {
                 this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "La persona con ID " + id + " no fue encontrada."),
-                    "No se pudo encontrar la información de la persona evaluada con el identificador proporcionado."
+                    ErrorCode.PERSON_NOT_FOUND,
+                    "user.person.id_not_found",
+                    id
                 );
-                return null; // nunca se ejecuta, pero requerido por el compilador
+                return null;
             });
     }
 
     /**
-     * Consulta una lista paginada de personas evaluadas por su identidad.
+     * Busca personas evaluadas utilizando su documento de identidad.
      *
-     * @param abbreviation       la abreviatura del tipo de identificación
-     * @param identificationNumber el número de identificación
-     * @param page               el número de página
-     * @param size               el tamaño de la página
-     * @return una página de información de personas evaluadas
+     * @param abbreviation abreviatura del tipo de documento (CC, TI, etc.)
+     * @param identificationNumber número de documento
+     * @param page número de página para la paginación
+     * @param size tamaño de la página
+     * @return página de resultados con las personas que coinciden con el criterio
      */
     @Override
     public Page<PersonEvaluated> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size) {
-
         IdentificationType identificationType = catalogQueryRepository.getIdTypeByAbbreviation(abbreviation)
             .orElseGet(() -> {
                 this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "El tipo de identificación con abreviatura " + abbreviation + " no fue encontrado."),
-                    "El tipo de identificación seleccionado no es válido o no se encuentra registrado en el sistema."
+                    ErrorCode.PERSON_ID_TYPE_NOT_FOUND,
+                    "user.person.id_type_invalid",
+                    abbreviation
                 );
                 return null;
             });
@@ -76,8 +78,7 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
      */
     @Override
     public Page<PersonEvaluated> listPaginatedPersons(Integer page, Integer size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        return personEvaluatedQueryRepository.findAllPaged(page, size, sort);
+        return personEvaluatedQueryRepository.findAllPaged(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
     /**
@@ -91,17 +92,15 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
     @Override
     public Page<PersonEvaluated> listPaginatedWithSearchTerm(Integer page, Integer size, String searchTerm) {
         String normalizedTerm = normalizeTerm(searchTerm);
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        return personEvaluatedQueryRepository.findAllWithSearchTermPaged(normalizedTerm, page, size, sort);
+        return personEvaluatedQueryRepository.findAllWithSearchTermPaged(normalizedTerm, page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
     /**
-     * Normaliza el término de búsqueda: trim + convierte vacío a null.
+     * Limpia y normaliza el término de búsqueda para evitar consultas inconsistentes.
      */
     private String normalizeTerm(String term) {
         if (term == null) return null;
         String normalized = term.trim();
         return normalized.isBlank() ? null : normalized;
     }
-
 }

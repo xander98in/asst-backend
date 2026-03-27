@@ -10,11 +10,10 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 /**
- * Implementación de los casos de uso de consulta de cuestionarios.
- *
- * Orquesta la lógica de negocio de solo lectura apoyándose en el puerto de salida
- * {@link QuestionnaireQueryRepository} y estandariza errores a través de
- * {@link ResultFormatterOutputPort}.
+ * Servicio de dominio para la consulta de catálogos de cuestionarios.
+ * 
+ * <p>Esta clase orquesta la lógica de negocio de solo lectura para los cuestionarios disponibles
+ * en el sistema. Utiliza i18n para reportar fallos de búsqueda mediante abreviaturas semánticas.</p>
  */
 @RequiredArgsConstructor
 public class QuestionnaireQueryService implements QuestionnaireQueryCUInputPort {
@@ -23,9 +22,9 @@ public class QuestionnaireQueryService implements QuestionnaireQueryCUInputPort 
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
-     * Recupera todos los cuestionarios disponibles en el sistema.
+     * Recupera todos los cuestionarios registrados en el sistema.
      *
-     * @return una lista con todos los cuestionarios registrados.
+     * @return lista completa de cuestionarios
      */
     @Override
     public List<Questionnaire> getAllQuestionnaires() {
@@ -33,24 +32,21 @@ public class QuestionnaireQueryService implements QuestionnaireQueryCUInputPort 
     }
 
     /**
-     * Obtiene un cuestionario a partir de su abreviatura exacta.
+     * Obtiene un cuestionario específico a partir de su abreviatura única.
      *
-     * @param abbreviation abreviatura del cuestionario (por ejemplo, "ILA", "ILB", "EXT", "EST").
-     * @return el cuestionario correspondiente a la abreviatura indicada.
+     * @param abbreviation abreviatura del cuestionario (ej: 'ILA', 'EXT')
+     * @return el cuestionario encontrado
      */
     @Override
     public Questionnaire getQuestionnaireByAbbreviation(String abbreviation) {
         return questionnaireQueryRepository.getByAbbreviation(abbreviation)
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(
-                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "El cuestionario con abreviatura '" + abbreviation + "' no fue encontrado."
-                    ),
-                    "No se pudo encontrar la información del cuestionario solicitado. Por favor, verifique la abreviatura e intente de nuevo."
+                    ErrorCode.QUESTIONNAIRE_NOT_FOUND_BY_REF,
+                    "user.questionnaire.not_found",
+                    abbreviation
                 );
-                return null; // requerido por el compilador; nunca se ejecuta
+                return null;
             });
     }
 }

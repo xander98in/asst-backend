@@ -7,6 +7,12 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.in
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireManagementRecordQueryRepository;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Servicio de dominio para la consulta de registros de gestión de cuestionarios.
+ * 
+ * <p>Proporciona acceso a la información de vinculación entre baterías y cuestionarios.
+ * Implementa i18n para reportar fallos de búsqueda de forma detallada y profesional.</p>
+ */
 @RequiredArgsConstructor
 public class QuestionnaireManagementRecordQueryService implements QuestionnaireManagementRecordQueryCUInputPort {
 
@@ -14,12 +20,11 @@ public class QuestionnaireManagementRecordQueryService implements QuestionnaireM
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
-     * Obtiene un registro de gestión de cuestionario por el ID del registro de gestión de batería
-     * y la abreviatura del cuestionario.
+     * Obtiene un registro de gestión de cuestionario específico dentro de una batería.
      *
-     * @param batteryManagementRecordId ID del registro de gestión de batería.
-     * @param questionnaireAbbreviation Abreviatura del cuestionario.
-     * @return El registro de gestión de cuestionario correspondiente.
+     * @param batteryManagementRecordId identificador del registro de gestión de batería (BMR)
+     * @param questionnaireAbbreviation abreviatura del cuestionario solicitado
+     * @return el registro de gestión de cuestionario encontrado
      */
     @Override
     public QuestionnaireManagementRecord getByBatteryRecordIdAndQuestionnaireAbbreviation(Long batteryManagementRecordId, String questionnaireAbbreviation) {
@@ -27,13 +32,9 @@ public class QuestionnaireManagementRecordQueryService implements QuestionnaireM
             .findByBatteryManagementRecordIdAndQuestionnaireAbbreviationWithAll(batteryManagementRecordId, questionnaireAbbreviation)
             .orElseGet(() -> {
                 resultFormatter.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(
-                        ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "No se encontró un registro de gestión de cuestionario para el recordId "
-                            + batteryManagementRecordId + " y el cuestionario " + questionnaireAbbreviation
-                    ),
-                    "No se pudo encontrar el acceso al cuestionario solicitado para este proceso de evaluación. Por favor, verifique la información."
+                    ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
+                    "user.questionnaire_management.query_not_found",
+                    questionnaireAbbreviation
                 );
                 return null;
             });

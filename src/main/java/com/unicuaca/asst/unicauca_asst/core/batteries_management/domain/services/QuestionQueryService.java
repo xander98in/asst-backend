@@ -7,16 +7,18 @@ import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Question;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.QuestionQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionQueryRepository;
-
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireQueryRepository;
+
 import lombok.RequiredArgsConstructor;
 
 /**
- * Implementación del caso de uso para operaciones de consulta (query)
- * sobre preguntas de cuestionarios.
+ * Servicio de dominio para la consulta de preguntas de cuestionarios.
  *
- * Encapsula la lógica de negocio de lectura utilizando el puerto de salida
- * {@link QuestionQueryRepository}.
+ * <p>Implementa la lógica de lectura para recuperar preguntas individuales o en lote,
+ * permitiendo filtrar por identificador, orden dentro del cuestionario o pertenencia
+ * a un cuestionario específico (por ID o abreviatura). Valida la existencia de las
+ * entidades referenciadas antes de ejecutar la consulta y centraliza la gestión de
+ * errores mediante i18n para mensajes técnicos y de usuario.</p>
  */
 @RequiredArgsConstructor
 public class QuestionQueryService implements QuestionQueryCUInputPort {
@@ -26,51 +28,48 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
-     * Consulta una pregunta por su identificador único,
-     * sin requerir explícitamente la carga del cuestionario.
+     * Obtiene una pregunta por su identificador único.
      *
-     * @param id identificador de la pregunta.
-     * @return la pregunta encontrada.
+     * @param id identificador de la pregunta
+     * @return la pregunta encontrada
      */
     @Override
     public Question getQuestionById(Long id) {
         return questionQueryRepository.getQuestionById(id)
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
-                            ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                            String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                                "La pregunta con ID " + id + " no fue encontrada."),
-                            "No se pudo encontrar la información de la pregunta solicitada."
-                    );
-                    return null; // requerido por el compilador
-                });
-    }
-
-    /**
-     * Consulta una pregunta por su identificador único,
-     * cargando explícitamente la información del cuestionario asociado.
-     *
-     * @param id identificador de la pregunta.
-     * @return la pregunta encontrada (incluyendo su cuestionario).
-     */
-    @Override
-    public Question getQuestionByIdWithQuestionnaire(Long id) {
-        return questionQueryRepository.getQuestionByIdWithQuestionnaire(id)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                            ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                            String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                                "La pregunta con ID " + id + " no fue encontrada."),
-                            "No se pudo encontrar la información detallada de la pregunta solicitada."
+                        ErrorCode.QUESTION_NOT_FOUND,
+                        "user.question.not_found",
+                        id
                     );
                     return null;
                 });
     }
 
     /**
-     * Obtiene todas las preguntas, sin requerir explícitamente la carga del cuestionario.
+     * Obtiene una pregunta por su identificador, incluyendo la información
+     * del cuestionario al que pertenece.
      *
-     * @return lista de preguntas (posiblemente vacía si no hay resultados).
+     * @param id identificador de la pregunta
+     * @return la pregunta encontrada con su cuestionario cargado
+     */
+    @Override
+    public Question getQuestionByIdWithQuestionnaire(Long id) {
+        return questionQueryRepository.getQuestionByIdWithQuestionnaire(id)
+                .orElseGet(() -> {
+                    resultFormatter.throwEntityNotFound(
+                        ErrorCode.QUESTION_NOT_FOUND,
+                        "user.question.query_details_not_found",
+                        id
+                    );
+                    return null;
+                });
+    }
+
+    /**
+     * Obtiene todas las preguntas registradas en el sistema.
+     *
+     * @return lista de preguntas (posiblemente vacía si no hay registros)
      */
     @Override
     public List<Question> getAllQuestions() {
@@ -78,10 +77,10 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
     }
 
     /**
-     * Obtiene todas las preguntas, cargando explícitamente la información
+     * Obtiene todas las preguntas registradas, incluyendo la información
      * del cuestionario asociado a cada una.
      *
-     * @return lista de preguntas con sus cuestionarios (posiblemente vacía si no hay resultados).
+     * @return lista de preguntas con sus cuestionarios cargados (posiblemente vacía)
      */
     @Override
     public List<Question> getAllQuestionsWithQuestionnaire() {
@@ -89,43 +88,43 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
     }
 
     /**
-     * Obtiene una pregunta por su orden y el identificador del cuestionario,
-     * cargando explícitamente la información del cuestionario asociado.
+     * Obtiene una pregunta por su posición ordinal dentro de un cuestionario específico,
+     * incluyendo la información del cuestionario asociado.
      *
-     * @param order           orden de la pregunta dentro del cuestionario.
-     * @param questionnaireId identificador del cuestionario.
-     * @return la pregunta encontrada (incluyendo su cuestionario).
+     * @param order           número de orden de la pregunta dentro del cuestionario
+     * @param questionnaireId identificador del cuestionario al que pertenece
+     * @return la pregunta encontrada con su cuestionario cargado
      */
     @Override
     public Question getQuestionByOrderAndQuestionnaireIdWithQuestionnaire(Integer order, Long questionnaireId) {
         return questionQueryRepository.getQuestionByOrderAndQuestionnaireIdWithQuestionnaire(order, questionnaireId)
                 .orElseGet(() -> {
                     resultFormatter.throwEntityNotFound(
-                            ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                            String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                                "No se encontró una pregunta con orden " + order + " en el cuestionario con ID " + questionnaireId + "."),
-                            "No se pudo localizar la pregunta en la posición solicitada dentro de este cuestionario."
+                        ErrorCode.QUESTION_NOT_FOUND,
+                        "user.question.by_order_not_found",
+                        order
                     );
                     return null;
                 });
     }
 
     /**
-     * Obtiene las preguntas asociadas a un cuestionario específico por su ID.
+     * Obtiene las preguntas asociadas a un cuestionario específico por su identificador.
      *
-     * @param questionnaireId ID del cuestionario.
-     * @return Lista de preguntas.
+     * <p>Valida previamente que el cuestionario exista antes de ejecutar la consulta.</p>
+     *
+     * @param questionnaireId identificador del cuestionario
+     * @return lista de preguntas pertenecientes al cuestionario
      */
     @Override
     public List<Question> getQuestionsByQuestionnaireId(Long questionnaireId) {
         if (!questionnaireQueryRepository.existsById(questionnaireId)) {
             resultFormatter.throwEntityNotFound(
-                ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                    "El cuestionario con ID " + questionnaireId + " no existe."),
-                "No se encontró el cuestionario asociado a las preguntas solicitadas. Por favor, verifique la información."
+                ErrorCode.QUESTIONNAIRE_NOT_FOUND_BY_REF,
+                "user.question.questionnaire_not_found",
+                questionnaireId
             );
-            return null; // requerido por el compilador, aunque no se alcanzará debido a la excepción lanzada
+            return null;
         }
         return questionQueryRepository.getByQuestionnaireId(questionnaireId);
     }
@@ -133,21 +132,21 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
     /**
      * Obtiene las preguntas asociadas a un cuestionario específico por su abreviatura.
      *
-     * @param abbreviation Abreviatura del cuestionario.
-     * @return Lista de preguntas.
+     * <p>Valida previamente que el cuestionario exista antes de ejecutar la consulta.</p>
+     *
+     * @param abbreviation abreviatura del cuestionario (ej: "EXT", "EST", "ILA")
+     * @return lista de preguntas pertenecientes al cuestionario
      */
     @Override
     public List<Question> getQuestionsByQuestionnaireAbbreviation(String abbreviation) {
         if (!questionnaireQueryRepository.existsByAbbreviation(abbreviation)) {
             resultFormatter.throwEntityNotFound(
-                ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                    "El cuestionario con abreviatura '" + abbreviation + "' no existe."),
-                "No se encontró el cuestionario indicado para recuperar sus preguntas. Por favor, verifique la abreviatura."
+                ErrorCode.QUESTIONNAIRE_NOT_FOUND_BY_REF,
+                "user.question.questionnaire_not_found",
+                abbreviation
             );
-            return null; // requerido por el compilador, aunque no se alcanzará debido a la excepción lanzada
+            return null;
         }
         return questionQueryRepository.getByQuestionnaireAbbreviation(abbreviation);
     }
-
 }

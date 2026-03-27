@@ -16,8 +16,10 @@ public class EntityNotFoundPersException extends RuntimeException {
     private final String code;
     /** Mensaje legible del error. */
     private final String message;
-    /** Mensaje amigable destinado al usuario final. */
+    /** Clave del mensaje amigable o mensaje directo destinado al usuario final. */
     private final String userMessage;
+    /** Argumentos para formatear el mensaje de usuario dinámicamente. */
+    private final Object[] args;
 
     /**
      * Constructor que permite lanzar la excepción con un código de error específico.
@@ -29,6 +31,7 @@ public class EntityNotFoundPersException extends RuntimeException {
         this.code = code.getCode();
         this.message = code.getMessageKey();
         this.userMessage = null;
+        this.args = null;
     }
 
     /**
@@ -41,6 +44,7 @@ public class EntityNotFoundPersException extends RuntimeException {
         this.code = ErrorCode.ENTITY_NOT_FOUND.getCode();
         this.message = ErrorCode.ENTITY_NOT_FOUND.getMessageKey();
         this.userMessage = null;
+        this.args = null;
     }
 
     /**
@@ -54,6 +58,7 @@ public class EntityNotFoundPersException extends RuntimeException {
         this.code = code;
         this.message = message;
         this.userMessage = null;
+        this.args = null;
     }
 
     /**
@@ -61,12 +66,29 @@ public class EntityNotFoundPersException extends RuntimeException {
      *
      * @param code        código personalizado para la excepción
      * @param message     mensaje técnico de la excepción
-     * @param userMessage mensaje amigable destinado al usuario final
+     * @param userMessage mensaje amigable o clave de traducción
      */
     public EntityNotFoundPersException(String code, String message, String userMessage) {
         super(message);
         this.code = code;
         this.message = message;
         this.userMessage = userMessage;
+        this.args = null;
+    }
+
+    /**
+     * Constructor completo con soporte para argumentos dinámicos.
+     *
+     * @param code        código personalizado
+     * @param message     mensaje técnico
+     * @param userMessage clave de traducción
+     * @param args        argumentos para el mensaje
+     */
+    public EntityNotFoundPersException(String code, String message, String userMessage, Object[] args) {
+        super(message);
+        this.code = code;
+        this.message = message;
+        this.userMessage = userMessage;
+        this.args = args;
     }
 }

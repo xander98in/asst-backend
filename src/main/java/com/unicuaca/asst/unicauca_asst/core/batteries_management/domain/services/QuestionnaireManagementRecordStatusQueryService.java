@@ -13,10 +13,11 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import lombok.RequiredArgsConstructor;
 
 /**
- * Implementación de los casos de uso de consulta para los estados de los registros de gestión de cuestionarios.
- *
- * Esta clase pertenece a la capa de dominio y orquesta la lógica de negocio para la recuperación de los estados, 
- * delegando la persistencia en los puertos de salida correspondientes.
+ * Servicio de dominio para la consulta de estados de registros de gestión de cuestionarios.
+ * 
+ * <p>Esta clase orquesta la recuperación de los estados válidos para los cuestionarios,
+ * delegando la persistencia en el repositorio correspondiente. Implementa i18n para reportar
+ * fallos de búsqueda de forma profesional.</p>
  */
 @RequiredArgsConstructor
 public class QuestionnaireManagementRecordStatusQueryService implements QuestionnaireManagementRecordStatusQueryCUInputPort {
@@ -25,39 +26,39 @@ public class QuestionnaireManagementRecordStatusQueryService implements Question
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
-     * Obtiene un estado de registro de gestión de cuestionarios por su identificador.
+     * Obtiene un estado específico mediante su identificador único.
      *
      * @param id identificador del estado
-     * @return el {@link QuestionnaireManagementRecordStatus} encontrado
+     * @return el estado encontrado
      */
     @Override
     public QuestionnaireManagementRecordStatus getQuestionnaireManagementRecordStatusById(Long id) {
         return fetchOrThrow(
             () -> questionnaireManagementRecordStatusQueryRepository.getQuestionnaireManagementRecordStatusById(id),
-            String.format("El estado de registro de gestión de cuestionarios con ID %d no fue encontrado.", id),
-            "No se pudo encontrar la información del estado del cuestionario solicitado. Por favor, intente más tarde."
+            id.toString(),
+            "user.questionnaire_management.status_id_not_found"
         );
     }
 
     /**
-     * Obtiene un estado de registro de gestión de cuestionarios por su nombre.
+     * Obtiene un estado específico mediante su nombre descriptivo.
      *
-     * @param name nombre del estado
-     * @return el {@link QuestionnaireManagementRecordStatus} encontrado
+     * @param name nombre del estado (ej: 'Creado', 'Diligenciado')
+     * @return el estado encontrado
      */
     @Override
     public QuestionnaireManagementRecordStatus getQuestionnaireManagementRecordStatusByName(String name) {
         return fetchOrThrow(
             () -> questionnaireManagementRecordStatusQueryRepository.getQuestionnaireManagementRecordStatusByName(name),
-            String.format("El estado de registro de gestión de cuestionarios con nombre '%s' no fue encontrado.", name),
-            "No fue posible identificar el estado del cuestionario con el nombre proporcionado."
+            name,
+            "user.questionnaire_management.status_name_not_found"
         );
     }
 
     /**
-     * Obtiene todos los estados de registro de gestión de cuestionarios.
+     * Obtiene la lista completa de todos los estados de cuestionario disponibles en el sistema.
      *
-     * @return lista de {@link QuestionnaireManagementRecordStatus}
+     * @return lista de estados
      */
     @Override
     public List<QuestionnaireManagementRecordStatus> getAllQuestionnaireManagementRecordStatuses() {
@@ -65,22 +66,21 @@ public class QuestionnaireManagementRecordStatusQueryService implements Question
     }
 
     /**
-     * Helper genérico para obtener un recurso o lanzar excepción estandarizada.
+     * Helper centralizado para la resolución de opcionales con lanzamiento de excepción i18n.
      *
-     * @param fetcher     supplier que obtiene el Optional del recurso
-     * @param notFoundMsg mensaje técnico cuando no existe
-     * @param userMessage mensaje para el usuario final
-     * @return recurso resuelto
+     * @param fetcher supplier que obtiene el Optional del recurso
+     * @param reference valor de referencia (ID o Nombre) para el log técnico {0}
+     * @param userKey clave de traducción para el mensaje de usuario final
+     * @return el recurso encontrado
      */
-    private <T> T fetchOrThrow(Supplier<Optional<T>> fetcher, String notFoundMsg, String userMessage) {
+    private <T> T fetchOrThrow(Supplier<Optional<T>> fetcher, String reference, String userKey) {
         return fetcher.get().orElseGet(() -> {
             resultFormatter.throwEntityNotFound(
-                ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), notFoundMsg),
-                userMessage
+                ErrorCode.QUESTIONNAIRE_MGMT_STATUS_NOT_FOUND,
+                userKey,
+                reference
             );
-            return null; // requerido por el compilador
+            return null;
         });
     }
-
 }
