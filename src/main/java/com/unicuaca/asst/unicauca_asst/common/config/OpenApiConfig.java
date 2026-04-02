@@ -5,9 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 
 /**
@@ -30,6 +32,13 @@ import io.swagger.v3.oas.annotations.servers.Server;
         @Server(url = "http://localhost:8080", description = "Local"),
         @Server(url = "https://api.unicauca.edu.co", description = "Prod")
     }
+)
+@SecurityScheme(
+    name = "bearerAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT",
+    description = "Token JWT de acceso. Obtenerlo desde POST /auth/login"
 )
 @Configuration
 public class OpenApiConfig {
@@ -162,6 +171,36 @@ public class OpenApiConfig {
             .group("respuestas-cuestionarios")
             .packagesToScan("com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers")
             .pathsToMatch("/asst/questionnaire-response/**")
+            .build();
+    }
+
+    /**
+     * Grupo de documentación para los endpoints de autenticación
+     * (login, refresh, logout).
+     *
+     * Agrupa todos los endpoints bajo el prefijo <code>/auth/**</code>.
+     */
+    @Bean
+    GroupedOpenApi authGroup() {
+        return GroupedOpenApi.builder()
+            .group("autenticacion")
+            .packagesToScan("com.unicuaca.asst.unicauca_asst.core.auth.infrastructure.adapters.input.controllers")
+            .pathsToMatch("/auth/**")
+            .build();
+    }
+
+    /**
+     * Grupo de documentación para la gestión de usuarios del sistema
+     * (crear, actualizar, cambiar estado, eliminar, listar).
+     *
+     * Agrupa todos los endpoints bajo el prefijo <code>/asst/users/**</code>.
+     */
+    @Bean
+    GroupedOpenApi usersGroup() {
+        return GroupedOpenApi.builder()
+            .group("usuarios-sistema")
+            .packagesToScan("com.unicuaca.asst.unicauca_asst.core.auth.infrastructure.adapters.input.controllers")
+            .pathsToMatch("/asst/users/**")
             .build();
     }
 

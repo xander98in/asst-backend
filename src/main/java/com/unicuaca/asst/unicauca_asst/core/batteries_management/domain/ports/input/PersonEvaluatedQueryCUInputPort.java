@@ -4,6 +4,15 @@ import org.springframework.data.domain.Page;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
 
+/**
+ * Puerto de entrada para operaciones de consulta sobre el agregado {@link PersonEvaluated}.
+ *
+ * Define las firmas de los métodos que deben implementar los casos de uso encargados
+ * de recuperar información de personas evaluadas desde el dominio.
+ *
+ * <p>Hace parte de la arquitectura hexagonal, separando las dependencias externas
+ * de la lógica del dominio.</p>
+ */
 public interface PersonEvaluatedQueryCUInputPort {
 
     /**

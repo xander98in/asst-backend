@@ -269,6 +269,95 @@ public class RestApiExceptionHandler {
     }
 
     /**
+     * Maneja la excepción {@link GoogleTokenException} cuando falla la verificación
+     * del token de Google OAuth (token inválido, expirado o dominio no autorizado).
+     *
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción lanzada al verificar el token de Google
+     * @return {@link ResponseEntity} con estado 401 y cuerpo estandarizado de error
+     */
+    @ExceptionHandler(GoogleTokenException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleGoogleTokenException(
+            HttpServletRequest req, GoogleTokenException ex) {
+
+        String defaultMsg = resolveUserMessage("user.auth.invalid_google_token", null, req, "Error de autenticación con Google.");
+        String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
+        String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
+
+        var details = ErrorUtils.of(
+            ex.getCode(),
+            techDetail,
+            userMsg,
+            req.getMethod()
+        );
+
+        String wrapperMessage;
+        try {
+            wrapperMessage = messageSource.getMessage(
+                ErrorCode.AUTHENTICATION_ERROR.getMessageKey(),
+                new Object[]{techDetail},
+                req.getLocale()
+            );
+        } catch (NoSuchMessageException e) {
+            wrapperMessage = techDetail;
+        }
+
+        return ResponseUtil.error(
+            req,
+            ErrorCode.AUTHENTICATION_ERROR.getCode(),
+            HttpStatus.UNAUTHORIZED,
+            wrapperMessage,
+            details
+        );
+    }
+
+    /**
+     * Maneja la excepción {@link InvalidJwtException} cuando falla la validación
+     * del JWT propio de la aplicación (expirado, firma inválida, malformado).
+     *
+     * <p>Segunda línea de defensa: normalmente capturada por {@code JwtAuthFilter},
+     * pero garantiza consistencia si algún servicio la lanza directamente.</p>
+     *
+     * @param req solicitud HTTP que originó la excepción
+     * @param ex  excepción lanzada al validar el JWT
+     * @return {@link ResponseEntity} con estado 401 y cuerpo estandarizado de error
+     */
+    @ExceptionHandler(InvalidJwtException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleInvalidJwtException(
+            HttpServletRequest req, InvalidJwtException ex) {
+
+        String defaultMsg = resolveUserMessage("user.auth.jwt_malformed", null, req, "Token de seguridad inválido.");
+        String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
+        String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
+
+        var details = ErrorUtils.of(
+            ex.getCode(),
+            techDetail,
+            userMsg,
+            req.getMethod()
+        );
+
+        String wrapperMessage;
+        try {
+            wrapperMessage = messageSource.getMessage(
+                ErrorCode.AUTHENTICATION_ERROR.getMessageKey(),
+                new Object[]{techDetail},
+                req.getLocale()
+            );
+        } catch (NoSuchMessageException e) {
+            wrapperMessage = techDetail;
+        }
+
+        return ResponseUtil.error(
+            req,
+            ErrorCode.AUTHENTICATION_ERROR.getCode(),
+            HttpStatus.UNAUTHORIZED,
+            wrapperMessage,
+            details
+        );
+    }
+
+    /**
      * Maneja {@link QueryTimeoutException} cuando una consulta a la base
      * de datos excede el tiempo de espera configurado.
      *

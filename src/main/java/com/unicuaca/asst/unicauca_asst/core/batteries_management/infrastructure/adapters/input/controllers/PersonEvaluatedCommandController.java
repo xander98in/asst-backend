@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -28,10 +29,10 @@ import lombok.RequiredArgsConstructor;
  * Forma parte de la capa de entrada (Input Adapter) en la arquitectura hexagonal.
  * Delega la lógica al {@link PersonEvaluatedCommandHandler}.
  */
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/person-evaluated")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class PersonEvaluatedCommandController {
 
     private final PersonEvaluatedCommandHandler personEvaluatedCommandHandler;

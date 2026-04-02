@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,10 @@ import lombok.RequiredArgsConstructor;
     name = "Gestión de registros de cuestionarios",
     description = "Endpoints para gestionar los registros de gestión de cuestionarios."
 )
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/questionnaire-management-record")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class QuestionnaireManagementRecordCommandController {
 
     private final QuestionnaireManagementRecordCommandHandler questionnaireManagementRecordCommandHandler;

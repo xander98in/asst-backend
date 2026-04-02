@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +27,10 @@ import org.springframework.web.bind.annotation.*;
  * Forma parte del adaptador de entrada (Input Adapter) en la arquitectura hexagonal.
  * Delega la orquestación al {@link PersonEvaluatedDetailsCommandHandler}.
  */
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/person-evaluated-details")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class PersonEvaluatedDetailsCommandController {
 
     private final PersonEvaluatedDetailsCommandHandler personEvaluatedDetailsCommandHandler;

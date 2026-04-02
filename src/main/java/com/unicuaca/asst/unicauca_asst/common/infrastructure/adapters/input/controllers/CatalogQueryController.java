@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,10 +36,10 @@ import lombok.RequiredArgsConstructor;
  * <p>Utiliza {@link CatalogQueryHandler} para ejecutar la lógica de consulta relacionada con catálogos.</p>
  */
 @Tag(name = "catálogos", description = "Operaciones de consulta de catálogos comunes")
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/catalog")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class CatalogQueryController {
 
     private final CatalogQueryHandler catalogQueryHandler;

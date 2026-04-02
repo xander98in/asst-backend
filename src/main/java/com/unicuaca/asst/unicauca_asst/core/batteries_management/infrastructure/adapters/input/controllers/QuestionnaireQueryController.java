@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +30,10 @@ import java.util.List;
     name = "Cuestionarios",
     description = "Operaciones de consulta (lectura) sobre el catálogo de cuestionarios disponibles en el sistema."
 )
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/questionnaires")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class QuestionnaireQueryController {
 
     private final QuestionnaireQueryHandler questionnaireQueryHandler;

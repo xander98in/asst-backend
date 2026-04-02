@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.unicuaca.asst.unicauca_asst.common.docs.ErrorResponseApiResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +21,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +35,10 @@ import lombok.RequiredArgsConstructor;
     name = "Estados de registros de gestión de cuestionarios",
     description = "Operaciones de consulta (lectura) sobre el catálogo de estados de los registros de gestión de cuestionarios."
 )
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/questionnaire-management-record-statuses")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class QuestionnaireManagementRecordStatusQueryController {
 
     private final QuestionnaireManagementRecordStatusHandler questionnaireManagementRecordStatusHandler;

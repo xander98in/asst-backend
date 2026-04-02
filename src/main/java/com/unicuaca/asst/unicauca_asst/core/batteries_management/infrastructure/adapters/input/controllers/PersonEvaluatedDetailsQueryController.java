@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
@@ -24,10 +25,10 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Controlador REST para consultas relacionadas con los detalles de las personas evaluadas.
  */
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/person-evaluated-details")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class PersonEvaluatedDetailsQueryController {
 
     private final PersonEvaluatedDetailsQueryHandler personEvaluatedDetailsQueryHandler;

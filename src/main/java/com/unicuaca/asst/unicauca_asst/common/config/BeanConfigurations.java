@@ -1,5 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.common.config;
 
+import com.unicuaca.asst.unicauca_asst.core.auth.domain.ports.output.*;
+import com.unicuaca.asst.unicauca_asst.core.auth.domain.services.*;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.*;
 import org.springframework.context.annotation.Bean;
@@ -234,5 +236,40 @@ public class BeanConfigurations {
             questionnaireResponseQueryRepository,
             resultFormatterOutputPort
         );
+    }
+
+    // ── Módulo Auth ──────────────────────────────────────────────────────
+
+    @Bean
+    public AuthService authService(
+        SystemUserQueryRepository systemUserQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new AuthService(systemUserQueryRepository, resultFormatterOutputPort);
+    }
+
+    @Bean
+    public SystemUserCommandService systemUserCommandService(
+        SystemUserCommandRepository systemUserCommandRepository,
+        SystemUserQueryRepository systemUserQueryRepository,
+        UserStatusQueryRepository userStatusQueryRepository,
+        RoleQueryRepository roleQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new SystemUserCommandService(
+            systemUserCommandRepository,
+            systemUserQueryRepository,
+            userStatusQueryRepository,
+            roleQueryRepository,
+            resultFormatterOutputPort
+        );
+    }
+
+    @Bean
+    public SystemUserQueryService systemUserQueryService(
+        SystemUserQueryRepository systemUserQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new SystemUserQueryService(systemUserQueryRepository, resultFormatterOutputPort);
     }
 }

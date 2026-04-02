@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASST - Test Google Login</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; padding: 2rem; }
+        .container { max-width: 640px; margin: 0 auto; }
+        h1 { font-size: 1.4rem; color: #333; margin-bottom: 0.25rem; }
+        .subtitle { color: #888; font-size: 0.85rem; margin-bottom: 2rem; }
+        .card { background: #fff; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .card h2 { font-size: 1rem; color: #555; margin-bottom: 1rem; }
+        #google-btn { display: flex; justify-content: center; }
+        label { display: block; font-size: 0.85rem; color: #666; margin-bottom: 0.4rem; }
+        textarea { width: 100%; height: 120px; font-family: monospace; font-size: 0.8rem; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; resize: vertical; background: #fafafa; }
+        .btn { padding: 0.5rem 1rem; border: none; border-radius: 6px; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+        .btn-copy { background: #4285f4; color: #fff; margin-top: 0.75rem; }
+        .btn-copy:hover { background: #3367d6; }
+        .btn-copy:disabled { background: #ccc; cursor: default; }
+        .status { margin-top: 0.5rem; font-size: 0.8rem; color: #888; min-height: 1.2em; }
+        .status.success { color: #0a7; }
+        .status.error { color: #d33; }
+        #token-section { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ASST - Test Google Login</h1>
+        <p class="subtitle">Página de prueba para obtener el Google ID Token (solo desarrollo)</p>
+
+        <div class="card">
+            <h2>1. Iniciar sesión con Google</h2>
+            <div id="google-btn"></div>
+        </div>
+
+        <div id="token-section">
+            <div class="card">
+                <h2>2. Google ID Token</h2>
+                <label for="token-area">Credential (Google ID Token):</label>
+                <textarea id="token-area" readonly></textarea>
+                <button class="btn btn-copy" id="copy-btn" onclick="copyToken()">Copiar token</button>
+                <div class="status" id="copy-status"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            var token = response.credential;
+            var tokenArea = document.getElementById('token-area');
+            var tokenSection = document.getElementById('token-section');
+            var copyBtn = document.getElementById('copy-btn');
+            var copyStatus = document.getElementById('copy-status');
+
+            tokenArea.value = token;
+            tokenSection.style.display = 'block';
+            copyBtn.disabled = false;
+            copyStatus.textContent = 'Token recibido correctamente.';
+            copyStatus.className = 'status success';
+        }
+
+        function copyToken() {
+            var tokenArea = document.getElementById('token-area');
+            var copyStatus = document.getElementById('copy-status');
+
+            if (!tokenArea.value) {
+                copyStatus.textContent = 'No hay token para copiar.';
+                copyStatus.className = 'status error';
+                return;
+            }
+
+            navigator.clipboard.writeText(tokenArea.value).then(function() {
+                copyStatus.textContent = 'Token copiado al portapapeles.';
+                copyStatus.className = 'status success';
+            }).catch(function() {
+                tokenArea.select();
+                document.execCommand('copy');
+                copyStatus.textContent = 'Token copiado (fallback).';
+                copyStatus.className = 'status success';
+            });
+        }
+
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: '611422532123-5d08k8boi712dtirdd14gsdrpt7f4km0.apps.googleusercontent.com',
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById('google-btn'),
+                { theme: 'outline', size: 'large', text: 'signin_with', locale: 'es' }
+            );
+        };
+    </script>
+</body>
+</html>

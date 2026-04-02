@@ -92,7 +92,32 @@ public enum ErrorCode {
     PERSON_DETAILS_ALREADY_EXISTS("ASST-BUS-0035", "tech.details.already_exists"),
 
     /** Dominio Específico - Catálogos (No Encontrado) */
-    CATALOG_RESOURCE_NOT_FOUND("ASST-BUS-0030", "tech.catalog.resource_not_found");
+    CATALOG_RESOURCE_NOT_FOUND("ASST-BUS-0030", "tech.catalog.resource_not_found"),
+
+    /** Dominio Específico - Usuarios del Sistema */
+    USER_NOT_FOUND("ASST-BUS-0036", "tech.user.not_found"),
+    USER_STATUS_NOT_FOUND("ASST-BUS-0037", "tech.user.status_not_found"),
+    USER_EMAIL_EXISTS("ASST-BUS-0038", "tech.user.email_exists"),
+    USER_ALREADY_BLOCKED("ASST-BUS-0039", "tech.user.already_blocked"),
+    USER_ALREADY_INACTIVE("ASST-BUS-0040", "tech.user.already_inactive"),
+    USER_ALREADY_ACTIVE("ASST-BUS-0047", "tech.user.already_active"),
+    USER_USERNAME_EXISTS("ASST-BUS-0048", "tech.user.username_exists"),
+    USER_CREATION_FAILED("ASST-BUS-0041", "tech.user.creation_failed"),
+    USER_UPDATE_FAILED("ASST-BUS-0042", "tech.user.update_failed"),
+    USER_INACTIVE("ASST-BUS-0043", "tech.user.inactive"),
+    USER_BLOCKED("ASST-BUS-0044", "tech.user.blocked"),
+    USER_DOMAIN_NOT_ALLOWED("ASST-BUS-0045", "tech.user.domain_not_allowed"),
+    ROLE_NOT_FOUND("ASST-BUS-0046", "tech.role.not_found"),
+    INVALID_GOOGLE_TOKEN("ASST-SEC-0005", "tech.auth.invalid_google_token"),
+    GOOGLE_TOKEN_VERIFICATION_FAILED("ASST-SEC-0006", "tech.auth.google_token_failed"),
+
+    /** Errores de JWT */
+    JWT_EXPIRED("ASST-SEC-0007", "tech.auth.jwt_expired"),
+    JWT_INVALID_SIGNATURE("ASST-SEC-0008", "tech.auth.jwt_invalid_signature"),
+    JWT_MALFORMED("ASST-SEC-0009", "tech.auth.jwt_malformed"),
+    JWT_MISSING("ASST-SEC-0010", "tech.auth.jwt_missing"),
+    REFRESH_TOKEN_EXPIRED("ASST-SEC-0011", "tech.auth.refresh_token_expired"),
+    REFRESH_TOKEN_INVALID("ASST-SEC-0012", "tech.auth.refresh_token_invalid");
 
     /** Código único de error para trazabilidad. */
     private final String code;

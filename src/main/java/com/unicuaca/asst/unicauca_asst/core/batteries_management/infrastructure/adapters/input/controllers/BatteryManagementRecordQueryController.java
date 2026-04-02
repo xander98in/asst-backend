@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
@@ -31,10 +32,10 @@ import org.springframework.web.bind.annotation.*;
  * <p>Utiliza {@link BatteryManagementRecordQueryHandler} como puerto de entrada para ejecutar la lógica de consulta
  * relacionada con registros de gestión de baterías.</p>
  */
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/asst/battery-management-record")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class BatteryManagementRecordQueryController {
 
     private final BatteryManagementRecordQueryHandler batteryManagementRecordQueryHandler;
