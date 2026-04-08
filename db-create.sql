@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS preguntas (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- NOTA: La entidad JPA define el nombre "opciones_respuesta".
--- El archivo db-seed.sql original usa "opciones_respuetas" (typo).
+-- El archivo db-seed.sql original usa "opciones_respuesta" (typo).
 -- Si se ejecuta este script, verificar que db-seed.sql apunte al nombre correcto.
 CREATE TABLE IF NOT EXISTS opciones_respuesta (
     id    BIGINT NOT NULL AUTO_INCREMENT,

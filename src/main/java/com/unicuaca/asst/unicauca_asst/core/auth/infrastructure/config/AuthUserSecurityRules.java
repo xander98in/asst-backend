@@ -66,6 +66,9 @@ public class AuthUserSecurityRules {
                 .accessDeniedHandler(accessDeniedHandler)
             )
             .authorizeHttpRequests(auth -> auth
+                // Catálogos de auth — solo ADMIN
+                .requestMatchers(HttpMethod.GET, "/asst/users/catalog/**").hasRole("ADMIN")
+
                 // /me — cualquier usuario autenticado
                 .requestMatchers(HttpMethod.GET, "/asst/users/me").authenticated()
 

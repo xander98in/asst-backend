@@ -272,4 +272,19 @@ public class BeanConfigurations {
     ) {
         return new SystemUserQueryService(systemUserQueryRepository, resultFormatterOutputPort);
     }
+
+    @Bean
+    public RoleQueryService roleQueryService(
+        RoleQueryRepository roleQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new RoleQueryService(roleQueryRepository, resultFormatterOutputPort);
+    }
+
+    @Bean
+    public UserStatusQueryService userStatusQueryService(
+        UserStatusQueryRepository userStatusQueryRepository
+    ) {
+        return new UserStatusQueryService(userStatusQueryRepository);
+    }
 }
