@@ -3,6 +3,7 @@ package com.unicuaca.asst.unicauca_asst.core.auth.domain.services;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -71,29 +72,28 @@ public class SystemUserCommandService implements SystemUserCommandCUInputPort {
         resolveRoles(systemUser);
 
         // Asignación de estado inicial ACTIVE
-        UserStatus activeStatus = userStatusQueryRepository.getUserStatusByName(UserStatusEnum.ACTIVE.getDescription())
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.USER_STATUS_NOT_FOUND,
-                    "user.user.not_found",
-                    UserStatusEnum.ACTIVE.getDescription()
-                );
-                return null;
-            });
-        systemUser.setStatus(activeStatus);
+        Optional<UserStatus> activeStatusOpt = userStatusQueryRepository.getUserStatusByName(UserStatusEnum.ACTIVE.getDescription());
+        if (activeStatusOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.USER_STATUS_NOT_FOUND,
+                "user.user.not_found",
+                UserStatusEnum.ACTIVE.getDescription()
+            );
+        }
+        systemUser.setStatus(activeStatusOpt.get());
 
         // Asignación de fecha de registro
         systemUser.setRegisteredAt(LocalDateTime.now());
 
-        return systemUserCommandRepository.saveSystemUser(systemUser)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityCreationFailed(
-                    ErrorCode.USER_CREATION_FAILED,
-                    "user.user.creation_failed",
-                    systemUser.getEmail()
-                );
-                return null;
-            });
+        Optional<SystemUser> savedOpt = systemUserCommandRepository.saveSystemUser(systemUser);
+        if (savedOpt.isEmpty()) {
+            resultFormatter.throwEntityCreationFailed(
+                ErrorCode.USER_CREATION_FAILED,
+                "user.user.creation_failed",
+                systemUser.getEmail()
+            );
+        }
+        return savedOpt.get();
     }
 
     /**
@@ -140,15 +140,15 @@ public class SystemUserCommandService implements SystemUserCommandCUInputPort {
         // Resolución de roles por ID
         resolveRoles(systemUser);
 
-        return systemUserCommandRepository.updateSystemUser(systemUser)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityCreationFailed(
-                    ErrorCode.USER_UPDATE_FAILED,
-                    "user.user.update_failed",
-                    id
-                );
-                return null;
-            });
+        Optional<SystemUser> updatedOpt = systemUserCommandRepository.updateSystemUser(systemUser);
+        if (updatedOpt.isEmpty()) {
+            resultFormatter.throwEntityCreationFailed(
+                ErrorCode.USER_UPDATE_FAILED,
+                "user.user.update_failed",
+                id
+            );
+        }
+        return updatedOpt.get();
     }
 
     /**
@@ -161,68 +161,61 @@ public class SystemUserCommandService implements SystemUserCommandCUInputPort {
     @Override
     public SystemUser changeUserStatus(Long id, String statusName) {
         // Verificación de existencia
-        SystemUser systemUser = systemUserQueryRepository.getSystemUserById(id)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.USER_NOT_FOUND,
-                    "user.user.not_found",
-                    id
-                );
-                return null;
-            });
+        Optional<SystemUser> userOpt = systemUserQueryRepository.getSystemUserById(id);
+        if (userOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.USER_NOT_FOUND,
+                "user.user.not_found",
+                id
+            );
+        }
+        SystemUser systemUser = userOpt.get();
 
         // Resolución del nuevo estado
-        UserStatus newStatus = userStatusQueryRepository.getUserStatusByName(statusName)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.USER_STATUS_NOT_FOUND,
-                    "user.user.not_found",
-                    statusName
-                );
-                return null;
-            });
+        Optional<UserStatus> statusOpt = userStatusQueryRepository.getUserStatusByName(statusName);
+        if (statusOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.USER_STATUS_NOT_FOUND,
+                "user.user.not_found",
+                statusName
+            );
+        }
+        UserStatus newStatus = statusOpt.get();
 
         // Validación: el nuevo estado debe ser diferente al actual
         String currentStatusName = systemUser.getStatus().getName();
         if (currentStatusName.equals(statusName)) {
+            ErrorCode errorCode;
+            String messageKey;
+
             if (UserStatusEnum.BLOCKED.getDescription().equals(statusName)) {
-                resultFormatter.throwBusinessRuleViolation(
-                    ErrorCode.USER_ALREADY_BLOCKED,
-                    "user.user.already_blocked",
-                    id
-                );
+                errorCode = ErrorCode.USER_ALREADY_BLOCKED;
+                messageKey = "user.user.already_blocked";
             } else if (UserStatusEnum.INACTIVE.getDescription().equals(statusName)) {
-                resultFormatter.throwBusinessRuleViolation(
-                    ErrorCode.USER_ALREADY_INACTIVE,
-                    "user.user.already_inactive",
-                    id
-                );
+                errorCode = ErrorCode.USER_ALREADY_INACTIVE;
+                messageKey = "user.user.already_inactive";
             } else if (UserStatusEnum.ACTIVE.getDescription().equals(statusName)) {
-                resultFormatter.throwBusinessRuleViolation(
-                    ErrorCode.USER_ALREADY_ACTIVE,
-                    "user.user.already_active",
-                    id
-                );
+                errorCode = ErrorCode.USER_ALREADY_ACTIVE;
+                messageKey = "user.user.already_active";
             } else {
-                resultFormatter.throwBusinessRuleViolation(
-                    ErrorCode.BUSINESS_RULE_VIOLATION,
-                    "user.default.business_rule_violation",
-                    id
-                );
+                errorCode = ErrorCode.BUSINESS_RULE_VIOLATION;
+                messageKey = "user.default.business_rule_violation";
             }
+
+            resultFormatter.throwBusinessRuleViolation(errorCode, messageKey, id);
         }
 
         systemUser.setStatus(newStatus);
 
-        return systemUserCommandRepository.updateSystemUser(systemUser)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityCreationFailed(
-                    ErrorCode.USER_UPDATE_FAILED,
-                    "user.user.update_failed",
-                    id
-                );
-                return null;
-            });
+        Optional<SystemUser> updatedOpt = systemUserCommandRepository.updateSystemUser(systemUser);
+        if (updatedOpt.isEmpty()) {
+            resultFormatter.throwEntityCreationFailed(
+                ErrorCode.USER_UPDATE_FAILED,
+                "user.user.update_failed",
+                id
+            );
+        }
+        return updatedOpt.get();
     }
 
     /**
@@ -256,16 +249,15 @@ public class SystemUserCommandService implements SystemUserCommandCUInputPort {
 
         Set<Role> resolvedRoles = new HashSet<>();
         for (Role roleStub : systemUser.getRoles()) {
-            Role resolved = roleQueryRepository.getRoleById(roleStub.getId())
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.ROLE_NOT_FOUND,
-                        "user.role.not_found",
-                        roleStub.getId()
-                    );
-                    return null;
-                });
-            resolvedRoles.add(resolved);
+            Optional<Role> resolvedOpt = roleQueryRepository.getRoleById(roleStub.getId());
+            if (resolvedOpt.isEmpty()) {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.ROLE_NOT_FOUND,
+                    "user.role.not_found",
+                    roleStub.getId()
+                );
+            }
+            resolvedRoles.add(resolvedOpt.get());
         }
         systemUser.setRoles(resolvedRoles);
     }

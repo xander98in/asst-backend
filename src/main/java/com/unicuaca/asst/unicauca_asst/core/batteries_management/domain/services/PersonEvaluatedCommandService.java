@@ -1,5 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services;
 
+import java.util.Optional;
+
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
@@ -43,15 +45,15 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
         personEvaluated.setLastName(personEvaluated.getLastName().toUpperCase());
 
         // Validación de catálogo para el tipo de identificación
-        IdentificationType identificationType = catalogQueryRepository.getIdTypeByAbbreviation(personEvaluated.getIdentificationType().getAbbreviation())
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.PERSON_ID_TYPE_NOT_FOUND,
-                    "user.person.id_type_invalid",
-                    personEvaluated.getIdentificationType().getAbbreviation()
-                );
-                return null;
-            });
+        Optional<IdentificationType> optionalIdType = catalogQueryRepository.getIdTypeByAbbreviation(personEvaluated.getIdentificationType().getAbbreviation());
+        if (optionalIdType.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.PERSON_ID_TYPE_NOT_FOUND,
+                "user.person.id_type_invalid",
+                personEvaluated.getIdentificationType().getAbbreviation()
+            );
+        }
+        IdentificationType identificationType = optionalIdType.get();
 
         personEvaluated.setIdentificationType(identificationType);
 
@@ -74,26 +76,26 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
         }
 
         // Asignación de estado inicial por defecto
-        StatusPersonEvaluated statusPersonEvaluated = personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription())
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.PERSON_STATUS_NOT_FOUND,
-                    "user.person.status_not_found",
-                    StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription()
-                );
-                return null;
-            });
+        Optional<StatusPersonEvaluated> optionalStatus = personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription());
+        if (optionalStatus.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.PERSON_STATUS_NOT_FOUND,
+                "user.person.status_not_found",
+                StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription()
+            );
+        }
+        StatusPersonEvaluated statusPersonEvaluated = optionalStatus.get();
         personEvaluated.setStatus(statusPersonEvaluated);
 
-        return personEvaluatedCommandRepository.savePersonEvaluated(personEvaluated)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityCreationFailed(
-                    ErrorCode.ENTITY_CREATION_ERROR,
-                    "user.person.creation_failed",
-                    personEvaluated.getIdentificationNumber()
-                );
-                return null;
-            });
+        Optional<PersonEvaluated> optionalSaved = personEvaluatedCommandRepository.savePersonEvaluated(personEvaluated);
+        if (optionalSaved.isEmpty()) {
+            resultFormatter.throwEntityCreationFailed(
+                ErrorCode.ENTITY_CREATION_ERROR,
+                "user.person.creation_failed",
+                personEvaluated.getIdentificationNumber()
+            );
+        }
+        return optionalSaved.get();
     }
 
     /**
@@ -120,15 +122,15 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
             );
         }
 
-        IdentificationType identificationType = catalogQueryRepository.getIdTypeByAbbreviation(personEvaluated.getIdentificationType().getAbbreviation())
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.PERSON_ID_TYPE_NOT_FOUND,
-                    "user.person.id_type_invalid",
-                    personEvaluated.getIdentificationType().getAbbreviation()
-                );
-                return null;
-            });
+        Optional<IdentificationType> optionalIdType = catalogQueryRepository.getIdTypeByAbbreviation(personEvaluated.getIdentificationType().getAbbreviation());
+        if (optionalIdType.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.PERSON_ID_TYPE_NOT_FOUND,
+                "user.person.id_type_invalid",
+                personEvaluated.getIdentificationType().getAbbreviation()
+            );
+        }
+        IdentificationType identificationType = optionalIdType.get();
         personEvaluated.setIdentificationType(identificationType);
 
         // Validación de conflictos de identidad con otros registros
@@ -148,15 +150,15 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
             );
         }
 
-        return personEvaluatedCommandRepository.updatePersonEvaluated(personEvaluated)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityCreationFailed(
-                    ErrorCode.ENTITY_UPDATE_ERROR,
-                    "user.person.update_failed",
-                    id
-                );
-                return null;
-            });
+        Optional<PersonEvaluated> optionalUpdated = personEvaluatedCommandRepository.updatePersonEvaluated(personEvaluated);
+        if (optionalUpdated.isEmpty()) {
+            resultFormatter.throwEntityCreationFailed(
+                ErrorCode.ENTITY_UPDATE_ERROR,
+                "user.person.update_failed",
+                id
+            );
+        }
+        return optionalUpdated.get();
     }
 
     /**

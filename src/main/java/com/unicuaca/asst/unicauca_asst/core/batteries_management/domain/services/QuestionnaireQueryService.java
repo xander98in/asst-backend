@@ -8,6 +8,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Servicio de dominio para la consulta de catálogos de cuestionarios.
@@ -39,14 +40,14 @@ public class QuestionnaireQueryService implements QuestionnaireQueryCUInputPort 
      */
     @Override
     public Questionnaire getQuestionnaireByAbbreviation(String abbreviation) {
-        return questionnaireQueryRepository.getByAbbreviation(abbreviation)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.QUESTIONNAIRE_NOT_FOUND_BY_REF,
-                    "user.questionnaire.not_found",
-                    abbreviation
-                );
-                return null;
-            });
+        Optional<Questionnaire> questionnaireOpt = questionnaireQueryRepository.getByAbbreviation(abbreviation);
+        if (questionnaireOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTIONNAIRE_NOT_FOUND_BY_REF,
+                "user.questionnaire.not_found",
+                abbreviation
+            );
+        }
+        return questionnaireOpt.get();
     }
 }

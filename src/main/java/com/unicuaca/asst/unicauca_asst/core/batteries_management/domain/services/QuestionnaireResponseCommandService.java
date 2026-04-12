@@ -2,16 +2,31 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.service
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.*;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.AnswerOption;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecordStatus;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Question;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecord;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecordStatus;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireResponse;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.BatteryManagementRecordStatusCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.QuestionnaireEnum;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.QuestionnaireManagementRecordStatusEnum;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.QuestionnaireResponseCommandCUInputPort;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.AnswerOptionQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordStatusQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireManagementRecordCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireManagementRecordQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireManagementRecordStatusQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireResponseCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireResponseQueryRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Servicio de dominio para la gestión de respuestas de cuestionarios en bloque.
@@ -47,7 +62,6 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 ErrorCode.EMPTY_LIST_OF_RESPONSES,
                 "user.responses.empty_list"
             );
-            return;
         }
 
         // Obtener ID de referencia y validar consistencia del lote
@@ -78,16 +92,16 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
         }
 
         // Recuperar registro de gestión de cuestionario con hidratación completa
-        QuestionnaireManagementRecord managementRecord = questionnaireManagementRecordQueryRepository
-            .findByIdWithAll(recordIdRef)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
-                    "user.responses.record_not_found",
-                    recordIdRef
-                );
-                return null;
-            });
+        Optional<QuestionnaireManagementRecord> managementRecordOpt = questionnaireManagementRecordQueryRepository
+            .findByIdWithAll(recordIdRef);
+        if (managementRecordOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
+                "user.responses.record_not_found",
+                recordIdRef
+            );
+        }
+        QuestionnaireManagementRecord managementRecord = managementRecordOpt.get();
 
         // Hidratación y validación de cada respuesta individual
         responses.forEach(response -> {
@@ -95,15 +109,15 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             // Obtener la Pregunta completa (con su cuestionario)
             Long questionId = response.getQuestion().getId();
 
-            Question question = questionQueryRepository.getQuestionByIdWithQuestionnaire(questionId)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.QUESTION_NOT_FOUND,
-                        "user.responses.question_invalid",
-                        questionId
-                    );
-                    return null;
-                });
+            Optional<Question> questionOpt = questionQueryRepository.getQuestionByIdWithQuestionnaire(questionId);
+            if (questionOpt.isEmpty()) {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.QUESTION_NOT_FOUND,
+                    "user.responses.question_invalid",
+                    questionId
+                );
+            }
+            Question question = questionOpt.get();
 
             // Regla de Integridad: La pregunta debe pertenecer al cuestionario actual
             if (!question.getQuestionnaire().getId().equals(managementRecord.getQuestionnaire().getId())) {
@@ -115,15 +129,15 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             }
 
             Integer answerValue = response.getAnswerOption().getValue();
-            AnswerOption answerOption = answerOptionQueryRepository.getAnswerOptionByValue(answerValue)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.RESPONSE_OPTION_NOT_FOUND,
-                        "user.responses.option_invalid",
-                        answerValue
-                    );
-                    return null;
-                });
+            Optional<AnswerOption> answerOptionOpt = answerOptionQueryRepository.getAnswerOptionByValue(answerValue);
+            if (answerOptionOpt.isEmpty()) {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.RESPONSE_OPTION_NOT_FOUND,
+                    "user.responses.option_invalid",
+                    answerValue
+                );
+            }
+            AnswerOption answerOption = answerOptionOpt.get();
 
             // Regla de Negocio: Evitar sobreescritura accidental sin usar el comando de actualización
             if (questionnaireResponseQueryRepository.existsByRecordIdAndQuestionId(recordIdRef, questionId)) {
@@ -158,7 +172,6 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
                 ErrorCode.EMPTY_LIST_OF_RESPONSES,
                 "user.responses.update_empty"
             );
-            return;
         }
 
         // Obtener ID de referencia y validar consistencia del lote
@@ -179,28 +192,27 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             );
         }
 
-        questionnaireManagementRecordQueryRepository.findById(recordIdRef)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
-                    "user.responses.update_record_not_found",
-                    recordIdRef
-                );
-                return null;
-            });
+        Optional<QuestionnaireManagementRecord> recordOpt = questionnaireManagementRecordQueryRepository.findById(recordIdRef);
+        if (recordOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
+                "user.responses.update_record_not_found",
+                recordIdRef
+            );
+        }
 
         // Procesamiento de cada actualización con validación de seguridad
         responses.forEach(inputResponse -> {
             Long responseId = inputResponse.getId();
-            QuestionnaireResponse existing = questionnaireResponseQueryRepository.getByIdWithAllRelations(responseId)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.RESPONSE_NOT_FOUND,
-                        "user.responses.update_not_found",
-                        responseId
-                    );
-                    return null;
-                });
+            Optional<QuestionnaireResponse> existingOpt = questionnaireResponseQueryRepository.getByIdWithAllRelations(responseId);
+            if (existingOpt.isEmpty()) {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.RESPONSE_NOT_FOUND,
+                    "user.responses.update_not_found",
+                    responseId
+                );
+            }
+            QuestionnaireResponse existing = existingOpt.get();
 
             // Regla de Seguridad: Impedir modificaciones en registros cruzados
             if (!existing.getQuestionnaireManagementRecord().getId().equals(recordIdRef)) {
@@ -223,16 +235,15 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
 
             Integer newValue = inputResponse.getAnswerOption().getValue();
             if (!Objects.equals(existing.getAnswerOption().getValue(), newValue)) {
-                AnswerOption newOption = answerOptionQueryRepository.getAnswerOptionByValue(newValue)
-                    .orElseGet(() -> {
-                        resultFormatter.throwEntityNotFound(
-                            ErrorCode.RESPONSE_OPTION_NOT_FOUND,
-                            "user.responses.update_option_invalid",
-                            newValue
-                        );
-                        return null;
-                    });
-                existing.setAnswerOption(newOption);
+                Optional<AnswerOption> newOptionOpt = answerOptionQueryRepository.getAnswerOptionByValue(newValue);
+                if (newOptionOpt.isEmpty()) {
+                    resultFormatter.throwEntityNotFound(
+                        ErrorCode.RESPONSE_OPTION_NOT_FOUND,
+                        "user.responses.update_option_invalid",
+                        newValue
+                    );
+                }
+                existing.setAnswerOption(newOptionOpt.get());
             }
             
             // Hidratación del objeto para persistencia consistente
@@ -253,16 +264,16 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
     private void syncStatusAfterSave(QuestionnaireManagementRecord managementRecord) {
         String targetStatusName = QuestionnaireManagementRecordStatusEnum.DILIGENCIADO.getName();
         
-        QuestionnaireManagementRecordStatus diligenciadoStatus = questionnaireManagementRecordStatusQueryRepository
-            .getQuestionnaireManagementRecordStatusByName(targetStatusName)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.QUESTIONNAIRE_MGMT_STATUS_NOT_FOUND,
-                    "user.responses.sync_status_failed",
-                    targetStatusName
-                );
-                return null;
-            });
+        Optional<QuestionnaireManagementRecordStatus> diligenciadoStatusOpt = questionnaireManagementRecordStatusQueryRepository
+            .getQuestionnaireManagementRecordStatusByName(targetStatusName);
+        if (diligenciadoStatusOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTIONNAIRE_MGMT_STATUS_NOT_FOUND,
+                "user.responses.sync_status_failed",
+                targetStatusName
+            );
+        }
+        QuestionnaireManagementRecordStatus diligenciadoStatus = diligenciadoStatusOpt.get();
 
         managementRecord.setStatus(diligenciadoStatus);
         questionnaireManagementRecordCommandRepository.save(managementRecord);
@@ -282,16 +293,16 @@ public class QuestionnaireResponseCommandService implements QuestionnaireRespons
             : BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription();
 
         BatteryManagementRecord battery = managementRecord.getBatteryManagementRecord();
-        BatteryManagementRecordStatus newStatus = batteryManagementRecordStatusQueryRepository
-            .getStatusByName(targetBatteryStatus)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.BATTERY_STATUS_NOT_FOUND,
-                    "user.responses.sync_status_not_found",
-                    targetBatteryStatus
-                );
-                return null;
-            });
+        Optional<BatteryManagementRecordStatus> newStatusOpt = batteryManagementRecordStatusQueryRepository
+            .getStatusByName(targetBatteryStatus);
+        if (newStatusOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.BATTERY_STATUS_NOT_FOUND,
+                "user.responses.sync_status_not_found",
+                targetBatteryStatus
+            );
+        }
+        BatteryManagementRecordStatus newStatus = newStatusOpt.get();
 
         battery.setStatus(newStatus);
         batteryManagementRecordCommandRepository.updateBatteryManagementRecord(battery);

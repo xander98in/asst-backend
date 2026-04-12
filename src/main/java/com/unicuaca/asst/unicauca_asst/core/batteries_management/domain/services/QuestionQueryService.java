@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
@@ -35,15 +36,15 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
      */
     @Override
     public Question getQuestionById(Long id) {
-        return questionQueryRepository.getQuestionById(id)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.QUESTION_NOT_FOUND,
-                        "user.question.not_found",
-                        id
-                    );
-                    return null;
-                });
+        Optional<Question> questionOpt = questionQueryRepository.getQuestionById(id);
+        if (questionOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTION_NOT_FOUND,
+                "user.question.not_found",
+                id
+            );
+        }
+        return questionOpt.get();
     }
 
     /**
@@ -55,15 +56,15 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
      */
     @Override
     public Question getQuestionByIdWithQuestionnaire(Long id) {
-        return questionQueryRepository.getQuestionByIdWithQuestionnaire(id)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.QUESTION_NOT_FOUND,
-                        "user.question.query_details_not_found",
-                        id
-                    );
-                    return null;
-                });
+        Optional<Question> questionOpt = questionQueryRepository.getQuestionByIdWithQuestionnaire(id);
+        if (questionOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTION_NOT_FOUND,
+                "user.question.query_details_not_found",
+                id
+            );
+        }
+        return questionOpt.get();
     }
 
     /**
@@ -97,15 +98,16 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
      */
     @Override
     public Question getQuestionByOrderAndQuestionnaireIdWithQuestionnaire(Integer order, Long questionnaireId) {
-        return questionQueryRepository.getQuestionByOrderAndQuestionnaireIdWithQuestionnaire(order, questionnaireId)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.QUESTION_NOT_FOUND,
-                        "user.question.by_order_not_found",
-                        order
-                    );
-                    return null;
-                });
+        Optional<Question> questionOpt = questionQueryRepository
+            .getQuestionByOrderAndQuestionnaireIdWithQuestionnaire(order, questionnaireId);
+        if (questionOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTION_NOT_FOUND,
+                "user.question.by_order_not_found",
+                order
+            );
+        }
+        return questionOpt.get();
     }
 
     /**
@@ -124,7 +126,6 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                 "user.question.questionnaire_not_found",
                 questionnaireId
             );
-            return null;
         }
         return questionQueryRepository.getByQuestionnaireId(questionnaireId);
     }
@@ -145,7 +146,6 @@ public class QuestionQueryService implements QuestionQueryCUInputPort {
                 "user.question.questionnaire_not_found",
                 abbreviation
             );
-            return null;
         }
         return questionQueryRepository.getByQuestionnaireAbbreviation(abbreviation);
     }

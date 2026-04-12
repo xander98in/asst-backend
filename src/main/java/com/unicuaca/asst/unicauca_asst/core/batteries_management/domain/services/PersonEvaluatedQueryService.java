@@ -1,17 +1,17 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services;
 
-import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.PersonEvaluatedQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedQueryRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+
+import java.util.Optional;
 
 /**
  * Servicio de dominio para la consulta de información de personas evaluadas.
@@ -35,15 +35,15 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
      */
     @Override
     public PersonEvaluated getPersonEvaluatedById(Long id) {
-        return personEvaluatedQueryRepository.getPersonEvaluatedById(id)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.PERSON_NOT_FOUND,
-                    "user.person.id_not_found",
-                    id
-                );
-                return null;
-            });
+        Optional<PersonEvaluated> personOpt = personEvaluatedQueryRepository.getPersonEvaluatedById(id);
+        if (personOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.PERSON_NOT_FOUND,
+                "user.person.id_not_found",
+                id
+            );
+        }
+        return personOpt.get();
     }
 
     /**
@@ -57,15 +57,15 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
      */
     @Override
     public Page<PersonEvaluated> queryByIdentity(String abbreviation, String identificationNumber, Integer page, Integer size) {
-        IdentificationType identificationType = catalogQueryRepository.getIdTypeByAbbreviation(abbreviation)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.PERSON_ID_TYPE_NOT_FOUND,
-                    "user.person.id_type_invalid",
-                    abbreviation
-                );
-                return null;
-            });
+        Optional<IdentificationType> idTypeOpt = catalogQueryRepository.getIdTypeByAbbreviation(abbreviation);
+        if (idTypeOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.PERSON_ID_TYPE_NOT_FOUND,
+                "user.person.id_type_invalid",
+                abbreviation
+            );
+        }
+        IdentificationType identificationType = idTypeOpt.get();
         return personEvaluatedQueryRepository.queryByIdentity(identificationType, identificationNumber, page, size, Sort.by(Sort.Direction.DESC, "id"));
     }
 

@@ -1,5 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.auth.domain.services;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
@@ -31,15 +33,15 @@ public class SystemUserQueryService implements SystemUserQueryCUInputPort {
      */
     @Override
     public SystemUser getSystemUserById(Long id) {
-        return systemUserQueryRepository.getSystemUserById(id)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.USER_NOT_FOUND,
-                    "user.user.not_found",
-                    id
-                );
-                return null;
-            });
+        Optional<SystemUser> userOpt = systemUserQueryRepository.getSystemUserById(id);
+        if (userOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.USER_NOT_FOUND,
+                "user.user.not_found",
+                id
+            );
+        }
+        return userOpt.get();
     }
 
     /**
@@ -50,15 +52,15 @@ public class SystemUserQueryService implements SystemUserQueryCUInputPort {
      */
     @Override
     public SystemUser getSystemUserByEmail(String email) {
-        return systemUserQueryRepository.getSystemUserByEmail(email)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.USER_NOT_FOUND,
-                    "user.user.not_found",
-                    email
-                );
-                return null;
-            });
+        Optional<SystemUser> userOpt = systemUserQueryRepository.getSystemUserByEmail(email);
+        if (userOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.USER_NOT_FOUND,
+                "user.user.not_found",
+                email
+            );
+        }
+        return userOpt.get();
     }
 
     /**

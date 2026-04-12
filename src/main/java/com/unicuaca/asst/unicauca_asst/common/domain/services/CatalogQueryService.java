@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.common.domain.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
@@ -182,14 +183,14 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      */
     @Override
     public City getCityByCodeWithDepartment(String code) {
-        return this.catalogQueryRepository.getCityByCodeWithDepartment(code)
-            .orElseGet(() -> {
-                this.resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "Ciudad con código: '" + code + "'")
-                );
-                return null;
-            });
+        Optional<City> cityOpt = catalogQueryRepository.getCityByCodeWithDepartment(code);
+        if (cityOpt.isEmpty()) {
+            resultFormatterOutputPort.throwEntityNotFound(
+                ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "Ciudad con código: '" + code + "'")
+            );
+        }
+        return cityOpt.get();
     }
 
     /**
@@ -200,14 +201,14 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      */
     @Override
     public City getCityByNameWithDepartment(String name) {
-        return catalogQueryRepository.getCityByNameWithDepartment(name)
-            .orElseGet(() -> {
-                resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "Ciudad con nombre '" + name + "'")
-                );
-                return null;
-            });
+        Optional<City> cityOpt = catalogQueryRepository.getCityByNameWithDepartment(name);
+        if (cityOpt.isEmpty()) {
+            resultFormatterOutputPort.throwEntityNotFound(
+                ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "Ciudad con nombre '" + name + "'")
+            );
+        }
+        return cityOpt.get();
     }
 
     /**
@@ -218,14 +219,14 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      */
     @Override
     public Department getDepartmentByCodeWithCities(String code) {
-        return catalogQueryRepository.getDepartmentByCodeWithCities(code)
-            .orElseGet(() -> {
-                resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "Departamento con código '" + code + "'")
-                );
-                return null;
-            });
+        Optional<Department> deptOpt = catalogQueryRepository.getDepartmentByCodeWithCities(code);
+        if (deptOpt.isEmpty()) {
+            resultFormatterOutputPort.throwEntityNotFound(
+                ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "Departamento con código '" + code + "'")
+            );
+        }
+        return deptOpt.get();
     }
 
     /**
@@ -236,15 +237,15 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      */
     @Override
     public Department getDepartmentByNameWithCities(String name) {
-        return catalogQueryRepository.getDepartmentByNameWithCities(name)
-            .orElseGet(() -> {
-                resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                    String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                        "Departamento con nombre '" + name + "'")
-                );
-                return null;
-            });
+        Optional<Department> deptOpt = catalogQueryRepository.getDepartmentByNameWithCities(name);
+        if (deptOpt.isEmpty()) {
+            resultFormatterOutputPort.throwEntityNotFound(
+                ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
+                    "Departamento con nombre '" + name + "'")
+            );
+        }
+        return deptOpt.get();
     }
 
     /**

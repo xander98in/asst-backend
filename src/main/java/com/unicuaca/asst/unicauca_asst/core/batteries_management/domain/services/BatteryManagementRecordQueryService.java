@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Servicio de dominio para la consulta de registros de gestión de baterías.
@@ -137,15 +138,15 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
      */
     @Override
     public BatteryManagementRecordInformation getRecordInformationById(Long id) {
-        BatteryManagementRecord record = recordQueryRepository.getBatteryManagementRecordById(id)
-            .orElseGet(() -> {
-                resultFormatterOutputPort.throwEntityNotFound(
-                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
-                    "user.battery.query_not_found",
-                    id
-                );
-                return null;
-            });
+        Optional<BatteryManagementRecord> recordOpt = recordQueryRepository.getBatteryManagementRecordById(id);
+        if (recordOpt.isEmpty()) {
+            resultFormatterOutputPort.throwEntityNotFound(
+                ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                "user.battery.query_not_found",
+                id
+            );
+        }
+        BatteryManagementRecord record = recordOpt.get();
 
         String workArea = detailsQueryRepository
             .getWorkAreaNameByBatteryManagementRecordId(record.getId())

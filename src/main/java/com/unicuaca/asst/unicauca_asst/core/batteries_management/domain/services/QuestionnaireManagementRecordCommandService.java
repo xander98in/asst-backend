@@ -2,15 +2,27 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.service
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.*;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecordStatus;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Questionnaire;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecord;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecordStatus;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.BatteryManagementRecordStatusCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.QuestionnaireEnum;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.QuestionnaireManagementRecordStatusEnum;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.QuestionnaireManagementRecordCommandCUInputPort;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordStatusQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireManagementRecordCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireManagementRecordQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireManagementRecordStatusQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireResponseCommandRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Servicio de dominio para la gestión de registros de gestión de cuestionarios.
@@ -44,27 +56,27 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
         Long batteryId = record.getBatteryManagementRecord().getId();
 
         // Validación de existencia de la batería contenedora
-        BatteryManagementRecord batteryRecord = batteryManagementRecordQueryRepository.getBatteryManagementRecordById(batteryId)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
-                    "user.questionnaire_management.battery_not_found",
-                    batteryId
-                );
-                return null;
-            });
+        Optional<BatteryManagementRecord> batteryOpt = batteryManagementRecordQueryRepository.getBatteryManagementRecordById(batteryId);
+        if (batteryOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                "user.questionnaire_management.battery_not_found",
+                batteryId
+            );
+        }
+        BatteryManagementRecord batteryRecord = batteryOpt.get();
 
         // Validación de existencia del catálogo de cuestionario
         Long questionnaireId = record.getQuestionnaire().getId();
-        Questionnaire questionnaire = questionnaireQueryRepository.getById(questionnaireId)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.QUESTIONNAIRE_NOT_FOUND_BY_REF,
-                    "user.questionnaire_management.not_found",
-                    questionnaireId
-                );
-                return null;
-            });
+        Optional<Questionnaire> questionnaireOpt = questionnaireQueryRepository.getById(questionnaireId);
+        if (questionnaireOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTIONNAIRE_NOT_FOUND_BY_REF,
+                "user.questionnaire_management.not_found",
+                questionnaireId
+            );
+        }
+        Questionnaire questionnaire = questionnaireOpt.get();
 
         // Regla de Negocio: Evitar duplicidad de asignación
         if (questionnaireManagementRecordQueryRepository
@@ -78,16 +90,16 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
 
         // Resolución del estado inicial 'Creado' para el cuestionario
         String initialStatusName = QuestionnaireManagementRecordStatusEnum.CREADO.getName();
-        QuestionnaireManagementRecordStatus initialStatus = questionnaireManagementRecordStatusQueryRepository
-            .getQuestionnaireManagementRecordStatusByName(initialStatusName)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.QUESTIONNAIRE_MGMT_STATUS_NOT_FOUND,
-                    "user.questionnaire_management.config_error",
-                    initialStatusName
-                );
-                return null;
-            });
+        Optional<QuestionnaireManagementRecordStatus> initialStatusOpt = questionnaireManagementRecordStatusQueryRepository
+            .getQuestionnaireManagementRecordStatusByName(initialStatusName);
+        if (initialStatusOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTIONNAIRE_MGMT_STATUS_NOT_FOUND,
+                "user.questionnaire_management.config_error",
+                initialStatusName
+            );
+        }
+        QuestionnaireManagementRecordStatus initialStatus = initialStatusOpt.get();
 
         record.setBatteryManagementRecord(batteryRecord);
         record.setQuestionnaire(questionnaire);
@@ -104,15 +116,15 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
     @Override
     public void deleteQuestionnaireManagementRecord(Long id) {
 
-        QuestionnaireManagementRecord recordToDelete = questionnaireManagementRecordQueryRepository.findByIdWithAll(id)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
-                    "user.questionnaire_management.delete_not_found",
-                    id
-                );
-                return null;
-            });
+        Optional<QuestionnaireManagementRecord> recordOpt = questionnaireManagementRecordQueryRepository.findByIdWithAll(id);
+        if (recordOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
+                "user.questionnaire_management.delete_not_found",
+                id
+            );
+        }
+        QuestionnaireManagementRecord recordToDelete = recordOpt.get();
 
         // Regla de Negocio: No eliminar cuestionarios finalizados
         if (QuestionnaireManagementRecordStatusEnum.CERRADO.getName().equals(recordToDelete.getStatus().getName())) {
@@ -154,27 +166,27 @@ public class QuestionnaireManagementRecordCommandService implements Questionnair
             ? BatteryManagementRecordStatusCode.COMPLETED.getDescription() 
             : BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription();
 
-        BatteryManagementRecord batteryRecord = batteryManagementRecordQueryRepository.getBatteryManagementRecordById(batteryId)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
-                    "user.questionnaire_management.sync_battery_failed",
-                    batteryId
-                );
-                return null;
-            });
+        Optional<BatteryManagementRecord> batteryOpt = batteryManagementRecordQueryRepository.getBatteryManagementRecordById(batteryId);
+        if (batteryOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                "user.questionnaire_management.sync_battery_failed",
+                batteryId
+            );
+        }
+        BatteryManagementRecord batteryRecord = batteryOpt.get();
 
         if (!batteryRecord.getStatus().getName().equals(targetBatteryStatusName)) {
-            BatteryManagementRecordStatus newStatus = batteryManagementRecordStatusQueryRepository
-                .getStatusByName(targetBatteryStatusName)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.BATTERY_STATUS_NOT_FOUND,
-                        "user.questionnaire_management.sync_status_not_found",
-                        targetBatteryStatusName
-                    );
-                    return null;
-                });
+            Optional<BatteryManagementRecordStatus> statusOpt = batteryManagementRecordStatusQueryRepository
+                .getStatusByName(targetBatteryStatusName);
+            if (statusOpt.isEmpty()) {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.BATTERY_STATUS_NOT_FOUND,
+                    "user.questionnaire_management.sync_status_not_found",
+                    targetBatteryStatusName
+                );
+            }
+            BatteryManagementRecordStatus newStatus = statusOpt.get();
 
             batteryRecord.setStatus(newStatus);
             batteryManagementRecordCommandRepository.updateBatteryManagementRecord(batteryRecord);

@@ -9,6 +9,8 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedDetailsQueryRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 /**
  * Servicio de dominio para la consulta de información sociodemográfica de personas evaluadas.
  * 
@@ -36,28 +38,28 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
     public PersonEvaluatedDetails getMetaByBatteryManagementRecordId(Long batteryManagementRecordId) {
 
         // Validación de existencia de la batería
-        BatteryManagementRecord record = batteryManagementRecordQueryRepository
-            .getBatteryManagementRecordById(batteryManagementRecordId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
-                    "user.person_evaluated_details.battery_not_found",
-                    batteryManagementRecordId
-                );
-                return null;
-            });
+        Optional<BatteryManagementRecord> recordOpt = batteryManagementRecordQueryRepository
+            .getBatteryManagementRecordById(batteryManagementRecordId);
+        if (recordOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                "user.person_evaluated_details.battery_not_found",
+                batteryManagementRecordId
+            );
+        }
+        BatteryManagementRecord record = recordOpt.get();
 
         // Consulta de detalles vinculados a la batería
-        PersonEvaluatedDetails details = personEvaluatedDetailsQueryRepository
-            .getByBatteryManagementRecordId(record.getId())
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.PERSON_DETAILS_NOT_FOUND,
-                    "user.person_evaluated_details.query_by_record_not_found",
-                    batteryManagementRecordId
-                );
-                return null;
-            });
+        Optional<PersonEvaluatedDetails> detailsOpt = personEvaluatedDetailsQueryRepository
+            .getByBatteryManagementRecordId(record.getId());
+        if (detailsOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.PERSON_DETAILS_NOT_FOUND,
+                "user.person_evaluated_details.query_by_record_not_found",
+                batteryManagementRecordId
+            );
+        }
+        PersonEvaluatedDetails details = detailsOpt.get();
 
         return PersonEvaluatedDetails.builder()
             .id(details.getId())
@@ -76,15 +78,15 @@ public class PersonEvaluatedDetailsQueryService implements PersonEvaluatedDetail
      */
     @Override
     public PersonEvaluatedDetails getPersonEvaluatedDetailsById(Long personEvaluatedDetailsId) {
-        return personEvaluatedDetailsQueryRepository
-            .getByIdWithAll(personEvaluatedDetailsId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.PERSON_DETAILS_NOT_FOUND,
-                    "user.person_evaluated_details.query_not_found",
-                    personEvaluatedDetailsId
-                );
-                return null;
-            });
+        Optional<PersonEvaluatedDetails> detailsOpt = personEvaluatedDetailsQueryRepository
+            .getByIdWithAll(personEvaluatedDetailsId);
+        if (detailsOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.PERSON_DETAILS_NOT_FOUND,
+                "user.person_evaluated_details.query_not_found",
+                personEvaluatedDetailsId
+            );
+        }
+        return detailsOpt.get();
     }
 }

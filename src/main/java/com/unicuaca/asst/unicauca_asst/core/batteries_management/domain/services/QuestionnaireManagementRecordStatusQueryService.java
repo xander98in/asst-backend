@@ -74,13 +74,14 @@ public class QuestionnaireManagementRecordStatusQueryService implements Question
      * @return el recurso encontrado
      */
     private <T> T fetchOrThrow(Supplier<Optional<T>> fetcher, String reference, String userKey) {
-        return fetcher.get().orElseGet(() -> {
+        Optional<T> result = fetcher.get();
+        if (result.isEmpty()) {
             resultFormatter.throwEntityNotFound(
                 ErrorCode.QUESTIONNAIRE_MGMT_STATUS_NOT_FOUND,
                 userKey,
                 reference
             );
-            return null;
-        });
+        }
+        return result.get();
     }
 }

@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.auth.domain.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
@@ -40,14 +41,14 @@ public class RoleQueryService implements RoleQueryCUInputPort {
      */
     @Override
     public Role getRoleByKeyName(String keyName) {
-        return roleQueryRepository.getRoleByKeyName(keyName)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.ROLE_NOT_FOUND,
-                    "tech.role.not_found",
-                    keyName
-                );
-                return null;
-            });
+        Optional<Role> roleOpt = roleQueryRepository.getRoleByKeyName(keyName);
+        if (roleOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.ROLE_NOT_FOUND,
+                "tech.role.not_found",
+                keyName
+            );
+        }
+        return roleOpt.get();
     }
 }

@@ -4,7 +4,15 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.City;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.CivilStatus;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.ContractType;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.EducationLevel;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.Gender;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.HousingType;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.JobPositionType;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.SalaryType;
+import com.unicuaca.asst.unicauca_asst.common.domain.models.SocioeconomicLevel;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
@@ -13,7 +21,12 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.P
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.BatteryManagementRecordStatusCode;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.enums.QuestionnaireEnum;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.PersonEvaluatedDetailsCommandCUInputPort;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.BatteryManagementRecordStatusQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedDetailsCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedDetailsQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireManagementRecordQueryRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,16 +70,15 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
 
         hydrateDetails(personEvaluatedDetails);
 
-        personEvaluatedDetailsCommandRepository
-            .savePersonEvaluatedDetails(personEvaluatedDetails)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityCreationFailed(
-                    ErrorCode.ENTITY_CREATION_ERROR,
-                    "user.person_evaluated_details.creation_failed",
-                    bmrId
-                );
-                return null;
-            });
+        Optional<PersonEvaluatedDetails> optionalSaved = personEvaluatedDetailsCommandRepository
+            .savePersonEvaluatedDetails(personEvaluatedDetails);
+        if (optionalSaved.isEmpty()) {
+            resultFormatter.throwEntityCreationFailed(
+                ErrorCode.ENTITY_CREATION_ERROR,
+                "user.person_evaluated_details.creation_failed",
+                bmrId
+            );
+        }
 
         syncBatteryToInProcessing(bmrId);
     }
@@ -76,31 +88,30 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     @Override
     public void updatePersonEvaluatedDetails(Long id, PersonEvaluatedDetails personEvaluatedDetails) {
-        PersonEvaluatedDetails existing = personEvaluatedDetailsQueryRepository
-            .getByIdWithAll(id)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.PERSON_DETAILS_NOT_FOUND,
-                    "user.person_evaluated_details.update_not_found",
-                    id
-                );
-                return null;
-            });
+        Optional<PersonEvaluatedDetails> optionalExisting = personEvaluatedDetailsQueryRepository
+            .getByIdWithAll(id);
+        if (optionalExisting.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.PERSON_DETAILS_NOT_FOUND,
+                "user.person_evaluated_details.update_not_found",
+                id
+            );
+        }
+        PersonEvaluatedDetails existing = optionalExisting.get();
 
         personEvaluatedDetails.setBatteryManagementRecord(existing.getBatteryManagementRecord());
         hydrateDetails(personEvaluatedDetails);
         personEvaluatedDetails.setId(existing.getId());
 
-        personEvaluatedDetailsCommandRepository
-            .updatePersonEvaluatedDetails(id, personEvaluatedDetails)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityCreationFailed(
-                    ErrorCode.ENTITY_UPDATE_ERROR,
-                    "user.person_evaluated_details.update_failed",
-                    id
-                );
-                return null;
-            });
+        Optional<PersonEvaluatedDetails> optionalUpdated = personEvaluatedDetailsCommandRepository
+            .updatePersonEvaluatedDetails(id, personEvaluatedDetails);
+        if (optionalUpdated.isEmpty()) {
+            resultFormatter.throwEntityCreationFailed(
+                ErrorCode.ENTITY_UPDATE_ERROR,
+                "user.person_evaluated_details.update_failed",
+                id
+            );
+        }
     }
 
     /**
@@ -109,16 +120,16 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
     @Override
     public void deletePersonEvaluatedDetails(Long personEvaluatedDetailsId) {
 
-        PersonEvaluatedDetails details = personEvaluatedDetailsQueryRepository
-            .getByIdWithAll(personEvaluatedDetailsId)
-            .orElseGet(() -> {
-                this.resultFormatter.throwEntityNotFound(
-                    ErrorCode.PERSON_DETAILS_NOT_FOUND,
-                    "user.person_evaluated_details.delete_not_found",
-                    personEvaluatedDetailsId
-                );
-                return null;
-            });
+        Optional<PersonEvaluatedDetails> optionalDetails = personEvaluatedDetailsQueryRepository
+            .getByIdWithAll(personEvaluatedDetailsId);
+        if (optionalDetails.isEmpty()) {
+            this.resultFormatter.throwEntityNotFound(
+                ErrorCode.PERSON_DETAILS_NOT_FOUND,
+                "user.person_evaluated_details.delete_not_found",
+                personEvaluatedDetailsId
+            );
+        }
+        PersonEvaluatedDetails details = optionalDetails.get();
 
         Long batteryRecordId = details.getBatteryManagementRecord().getId();
 
@@ -134,7 +145,6 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
                 "user.person_evaluated_details.delete_not_allowed",
                 batteryRecordId
             );
-            return;
         }
 
         personEvaluatedDetailsCommandRepository.deleteById(personEvaluatedDetailsId);
@@ -177,27 +187,27 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @param bmrId el ID del registro de gestión de batería a sincronizar
      */
     private void syncBatteryToInProcessing(Long bmrId) {
-        BatteryManagementRecord record = batteryManagementRecordQueryRepository
-            .getBatteryManagementRecordById(bmrId)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
-                    "user.person_evaluated_details.battery_not_found",
-                    bmrId
-                );
-                return null;
-            });
+        Optional<BatteryManagementRecord> optionalRecord = batteryManagementRecordQueryRepository
+            .getBatteryManagementRecordById(bmrId);
+        if (optionalRecord.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                "user.person_evaluated_details.battery_not_found",
+                bmrId
+            );
+        }
+        BatteryManagementRecord record = optionalRecord.get();
 
-        BatteryManagementRecordStatus status = batteryManagementRecordStatusQueryRepository
-            .getStatusByName(BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription())
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.BATTERY_STATUS_NOT_FOUND,
-                    "user.person_evaluated_details.sync_status_not_found",
-                    BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription()
-                );
-                return null;
-            });
+        Optional<BatteryManagementRecordStatus> optionalStatus = batteryManagementRecordStatusQueryRepository
+            .getStatusByName(BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription());
+        if (optionalStatus.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.BATTERY_STATUS_NOT_FOUND,
+                "user.person_evaluated_details.sync_status_not_found",
+                BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription()
+            );
+        }
+        BatteryManagementRecordStatus status = optionalStatus.get();
 
         record.setStatus(status);
         batteryManagementRecordCommandRepository.updateBatteryManagementRecord(record);
@@ -212,27 +222,27 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      */
     private void syncBatteryAfterDetailsDelete(Long bmrId) {
         if (!questionnaireManagementRecordQueryRepository.existsByBatteryManagementRecordId(bmrId)) {
-            BatteryManagementRecord record = batteryManagementRecordQueryRepository
-                .getBatteryManagementRecordById(bmrId)
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.BATTERY_RECORD_NOT_FOUND,
-                        "user.person_evaluated_details.battery_not_found",
-                        bmrId
-                    );
-                    return null;
-                });
+            Optional<BatteryManagementRecord> optionalRecord = batteryManagementRecordQueryRepository
+                .getBatteryManagementRecordById(bmrId);
+            if (optionalRecord.isEmpty()) {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.BATTERY_RECORD_NOT_FOUND,
+                    "user.person_evaluated_details.battery_not_found",
+                    bmrId
+                );
+            }
+            BatteryManagementRecord record = optionalRecord.get();
 
-            BatteryManagementRecordStatus status = batteryManagementRecordStatusQueryRepository
-                .getStatusByName(BatteryManagementRecordStatusCode.CREATED.getDescription())
-                .orElseGet(() -> {
-                    resultFormatter.throwEntityNotFound(
-                        ErrorCode.BATTERY_STATUS_NOT_FOUND,
-                        "user.person_evaluated_details.sync_status_failed",
-                        BatteryManagementRecordStatusCode.CREATED.getDescription()
-                    );
-                    return null;
-                });
+            Optional<BatteryManagementRecordStatus> optionalStatus = batteryManagementRecordStatusQueryRepository
+                .getStatusByName(BatteryManagementRecordStatusCode.CREATED.getDescription());
+            if (optionalStatus.isEmpty()) {
+                resultFormatter.throwEntityNotFound(
+                    ErrorCode.BATTERY_STATUS_NOT_FOUND,
+                    "user.person_evaluated_details.sync_status_failed",
+                    BatteryManagementRecordStatusCode.CREATED.getDescription()
+                );
+            }
+            BatteryManagementRecordStatus status = optionalStatus.get();
 
             record.setStatus(status);
             batteryManagementRecordCommandRepository.updateBatteryManagementRecord(record);
@@ -248,7 +258,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return el registro resuelto
      */
     private BatteryManagementRecord resolveBatteryRecord(BatteryManagementRecord input) {
-        Long id = safeId(input, input::getId, "registro de gestión de batería");
+        Long id = safeId(input.getId(), "registro de gestión de batería");
         return fetchOrThrow(() -> batteryManagementRecordQueryRepository.getBatteryManagementRecordById(id), "registro de gestión de batería", id);
     }
 
@@ -259,7 +269,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return el género resuelto
      */
     private Gender resolveGender(Gender input) {
-        Long id = safeId(input, input::getId, "género");
+        Long id = safeId(input.getId(), "género");
         return fetchOrThrow(() -> catalogQueryRepository.getGenderById(id), "género", id);
     }
 
@@ -270,7 +280,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return el estado civil resuelto
      */
     private CivilStatus resolveCivilStatus(CivilStatus input) {
-        Long id = safeId(input, input::getId, "estado civil");
+        Long id = safeId(input.getId(), "estado civil");
         return fetchOrThrow(() -> catalogQueryRepository.getCivilStatusById(id), "estado civil", id);
     }
 
@@ -281,7 +291,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return el nivel de educación resuelto
      */
     private EducationLevel resolveEducationLevel(EducationLevel input) {
-        Long id = safeId(input, input::getId, "nivel de educación");
+        Long id = safeId(input.getId(), "nivel de educación");
         return fetchOrThrow(() -> catalogQueryRepository.getEducationLevelById(id), "nivel de educación", id);
     }
 
@@ -293,7 +303,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return la ciudad resuelta
      */
     private City resolveCity(City input, String contexto) {
-        Long id = safeId(input, input::getId, "ciudad de " + contexto);
+        Long id = safeId(input.getId(), "ciudad de " + contexto);
         return fetchOrThrow(() -> catalogQueryRepository.getCityById(id), "ciudad de " + contexto, id);
     }
 
@@ -304,7 +314,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return el nivel socioeconómico resuelto
      */
     private SocioeconomicLevel resolveSocioeconomicLevel(SocioeconomicLevel input) {
-        Long id = safeId(input, input::getId, "nivel socioeconómico");
+        Long id = safeId(input.getId(), "nivel socioeconómico");
         return fetchOrThrow(() -> catalogQueryRepository.getSocioeconomicLevelById(id), "nivel socioeconómico", id);
     }
 
@@ -315,7 +325,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return el tipo de vivienda resuelto
      */
     private HousingType resolveHousingType(HousingType input) {
-        Long id = safeId(input, input::getId, "tipo de vivienda");
+        Long id = safeId(input.getId(), "tipo de vivienda");
         return fetchOrThrow(() -> catalogQueryRepository.getHousingTypeById(id), "tipo de vivienda", id);
     }
 
@@ -326,7 +336,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return el tipo de cargo resuelto
      */
     private JobPositionType resolveJobPositionType(JobPositionType input) {
-        Long id = safeId(input, input::getId, "tipo de cargo");
+        Long id = safeId(input.getId(), "tipo de cargo");
         return fetchOrThrow(() -> catalogQueryRepository.getJobPositionTypeById(id), "tipo de cargo", id);
     }
 
@@ -337,7 +347,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return el tipo de contrato resuelto
      */
     private ContractType resolveContractType(ContractType input) {
-        Long id = safeId(input, input::getId, "tipo de contrato");
+        Long id = safeId(input.getId(), "tipo de contrato");
         return fetchOrThrow(() -> catalogQueryRepository.getContractTypeById(id), "tipo de contrato", id);
     }
 
@@ -348,7 +358,7 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return el tipo de salario resuelto
      */
     private SalaryType resolveSalaryType(SalaryType input) {
-        Long id = safeId(input, input::getId, "tipo de salario");
+        Long id = safeId(input.getId(), "tipo de salario");
         return fetchOrThrow(() -> catalogQueryRepository.getSalaryTypeById(id), "tipo de salario", id);
     }
 
@@ -362,40 +372,36 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
      * @return la entidad resuelta o null si no se encuentra (la excepción ya se lanza en ese caso)
      */
     private <T> T fetchOrThrow(Supplier<Optional<T>> fetcher, String recurso, Long id) {
-        return fetcher.get().orElseGet(() -> {
+        Optional<T> result = fetcher.get();
+        if (result.isEmpty()) {
             resultFormatter.throwEntityNotFound(
                 ErrorCode.CATALOG_RESOURCE_NOT_FOUND,
                 "user.person_evaluated_details.catalog_invalid",
                 recurso,
                 id
             );
-            return null;
-        });
+        }
+        return result.get();
     }
 
     /**
-     * Extrae de manera segura el ID de un objeto y valida nulls de forma genérica.
+     * Valida que un ID de catálogo no sea nulo.
      *
-     * <p>Este helper evita NullPointerException verificando que tanto el objeto como su ID sean válidos.</p>
-     *
-     * @param ref         referencia al objeto (puede ser null)
-     * @param idSupplier  función que obtiene el ID del objeto
-     * @param nombre      nombre legible del recurso (para el mensaje de error)
-     * @return el ID no nulo del recurso
+     * @param id     el ID a validar
+     * @param nombre nombre legible del recurso (para el mensaje de error)
+     * @return el ID validado
      */
-    private Long safeId(Object ref, Supplier<Long> idSupplier, String nombre) {
-        Long id = (ref != null) ? idSupplier.get() : null;
+    private Long safeId(Long id, String nombre) {
         if (id == null) {
             resultFormatter.throwBusinessRuleViolation(
                 ErrorCode.BAD_REQUEST,
                 "user.person_evaluated_details.required_fields_missing",
                 nombre
             );
-            return null;
         }
         return id;
     }
-
+    
     /**
      * Normaliza un texto aplicando trim y capitalización de la primera letra.
      *

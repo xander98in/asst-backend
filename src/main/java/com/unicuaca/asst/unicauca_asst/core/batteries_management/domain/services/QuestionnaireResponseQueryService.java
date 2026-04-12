@@ -40,16 +40,9 @@ public class QuestionnaireResponseQueryService implements QuestionnaireResponseQ
                 "user.responses.query_not_found",
                 recordId
             );
-            return null;
         }
 
         // Recuperación de respuestas con relaciones hidratadas
-        List<QuestionnaireResponse> responses = questionnaireResponseQueryRepository.findAllByRecordIdWithAllRelations(recordId);
-        
-        if (responses.isEmpty()) {
-            return List.of();
-        }
-        
-        return responses;
+        return questionnaireResponseQueryRepository.findAllByRecordIdWithAllRelations(recordId);
     }
 }

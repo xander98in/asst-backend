@@ -7,6 +7,8 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.in
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireManagementRecordQueryRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 /**
  * Servicio de dominio para la consulta de registros de gestión de cuestionarios.
  * 
@@ -28,15 +30,15 @@ public class QuestionnaireManagementRecordQueryService implements QuestionnaireM
      */
     @Override
     public QuestionnaireManagementRecord getByBatteryRecordIdAndQuestionnaireAbbreviation(Long batteryManagementRecordId, String questionnaireAbbreviation) {
-        return questionnaireManagementRecordQueryRepository
-            .findByBatteryManagementRecordIdAndQuestionnaireAbbreviationWithAll(batteryManagementRecordId, questionnaireAbbreviation)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
-                    "user.questionnaire_management.query_not_found",
-                    questionnaireAbbreviation
-                );
-                return null;
-            });
+        Optional<QuestionnaireManagementRecord> recordOpt = questionnaireManagementRecordQueryRepository
+            .findByBatteryManagementRecordIdAndQuestionnaireAbbreviationWithAll(batteryManagementRecordId, questionnaireAbbreviation);
+        if (recordOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.QUESTIONNAIRE_MGMT_RECORD_NOT_FOUND,
+                "user.questionnaire_management.query_not_found",
+                questionnaireAbbreviation
+            );
+        }
+        return recordOpt.get();
     }
 }

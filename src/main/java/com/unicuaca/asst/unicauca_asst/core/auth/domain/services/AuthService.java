@@ -1,5 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.auth.domain.services;
 
+import java.util.Optional;
+
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.models.SystemUser;
@@ -29,15 +31,15 @@ public class AuthService implements AuthCUInputPort {
      */
     @Override
     public SystemUser loginWithGoogle(String email) {
-        SystemUser systemUser = systemUserQueryRepository.getSystemUserByEmail(email)
-            .orElseGet(() -> {
-                resultFormatter.throwEntityNotFound(
-                    ErrorCode.USER_NOT_FOUND,
-                    "user.user.not_found",
-                    email
-                );
-                return null;
-            });
+        Optional<SystemUser> userOpt = systemUserQueryRepository.getSystemUserByEmail(email);
+        if (userOpt.isEmpty()) {
+            resultFormatter.throwEntityNotFound(
+                ErrorCode.USER_NOT_FOUND,
+                "user.user.not_found",
+                email
+            );
+        }
+        SystemUser systemUser = userOpt.get();
 
         String currentStatus = systemUser.getStatus().getName();
 
