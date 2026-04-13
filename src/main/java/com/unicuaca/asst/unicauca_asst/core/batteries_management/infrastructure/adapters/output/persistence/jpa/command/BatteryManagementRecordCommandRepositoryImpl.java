@@ -31,7 +31,6 @@ public class BatteryManagementRecordCommandRepositoryImpl implements BatteryMana
         BatteryManagementRecordEntity saved = batteryManagementRecordSpringJpaRepository.save(entity);
         BatteryManagementRecordEntity loaded = batteryManagementRecordSpringJpaRepository.findByIdWithRelations(saved.getId())
                 .orElse(saved);
-        System.out.println("Saved BatteryManagementRecordEntity: " + saved.getCreatedAt());
         return Optional.of(batteryManagementRecordPersistenceMapper.toDomain(loaded));
     }
 

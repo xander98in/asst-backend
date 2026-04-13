@@ -644,7 +644,6 @@ public class RestApiExceptionHandler {
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleGeneric(
             HttpServletRequest req, Exception ex) {
 
-        System.out.println("\n\n[ERROR] Excepción no controlada capturada por RestApiExceptionHandler:");
         ex.printStackTrace();
 
         String userMsg = resolveUserMessage("user.generic.error", null, req, "Error inesperado.");
