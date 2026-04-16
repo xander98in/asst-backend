@@ -1,10 +1,15 @@
 package com.unicuaca.asst.unicauca_asst.core.reports.domain.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecordInformation;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.BatteryManagementRecordQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.models.AnalysisSpace;
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.input.AnalysisSpaceQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.AnalysisSpaceQueryRepository;
@@ -21,13 +26,11 @@ import lombok.RequiredArgsConstructor;
 public class AnalysisSpaceQueryService implements AnalysisSpaceQueryCUInputPort {
 
     private final AnalysisSpaceQueryRepository analysisSpaceQueryRepository;
+    private final BatteryManagementRecordQueryCUInputPort batteryManagementRecordQueryCUInputPort;
     private final ResultFormatterOutputPort resultFormatter;
 
     /**
-     * Lista todos los espacios de análisis creados por un usuario.
-     *
-     * @param userId ID del usuario
-     * @return lista de espacios de análisis del usuario
+     * {@inheritDoc}
      */
     @Override
     public List<AnalysisSpace> getAnalysisSpacesByUser(Long userId) {
@@ -35,12 +38,7 @@ public class AnalysisSpaceQueryService implements AnalysisSpaceQueryCUInputPort 
     }
 
     /**
-     * Obtiene un espacio de análisis con sus baterías asociadas,
-     * validando que pertenece al usuario solicitante.
-     *
-     * @param spaceId ID del espacio de análisis
-     * @param userId  ID del usuario que realiza la consulta
-     * @return el espacio de análisis con sus baterías
+     * {@inheritDoc}
      */
     @Override
     public AnalysisSpace getAnalysisSpaceById(Long spaceId, Long userId) {
@@ -64,5 +62,31 @@ public class AnalysisSpaceQueryService implements AnalysisSpaceQueryCUInputPort 
         }
 
         return space;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Reutiliza {@link #getAnalysisSpaceById(Long, Long)} para validar la existencia
+     * del espacio y la pertenencia al usuario antes de delegar la consulta paginada al
+     * módulo de baterías.</p>
+     */
+    @Override
+    public Page<BatteryManagementRecordInformation> getSpaceBatteriesWithMultifilter(
+        Long spaceId, Long userId,
+        String identificationNumber, String workAreaName,
+        LocalDateTime dateFrom, LocalDateTime dateTo,
+        Long identificationTypeId, Long jobPositionTypeId,
+        String intralaboralForm,
+        Integer page, Integer size
+    ) {
+        getAnalysisSpaceById(spaceId, userId);
+
+        return batteryManagementRecordQueryCUInputPort.listByAnalysisSpaceWithMultipleFilters(
+            spaceId,
+            identificationNumber, workAreaName, dateFrom, dateTo,
+            identificationTypeId, jobPositionTypeId, intralaboralForm,
+            page, size
+        );
     }
 }

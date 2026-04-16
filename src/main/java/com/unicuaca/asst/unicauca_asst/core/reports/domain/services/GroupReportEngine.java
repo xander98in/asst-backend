@@ -39,6 +39,8 @@ public class GroupReportEngine {
         int formaACount,
         int formaBCount,
         QuestionnaireGroupSummary intralaboral,
+        QuestionnaireGroupSummary intralaboralFormaA,
+        QuestionnaireGroupSummary intralaboralFormaB,
         QuestionnaireGroupSummary extralaboral,
         QuestionnaireGroupSummary generalTotal,
         QuestionnaireGroupSummary stress
@@ -148,9 +150,37 @@ public class GroupReportEngine {
             score -> BaremTables.classifyStress(score, BaremTables.getStressBarem(occupationalGroup))
         );
 
+        // Separar resultados por forma
+        List<ScoringEngine.IndividualScoringResult> formaAResults = new ArrayList<>();
+        List<ScoringEngine.IndividualScoringResult> formaBResults = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            if ("ILA".equals(forms.get(i))) {
+                formaAResults.add(results.get(i));
+            } else {
+                formaBResults.add(results.get(i));
+            }
+        }
+
+        // Forma A
+        QuestionnaireGroupSummary intralaboralFormaA = buildFormSummary(
+            formaAResults, formaACount, 0,
+            r -> r.intralaboral().totalTransformedScore(),
+            r -> r.intralaboral().totalRiskLevel(),
+            score -> BaremTables.classify(score, BaremTables.getIntralaboralTotalBarem("ILA"))
+        );
+
+        // Forma B
+        QuestionnaireGroupSummary intralaboralFormaB = buildFormSummary(
+            formaBResults, 0, formaBCount,
+            r -> r.intralaboral().totalTransformedScore(),
+            r -> r.intralaboral().totalRiskLevel(),
+            score -> BaremTables.classify(score, BaremTables.getIntralaboralTotalBarem("ILB"))
+        );
+
         return new GroupSummaryResult(
             totalPersons, formaACount, formaBCount,
-            intralaboral, extralaboral, generalTotal, stress
+            intralaboral, intralaboralFormaA, intralaboralFormaB,
+            extralaboral, generalTotal, stress
         );
     }
 
@@ -257,7 +287,7 @@ public class GroupReportEngine {
         List<String> stressLevels
     ) {
         int totalPersons = results.size();
-        long totalHighStress = stressLevels.stream().filter(this::isHighStress).count();
+        long totalMediumOrHighStress = stressLevels.stream().filter(this::isMediumOrHighStress).count();
 
         // Recopilar pares (riskLevel, stressLevel) por dimensión y dominio intralaboral
         Map<String, List<String[]>> intraDimData = new LinkedHashMap<>();
@@ -282,7 +312,7 @@ public class GroupReportEngine {
         List<RiskMatrixEntry> intralaboralDimensions = new ArrayList<>();
         for (Map.Entry<String, List<String[]>> entry : intraDimData.entrySet()) {
             intralaboralDimensions.add(
-                buildRiskMatrixEntry(entry.getKey(), entry.getValue(), totalPersons, totalHighStress)
+                buildRiskMatrixEntry(entry.getKey(), entry.getValue(), totalPersons, totalMediumOrHighStress)
             );
         }
 
@@ -290,7 +320,7 @@ public class GroupReportEngine {
         List<RiskMatrixEntry> intralaboralDomains = new ArrayList<>();
         for (Map.Entry<String, List<String[]>> entry : intraDomainData.entrySet()) {
             intralaboralDomains.add(
-                buildRiskMatrixEntry(entry.getKey(), entry.getValue(), totalPersons, totalHighStress)
+                buildRiskMatrixEntry(entry.getKey(), entry.getValue(), totalPersons, totalMediumOrHighStress)
             );
         }
 
@@ -299,7 +329,7 @@ public class GroupReportEngine {
             .mapToObj(i -> new String[]{results.get(i).intralaboral().totalRiskLevel(), stressLevels.get(i)})
             .toList();
         RiskMatrixEntry intralaboralTotal = buildRiskMatrixEntry(
-            "Total intralaboral", intraTotalData, totalPersons, totalHighStress
+            "Total intralaboral", intraTotalData, totalPersons, totalMediumOrHighStress
         );
 
         // Dimensiones extralaborales
@@ -315,7 +345,7 @@ public class GroupReportEngine {
         List<RiskMatrixEntry> extralaboralDimensions = new ArrayList<>();
         for (Map.Entry<String, List<String[]>> entry : extraDimData.entrySet()) {
             extralaboralDimensions.add(
-                buildRiskMatrixEntry(entry.getKey(), entry.getValue(), totalPersons, totalHighStress)
+                buildRiskMatrixEntry(entry.getKey(), entry.getValue(), totalPersons, totalMediumOrHighStress)
             );
         }
 
@@ -324,7 +354,7 @@ public class GroupReportEngine {
             .mapToObj(i -> new String[]{results.get(i).extralaboral().totalRiskLevel(), stressLevels.get(i)})
             .toList();
         RiskMatrixEntry extralaboralTotal = buildRiskMatrixEntry(
-            "Total extralaboral", extraTotalData, totalPersons, totalHighStress
+            "Total extralaboral", extraTotalData, totalPersons, totalMediumOrHighStress
         );
 
         return new RiskMatrixResult(
@@ -350,8 +380,38 @@ public class GroupReportEngine {
         );
     }
 
+    /**
+     * Construye el resumen grupal para un subconjunto de resultados filtrados por forma (A o B).
+     *
+     * @param formResults  resultados individuales de la forma específica
+     * @param formaACount  cantidad de personas con Forma A en este subconjunto
+     * @param formaBCount  cantidad de personas con Forma B en este subconjunto
+     * @param scoreExtractor función para extraer el puntaje del resultado individual
+     * @param levelExtractor función para extraer el nivel de riesgo del resultado individual
+     * @param classifier   función para clasificar el puntaje promedio con los baremos correspondientes
+     * @return resumen grupal del subconjunto, o resumen vacío con "N/A" si no hay resultados
+     */
+    private QuestionnaireGroupSummary buildFormSummary(
+        List<ScoringEngine.IndividualScoringResult> formResults,
+        int formaACount, int formaBCount,
+        Function<ScoringEngine.IndividualScoringResult, Double> scoreExtractor,
+        Function<ScoringEngine.IndividualScoringResult, String> levelExtractor,
+        Function<Double, String> classifier
+    ) {
+        if (formResults.isEmpty()) {
+            return new QuestionnaireGroupSummary(
+                0, formaACount, formaBCount, 0.0, "N/A",
+                new RiskDistribution(0, 0, 0, 0, 0, 0, 0)
+            );
+        }
+        int total = formResults.size();
+        List<Double> scores = formResults.stream().map(scoreExtractor).toList();
+        List<String> levels = formResults.stream().map(levelExtractor).toList();
+        return buildSummary(total, formaACount, formaBCount, scores, levels, classifier);
+    }
+
     private RiskMatrixEntry buildRiskMatrixEntry(
-        String name, List<String[]> riskStressPairs, int totalPersons, long totalHighStress
+        String name, List<String[]> riskStressPairs, int totalPersons, long totalMediumOrHighStress
     ) {
         long mediumOrHighRiskCount = riskStressPairs.stream()
             .filter(pair -> isMediumOrHighRisk(pair[0]))
@@ -362,11 +422,11 @@ public class GroupReportEngine {
             : 0.0;
 
         double associationIndex = 0.0;
-        if (totalHighStress > 0) {
-            long highRiskAndHighStress = riskStressPairs.stream()
-                .filter(pair -> isHighRisk(pair[0]) && isHighStress(pair[1]))
+        if (totalMediumOrHighStress > 0) {
+            long mediumOrHighRiskAndStress = riskStressPairs.stream()
+                .filter(pair -> isMediumOrHighRisk(pair[0]) && isMediumOrHighStress(pair[1]))
                 .count();
-            associationIndex = roundToTwoDecimals((double) highRiskAndHighStress / totalHighStress);
+            associationIndex = roundToTwoDecimals((double) mediumOrHighRiskAndStress / totalMediumOrHighStress);
         }
 
         return new RiskMatrixEntry(
@@ -405,16 +465,12 @@ public class GroupReportEngine {
             .orElse("");
     }
 
-    private boolean isHighRisk(String riskLevel) {
-        return "Riesgo alto".equals(riskLevel) || "Riesgo muy alto".equals(riskLevel);
-    }
-
     private boolean isMediumOrHighRisk(String riskLevel) {
         return "Riesgo medio".equals(riskLevel) || "Riesgo alto".equals(riskLevel) || "Riesgo muy alto".equals(riskLevel);
     }
 
-    private boolean isHighStress(String stressLevel) {
-        return "Alto".equals(stressLevel) || "Muy alto".equals(stressLevel);
+    private boolean isMediumOrHighStress(String stressLevel) {
+        return "Medio".equals(stressLevel) || "Alto".equals(stressLevel) || "Muy alto".equals(stressLevel);
     }
 
     private String getMagnitudeSemaphore(double magnitudePercent) {

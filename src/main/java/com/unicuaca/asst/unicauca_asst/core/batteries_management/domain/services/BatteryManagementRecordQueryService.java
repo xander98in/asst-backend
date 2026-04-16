@@ -161,6 +161,28 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * <p>Delega al repositorio usando la Specification específica del espacio de análisis
+     * y enriquece el resultado con la información sociodemográfica.</p>
+     */
+    @Override
+    public Page<BatteryManagementRecordInformation> listByAnalysisSpaceWithMultipleFilters(
+        Long spaceId,
+        String identificationNumber, String workAreaName,
+        LocalDateTime dateFrom, LocalDateTime dateTo,
+        Long identificationTypeId, Long jobPositionTypeId,
+        String intralaboralForm,
+        Integer page, Integer size
+    ) {
+        Page<BatteryManagementRecord> recordPage = recordQueryRepository.listByAnalysisSpaceWithMultipleFilters(
+            spaceId, identificationNumber, workAreaName, dateFrom, dateTo,
+            identificationTypeId, jobPositionTypeId, intralaboralForm, page, size
+        );
+        return mapToInformationPage(recordPage);
+    }
+
+    /**
      * Obtiene la información enriquecida de un proceso de evaluación por su ID.
      *
      * @param id identificador único del registro de batería

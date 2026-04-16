@@ -2,6 +2,7 @@ package com.unicuaca.asst.unicauca_asst.common.config;
 
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.ports.output.*;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.services.*;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.BatteryManagementRecordQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.*;
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.AnalysisSpaceCommandRepository;
@@ -342,9 +343,14 @@ public class BeanConfigurations {
     @Bean
     public AnalysisSpaceQueryService analysisSpaceQueryService(
         AnalysisSpaceQueryRepository analysisSpaceQueryRepository,
+        BatteryManagementRecordQueryCUInputPort batteryManagementRecordQueryCUInputPort,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
-        return new AnalysisSpaceQueryService(analysisSpaceQueryRepository, resultFormatterOutputPort);
+        return new AnalysisSpaceQueryService(
+            analysisSpaceQueryRepository,
+            batteryManagementRecordQueryCUInputPort,
+            resultFormatterOutputPort
+        );
     }
 
     @Bean

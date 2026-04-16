@@ -24,6 +24,12 @@ public class GroupSummaryResponseDTO {
     @Schema(description = "Resumen grupal del cuestionario intralaboral")
     private QuestionnaireGroupSummaryDTO intralaboral;
 
+    @Schema(description = "Resumen grupal intralaboral de personas con Forma A (ILA)")
+    private QuestionnaireGroupSummaryDTO intralaboralFormaA;
+
+    @Schema(description = "Resumen grupal intralaboral de personas con Forma B (ILB)")
+    private QuestionnaireGroupSummaryDTO intralaboralFormaB;
+
     @Schema(description = "Resumen grupal del cuestionario extralaboral")
     private QuestionnaireGroupSummaryDTO extralaboral;
 

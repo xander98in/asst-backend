@@ -161,6 +161,29 @@ public class BatteryManagementRecordQueryHandlerImpl implements BatteryManagemen
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<BatteryManagementRecordInformationResponseDTO> listByAnalysisSpaceWithMultipleFilters(
+        Long spaceId,
+        String identificationNumber, String workAreaName,
+        LocalDateTime dateFrom, LocalDateTime dateTo,
+        Long identificationTypeId, Long jobPositionTypeId,
+        String intralaboralForm,
+        Integer page, Integer size
+    ) {
+        Page<BatteryManagementRecordInformation> infoPage =
+            batteryManagementRecordQueryCUInputPort.listByAnalysisSpaceWithMultipleFilters(
+                spaceId, identificationNumber, workAreaName, dateFrom, dateTo,
+                identificationTypeId, jobPositionTypeId, intralaboralForm, page, size
+            );
+        List<BatteryManagementRecordInformationResponseDTO> dtoList = infoPage.getContent().stream()
+            .map(batteryManagementRecordMapper::toInformationResponseDTO)
+            .toList();
+        return new PageImpl<>(dtoList, infoPage.getPageable(), infoPage.getTotalElements());
+    }
+
+    /**
      * Obtiene la información detallada de un registro de gestión de baterías por su ID.
      *
      * @param id ID del registro de gestión de baterías

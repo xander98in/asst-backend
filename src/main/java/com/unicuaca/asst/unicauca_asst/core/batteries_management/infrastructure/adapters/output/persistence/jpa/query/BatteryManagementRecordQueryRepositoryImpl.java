@@ -223,4 +223,33 @@ public class BatteryManagementRecordQueryRepositoryImpl implements BatteryManage
             .toList();
         return new PageImpl<>(domainList, entityPage.getPageable(), entityPage.getTotalElements());
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Usa {@link BatteryManagementRecordSpecification#withSpaceAndFilters} para construir
+     * la Specification dinámica que restringe los resultados a las baterías asociadas al
+     * espacio indicado.</p>
+     */
+    @Override
+    public Page<BatteryManagementRecord> listByAnalysisSpaceWithMultipleFilters(
+        Long spaceId,
+        String identificationNumber, String workAreaName,
+        LocalDateTime dateFrom, LocalDateTime dateTo,
+        Long identificationTypeId, Long jobPositionTypeId,
+        String intralaboralForm,
+        Integer page, Integer size
+    ) {
+        Specification<BatteryManagementRecordEntity> spec =
+            BatteryManagementRecordSpecification.withSpaceAndFilters(
+                spaceId, identificationNumber, workAreaName, dateFrom, dateTo,
+                identificationTypeId, jobPositionTypeId, intralaboralForm
+            );
+        Page<BatteryManagementRecordEntity> entityPage =
+            batteryManagementRecordSpringJpaRepository.findAll(spec, PageRequest.of(page, size));
+        List<BatteryManagementRecord> domainList = entityPage.getContent().stream()
+            .map(batteryManagementRecordPersistenceMapper::toDomain)
+            .toList();
+        return new PageImpl<>(domainList, entityPage.getPageable(), entityPage.getTotalElements());
+    }
 }
