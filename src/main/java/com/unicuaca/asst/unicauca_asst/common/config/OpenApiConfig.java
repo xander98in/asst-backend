@@ -204,4 +204,19 @@ public class OpenApiConfig {
             .build();
     }
 
+    /**
+     * Grupo de documentación para el módulo de informes de riesgo psicosocial
+     * (informes individuales, grupales, espacios de análisis).
+     *
+     * Agrupa todos los endpoints bajo el prefijo <code>/asst/reports/**</code>.
+     */
+    @Bean
+    GroupedOpenApi reportsGroup() {
+        return GroupedOpenApi.builder()
+            .group("informes")
+            .packagesToScan("com.unicuaca.asst.unicauca_asst.core.reports.infrastructure.adapters.input.controllers")
+            .pathsToMatch("/asst/reports/**")
+            .build();
+    }
+
 }

@@ -117,7 +117,24 @@ public enum ErrorCode {
     JWT_MALFORMED("ASST-SEC-0009", "tech.auth.jwt_malformed"),
     JWT_MISSING("ASST-SEC-0010", "tech.auth.jwt_missing"),
     REFRESH_TOKEN_EXPIRED("ASST-SEC-0011", "tech.auth.refresh_token_expired"),
-    REFRESH_TOKEN_INVALID("ASST-SEC-0012", "tech.auth.refresh_token_invalid");
+    REFRESH_TOKEN_INVALID("ASST-SEC-0012", "tech.auth.refresh_token_invalid"),
+
+    /** Dominio Específico - Módulo de Informes */
+    REPORT_BATTERY_NOT_CLOSED("ASST-BUS-0049", "tech.report.battery_not_closed"),
+    REPORT_INCOMPLETE_BATTERY("ASST-BUS-0050", "tech.report.incomplete_battery"),
+
+    /** Dominio Específico - Espacios de Análisis */
+    ANALYSIS_SPACE_NOT_FOUND("ASST-BUS-0051", "tech.report.space_not_found"),
+    ANALYSIS_SPACE_NAME_EXISTS("ASST-BUS-0052", "tech.report.space_name_exists"),
+    ANALYSIS_SPACE_LIMIT_REACHED("ASST-BUS-0053", "tech.report.space_limit_reached"),
+    ANALYSIS_SPACE_ACCESS_DENIED("ASST-BUS-0054", "tech.report.space_access_denied"),
+    ANALYSIS_SPACE_BATTERY_NOT_FOUND("ASST-BUS-0055", "tech.report.space_battery_not_found"),
+    ANALYSIS_SPACE_MIN_BATTERIES("ASST-BUS-0056", "tech.report.space_min_batteries"),
+
+    /** Dominio Específico - Evaluadores */
+    EVALUATOR_NOT_FOUND("ASST-BUS-0057", "tech.report.evaluator_not_found"),
+    EVALUATOR_ACCESS_DENIED("ASST-BUS-0058", "tech.report.evaluator_access_denied"),
+    EVALUATOR_IN_USE("ASST-BUS-0059", "tech.report.evaluator_in_use");
 
     /** Código único de error para trazabilidad. */
     private final String code;

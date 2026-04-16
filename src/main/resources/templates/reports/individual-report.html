@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Informe Individual de Riesgo Psicosocial</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 1.5cm 2cm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 9pt;
+            color: #222;
+            background-color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page {
+            background-color: #FFFFFF;
+            padding: 5px 0;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        h1.report-title {
+            font-size: 11pt;
+            text-align: center;
+            color: #000000;
+            font-weight: bold;
+            margin: 0 0 12px 0;
+            padding: 8px;
+            border: none;
+            background-color: #F2F2F2;
+        }
+
+        h2.section-header {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #000000;
+            background-color: #F2F2F2;
+            padding: 4px 8px;
+            margin: 20px 0 6px 0;
+            border: none;
+            text-align: center;
+        }
+
+        .page-break > h2.section-header:first-child {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 0 5px 0;
+            background-color: #FFFFFF;
+        }
+
+        table td, table th {
+            border: none;
+            padding: 4px 6px;
+            vertical-align: middle;
+            font-size: 10pt;
+        }
+
+        table.data-table th {
+            background-color: #B8C9B0;
+            text-align: left;
+            font-weight: bold;
+            width: 35%;
+            font-size: 9pt;
+        }
+
+        table.data-table td {
+            font-size: 9pt;
+        }
+
+        table.form-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: none;
+            background-color: transparent;
+            margin: 0;
+        }
+
+        table.form-table td, table.form-table th {
+            padding: 4px 8px;
+            vertical-align: middle;
+            font-size: 11pt;
+            font-weight: bold;
+            border: none;
+        }
+
+        table.form-table th {
+            background-color: #F2F2F2;
+            text-align: left;
+            width: 42%;
+        }
+
+        table.form-table td.separator {
+            width: 3%;
+            border-right: 1px solid #000000;
+            padding: 0;
+        }
+
+        table.form-table td.field-value {
+            width: 55%;
+            text-align: center;
+            background-color: #FFFFFF;
+            border: 1px solid #000000;
+        }
+
+        table.form-table tr.spacer-row td {
+            height: 3px;
+            padding: 0;
+            border: none;
+            background-color: transparent;
+        }
+
+        table.results-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 5px;
+            margin: 0 0 5px 0;
+            background-color: #FFFFFF;
+        }
+
+        table.results-table th {
+            background-color: #F2F2F2;
+            color: #000000;
+            text-align: center;
+            font-weight: bold;
+            font-size: 10pt;
+            border: none;
+            padding: 4px 6px;
+        }
+
+        table.results-table td {
+            text-align: center;
+            font-size: 10pt;
+        }
+
+        table.results-table td.text-left {
+            text-align: left;
+        }
+
+        table.results-table td.text-left,
+        table.results-table td.domain-cell {
+            background-color: #F2F2F2;
+        }
+
+        table.results-table td.score-cell {
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+            text-align: center;
+            font-size: 9pt;
+        }
+
+        table.results-table td.domain-cell {
+            background-color: #F2F2F2;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 10pt;
+        }
+
+        .domain-total-row td {
+            background-color: #F2F2F2;
+            font-weight: bold;
+            font-size: 10pt;
+            text-align: center;
+        }
+
+        .domain-total-row td.score-cell {
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+            font-weight: bold;
+        }
+
+        .grand-total-row td {
+            background-color: #F2F2F2;
+            color: #000000;
+            font-weight: bold;
+            font-size: 10pt;
+        }
+
+        .grand-total-row td.score-cell {
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+            font-weight: bold;
+        }
+
+        .footnote {
+            font-size: 11pt;
+            font-style: normal;
+            color: #000000;
+            margin-top: 10px;
+            font-family: Arial, sans-serif;
+        }
+
+        .risk-interpretation {
+            margin: 5px 0;
+            background-color: #FFFFFF;
+            border: 1px solid #999;
+            padding: 6px;
+        }
+
+        .risk-interpretation p {
+            margin: 2px 0;
+            font-size: 10pt;
+            text-align: justify;
+        }
+
+        .observation-box {
+            background-color: #FFFFFF;
+            border: 1px solid #999;
+            padding: 8px;
+            min-height: 2cm;
+            margin-bottom: 10px;
+            font-size: 10pt;
+            line-height: 1.3;
+            text-align: justify;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ══════════════════ PÁGINA 1 ══════════════════ -->
+    <div class="page">
+        <h1 class="report-title">
+            INFORME DE RESULTADOS DEL CUESTIONARIO DE FACTORES DE RIESGO PSICOSOCIAL INTRALABORAL – FORMA <span th:text="${intralaboralForm}">A</span>
+        </h1>
+
+        <h2 class="section-header">DATOS GENERALES DEL TRABAJADOR</h2>
+        <table class="form-table">
+            <tr>
+                <th>Nombre del trabajador:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${workerName}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Número de identificación (ID):</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${workerId}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Cargo:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${workerPosition}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Departamento o sección:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${workerDepartment}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Edad:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${workerAge}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Sexo:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${workerGender}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Fecha de aplicación del cuestionario:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${applicationDate}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Nombre de la empresa:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${companyName}">Universidad del Cauca</td>
+            </tr>
+        </table>
+
+        <h2 class="section-header">DATOS DEL EVALUADOR</h2>
+        <table class="form-table">
+            <tr>
+                <th>Nombre del evaluador:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${evaluatorName}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Número de identificación (c.c.):</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${evaluatorId}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Profesión:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${evaluatorProfession}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Postgrado:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${evaluatorPostgraduate}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>No Tarjeta profesional*:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${evaluatorProfessionalCard}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>No. Licencia en salud ocupacional*:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${evaluatorLicense}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Fecha de expedición de la licencia en salud ocupacional*:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${evaluatorLicenseDate}">—</td>
+            </tr>
+        </table>
+
+        <p class="footnote">* Todo informe que carezca de estos datos <em>no será válido</em>.</p>
+    </div>
+
+    <!-- ══════════════════ PÁGINA 2 ══════════════════ -->
+    <div class="page page-break">
+        <h2 class="section-header">RESULTADOS DEL CUESTIONARIO INTRALABORAL</h2>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th style="width: 18%;">Dominios</th>
+                    <th style="width: 42%;">Dimensiones</th>
+                    <th style="width: 20%;">Puntaje<br/><span style="font-size: 8pt; font-weight: normal;">(transformado)</span></th>
+                    <th style="width: 20%;">Nivel de<br/>riesgo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <th:block th:each="domain : ${intralaboralDomains}">
+                    <tr th:each="dim, iter : ${domain.dimensions}">
+                        <td class="domain-cell" th:if="${iter.first}" th:rowspan="${domain.dimensions.size()}" th:text="${domain.domainName}">Dominio</td>
+                        <td class="text-left" th:text="${dim.dimensionName}">Dimensión</td>
+                        <td class="score-cell" th:text="${dim.transformedScore}">0.0</td>
+                        <td class="score-cell" th:text="${dim.riskLevel}">—</td>
+                    </tr>
+                    <tr class="domain-total-row">
+                        <td colspan="2" class="text-left" style="text-transform: uppercase;" th:text="${domain.domainName}">TOTAL DOMINIO</td>
+                        <td class="score-cell" th:text="${domain.transformedScore}">0.0</td>
+                        <td class="score-cell" th:text="${domain.riskLevel}">—</td>
+                    </tr>
+                </th:block>
+                <tr class="grand-total-row">
+                    <td colspan="2" class="text-left">TOTAL GENERAL FACTORES DE RIESGO PSICOSOCIAL INTRALABORAL</td>
+                    <td class="score-cell" th:text="${intralaboralTotalScore}">0.0</td>
+                    <td class="score-cell" th:text="${intralaboralTotalRiskLevel}">—</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ══════════════════ PÁGINA 3 ══════════════════ -->
+    <div class="page">
+        <h2 class="section-header">RESULTADOS DEL CUESTIONARIO EXTRALABORAL</h2>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th style="width: 50%;">Dimensiones</th>
+                    <th style="width: 25%;">Puntaje (transformado)</th>
+                    <th style="width: 25%;">Nivel de riesgo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="dim : ${extralaboralDimensions}">
+                    <td class="text-left" th:text="${dim.dimensionName}">Dimensión</td>
+                    <td th:text="${dim.transformedScore}">0.0</td>
+                    <td th:text="${dim.riskLevel}">—</td>
+                </tr>
+                <tr class="grand-total-row">
+                    <td class="text-left">TOTAL GENERAL FACTORES DE RIESGO PSICOSOCIAL EXTRALABORAL</td>
+                    <td th:text="${extralaboralTotalScore}">0.0</td>
+                    <td th:text="${extralaboralTotalRiskLevel}">—</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-header">TOTAL GENERAL</h2>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th style="width: 50%;">Concepto</th>
+                    <th style="width: 25%;">Puntaje (transformado)</th>
+                    <th style="width: 25%;">Nivel de riesgo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="grand-total-row">
+                    <td class="text-left">TOTAL GENERAL (Intralaboral + Extralaboral)</td>
+                    <td th:text="${generalTotalScore}">0.0</td>
+                    <td th:text="${generalTotalRiskLevel}">—</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-header">RESULTADOS DEL CUESTIONARIO DE ESTRÉS</h2>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th style="width: 50%;">Concepto</th>
+                    <th style="width: 25%;">Puntaje (transformado)</th>
+                    <th style="width: 25%;">Nivel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="grand-total-row">
+                    <td class="text-left">TOTAL GENERAL SÍNTOMAS DE ESTRÉS</td>
+                    <td th:text="${stressScore}">0.0</td>
+                    <td th:text="${stressLevel}">—</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-header">INTERPRETACIÓN GENÉRICA DE LOS NIVELES DE RIESGO</h2>
+        <div class="risk-interpretation">
+            <p><strong>Sin riesgo o riesgo despreciable:</strong> Ausencia de riesgo o riesgo tan bajo que no amerita desarrollar actividades de intervención. Las dimensiones y dominios que se encuentran bajo esta categoría serán objeto de acciones o programas de promoción.</p>
+            <p><strong>Riesgo bajo:</strong> No se espera que los factores psicosociales que obtengan puntuaciones de este nivel estén relacionados con síntomas o respuestas de estrés significativas. Las dimensiones y dominios que se encuentren bajo esta categoría serán objeto de acciones o programas de intervención, a manera de prevención.</p>
+            <p><strong>Riesgo medio:</strong> Nivel de riesgo en el que se esperaría una respuesta de estrés moderada. Las dimensiones y dominios que se encuentren bajo esta categoría ameritan observación y acciones sistemáticas de intervención para prevenir efectos perjudiciales en la salud.</p>
+            <p><strong>Riesgo alto:</strong> Nivel de riesgo que tiene una importante posibilidad de asociación con respuestas de estrés alto y por tanto, las dimensiones y dominios que se encuentren bajo esta categoría requieren intervención en el marco de un sistema de vigilancia epidemiológica.</p>
+            <p><strong>Riesgo muy alto:</strong> Nivel de riesgo con amplia posibilidad de asociarse a respuestas muy altas de estrés. Por consiguiente las dimensiones y dominios que se encuentren bajo esta categoría requieren intervención inmediata en el marco de un sistema de vigilancia epidemiológica.</p>
+        </div>
+    </div>
+
+    <!-- ══════════════════ PÁGINA 4 ══════════════════ -->
+    <div class="page">
+        <h2 class="section-header">OBSERVACIONES Y COMENTARIOS DEL EVALUADOR</h2>
+        <div class="observation-box" th:utext="${observations}">—</div>
+
+        <h2 class="section-header">RECOMENDACIONES PARTICULARES</h2>
+        <div class="observation-box" th:utext="${recommendations}">—</div>
+
+        <table class="form-table" style="margin-top: 15px;">
+            <tr>
+                <th>Fecha de elaboración del informe:</th>
+                <td class="separator"></td>
+                <td class="field-value" th:text="${reportDate}">—</td>
+            </tr>
+            <tr class="spacer-row"><td></td><td></td><td></td></tr>
+            <tr>
+                <th>Firma del evaluador:</th>
+                <td class="separator"></td>
+                <td class="field-value" style="min-height: 40px;">&#160;</td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

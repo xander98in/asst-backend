@@ -19,8 +19,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Controlador REST que expone los endpoints de consulta relacionados con registros de gestión de baterías.
@@ -332,6 +336,75 @@ public class BatteryManagementRecordQueryController {
         return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);   
     }
     
+    /**
+     * Endpoint para listar baterías cerradas con filtros opcionales múltiples (JPA Criteria).
+     *
+     * @param identificationNumber número de identificación (prefijo, opcional)
+     * @param workAreaName         nombre del área de trabajo (contenido, opcional)
+     * @param dateFrom             fecha inicial del rango (opcional, formato ISO yyyy-MM-dd)
+     * @param dateTo               fecha final del rango (opcional, formato ISO yyyy-MM-dd)
+     * @param identificationTypeId ID del tipo de identificación (opcional)
+     * @param jobPositionTypeId    ID del tipo de cargo (opcional)
+     * @param page                 número de página (0-indexado)
+     * @param size                 cantidad de registros por página
+     * @param request              solicitud HTTP entrante
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una página de
+     *         {@link BatteryManagementRecordInformationResponseDTO}
+     */
+    @Operation(
+        summary = "Listar baterías cerradas con multifiltro",
+        description = "Lista paginada de baterías cerradas filtradas por número de identificación, área, " +
+            "fechas, tipo de identificación y tipo de cargo. Todos los filtros son opcionales."
+    )
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Consulta exitosa",
+            content = @Content(mediaType = "application/json")
+        )
+    })
+    @GetMapping("/list-paged-closed-multifilter")
+    public ResponseEntity<ApiResponse<Page<BatteryManagementRecordInformationResponseDTO>>> listClosedWithMultipleFilters(
+        @Parameter(description = "Prefijo del número de identificación", example = "12345")
+        @RequestParam(required = false) String identificationNumber,
+
+        @Parameter(description = "Nombre del área de trabajo (contenido parcial)", example = "Talento")
+        @RequestParam(required = false) String workAreaName,
+
+        @Parameter(description = "Fecha inicial del rango (ISO yyyy-MM-dd)", example = "2026-01-01")
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+
+        @Parameter(description = "Fecha final del rango (ISO yyyy-MM-dd)", example = "2026-12-31")
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
+
+        @Parameter(description = "ID del tipo de identificación", example = "1")
+        @RequestParam(required = false) Long identificationTypeId,
+
+        @Parameter(description = "ID del tipo de cargo", example = "2")
+        @RequestParam(required = false) Long jobPositionTypeId,
+
+        @Parameter(description = "Forma intralaboral: A (tipos de cargo 1-2) o B (tipos de cargo 3-4)", example = "A")
+        @RequestParam(required = false) String intralaboralForm,
+
+        @Parameter(description = "Página (0-indexado)", example = "0")
+        @RequestParam(defaultValue = "0") Integer page,
+
+        @Parameter(description = "Cantidad de registros por página", example = "10")
+        @RequestParam(defaultValue = "10") Integer size,
+
+        HttpServletRequest request
+    ) {
+        LocalDateTime dateTimeFrom = dateFrom != null ? dateFrom.atStartOfDay() : null;
+        LocalDateTime dateTimeTo = dateTo != null ? dateTo.atTime(23, 59, 59) : null;
+
+        Page<BatteryManagementRecordInformationResponseDTO> response =
+            batteryManagementRecordQueryHandler.listClosedWithMultipleFilters(
+                identificationNumber, workAreaName, dateTimeFrom, dateTimeTo,
+                identificationTypeId, jobPositionTypeId, intralaboralForm, page, size
+            );
+        return ResponseUtil.ok(request, SuccessCode.RETRIEVED, "Consulta exitosa", response);
+    }
+
     /**
      * Endpoint para obtener la información detallada de un registro de gestión de baterías por su ID.
      *

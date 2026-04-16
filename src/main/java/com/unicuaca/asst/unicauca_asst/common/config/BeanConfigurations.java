@@ -4,6 +4,20 @@ import com.unicuaca.asst.unicauca_asst.core.auth.domain.ports.output.*;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.services.*;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.*;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services.*;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.AnalysisSpaceCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.AnalysisSpaceQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.EvaluatorCommandRepository;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.EvaluatorQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.IndividualReportPdfOutputPort;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.ReportDataQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.services.AnalysisSpaceCommandService;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.services.AnalysisSpaceQueryService;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.services.EvaluatorCommandService;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.services.EvaluatorQueryService;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.services.GroupReportEngine;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.services.GroupReportQueryService;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.services.IndividualReportQueryService;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.services.ScoringEngine;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -286,5 +300,83 @@ public class BeanConfigurations {
         UserStatusQueryRepository userStatusQueryRepository
     ) {
         return new UserStatusQueryService(userStatusQueryRepository);
+    }
+
+    // ── Módulo de Informes ──────────────────────────────────────────────
+
+    @Bean
+    public ScoringEngine scoringEngine() {
+        return new ScoringEngine();
+    }
+
+    @Bean
+    public IndividualReportQueryService individualReportQueryService(
+        ReportDataQueryRepository reportDataQueryRepository,
+        AnalysisSpaceQueryRepository analysisSpaceQueryRepository,
+        EvaluatorQueryRepository evaluatorQueryRepository,
+        IndividualReportPdfOutputPort individualReportPdfOutputPort,
+        ScoringEngine scoringEngine,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new IndividualReportQueryService(
+            reportDataQueryRepository,
+            analysisSpaceQueryRepository,
+            evaluatorQueryRepository,
+            individualReportPdfOutputPort,
+            scoringEngine,
+            resultFormatterOutputPort
+        );
+    }
+
+    @Bean
+    public AnalysisSpaceCommandService analysisSpaceCommandService(
+        AnalysisSpaceCommandRepository analysisSpaceCommandRepository,
+        AnalysisSpaceQueryRepository analysisSpaceQueryRepository,
+        ReportDataQueryRepository reportDataQueryRepository,
+        EvaluatorQueryRepository evaluatorQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new AnalysisSpaceCommandService(analysisSpaceCommandRepository, analysisSpaceQueryRepository, reportDataQueryRepository, evaluatorQueryRepository, resultFormatterOutputPort);
+    }
+
+    @Bean
+    public AnalysisSpaceQueryService analysisSpaceQueryService(
+        AnalysisSpaceQueryRepository analysisSpaceQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new AnalysisSpaceQueryService(analysisSpaceQueryRepository, resultFormatterOutputPort);
+    }
+
+    @Bean
+    public GroupReportEngine groupReportEngine() {
+        return new GroupReportEngine();
+    }
+
+    @Bean
+    public GroupReportQueryService groupReportQueryService(
+        AnalysisSpaceQueryRepository analysisSpaceQueryRepository,
+        ReportDataQueryRepository reportDataQueryRepository,
+        ScoringEngine scoringEngine,
+        GroupReportEngine groupReportEngine,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new GroupReportQueryService(analysisSpaceQueryRepository, reportDataQueryRepository, scoringEngine, groupReportEngine, resultFormatterOutputPort);
+    }
+
+    @Bean
+    public EvaluatorCommandService evaluatorCommandService(
+        EvaluatorCommandRepository evaluatorCommandRepository,
+        EvaluatorQueryRepository evaluatorQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new EvaluatorCommandService(evaluatorCommandRepository, evaluatorQueryRepository, resultFormatterOutputPort);
+    }
+
+    @Bean
+    public EvaluatorQueryService evaluatorQueryService(
+        EvaluatorQueryRepository evaluatorQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new EvaluatorQueryService(evaluatorQueryRepository, resultFormatterOutputPort);
     }
 }

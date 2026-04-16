@@ -6,15 +6,19 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.BatteryManagementRecordEntity;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.BatteryManagementRecordSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.BatteryManagementRecordStatusSpringJpaRepository;
+import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.specifications.BatteryManagementRecordSpecification;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.BatteryManagementRecordPersistenceMapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.BatteryManagementRecordStatusPersistenceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -183,5 +187,40 @@ public class BatteryManagementRecordQueryRepositoryImpl implements BatteryManage
         return batteryManagementRecordSpringJpaRepository
             .listPagedExcludingStatusWithSearchTerm(excludedStatus, searchTerm, PageRequest.of(page, size, sort))
             .map(batteryManagementRecordPersistenceMapper::toDomain);
+    }
+
+    /**
+     * Lista baterías cerradas paginadas con filtros opcionales múltiples usando JPA Criteria.
+     *
+     * @param identificationNumber número de identificación (prefijo, puede ser null)
+     * @param workAreaName         área de trabajo (contenido parcial, puede ser null)
+     * @param dateFrom             fecha inicial del rango (puede ser null)
+     * @param dateTo               fecha final del rango (puede ser null)
+     * @param identificationTypeId ID del tipo de identificación (puede ser null)
+     * @param jobPositionTypeId    ID del tipo de cargo (puede ser null)
+     * @param intralaboralForm     forma intralaboral: "A" (cargos 1-2) o "B" (cargos 3-4), puede ser null
+     * @param page                 número de página
+     * @param size                 tamaño de página
+     * @return página de baterías cerradas filtradas
+     */
+    @Override
+    public Page<BatteryManagementRecord> listClosedWithMultipleFilters(
+        String identificationNumber, String workAreaName,
+        LocalDateTime dateFrom, LocalDateTime dateTo,
+        Long identificationTypeId, Long jobPositionTypeId,
+        String intralaboralForm,
+        Integer page, Integer size
+    ) {
+        Specification<BatteryManagementRecordEntity> spec =
+            BatteryManagementRecordSpecification.withClosedStatusAndFilters(
+                identificationNumber, workAreaName, dateFrom, dateTo,
+                identificationTypeId, jobPositionTypeId, intralaboralForm
+            );
+        Page<BatteryManagementRecordEntity> entityPage =
+            batteryManagementRecordSpringJpaRepository.findAll(spec, PageRequest.of(page, size));
+        List<BatteryManagementRecord> domainList = entityPage.getContent().stream()
+            .map(batteryManagementRecordPersistenceMapper::toDomain)
+            .toList();
+        return new PageImpl<>(domainList, entityPage.getPageable(), entityPage.getTotalElements());
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -126,6 +127,35 @@ public class BatteryManagementRecordQueryService implements BatteryManagementRec
             page,
             size,
             Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+        return mapToInformationPage(recordPage);
+    }
+
+    /**
+     * Lista baterías cerradas paginadas con filtros opcionales múltiples.
+     *
+     * @param identificationNumber número de identificación (prefijo, puede ser null)
+     * @param workAreaName         área de trabajo (contenido parcial, puede ser null)
+     * @param dateFrom             fecha inicial del rango (puede ser null)
+     * @param dateTo               fecha final del rango (puede ser null)
+     * @param identificationTypeId ID del tipo de identificación (puede ser null)
+     * @param jobPositionTypeId    ID del tipo de cargo (puede ser null)
+     * @param intralaboralForm     forma intralaboral: "A" (cargos 1-2) o "B" (cargos 3-4), puede ser null
+     * @param page                 número de página
+     * @param size                 tamaño de página
+     * @return una página de {@link BatteryManagementRecordInformation}
+     */
+    @Override
+    public Page<BatteryManagementRecordInformation> listClosedWithMultipleFilters(
+        String identificationNumber, String workAreaName,
+        LocalDateTime dateFrom, LocalDateTime dateTo,
+        Long identificationTypeId, Long jobPositionTypeId,
+        String intralaboralForm,
+        Integer page, Integer size
+    ) {
+        Page<BatteryManagementRecord> recordPage = recordQueryRepository.listClosedWithMultipleFilters(
+            identificationNumber, workAreaName, dateFrom, dateTo,
+            identificationTypeId, jobPositionTypeId, intralaboralForm, page, size
         );
         return mapToInformationPage(recordPage);
     }
