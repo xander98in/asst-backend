@@ -17,7 +17,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.QuestionnaireResponsePersistenceMapper;
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.ReportDataQueryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * Implementación del puerto de salida {@link ReportDataQueryRepository}
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  * <p>Reutiliza los repositorios JPA y persistence mappers existentes del módulo
  * de gestión de baterías para obtener los datos necesarios para calcular informes.</p>
  */
-@Component
+@Repository
 @RequiredArgsConstructor
 public class ReportDataQueryRepositoryImpl implements ReportDataQueryRepository {
 

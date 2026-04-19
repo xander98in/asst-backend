@@ -1,6 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.reports.infrastructure.adapters.output.persistence.jpa.command;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.models.Evaluator;
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.EvaluatorCommandRepository;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
  * repositorio Spring Data JPA y traduciendo entre entidades JPA y modelos de dominio
  * mediante el mapper de persistencia.</p>
  */
-@Component
+@Repository
 @RequiredArgsConstructor
 public class EvaluatorCommandRepositoryImpl implements EvaluatorCommandRepository {
 

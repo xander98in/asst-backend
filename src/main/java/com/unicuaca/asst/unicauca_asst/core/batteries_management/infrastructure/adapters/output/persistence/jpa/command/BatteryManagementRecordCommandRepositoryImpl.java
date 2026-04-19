@@ -6,7 +6,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.BatteryManagementRecordSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.BatteryManagementRecordPersistenceMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ import java.util.Optional;
  * sus relaciones principales para devolver al dominio un modelo hidratado.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class BatteryManagementRecordCommandRepositoryImpl implements BatteryManagementRecordCommandRepository {
 
     private final BatteryManagementRecordSpringJpaRepository batteryManagementRecordSpringJpaRepository;

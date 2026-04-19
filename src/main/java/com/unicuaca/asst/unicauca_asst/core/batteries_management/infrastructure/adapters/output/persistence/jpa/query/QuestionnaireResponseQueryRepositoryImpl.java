@@ -5,7 +5,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.QuestionnaireResponseSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.QuestionnaireResponsePersistenceMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,8 +17,8 @@ import java.util.Optional;
  * <p>Actúa como adaptador entre el dominio y la infraestructura para
  * recuperar información de las respuestas a los cuestionarios.</p>
  */
-@Component
 @RequiredArgsConstructor
+@Repository
 public class QuestionnaireResponseQueryRepositoryImpl implements QuestionnaireResponseQueryRepository {
 
     private final QuestionnaireResponseSpringJpaRepository repository;

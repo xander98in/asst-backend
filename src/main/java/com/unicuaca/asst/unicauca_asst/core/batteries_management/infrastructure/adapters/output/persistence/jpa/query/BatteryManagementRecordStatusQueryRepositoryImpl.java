@@ -5,7 +5,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.BatteryManagementRecordStatusSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.BatteryManagementRecordStatusPersistenceMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
  * <p>Actúa como adaptador entre el dominio y la infraestructura.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class BatteryManagementRecordStatusQueryRepositoryImpl implements BatteryManagementRecordStatusQueryRepository {
 
     private final BatteryManagementRecordStatusSpringJpaRepository batteryManagementRecordStatusSpringJpaRepository;

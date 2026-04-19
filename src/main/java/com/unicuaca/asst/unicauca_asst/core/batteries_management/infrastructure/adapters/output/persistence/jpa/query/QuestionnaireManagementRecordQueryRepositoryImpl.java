@@ -5,7 +5,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.QuestionnaireManagementRecordSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.QuestionnaireManagementRecordPersistenceMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.Optional;
  * <p>Actúa como adaptador entre el dominio y la infraestructura.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class QuestionnaireManagementRecordQueryRepositoryImpl implements QuestionnaireManagementRecordQueryRepository {
 
     private final QuestionnaireManagementRecordSpringJpaRepository questionnaireManagementRecordSpringJpaRepository;

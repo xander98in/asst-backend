@@ -6,7 +6,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.QuestionnaireManagementRecordSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.QuestionnaireManagementRecordPersistenceMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 /**
  * Implementación del puerto de salida {@link QuestionnaireManagementRecordCommandRepository}
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * persistir o eliminar información de los registros de gestión de cuestionarios.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class QuestionnaireManagementRecordCommandRepositoryImpl implements QuestionnaireManagementRecordCommandRepository {
 
     private final QuestionnaireManagementRecordSpringJpaRepository jpaRepository;

@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.models.SystemUser;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.ports.output.SystemUserQueryRepository;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
  * al repositorio JPA y convirtiendo las entidades a modelos de dominio.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class SystemUserQueryRepositoryImpl implements SystemUserQueryRepository {
 
     private final SystemUserSpringJpaRepository systemUserJpaRepository;

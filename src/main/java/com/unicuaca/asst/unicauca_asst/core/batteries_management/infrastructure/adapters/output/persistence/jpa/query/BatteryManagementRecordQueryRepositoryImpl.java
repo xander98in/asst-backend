@@ -15,7 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.Optional;
  * {@link BatteryManagementRecordSpecification}.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class BatteryManagementRecordQueryRepositoryImpl implements BatteryManagementRecordQueryRepository {
 
     private final BatteryManagementRecordSpringJpaRepository batteryManagementRecordSpringJpaRepository;

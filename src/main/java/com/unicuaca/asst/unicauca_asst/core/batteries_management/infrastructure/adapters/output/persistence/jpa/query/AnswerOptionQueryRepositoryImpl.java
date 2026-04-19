@@ -5,7 +5,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.ou
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.AnswerOptionSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.AnswerOptionPersistenceMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ import java.util.Optional;
  * recuperar información del catálogo de opciones de respuesta.</p>
  */
 @RequiredArgsConstructor
-@Component
+@Repository
 public class AnswerOptionQueryRepositoryImpl implements AnswerOptionQueryRepository {
 
     private final AnswerOptionSpringJpaRepository answerOptionSpringJpaRepository;

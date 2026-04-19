@@ -9,14 +9,14 @@ import com.unicuaca.asst.unicauca_asst.core.reports.infrastructure.adapters.outp
 import com.unicuaca.asst.unicauca_asst.core.reports.infrastructure.adapters.output.persistence.jpa.repositories.AnalysisSpaceSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.reports.infrastructure.adapters.output.persistence.mappers.AnalysisSpacePersistenceMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * Implementación del puerto de salida {@link AnalysisSpaceQueryRepository}.
  *
  * <p>Gestiona las operaciones de lectura sobre espacios de análisis.</p>
  */
-@Component
+@Repository
 @RequiredArgsConstructor
 public class AnalysisSpaceQueryRepositoryImpl implements AnalysisSpaceQueryRepository {
 

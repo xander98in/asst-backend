@@ -3,7 +3,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Question;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionQueryRepository;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
  * <p>Actúa como adaptador entre el dominio y la infraestructura.</p>
  */
 @RequiredArgsConstructor
-@Component
+@Repository
 public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
 
     private final QuestionSpringJpaRepository questionSpringJpaRepository;

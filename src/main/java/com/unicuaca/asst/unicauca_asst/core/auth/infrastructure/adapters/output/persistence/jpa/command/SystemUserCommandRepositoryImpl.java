@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.models.SystemUser;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.ports.output.SystemUserCommandRepository;
@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
  * referencias JPA ({@code getReferenceById}).</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class SystemUserCommandRepositoryImpl implements SystemUserCommandRepository {
 
     private final SystemUserSpringJpaRepository systemUserJpaRepository;

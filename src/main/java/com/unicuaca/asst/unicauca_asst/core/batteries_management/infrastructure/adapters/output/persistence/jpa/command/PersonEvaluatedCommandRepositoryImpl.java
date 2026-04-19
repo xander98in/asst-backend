@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.StatusPersonEvaluatedEntity;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.StatusPersonEvaluatedSpringJpaRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.IdentificationTypeSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
  * <p>Esta clase actúa como adaptador de salida para guardar entidades de persona en la base de datos.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class PersonEvaluatedCommandRepositoryImpl implements PersonEvaluatedCommandRepository {
 
     private final PersonEvaluatedSpringJpaRepository personEvaluatedJpaRepository;

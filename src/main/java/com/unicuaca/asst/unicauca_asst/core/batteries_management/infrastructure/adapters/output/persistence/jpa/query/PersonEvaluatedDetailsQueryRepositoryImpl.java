@@ -2,7 +2,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.PersonEvaluatedDetailsPersistenceMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedDetailsQueryRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.PersonEvaluatedDetailsSpringJpaRepository;
@@ -20,7 +20,7 @@ import java.util.Optional;
  * <p>Las operaciones definidas aquí son de solo lectura (consultas), y no incluyen lógica de negocio.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class PersonEvaluatedDetailsQueryRepositoryImpl implements PersonEvaluatedDetailsQueryRepository {
 
     private final PersonEvaluatedDetailsSpringJpaRepository personEvaluatedDetailsSpringJpaRepository;

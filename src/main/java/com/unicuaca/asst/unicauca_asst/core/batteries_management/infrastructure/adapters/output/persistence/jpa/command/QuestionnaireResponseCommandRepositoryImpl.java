@@ -6,7 +6,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.QuestionnaireResponseSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.QuestionnaireResponsePersistenceMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
  * guardar información de las respuestas a los cuestionarios.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class QuestionnaireResponseCommandRepositoryImpl implements QuestionnaireResponseCommandRepository {
 
     private final QuestionnaireResponseSpringJpaRepository questionnaireResponseSpringJpaRepository;

@@ -6,7 +6,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.repositories.QuestionnaireSpringJpaRepository;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.QuestionnairePersistenceMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ import java.util.Optional;
  * {@link QuestionnaireEntity} a los modelos de dominio {@link Questionnaire}.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class QuestionnaireQueryRepositoryImpl implements QuestionnaireQueryRepository {
 
     private final QuestionnaireSpringJpaRepository questionnaireJpaRepository;

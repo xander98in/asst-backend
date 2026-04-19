@@ -3,7 +3,7 @@ package com.unicuaca.asst.unicauca_asst.core.auth.infrastructure.adapters.output
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.models.UserStatus;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.ports.output.UserStatusQueryRepository;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
  * desde la base de datos.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class UserStatusQueryRepositoryImpl implements UserStatusQueryRepository {
 
     private final UserStatusSpringJpaRepository userStatusJpaRepository;

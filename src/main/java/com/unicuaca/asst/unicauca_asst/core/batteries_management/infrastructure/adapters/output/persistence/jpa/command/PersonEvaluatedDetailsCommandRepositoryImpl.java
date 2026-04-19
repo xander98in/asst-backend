@@ -2,7 +2,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.PersonEvaluatedDetailsCommandRepository;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
  * implementando los métodos definidos en la interfaz {@link PersonEvaluatedDetailsCommandRepository}.</p>
  */
 @RequiredArgsConstructor
-@Service
+@Repository
 public class PersonEvaluatedDetailsCommandRepositoryImpl implements PersonEvaluatedDetailsCommandRepository {
 
     private final PersonEvaluatedDetailsSpringJpaRepository personEvaluatedDetailsJpaRepository;

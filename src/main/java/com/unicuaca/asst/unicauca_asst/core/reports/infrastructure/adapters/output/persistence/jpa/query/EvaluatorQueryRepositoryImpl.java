@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.models.Evaluator;
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.EvaluatorQueryRepository;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
  * repositorios Spring Data JPA y traduciendo entre entidades JPA y modelos de dominio
  * mediante el mapper de persistencia.</p>
  */
-@Component
+@Repository
 @RequiredArgsConstructor
 public class EvaluatorQueryRepositoryImpl implements EvaluatorQueryRepository {
 
