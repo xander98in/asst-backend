@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -267,6 +268,126 @@ class BatteryManagementRecordQueryServiceTest {
             // Assert
             assertThat(result).isNotNull();
             assertThat(result.getContent()).hasSize(1);
+        }
+    }
+
+    // ==================================================================================
+    // listClosedWithMultipleFilters
+    // ==================================================================================
+
+    @Nested
+    @DisplayName("listClosedWithMultipleFilters")
+    class ListClosedWithMultipleFilters {
+
+        @Test
+        @DisplayName("Debe retornar página Cerrados aplicando todos los filtros")
+        void should_returnPage_when_allFiltersProvided() {
+            // Arrange
+            LocalDateTime from = LocalDateTime.of(2025, 1, 1, 0, 0);
+            LocalDateTime to = LocalDateTime.of(2025, 12, 31, 23, 59);
+            BatteryManagementRecord record = buildBatteryManagementRecord();
+            Page<BatteryManagementRecord> page = new PageImpl<>(List.of(record));
+            when(recordQueryRepository.listClosedWithMultipleFilters(
+                    eq("106"), eq("Tecnología"),
+                    eq(from), eq(to),
+                    eq(1L), eq(2L),
+                    eq("A"),
+                    eq(0), eq(10)))
+                    .thenReturn(page);
+            when(detailsQueryRepository.getWorkAreaNameByBatteryManagementRecordId(1L))
+                    .thenReturn(Optional.of("Tecnología"));
+
+            // Act
+            Page<BatteryManagementRecordInformation> result =
+                    batteryManagementRecordQueryService.listClosedWithMultipleFilters(
+                            "106", "Tecnología", from, to, 1L, 2L, "A", 0, 10);
+
+            // Assert
+            assertThat(result).isNotNull();
+            assertThat(result.getContent()).hasSize(1);
+            assertThat(result.getContent().get(0).getPersonEvaluatedDetails().getWorkAreaName())
+                    .isEqualTo("Tecnología");
+        }
+
+        @Test
+        @DisplayName("Debe retornar página vacía cuando todos los filtros son null")
+        void should_returnEmptyPage_when_allFiltersAreNull() {
+            // Arrange
+            Page<BatteryManagementRecord> emptyPage = new PageImpl<>(List.of());
+            when(recordQueryRepository.listClosedWithMultipleFilters(
+                    isNull(), isNull(), isNull(), isNull(),
+                    isNull(), isNull(), isNull(),
+                    eq(0), eq(10)))
+                    .thenReturn(emptyPage);
+
+            // Act
+            Page<BatteryManagementRecordInformation> result =
+                    batteryManagementRecordQueryService.listClosedWithMultipleFilters(
+                            null, null, null, null, null, null, null, 0, 10);
+
+            // Assert
+            assertThat(result.getContent()).isEmpty();
+        }
+    }
+
+    // ==================================================================================
+    // listByAnalysisSpaceWithMultipleFilters
+    // ==================================================================================
+
+    @Nested
+    @DisplayName("listByAnalysisSpaceWithMultipleFilters")
+    class ListByAnalysisSpaceWithMultipleFilters {
+
+        @Test
+        @DisplayName("Debe retornar página de baterías del espacio de análisis con filtros")
+        void should_returnPage_when_filteredBySpace() {
+            // Arrange
+            Long spaceId = 5L;
+            LocalDateTime from = LocalDateTime.of(2025, 1, 1, 0, 0);
+            LocalDateTime to = LocalDateTime.of(2025, 12, 31, 23, 59);
+            BatteryManagementRecord record = buildBatteryManagementRecord();
+            Page<BatteryManagementRecord> page = new PageImpl<>(List.of(record));
+            when(recordQueryRepository.listByAnalysisSpaceWithMultipleFilters(
+                    eq(spaceId),
+                    eq("106"), eq("Tecnología"),
+                    eq(from), eq(to),
+                    eq(1L), eq(2L),
+                    eq("B"),
+                    eq(0), eq(10)))
+                    .thenReturn(page);
+            when(detailsQueryRepository.getWorkAreaNameByBatteryManagementRecordId(1L))
+                    .thenReturn(Optional.of("Tecnología"));
+
+            // Act
+            Page<BatteryManagementRecordInformation> result =
+                    batteryManagementRecordQueryService.listByAnalysisSpaceWithMultipleFilters(
+                            spaceId, "106", "Tecnología", from, to, 1L, 2L, "B", 0, 10);
+
+            // Assert
+            assertThat(result).isNotNull();
+            assertThat(result.getContent()).hasSize(1);
+        }
+
+        @Test
+        @DisplayName("Debe retornar página vacía cuando el espacio no tiene baterías")
+        void should_returnEmptyPage_when_noBatteriesInSpace() {
+            // Arrange
+            Long spaceId = 5L;
+            Page<BatteryManagementRecord> emptyPage = new PageImpl<>(List.of());
+            when(recordQueryRepository.listByAnalysisSpaceWithMultipleFilters(
+                    eq(spaceId),
+                    isNull(), isNull(), isNull(), isNull(),
+                    isNull(), isNull(), isNull(),
+                    eq(0), eq(10)))
+                    .thenReturn(emptyPage);
+
+            // Act
+            Page<BatteryManagementRecordInformation> result =
+                    batteryManagementRecordQueryService.listByAnalysisSpaceWithMultipleFilters(
+                            spaceId, null, null, null, null, null, null, null, 0, 10);
+
+            // Assert
+            assertThat(result.getContent()).isEmpty();
         }
     }
 
