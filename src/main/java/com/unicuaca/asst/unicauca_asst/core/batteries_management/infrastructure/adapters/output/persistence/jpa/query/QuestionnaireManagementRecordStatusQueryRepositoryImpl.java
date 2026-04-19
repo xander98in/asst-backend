@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecordStatus;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionnaireManagementRecordStatusQueryRepository;
@@ -22,7 +21,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
 public class QuestionnaireManagementRecordStatusQueryRepositoryImpl implements QuestionnaireManagementRecordStatusQueryRepository{
 
     private final QuestionnaireManagementRecordStatusSpringJpaRepository questionnaireManagementRecordStatusSpringJpaRepository;

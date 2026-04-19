@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.models.SystemUser;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.ports.output.SystemUserQueryRepository;
@@ -23,7 +22,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Service
-@Transactional
 public class SystemUserQueryRepositoryImpl implements SystemUserQueryRepository {
 
     private final SystemUserSpringJpaRepository systemUserJpaRepository;

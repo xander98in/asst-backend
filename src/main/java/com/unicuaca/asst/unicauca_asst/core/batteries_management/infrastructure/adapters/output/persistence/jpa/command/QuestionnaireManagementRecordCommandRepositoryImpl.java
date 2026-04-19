@@ -7,7 +7,6 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.QuestionnaireManagementRecordPersistenceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementación del puerto de salida {@link QuestionnaireManagementRecordCommandRepository}
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RequiredArgsConstructor
 @Service
-@Transactional
 public class QuestionnaireManagementRecordCommandRepositoryImpl implements QuestionnaireManagementRecordCommandRepository {
 
     private final QuestionnaireManagementRecordSpringJpaRepository jpaRepository;

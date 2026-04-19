@@ -10,7 +10,6 @@ import com.unicuaca.asst.unicauca_asst.core.reports.infrastructure.adapters.outp
 import com.unicuaca.asst.unicauca_asst.core.reports.infrastructure.adapters.output.persistence.mappers.AnalysisSpacePersistenceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementación del puerto de salida {@link AnalysisSpaceQueryRepository}.
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class AnalysisSpaceQueryRepositoryImpl implements AnalysisSpaceQueryRepository {
 
     private final AnalysisSpaceSpringJpaRepository analysisSpaceJpaRepository;

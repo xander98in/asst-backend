@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.models.UserStatus;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.ports.output.UserStatusQueryRepository;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Service
-@Transactional
 public class UserStatusQueryRepositoryImpl implements UserStatusQueryRepository {
 
     private final UserStatusSpringJpaRepository userStatusJpaRepository;

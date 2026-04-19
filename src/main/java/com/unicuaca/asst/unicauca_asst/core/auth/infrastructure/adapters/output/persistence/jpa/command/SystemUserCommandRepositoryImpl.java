@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.models.SystemUser;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.ports.output.SystemUserCommandRepository;
@@ -28,7 +27,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Service
-@Transactional
 public class SystemUserCommandRepositoryImpl implements SystemUserCommandRepository {
 
     private final SystemUserSpringJpaRepository systemUserJpaRepository;

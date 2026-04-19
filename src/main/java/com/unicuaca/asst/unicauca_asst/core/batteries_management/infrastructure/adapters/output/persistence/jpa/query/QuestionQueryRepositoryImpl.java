@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Question;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.output.QuestionQueryRepository;
@@ -22,7 +21,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Component
-@Transactional(readOnly = true)
 public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
 
     private final QuestionSpringJpaRepository questionSpringJpaRepository;

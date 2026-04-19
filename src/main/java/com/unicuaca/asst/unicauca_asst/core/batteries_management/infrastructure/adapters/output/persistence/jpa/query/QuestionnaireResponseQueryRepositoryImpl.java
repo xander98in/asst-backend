@@ -6,7 +6,6 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers.QuestionnaireResponsePersistenceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +19,6 @@ import java.util.Optional;
  */
 @Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class QuestionnaireResponseQueryRepositoryImpl implements QuestionnaireResponseQueryRepository {
 
     private final QuestionnaireResponseSpringJpaRepository repository;

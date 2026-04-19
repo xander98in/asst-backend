@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.repositories.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.CivilStatusEntity;
@@ -32,7 +31,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
 public class CatalogQueryRepositoryImpl implements CatalogQueryRepository {
 
     private final IdentificationTypeSpringJpaRepository identificationTypeSpringJpaRepository;

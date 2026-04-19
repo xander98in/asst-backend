@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
@@ -30,7 +29,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Service
-@Transactional
 public class PersonEvaluatedQueryRepositoryImpl implements PersonEvaluatedQueryRepository {
 
     private final PersonEvaluatedSpringJpaRepository personEvaluatedJpaRepository;

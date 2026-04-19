@@ -1,7 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.reports.infrastructure.adapters.output.persistence.jpa.command;
 
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.models.Evaluator;
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.EvaluatorCommandRepository;
@@ -20,7 +19,6 @@ import lombok.RequiredArgsConstructor;
  */
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class EvaluatorCommandRepositoryImpl implements EvaluatorCommandRepository {
 
     private final EvaluatorSpringJpaRepository evaluatorJpaRepository;

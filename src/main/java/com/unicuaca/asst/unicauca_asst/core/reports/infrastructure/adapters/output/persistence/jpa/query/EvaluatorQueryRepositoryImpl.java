@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.models.Evaluator;
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.EvaluatorQueryRepository;
@@ -27,7 +26,6 @@ import lombok.RequiredArgsConstructor;
  */
 @Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class EvaluatorQueryRepositoryImpl implements EvaluatorQueryRepository {
 
     private final EvaluatorSpringJpaRepository evaluatorJpaRepository;
