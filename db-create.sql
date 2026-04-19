@@ -284,3 +284,41 @@ CREATE TABLE IF NOT EXISTS usuarios_sistema_roles (
     CONSTRAINT fk_usr_rol_usuario FOREIGN KEY (usuario_sistema_id) REFERENCES usuarios_sistema (id) ON DELETE CASCADE,
     CONSTRAINT fk_usr_rol_rol     FOREIGN KEY (rol_id)             REFERENCES roles (id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- ==========================================================
+-- 5. MÓDULO REPORTES
+-- ==========================================================
+
+CREATE TABLE IF NOT EXISTS evaluadores (
+    id_evaluador               BIGINT NOT NULL AUTO_INCREMENT,
+    nombre_completo            VARCHAR(150) NOT NULL,
+    numero_identificacion      VARCHAR(30)  NOT NULL,
+    profesion                  VARCHAR(100) NOT NULL,
+    postgrado                  VARCHAR(150),
+    tarjeta_profesional        VARCHAR(30)  NOT NULL,
+    licencia_salud_ocupacional VARCHAR(30)  NOT NULL,
+    fecha_expedicion_licencia  DATE         NOT NULL,
+    id_usuario_creador         BIGINT       NOT NULL,
+    fecha_creacion             DATETIME     NOT NULL,
+    PRIMARY KEY (id_evaluador)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS espacios_analisis (
+    id_espacio_analisis BIGINT NOT NULL AUTO_INCREMENT,
+    nombre              VARCHAR(150) NOT NULL,
+    id_evaluador        BIGINT       NOT NULL,
+    id_usuario_creador  BIGINT       NOT NULL,
+    fecha_creacion      DATETIME     NOT NULL,
+    PRIMARY KEY (id_espacio_analisis),
+    CONSTRAINT fk_espacio_analisis_evaluador FOREIGN KEY (id_evaluador) REFERENCES evaluadores (id_evaluador)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS espacios_analisis_baterias (
+    id_espacio_analisis         BIGINT NOT NULL,
+    id_registro_gestion_bateria BIGINT NOT NULL,
+    fecha_agregado              DATETIME NOT NULL,
+    PRIMARY KEY (id_espacio_analisis, id_registro_gestion_bateria),
+    CONSTRAINT fk_esp_bat_espacio FOREIGN KEY (id_espacio_analisis)         REFERENCES espacios_analisis (id_espacio_analisis),
+    CONSTRAINT fk_esp_bat_bateria FOREIGN KEY (id_registro_gestion_bateria) REFERENCES registros_gestion_baterias (id_registro_gestion_bateria)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
