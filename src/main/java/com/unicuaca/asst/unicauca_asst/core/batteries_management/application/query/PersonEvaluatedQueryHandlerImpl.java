@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RequiredArgsConstructor
 @Component
-@Transactional
+@Transactional(readOnly = true)
 public class PersonEvaluatedQueryHandlerImpl implements PersonEvaluatedQueryHandler {
 
     private final PersonEvaluatedQueryCUInputPort personEvaluatedQueryCUInputPort;

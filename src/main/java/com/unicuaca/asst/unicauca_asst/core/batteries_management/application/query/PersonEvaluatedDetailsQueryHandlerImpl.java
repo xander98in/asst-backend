@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RequiredArgsConstructor
 @Component
-@Transactional
+@Transactional(readOnly = true)
 public class PersonEvaluatedDetailsQueryHandlerImpl implements PersonEvaluatedDetailsQueryHandler{
 
     private final PersonEvaluatedDetailsQueryCUInputPort personEvaluatedDetailsQueryCUInputPort;

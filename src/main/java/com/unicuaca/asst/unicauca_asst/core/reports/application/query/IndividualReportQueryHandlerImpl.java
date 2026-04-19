@@ -6,6 +6,7 @@ import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.input.Individua
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.services.ScoringEngine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementación del manejador de consultas para informes individuales de riesgo psicosocial.
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @RequiredArgsConstructor
 @Component
+@Transactional(readOnly = true)
 public class IndividualReportQueryHandlerImpl implements IndividualReportQueryHandler {
 
     private final IndividualReportQueryCUInputPort individualReportQueryCUInputPort;

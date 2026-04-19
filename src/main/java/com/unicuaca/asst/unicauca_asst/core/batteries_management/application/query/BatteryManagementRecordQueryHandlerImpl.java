@@ -18,7 +18,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Component
-@Transactional
+@Transactional(readOnly = true)
 public class BatteryManagementRecordQueryHandlerImpl implements BatteryManagementRecordQueryHandler{
 
     private final BatteryManagementRecordQueryCUInputPort batteryManagementRecordQueryCUInputPort;

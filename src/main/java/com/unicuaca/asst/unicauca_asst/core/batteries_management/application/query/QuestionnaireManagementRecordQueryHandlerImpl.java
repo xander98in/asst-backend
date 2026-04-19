@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RequiredArgsConstructor
 @Component
-@Transactional
+@Transactional(readOnly = true)
 public class QuestionnaireManagementRecordQueryHandlerImpl implements QuestionnaireManagementRecordQueryHandler{
 
     private final QuestionnaireManagementRecordQueryCUInputPort questionnaireManagementRecordQueryCUInputPort;

@@ -10,6 +10,7 @@ import com.unicuaca.asst.unicauca_asst.common.application.mappers.CatalogMapper;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.input.CatalogQueryCUInputPort;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementación del manejador de consultas de catálogos.
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Component
+@Transactional(readOnly = true)
 public class CatalogQueryHandlerImpl implements CatalogQueryHandler {
 
     private final CatalogQueryCUInputPort catalogQueryCUInputPort;
