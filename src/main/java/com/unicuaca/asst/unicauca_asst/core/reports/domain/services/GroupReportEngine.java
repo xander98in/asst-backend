@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import com.unicuaca.asst.unicauca_asst.core.reports.domain.config.BaremTables;
+import com.unicuaca.asst.unicauca_asst.core.reports.domain.models.enums.SemaphoreColor;
 
 /**
  * Motor de cálculo de estadísticas grupales de riesgo psicosocial.
@@ -76,8 +77,8 @@ public class GroupReportEngine {
         String name,
         double riskMagnitudePercent,
         double associationIndex,
-        String magnitudeSemaphore,
-        String associationSemaphore
+        SemaphoreColor magnitudeSemaphore,
+        SemaphoreColor associationSemaphore
     ) {}
 
     /** Resultado completo de la matriz de riesgo del grupo. */
@@ -480,26 +481,6 @@ public class GroupReportEngine {
     }
 
     /**
-     * Calcula la moda (nivel más frecuente) dentro de una lista de niveles de riesgo.
-     *
-     * @param levels lista de niveles de riesgo individuales
-     * @return nivel más frecuente, o cadena vacía si la lista es vacía
-     */
-    private String findMode(List<String> levels) {
-        if (levels.isEmpty()) {
-            return "";
-        }
-        Map<String, Integer> frequency = new LinkedHashMap<>();
-        for (String level : levels) {
-            frequency.merge(level, 1, Integer::sum);
-        }
-        return frequency.entrySet().stream()
-            .max(Map.Entry.comparingByValue())
-            .map(Map.Entry::getKey)
-            .orElse("");
-    }
-
-    /**
      * Indica si un nivel de riesgo corresponde a "Riesgo medio", "Riesgo alto" o "Riesgo muy alto".
      *
      * @param riskLevel nivel de riesgo a evaluar
@@ -524,12 +505,12 @@ public class GroupReportEngine {
      * VERDE (≤ 40%), AMARILLO (&lt; 60%) o ROJO (≥ 60%).
      *
      * @param magnitudePercent porcentaje de magnitud del riesgo
-     * @return color del semáforo ("VERDE", "AMARILLO" o "ROJO")
+     * @return color del semáforo (VERDE, AMARILLO o ROJO)
      */
-    private String getMagnitudeSemaphore(double magnitudePercent) {
-        if (magnitudePercent <= 40.0) return "VERDE";
-        if (magnitudePercent < 60.0) return "AMARILLO";
-        return "ROJO";
+    private SemaphoreColor getMagnitudeSemaphore(double magnitudePercent) {
+        if (magnitudePercent <= 40.0) return SemaphoreColor.VERDE;
+        if (magnitudePercent < 60.0) return SemaphoreColor.AMARILLO;
+        return SemaphoreColor.ROJO;
     }
 
     /**
@@ -537,12 +518,12 @@ public class GroupReportEngine {
      * VERDE (≤ 0.29), AMARILLO (&lt; 0.70) o ROJO (≥ 0.70).
      *
      * @param associationIndex índice de asociación entre riesgo y estrés
-     * @return color del semáforo ("VERDE", "AMARILLO" o "ROJO")
+     * @return color del semáforo (VERDE, AMARILLO o ROJO)
      */
-    private String getAssociationSemaphore(double associationIndex) {
-        if (associationIndex <= 0.29) return "VERDE";
-        if (associationIndex < 0.70) return "AMARILLO";
-        return "ROJO";
+    private SemaphoreColor getAssociationSemaphore(double associationIndex) {
+        if (associationIndex <= 0.29) return SemaphoreColor.VERDE;
+        if (associationIndex < 0.70) return SemaphoreColor.AMARILLO;
+        return SemaphoreColor.ROJO;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.reports.domain.services;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -164,12 +165,7 @@ public class ScoringEngine {
         }
 
         // Ordenar dominios según el orden oficial del manual
-        domains.sort((a, b) -> {
-            int indexA = INTRALABORAL_DOMAIN_ORDER.indexOf(a.domainName());
-            int indexB = INTRALABORAL_DOMAIN_ORDER.indexOf(b.domainName());
-            return Integer.compare(indexA == -1 ? Integer.MAX_VALUE : indexA,
-                                   indexB == -1 ? Integer.MAX_VALUE : indexB);
-        });
+        domains.sort(Comparator.comparingInt(d -> INTRALABORAL_DOMAIN_ORDER.indexOf(d.domainName())));
 
         // Total intralaboral
         int totalFactor = TransformationFactors.getIntralaboralTotalFactor(form);
@@ -212,12 +208,7 @@ public class ScoringEngine {
         }
 
         // Ordenar dimensiones según el orden oficial del manual
-        dimensions.sort((a, b) -> {
-            int indexA = EXTRALABORAL_DIMENSION_ORDER.indexOf(a.dimensionName());
-            int indexB = EXTRALABORAL_DIMENSION_ORDER.indexOf(b.dimensionName());
-            return Integer.compare(indexA == -1 ? Integer.MAX_VALUE : indexA,
-                                   indexB == -1 ? Integer.MAX_VALUE : indexB);
-        });
+        dimensions.sort(Comparator.comparingInt(d -> EXTRALABORAL_DIMENSION_ORDER.indexOf(d.dimensionName())));
 
         int totalFactor = TransformationFactors.getExtralaboralTotalFactor();
         double totalTransformed = roundToOneDecimal((double) totalRawScore / totalFactor * 100);

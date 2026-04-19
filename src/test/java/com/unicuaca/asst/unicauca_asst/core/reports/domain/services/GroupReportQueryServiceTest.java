@@ -150,6 +150,62 @@ class GroupReportQueryServiceTest {
         }
 
         @Test
+        @DisplayName("Debe calcular usando ILB cuando tipo de cargo > 2")
+        void should_calculate_when_jobPositionILB() {
+            // Arrange
+            Long spaceId = 1L;
+            Long userId = 10L;
+            Long batteryId = 100L;
+            AnalysisSpace space = buildSpaceWithBattery(spaceId, userId, batteryId);
+            when(analysisSpaceQueryRepository.findByIdWithBatteries(spaceId)).thenReturn(Optional.of(space));
+            when(reportDataQueryRepository.getPersonDetailsByBatteryRecordId(batteryId))
+                    .thenReturn(Optional.of(buildPersonDetails(3L)));
+            when(reportDataQueryRepository.getQuestionnaireRecordsByBatteryId(batteryId))
+                    .thenReturn(buildQuestionnaireRecords("ILB", "EXT", "EST"));
+            when(reportDataQueryRepository.getResponsesByQuestionnaireRecordId(any()))
+                    .thenReturn(List.of(QuestionnaireResponse.builder().build()));
+            when(scoringEngine.calculateIndividualReport(any(), any(), any(), eq("ILB"), eq(3)))
+                    .thenReturn(buildScoringResult());
+            when(groupReportEngine.calculateGroupSummary(any(), any())).thenReturn(buildGroupSummary());
+
+            // Act
+            groupReportQueryService.getGroupSummary(spaceId, userId);
+
+            // Assert
+            verify(scoringEngine).calculateIndividualReport(any(), any(), any(), eq("ILB"), eq(3));
+        }
+
+        @Test
+        @DisplayName("Debe lanzar BusinessRuleViolation cuando un cuestionario no tiene respuestas")
+        void should_throwBusinessRule_when_questionnaireHasNoResponses() {
+            // Arrange
+            Long spaceId = 1L;
+            Long userId = 10L;
+            Long batteryId = 100L;
+            AnalysisSpace space = buildSpaceWithBattery(spaceId, userId, batteryId);
+            when(analysisSpaceQueryRepository.findByIdWithBatteries(spaceId)).thenReturn(Optional.of(space));
+            when(reportDataQueryRepository.getPersonDetailsByBatteryRecordId(batteryId))
+                    .thenReturn(Optional.of(buildPersonDetails(2L)));
+            when(reportDataQueryRepository.getQuestionnaireRecordsByBatteryId(batteryId))
+                    .thenReturn(buildQuestionnaireRecords("ILA", "EXT", "EST"));
+            when(reportDataQueryRepository.getResponsesByQuestionnaireRecordId(any()))
+                    .thenReturn(List.of());
+            doThrow(new BusinessRuleViolationException(
+                    ErrorCode.REPORT_INCOMPLETE_BATTERY.getCode(),
+                    ErrorCode.REPORT_INCOMPLETE_BATTERY.getMessageKey(),
+                    "user.report.incomplete_battery",
+                    new Object[]{batteryId, "ILA"}))
+                .when(resultFormatter).throwBusinessRuleViolation(
+                    any(ErrorCode.class), anyString(), any(), any());
+
+            // Act & Assert
+            assertThatThrownBy(() -> groupReportQueryService.getGroupSummary(spaceId, userId))
+                    .isInstanceOf(BusinessRuleViolationException.class);
+
+            verify(scoringEngine, never()).calculateIndividualReport(any(), any(), any(), any(), any(Integer.class));
+        }
+
+        @Test
         @DisplayName("Debe lanzar BusinessRuleViolation cuando falta un cuestionario en una batería")
         void should_throwBusinessRule_when_questionnaireMissing() {
             // Arrange

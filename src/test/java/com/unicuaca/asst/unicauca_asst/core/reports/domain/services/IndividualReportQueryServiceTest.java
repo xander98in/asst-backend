@@ -271,6 +271,42 @@ class IndividualReportQueryServiceTest {
         }
 
         @Test
+        @DisplayName("Debe generar PDF usando ILB cuando tipo de cargo > 2")
+        void should_generatePdf_when_jobPositionILB() {
+            // Arrange
+            Long recordId = 1L;
+            Long spaceId = 10L;
+            Long userId = 100L;
+            Long evaluatorId = 5L;
+
+            AnalysisSpace space = AnalysisSpace.builder()
+                    .id(spaceId).creatorUserId(userId).evaluatorId(evaluatorId).build();
+            Evaluator evaluator = Evaluator.builder().id(evaluatorId).build();
+            byte[] pdfBytes = new byte[]{9, 9, 9};
+
+            when(analysisSpaceQueryRepository.findByIdWithBatteries(spaceId)).thenReturn(Optional.of(space));
+            when(evaluatorQueryRepository.findById(evaluatorId)).thenReturn(Optional.of(evaluator));
+            when(reportDataQueryRepository.getBatteryRecordById(recordId)).thenReturn(Optional.of(buildClosedRecord()));
+            when(reportDataQueryRepository.getPersonDetailsByBatteryRecordId(recordId))
+                    .thenReturn(Optional.of(buildPersonDetails(3L)));
+            when(reportDataQueryRepository.getQuestionnaireRecordsByBatteryId(recordId))
+                    .thenReturn(buildQuestionnaireRecords("ILB", "EXT", "EST"));
+            when(reportDataQueryRepository.getResponsesByQuestionnaireRecordId(any()))
+                    .thenReturn(List.of(buildResponse()));
+            when(scoringEngine.calculateIndividualReport(any(), any(), any(), eq("ILB"), eq(3)))
+                    .thenReturn(buildScoringResult());
+            when(pdfOutputPort.generatePdf(any(), any(), any(), any(), eq("ILB")))
+                    .thenReturn(pdfBytes);
+
+            // Act
+            byte[] result = individualReportQueryService.getIndividualReportPdf(recordId, spaceId, userId);
+
+            // Assert
+            assertThat(result).isEqualTo(pdfBytes);
+            verify(pdfOutputPort).generatePdf(any(), any(), any(), eq(evaluator), eq("ILB"));
+        }
+
+        @Test
         @DisplayName("Debe lanzar EntityNotFound cuando el espacio no existe")
         void should_throwEntityNotFound_when_spaceNotFound() {
             // Arrange
