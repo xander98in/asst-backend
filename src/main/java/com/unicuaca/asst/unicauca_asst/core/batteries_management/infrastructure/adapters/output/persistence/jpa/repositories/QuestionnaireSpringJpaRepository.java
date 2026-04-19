@@ -2,7 +2,6 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.QuestionnaireEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
@@ -12,7 +11,6 @@ import java.util.Optional;
  * <p>Proporciona operaciones CRUD básicas (crear, leer, actualizar, eliminar)
  * sobre la tabla {@code cuestionarios} utilizando las abstracciones de {@link JpaRepository}.</p>
  */
-@Repository
 public interface QuestionnaireSpringJpaRepository extends JpaRepository<QuestionnaireEntity, Long> {
 
     /**

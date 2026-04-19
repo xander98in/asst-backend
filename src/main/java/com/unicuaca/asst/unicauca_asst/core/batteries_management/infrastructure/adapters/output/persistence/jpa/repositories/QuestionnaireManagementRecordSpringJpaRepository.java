@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.QuestionnaireManagementRecordEntity;
 
@@ -19,7 +18,6 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
  * el registro de gestión de batería, el cuestionario y el estado, evitando problemas de
  * lazy loading al navegar el grafo desde el dominio.</p>
  */
-@Repository
 public interface QuestionnaireManagementRecordSpringJpaRepository extends JpaRepository<QuestionnaireManagementRecordEntity, Long> {
 
     /**

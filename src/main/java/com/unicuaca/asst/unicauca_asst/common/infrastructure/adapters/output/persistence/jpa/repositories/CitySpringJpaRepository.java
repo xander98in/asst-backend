@@ -4,7 +4,6 @@ import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.per
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +11,6 @@ import java.util.Optional;
 /**
  * Repositorio JPA para la entidad {@link CityEntity}.
  */
-@Repository
 public interface CitySpringJpaRepository extends JpaRepository<CityEntity, Long> {
 
     /**

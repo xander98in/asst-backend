@@ -7,14 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.reports.infrastructure.adapters.output.persistence.jpa.entities.EvaluatorEntity;
 
 /**
  * Repositorio Spring Data JPA para la entidad {@link EvaluatorEntity}.
  */
-@Repository
 public interface EvaluatorSpringJpaRepository extends JpaRepository<EvaluatorEntity, Long> {
 
     /**

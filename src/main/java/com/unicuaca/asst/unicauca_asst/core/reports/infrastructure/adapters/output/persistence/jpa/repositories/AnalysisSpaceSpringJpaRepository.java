@@ -6,14 +6,12 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import com.unicuaca.asst.unicauca_asst.core.reports.infrastructure.adapters.output.persistence.jpa.entities.AnalysisSpaceEntity;
 
 /**
  * Repositorio Spring Data JPA para la entidad {@link AnalysisSpaceEntity}.
  */
-@Repository
 public interface AnalysisSpaceSpringJpaRepository extends JpaRepository<AnalysisSpaceEntity, Long> {
 
     /**

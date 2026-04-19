@@ -4,7 +4,6 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
@@ -18,7 +17,6 @@ import java.util.Optional;
  * tipo de salario) y, cuando aplica, el registro de gestión de batería y la persona
  * evaluada asociada.</p>
  */
-@Repository
 public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository<PersonEvaluatedDetailsEntity, Long> {
 
     /**

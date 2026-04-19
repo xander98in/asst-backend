@@ -2,7 +2,6 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.AnswerOptionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
@@ -12,7 +11,6 @@ import java.util.Optional;
  * <p>Proporciona métodos para realizar operaciones CRUD y consultas personalizadas.
  * Para manejar el catálogo de opciones de respuesta.</p>
  */
-@Repository
 public interface AnswerOptionSpringJpaRepository extends JpaRepository<AnswerOptionEntity, Long> {
 
     /**
