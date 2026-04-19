@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
+import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.CivilStatus;
 import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.City;
 import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.ContractType;

@@ -1,4 +1,4 @@
-package com.unicuaca.asst.unicauca_asst.common.infrastructure.persistence.jpa.entities;
+package com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities;
 
 import java.time.LocalDateTime;
 

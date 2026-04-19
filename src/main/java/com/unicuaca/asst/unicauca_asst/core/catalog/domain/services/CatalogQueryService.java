@@ -3,7 +3,7 @@ package com.unicuaca.asst.unicauca_asst.core.catalog.domain.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
+import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.*;
 import com.unicuaca.asst.unicauca_asst.core.catalog.domain.ports.input.CatalogQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.core.catalog.domain.ports.output.CatalogQueryRepository;

@@ -1,20 +1,23 @@
-package com.unicuaca.asst.unicauca_asst.common.application.output;
+package com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.exception;
 
-import com.unicuaca.asst.unicauca_asst.common.exceptions.BusinessRuleViolationException;
-import com.unicuaca.asst.unicauca_asst.common.exceptions.CatalogEmptyException;
-import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsException;
-import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityCreationException;
-import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityNotFoundPersException;
+import org.springframework.stereotype.Service;
+
+import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.ResultFormatterOutputPort;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.*;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 
 /**
- * Puerto de salida para formatear o propagar errores de negocio desde los casos de uso.
+ * Implementación del puerto de salida {@link ResultFormatterOutputPort} encargado de lanzar
+ * excepciones personalizadas relacionadas con errores de negocio.
  *
- * <p>Este contrato debe ser implementado por la infraestructura para lanzar excepciones
- * específicas como "Entidad ya existe", "Entidad no encontrada", o "Regla de negocio violada".
- * Soporta internacionalización (i18n) mediante claves de mensaje y argumentos dinámicos.</p>
+ * <p>Esta clase actúa como adaptador de salida en la arquitectura hexagonal y centraliza el
+ * lanzamiento de excepciones, permitiendo el soporte de internacionalización (i18n) tanto
+ * para mensajes técnicos como para mensajes destinados al usuario final.</p>
  */
-public interface ResultFormatterOutputPort {
+@Service
+public class ResultFormatterImpl implements ResultFormatterOutputPort {
+
+    // --- Nuevos métodos recomendados (Uso de ErrorCode) ---
 
     /**
      * Lanza una excepción cuando se detecta que la entidad ya existe, usando ErrorCode.
@@ -24,7 +27,10 @@ public interface ResultFormatterOutputPort {
      * @param args argumentos para formatear el mensaje dinámicamente
      * @throws EntityAlreadyExistsException siempre que se invoque
      */
-    void throwEntityAlreadyExists(ErrorCode errorCode, String userMessageKey, Object... args);
+    @Override
+    public void throwEntityAlreadyExists(ErrorCode errorCode, String userMessageKey, Object... args) {
+        throw new EntityAlreadyExistsException(errorCode.getCode(), errorCode.getMessageKey(), userMessageKey, args);
+    }
 
     /**
      * Lanza una excepción cuando no se encuentra una entidad, usando ErrorCode.
@@ -34,7 +40,10 @@ public interface ResultFormatterOutputPort {
      * @param args argumentos dinámicos
      * @throws EntityNotFoundPersException siempre que se invoque
      */
-    void throwEntityNotFound(ErrorCode errorCode, String userMessageKey, Object... args);
+    @Override
+    public void throwEntityNotFound(ErrorCode errorCode, String userMessageKey, Object... args) {
+        throw new EntityNotFoundPersException(errorCode.getCode(), errorCode.getMessageKey(), userMessageKey, args);
+    }
 
     /**
      * Lanza una excepción cuando se viola una regla de negocio, usando ErrorCode.
@@ -44,7 +53,10 @@ public interface ResultFormatterOutputPort {
      * @param args argumentos dinámicos
      * @throws BusinessRuleViolationException siempre que se invoque
      */
-    void throwBusinessRuleViolation(ErrorCode errorCode, String userMessageKey, Object... args);
+    @Override
+    public void throwBusinessRuleViolation(ErrorCode errorCode, String userMessageKey, Object... args) {
+        throw new BusinessRuleViolationException(errorCode.getCode(), errorCode.getMessageKey(), userMessageKey, args);
+    }
 
     /**
      * Lanza una excepción cuando falla la creación de una entidad, usando ErrorCode.
@@ -54,7 +66,10 @@ public interface ResultFormatterOutputPort {
      * @param args argumentos dinámicos
      * @throws EntityCreationException siempre que se invoque
      */
-    void throwEntityCreationFailed(ErrorCode errorCode, String userMessageKey, Object... args);
+    @Override
+    public void throwEntityCreationFailed(ErrorCode errorCode, String userMessageKey, Object... args) {
+        throw new EntityCreationException(errorCode.getCode(), errorCode.getMessageKey(), userMessageKey, args);
+    }
 
     /**
      * Lanza una excepción cuando un catálogo está vacío, usando ErrorCode.
@@ -64,7 +79,10 @@ public interface ResultFormatterOutputPort {
      * @param args argumentos dinámicos
      * @throws CatalogEmptyException siempre que se invoque
      */
-    void throwCatalogEmptyException(ErrorCode errorCode, String userMessageKey, Object... args);
+    @Override
+    public void throwCatalogEmptyException(ErrorCode errorCode, String userMessageKey, Object... args) {
+        throw new CatalogEmptyException(errorCode.getCode(), errorCode.getMessageKey(), userMessageKey, args);
+    }
 
     // --- Métodos de compatibilidad técnica ---
 
@@ -74,7 +92,10 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @throws EntityAlreadyExistsException siempre que se invoque
      */
-    void throwEntityAlreadyExists(String message);
+    @Override
+    public void throwEntityAlreadyExists(String message) {
+        throw new EntityAlreadyExistsException(message);
+    }
 
     /**
      * Lanza una excepción con código específico cuando se detecta duplicidad.
@@ -83,7 +104,10 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @throws EntityAlreadyExistsException siempre que se invoque
      */
-    void throwEntityAlreadyExists(String errorCode, String message);
+    @Override
+    public void throwEntityAlreadyExists(String errorCode, String message) {
+        throw new EntityAlreadyExistsException(errorCode, message);
+    }
 
     /**
      * Lanza una excepción con soporte completo para i18n manual.
@@ -94,7 +118,10 @@ public interface ResultFormatterOutputPort {
      * @param args argumentos dinámicos para formatear el mensaje de usuario
      * @throws EntityAlreadyExistsException siempre que se invoque
      */
-    void throwEntityAlreadyExists(String errorCode, String message, String userMessage, Object... args);
+    @Override
+    public void throwEntityAlreadyExists(String errorCode, String message, String userMessage, Object... args) {
+        throw new EntityAlreadyExistsException(errorCode, message, userMessage, args);
+    }
 
     /**
      * Lanza una excepción cuando no se encuentra una entidad.
@@ -103,7 +130,10 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @throws EntityNotFoundPersException siempre que se invoque
      */
-    void throwEntityNotFound(String errorCode, String message);
+    @Override
+    public void throwEntityNotFound(String errorCode, String message) {
+        throw new EntityNotFoundPersException(errorCode, message);
+    }
 
     /**
      * Lanza una excepción cuando no se encuentra una entidad, con soporte i18n manual.
@@ -114,7 +144,10 @@ public interface ResultFormatterOutputPort {
      * @param args argumentos dinámicos para formatear el mensaje de usuario
      * @throws EntityNotFoundPersException siempre que se invoque
      */
-    void throwEntityNotFound(String errorCode, String message, String userMessage, Object... args);
+    @Override
+    public void throwEntityNotFound(String errorCode, String message, String userMessage, Object... args) {
+        throw new EntityNotFoundPersException(errorCode, message, userMessage, args);
+    }
 
     /**
      * Lanza una excepción cuando se viola una regla de negocio.
@@ -122,7 +155,10 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @throws BusinessRuleViolationException siempre que se invoque
      */
-    void throwBusinessRuleViolation(String message);
+    @Override
+    public void throwBusinessRuleViolation(String message) {
+        throw new BusinessRuleViolationException(null, message);
+    }
 
     /**
      * Lanza una excepción cuando se viola una regla de negocio con código específico.
@@ -131,7 +167,10 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @throws BusinessRuleViolationException siempre que se invoque
      */
-    void throwBusinessRuleViolation(String errorCode, String message);
+    @Override
+    public void throwBusinessRuleViolation(String errorCode, String message) {
+        throw new BusinessRuleViolationException(errorCode, message);
+    }
 
     /**
      * Lanza una excepción cuando se viola una regla de negocio, con soporte i18n manual.
@@ -142,7 +181,10 @@ public interface ResultFormatterOutputPort {
      * @param args argumentos dinámicos para formatear el mensaje de usuario
      * @throws BusinessRuleViolationException siempre que se invoque
      */
-    void throwBusinessRuleViolation(String errorCode, String message, String userMessage, Object... args);
+    @Override
+    public void throwBusinessRuleViolation(String errorCode, String message, String userMessage, Object... args) {
+        throw new BusinessRuleViolationException(errorCode, message, userMessage, args);
+    }
 
     /**
      * Lanza una excepción cuando falla la creación de una entidad.
@@ -151,7 +193,10 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @throws EntityCreationException siempre que se invoque
      */
-    void throwEntityCreationFailed(String errorCode, String message);
+    @Override
+    public void throwEntityCreationFailed(String errorCode, String message) {
+        throw new EntityCreationException(errorCode, message);
+    }
 
     /**
      * Lanza una excepción cuando falla la creación de una entidad, con soporte i18n manual.
@@ -162,7 +207,10 @@ public interface ResultFormatterOutputPort {
      * @param args argumentos dinámicos para formatear el mensaje de usuario
      * @throws EntityCreationException siempre que se invoque
      */
-    void throwEntityCreationFailed(String errorCode, String message, String userMessage, Object... args);
+    @Override
+    public void throwEntityCreationFailed(String errorCode, String message, String userMessage, Object... args) {
+        throw new EntityCreationException(errorCode, message, userMessage, args);
+    }
 
     /**
      * Lanza una excepción cuando un catálogo está vacío.
@@ -171,7 +219,10 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @throws CatalogEmptyException siempre que se invoque
      */
-    void throwCatalogEmptyException(String errorCode, String message);
+    @Override
+    public void throwCatalogEmptyException(String errorCode, String message) {
+        throw new CatalogEmptyException(errorCode, message);
+    }
 
     /**
      * Lanza una excepción cuando un catálogo está vacío, con soporte i18n manual.
@@ -182,5 +233,8 @@ public interface ResultFormatterOutputPort {
      * @param args argumentos dinámicos para formatear el mensaje de usuario
      * @throws CatalogEmptyException siempre que se invoque
      */
-    void throwCatalogEmptyException(String errorCode, String message, String userMessage, Object... args);
+    @Override
+    public void throwCatalogEmptyException(String errorCode, String message, String userMessage, Object... args) {
+        throw new CatalogEmptyException(errorCode, message, userMessage, args);
+    }
 }

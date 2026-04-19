@@ -3,7 +3,7 @@ package com.unicuaca.asst.unicauca_asst.core.auth.domain.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
+import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.models.Role;
 import com.unicuaca.asst.unicauca_asst.core.auth.domain.ports.input.RoleQueryCUInputPort;

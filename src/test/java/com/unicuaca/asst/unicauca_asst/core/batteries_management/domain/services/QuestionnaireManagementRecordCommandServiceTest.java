@@ -11,7 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
+import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.BusinessRuleViolationException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityNotFoundPersException;

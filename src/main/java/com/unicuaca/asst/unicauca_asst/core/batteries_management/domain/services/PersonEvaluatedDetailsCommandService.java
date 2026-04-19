@@ -3,7 +3,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.service
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
+import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.ResultFormatterOutputPort;
 import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.City;
 import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.CivilStatus;
 import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.ContractType;
