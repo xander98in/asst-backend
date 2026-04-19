@@ -4,9 +4,20 @@ import java.util.List;
 
 import com.unicuaca.asst.unicauca_asst.common.application.dto.response.*;
 import com.unicuaca.asst.unicauca_asst.common.docs.ErrorResponseApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.CitiesApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.CitiesSummaryApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.CityApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.CivilStatusesApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.ContractTypesApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.DepartmentApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.DepartmentsApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.EducationLevelsApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.GendersApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.HousingTypesApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.IdentificationTypesApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.JobPositionTypesApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.SalaryTypesApiResponse;
+import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers.docs.SocioeconomicLevelsApiResponse;
 import com.unicuaca.asst.unicauca_asst.common.response.ResponseUtil;
 import com.unicuaca.asst.unicauca_asst.common.response.SuccessCode;
 import jakarta.servlet.http.HttpServletRequest;
@@ -92,14 +103,14 @@ public class CatalogQueryController {
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = CivilStatusesApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
             description = "Error interno",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
@@ -125,14 +136,14 @@ public class CatalogQueryController {
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = EducationLevelsApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
             description = "Error interno",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
@@ -158,14 +169,14 @@ public class CatalogQueryController {
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = HousingTypesApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
             description = "Error interno",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
@@ -191,14 +202,14 @@ public class CatalogQueryController {
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = SocioeconomicLevelsApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
             description = "Error interno",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
@@ -224,14 +235,14 @@ public class CatalogQueryController {
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = JobPositionTypesApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
             description = "Error interno",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
@@ -257,14 +268,14 @@ public class CatalogQueryController {
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = ContractTypesApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
             description = "Error interno",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
@@ -290,14 +301,14 @@ public class CatalogQueryController {
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = SalaryTypesApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
             description = "Error interno",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
@@ -323,14 +334,14 @@ public class CatalogQueryController {
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = GendersApiResponse.class)
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
             description = "Error interno",
             content = @Content(
-                schema = @Schema(implementation = ApiResponse.class)
+                schema = @Schema(implementation = ErrorResponseApiResponse.class)
             )
         )
     })
@@ -473,7 +484,7 @@ public class CatalogQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
-            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+            content = @Content(schema = @Schema(implementation = DepartmentsApiResponse.class))
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
@@ -503,7 +514,7 @@ public class CatalogQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
-            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+            content = @Content(schema = @Schema(implementation = DepartmentsApiResponse.class))
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
@@ -532,7 +543,7 @@ public class CatalogQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
-            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+            content = @Content(schema = @Schema(implementation = CitiesSummaryApiResponse.class))
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",
@@ -562,7 +573,7 @@ public class CatalogQueryController {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Catálogo obtenido correctamente",
-            content = @Content(schema = @Schema(implementation = ApiResponse.class))
+            content = @Content(schema = @Schema(implementation = CitiesApiResponse.class))
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "500",

@@ -4,12 +4,15 @@ import com.unicuaca.asst.unicauca_asst.common.application.dto.response.Departmen
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.List;
+
 /**
- * Wrapper solo para documentación OpenAPI del genérico {@code ApiResponse<DepartmentResponseDTO>}.
+ * Wrapper solo para documentación OpenAPI del genérico
+ * {@code ApiResponse<List<DepartmentResponseDTO>>}.
  *
  * <p>Permite que Swagger resuelva el tipo genérico y muestre correctamente el esquema
- * de respuesta que contiene un departamento con sus ciudades embebidas.</p>
+ * de respuesta que contiene la lista de departamentos.</p>
  */
-@Schema(name = "DepartmentApiResponse", description = "Respuesta API que contiene un departamento")
-public class DepartmentApiResponse extends ApiResponse<DepartmentResponseDTO> {
+@Schema(name = "DepartmentsApiResponse", description = "Respuesta API que contiene una lista de departamentos")
+public class DepartmentsApiResponse extends ApiResponse<List<DepartmentResponseDTO>> {
 }
