@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
@@ -25,6 +26,10 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Controlador REST para consultas relacionadas con los detalles de las personas evaluadas.
  */
+@Tag(
+    name = "Detalles de Personas Evaluadas - Consultas",
+    description = "Endpoints para consultar los detalles sociodemográficos y laborales de personas evaluadas."
+)
 @RestController
 @RequestMapping("/asst/person-evaluated-details")
 @RequiredArgsConstructor

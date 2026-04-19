@@ -37,10 +37,13 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>El endpoint {@code /me} es accesible por cualquier usuario autenticado;
  * los demás endpoints requieren rol ADMIN.</p>
  */
+@Tag(
+    name = "Usuarios del Sistema - Consultas",
+    description = "Operaciones de lectura sobre usuarios"
+)
 @RestController
 @RequestMapping("/asst/users")
 @RequiredArgsConstructor
-@Tag(name = "Usuarios del Sistema - Consultas", description = "Operaciones de lectura sobre usuarios")
 @SecurityRequirement(name = "bearerAuth")
 public class SystemUserQueryController {
 

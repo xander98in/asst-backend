@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +30,10 @@ import lombok.RequiredArgsConstructor;
  * <p>Forma parte de la capa de entrada (Input Adapter) en la arquitectura hexagonal.
  * Delega la lógica al {@link PersonEvaluatedCommandHandler}.</p>
  */
+@Tag(
+    name = "Personas Evaluadas - Comandos",
+    description = "Endpoints para crear, actualizar y eliminar personas evaluadas."
+)
 @RestController
 @RequestMapping("/asst/person-evaluated")
 @RequiredArgsConstructor

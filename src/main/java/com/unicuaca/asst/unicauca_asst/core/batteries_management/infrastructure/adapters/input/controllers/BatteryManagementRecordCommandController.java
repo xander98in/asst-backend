@@ -30,11 +30,14 @@ import org.springframework.web.bind.annotation.*;
  * orquestación al {@link BatteryManagementRecordCommandHandler}. Expone endpoints para crear, eliminar
  * y cerrar registros de gestión de baterías.</p>
  */
+@Tag(
+    name = "Registros de Gestión de Baterías - Comandos",
+    description = "Operaciones de escritura sobre los registros de gestión de baterías"
+)
 @Validated
 @RestController
 @RequestMapping("/asst/battery-management-record")
 @RequiredArgsConstructor
-@Tag(name = "Battery Management Records", description = "Gestión de registros de baterías")
 @SecurityRequirement(name = "bearerAuth")
 public class BatteryManagementRecordCommandController {
 

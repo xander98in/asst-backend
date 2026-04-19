@@ -37,10 +37,13 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>Forma parte de la capa de entrada (Input Adapter) en la arquitectura hexagonal.
  * Gestiona login con Google OAuth, refresco de tokens y logout.</p>
  */
+@Tag(
+    name = "Autenticación",
+    description = "Operaciones de autenticación: login, refresh y logout"
+)
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "Autenticación", description = "Operaciones de autenticación: login, refresh y logout")
 public class AuthController {
 
     private final AuthCommandHandler authCommandHandler;

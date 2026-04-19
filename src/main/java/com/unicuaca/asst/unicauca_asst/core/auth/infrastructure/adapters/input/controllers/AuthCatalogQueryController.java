@@ -36,10 +36,13 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * <p>Todos los endpoints requieren rol ADMIN.</p>
  */
+@Tag(
+    name = "Auth - Catálogos",
+    description = "Catálogos del módulo de autenticación: roles y estados de usuario"
+)
 @RestController
 @RequestMapping("/asst/users/catalog")
 @RequiredArgsConstructor
-@Tag(name = "Auth - Catálogos", description = "Catálogos del módulo de autenticación: roles y estados de usuario")
 @SecurityRequirement(name = "bearerAuth")
 public class AuthCatalogQueryController {
 

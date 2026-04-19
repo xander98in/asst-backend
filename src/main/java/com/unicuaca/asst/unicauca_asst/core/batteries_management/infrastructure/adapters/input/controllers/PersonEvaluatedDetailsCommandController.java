@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,10 @@ import org.springframework.web.bind.annotation.*;
  * <p>Forma parte del adaptador de entrada (Input Adapter) en la arquitectura hexagonal.
  * Delega la orquestación al {@link PersonEvaluatedDetailsCommandHandler}.</p>
  */
+@Tag(
+    name = "Detalles de Personas Evaluadas - Comandos",
+    description = "Endpoints para crear y actualizar los detalles sociodemográficos y laborales de personas evaluadas."
+)
 @RestController
 @RequestMapping("/asst/person-evaluated-details")
 @RequiredArgsConstructor

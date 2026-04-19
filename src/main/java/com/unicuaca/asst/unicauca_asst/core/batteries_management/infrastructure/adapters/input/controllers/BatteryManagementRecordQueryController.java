@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
@@ -36,6 +37,10 @@ import java.time.LocalDateTime;
  * <p>Utiliza {@link BatteryManagementRecordQueryHandler} como puerto de entrada para ejecutar la lógica de consulta
  * relacionada con registros de gestión de baterías.</p>
  */
+@Tag(
+    name = "Registros de Gestión de Baterías - Consultas",
+    description = "Endpoints para consultar registros de gestión de baterías, incluyendo listados paginados y detalles por ID."
+)
 @RestController
 @RequestMapping("/asst/battery-management-record")
 @RequiredArgsConstructor

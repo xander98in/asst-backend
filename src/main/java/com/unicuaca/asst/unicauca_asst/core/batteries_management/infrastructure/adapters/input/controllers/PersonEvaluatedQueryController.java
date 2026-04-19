@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -37,6 +38,10 @@ import lombok.RequiredArgsConstructor;
  * <p>Utiliza {@link PersonEvaluatedQueryHandler} como puerto de entrada para ejecutar la lógica de consulta
  * relacionada con personas.</p>
  */
+@Tag(
+    name = "Personas Evaluadas - Consultas",
+    description = "Endpoints para consultar personas evaluadas, incluyendo listados paginados y detalles por ID."
+)
 @RestController
 @RequestMapping("/asst/person-evaluated")
 @RequiredArgsConstructor

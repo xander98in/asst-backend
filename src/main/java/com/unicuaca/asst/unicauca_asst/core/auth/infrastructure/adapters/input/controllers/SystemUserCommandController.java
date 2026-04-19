@@ -38,10 +38,13 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>Forma parte de la capa de entrada (Input Adapter) en la arquitectura hexagonal.
  * Delega la lógica al {@link SystemUserCommandHandler}. Solo accesible por ADMIN.</p>
  */
+@Tag(
+    name = "Usuarios del Sistema - Comandos",
+    description = "Operaciones de escritura sobre usuarios (solo ADMIN)"
+)
 @RestController
 @RequestMapping("/asst/users")
 @RequiredArgsConstructor
-@Tag(name = "Usuarios del Sistema - Comandos", description = "Operaciones de escritura sobre usuarios (solo ADMIN)")
 @SecurityRequirement(name = "bearerAuth")
 public class SystemUserCommandController {
 
