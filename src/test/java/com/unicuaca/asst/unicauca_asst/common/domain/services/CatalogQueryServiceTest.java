@@ -31,6 +31,7 @@ import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -72,7 +73,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getIdTypes()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getIdTypes())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -83,7 +84,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getIdTypes()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getIdTypes())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -114,7 +115,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getCivilStatuses()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getCivilStatuses())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -125,7 +126,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getCivilStatuses()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getCivilStatuses())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -156,7 +157,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getEducationLevels()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getEducationLevels())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -167,7 +168,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getEducationLevels()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getEducationLevels())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -198,7 +199,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getHousingTypes()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getHousingTypes())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -209,7 +210,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getHousingTypes()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getHousingTypes())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -240,7 +241,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getSocioeconomicLevels()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getSocioeconomicLevels())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -251,7 +252,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getSocioeconomicLevels()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getSocioeconomicLevels())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -282,7 +283,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getJobPositionTypes()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getJobPositionTypes())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -293,7 +294,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getJobPositionTypes()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getJobPositionTypes())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -324,7 +325,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getContractTypes()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getContractTypes())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -335,7 +336,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getContractTypes()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getContractTypes())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -366,7 +367,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getSalaryTypes()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getSalaryTypes())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -377,7 +378,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getSalaryTypes()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getSalaryTypes())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -408,7 +409,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getGenders()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getGenders())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -419,7 +420,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getGenders()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getGenders())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -450,7 +451,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getAllDepartments()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getAllDepartments())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -461,7 +462,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getAllDepartments()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getAllDepartments())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -492,7 +493,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getAllDepartmentsWithCities()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getAllDepartmentsWithCities())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -503,7 +504,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getAllDepartmentsWithCities()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getAllDepartmentsWithCities())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -534,7 +535,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getAllCities()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getAllCities())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -545,7 +546,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getAllCities()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getAllCities())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -576,7 +577,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsEmpty() {
             when(catalogQueryRepository.getAllCitiesWithDepartment()).thenReturn(Collections.emptyList());
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getAllCitiesWithDepartment())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -587,7 +588,7 @@ class CatalogQueryServiceTest {
         void should_throwCatalogEmpty_when_listIsNull() {
             when(catalogQueryRepository.getAllCitiesWithDepartment()).thenReturn(null);
             doThrow(new CatalogEmptyException(ErrorCode.CATALOG_EMPTY.getCode(), "empty"))
-                .when(resultFormatterOutputPort).throwCatalogEmptyException(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwCatalogEmptyException(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getAllCitiesWithDepartment())
                     .isInstanceOf(CatalogEmptyException.class);
@@ -623,7 +624,7 @@ class CatalogQueryServiceTest {
             doThrow(new EntityNotFoundPersException(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     ErrorCode.ENTITY_NOT_FOUND.getMessageKey()))
-                .when(resultFormatterOutputPort).throwEntityNotFound(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwEntityNotFound(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getCityByCodeWithDepartment("99999"))
                     .isInstanceOf(EntityNotFoundPersException.class);
@@ -659,7 +660,7 @@ class CatalogQueryServiceTest {
             doThrow(new EntityNotFoundPersException(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     ErrorCode.ENTITY_NOT_FOUND.getMessageKey()))
-                .when(resultFormatterOutputPort).throwEntityNotFound(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwEntityNotFound(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getCityByNameWithDepartment("Inexistente"))
                     .isInstanceOf(EntityNotFoundPersException.class);
@@ -695,7 +696,7 @@ class CatalogQueryServiceTest {
             doThrow(new EntityNotFoundPersException(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     ErrorCode.ENTITY_NOT_FOUND.getMessageKey()))
-                .when(resultFormatterOutputPort).throwEntityNotFound(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwEntityNotFound(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getDepartmentByCodeWithCities("99"))
                     .isInstanceOf(EntityNotFoundPersException.class);
@@ -731,7 +732,7 @@ class CatalogQueryServiceTest {
             doThrow(new EntityNotFoundPersException(
                     ErrorCode.ENTITY_NOT_FOUND.getCode(),
                     ErrorCode.ENTITY_NOT_FOUND.getMessageKey()))
-                .when(resultFormatterOutputPort).throwEntityNotFound(anyString(), anyString());
+                .when(resultFormatterOutputPort).throwEntityNotFound(any(ErrorCode.class), anyString(), any());
 
             assertThatThrownBy(() -> catalogQueryService.getDepartmentByNameWithCities("Inexistente"))
                     .isInstanceOf(EntityNotFoundPersException.class);

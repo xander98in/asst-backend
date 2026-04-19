@@ -37,9 +37,10 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<IdentificationType> getIdTypes() {
         List<IdentificationType> list = catalogQueryRepository.getIdTypes();
         if (list == null || list.isEmpty()) {
-            this.resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "tipos de identificación")
+            resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "tipos de identificación"
             );
         }
         return list;
@@ -55,9 +56,10 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<CivilStatus> getCivilStatuses() {
         List<CivilStatus> list = catalogQueryRepository.getCivilStatuses();
         if (list == null || list.isEmpty()) {
-            this.resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "estados civiles")
+            resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "estados civiles"
             );
         }
         return list;
@@ -73,9 +75,10 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<EducationLevel> getEducationLevels() {
         List<EducationLevel> list = catalogQueryRepository.getEducationLevels();
         if (list == null || list.isEmpty()) {
-            this.resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "niveles educativos")
+            resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "niveles educativos"
             );
         }
         return list;
@@ -91,9 +94,10 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<HousingType> getHousingTypes() {
         List<HousingType> list = catalogQueryRepository.getHousingTypes();
         if (list == null || list.isEmpty()) {
-            this.resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "tipos de vivienda")
+            resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "tipos de vivienda"
             );
         }
         return list;
@@ -109,9 +113,10 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<SocioeconomicLevel> getSocioeconomicLevels() {
         List<SocioeconomicLevel> list = catalogQueryRepository.getSocioeconomicLevels();
         if (list == null || list.isEmpty()) {
-            this.resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "niveles socioeconómicos")
+            resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "niveles socioeconómicos"
             );
         }
         return list;
@@ -127,9 +132,10 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<JobPositionType> getJobPositionTypes() {
         List<JobPositionType> list = catalogQueryRepository.getJobPositionTypes();
         if (list == null || list.isEmpty()) {
-            this.resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "tipos de cargo")
+            resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "tipos de cargo"
             );
         }
         return list;
@@ -145,9 +151,10 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<ContractType> getContractTypes() {
         List<ContractType> list = catalogQueryRepository.getContractTypes();
         if (list == null || list.isEmpty()) {
-            this.resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "tipos de contrato")
+            resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "tipos de contrato"
             );
         }
         return list;
@@ -163,9 +170,10 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<SalaryType> getSalaryTypes() {
         List<SalaryType> list = catalogQueryRepository.getSalaryTypes();
         if (list == null || list.isEmpty()) {
-            this.resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "tipos de salario")
+            resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "tipos de salario"
             );
         }
         return list;
@@ -181,9 +189,10 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     public List<Gender> getGenders() {
         List<Gender> list = catalogQueryRepository.getGenders();
         if (list == null || list.isEmpty()) {
-            this.resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "géneros")
+            resultFormatterOutputPort.throwCatalogEmptyException(
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "géneros"
             );
         }
         return list;
@@ -201,8 +210,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
         Optional<City> cityOpt = catalogQueryRepository.getCityByCodeWithDepartment(code);
         if (cityOpt.isEmpty()) {
             resultFormatterOutputPort.throwEntityNotFound(
-                ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "Ciudad con código: '" + code + "'")
+                ErrorCode.ENTITY_NOT_FOUND,
+                "user.catalog.city_not_found",
+                "código " + code
             );
         }
         return cityOpt.get();
@@ -220,8 +230,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
         Optional<City> cityOpt = catalogQueryRepository.getCityByNameWithDepartment(name);
         if (cityOpt.isEmpty()) {
             resultFormatterOutputPort.throwEntityNotFound(
-                ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "Ciudad con nombre '" + name + "'")
+                ErrorCode.ENTITY_NOT_FOUND,
+                "user.catalog.city_not_found",
+                "nombre " + name
             );
         }
         return cityOpt.get();
@@ -239,8 +250,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
         Optional<Department> deptOpt = catalogQueryRepository.getDepartmentByCodeWithCities(code);
         if (deptOpt.isEmpty()) {
             resultFormatterOutputPort.throwEntityNotFound(
-                ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(), "Departamento con código '" + code + "'")
+                ErrorCode.ENTITY_NOT_FOUND,
+                "user.catalog.department_not_found",
+                "código " + code
             );
         }
         return deptOpt.get();
@@ -258,9 +270,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
         Optional<Department> deptOpt = catalogQueryRepository.getDepartmentByNameWithCities(name);
         if (deptOpt.isEmpty()) {
             resultFormatterOutputPort.throwEntityNotFound(
-                ErrorCode.ENTITY_NOT_FOUND.getCode(),
-                String.format(ErrorCode.ENTITY_NOT_FOUND.getMessageKey(),
-                    "Departamento con nombre '" + name + "'")
+                ErrorCode.ENTITY_NOT_FOUND,
+                "user.catalog.department_not_found",
+                "nombre " + name
             );
         }
         return deptOpt.get();
@@ -277,8 +289,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
         List<Department> list = catalogQueryRepository.getAllDepartments();
         if (list == null || list.isEmpty()) {
             resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "departamentos")
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "departamentos"
             );
         }
         return list;
@@ -296,8 +309,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
         List<Department> list = catalogQueryRepository.getAllDepartmentsWithCities();
         if (list == null || list.isEmpty()) {
             resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "departamentos")
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "departamentos"
             );
         }
         return list;
@@ -314,8 +328,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
         List<City> list = catalogQueryRepository.getAllCities();
         if (list == null || list.isEmpty()) {
             resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "ciudades")
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "ciudades"
             );
         }
         return list;
@@ -333,8 +348,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
         List<City> list = catalogQueryRepository.getAllCitiesWithDepartment();
         if (list == null || list.isEmpty()) {
             resultFormatterOutputPort.throwCatalogEmptyException(
-                ErrorCode.CATALOG_EMPTY.getCode(),
-                String.format(ErrorCode.CATALOG_EMPTY.getMessageKey(), "ciudades")
+                ErrorCode.CATALOG_EMPTY,
+                "user.catalog.empty",
+                "ciudades"
             );
         }
         return list;
