@@ -7,7 +7,10 @@ import com.unicuaca.asst.unicauca_asst.core.auth.application.dto.response.RoleRe
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Wrapper SOLO para documentación OpenAPI del genérico ApiResponse que contiene la lista de roles del sistema.
+ * Wrapper de documentación OpenAPI para {@link ApiResponse} parametrizado con {@link List} de {@link RoleResponseDTO}.
+ *
+ * <p>Permite a Swagger renderizar correctamente el tipo genérico en la especificación;
+ * no se instancia en tiempo de ejecución.</p>
  */
 @Schema(name = "RoleListApiResponse", description = "Respuesta API con lista de roles del sistema")
 public class RoleListApiResponse extends ApiResponse<List<RoleResponseDTO>> {

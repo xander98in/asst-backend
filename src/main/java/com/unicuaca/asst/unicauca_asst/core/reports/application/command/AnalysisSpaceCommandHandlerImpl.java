@@ -24,6 +24,13 @@ public class AnalysisSpaceCommandHandlerImpl implements AnalysisSpaceCommandHand
     private final AnalysisSpaceCommandCUInputPort analysisSpaceCommandCUInputPort;
     private final AnalysisSpaceMapper analysisSpaceMapper;
 
+    /**
+     * Crea un nuevo espacio de análisis.
+     *
+     * @param request datos de creación del espacio
+     * @param userId  ID del usuario autenticado
+     * @return DTO con el espacio creado
+     */
     @Override
     public AnalysisSpaceResponseDTO createAnalysisSpace(AnalysisSpaceCreateRequestDTO request, Long userId) {
         AnalysisSpace space = analysisSpaceCommandCUInputPort.createAnalysisSpace(
@@ -31,16 +38,36 @@ public class AnalysisSpaceCommandHandlerImpl implements AnalysisSpaceCommandHand
         return analysisSpaceMapper.toResponseDTO(space);
     }
 
+    /**
+     * Agrega baterías cerradas a un espacio de análisis.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @param request datos con los IDs de baterías a agregar
+     * @param userId  ID del usuario autenticado
+     */
     @Override
     public void addBatteriesToSpace(Long spaceId, AnalysisSpaceAddBatteriesRequestDTO request, Long userId) {
         analysisSpaceCommandCUInputPort.addBatteriesToSpace(spaceId, request.getBatteryRecordIds(), userId);
     }
 
+    /**
+     * Remueve una batería de un espacio de análisis.
+     *
+     * @param spaceId         ID del espacio de análisis
+     * @param batteryRecordId ID del registro de batería a remover
+     * @param userId          ID del usuario autenticado
+     */
     @Override
     public void removeBatteryFromSpace(Long spaceId, Long batteryRecordId, Long userId) {
         analysisSpaceCommandCUInputPort.removeBatteryFromSpace(spaceId, batteryRecordId, userId);
     }
 
+    /**
+     * Elimina un espacio de análisis completo.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @param userId  ID del usuario autenticado
+     */
     @Override
     public void deleteAnalysisSpace(Long spaceId, Long userId) {
         analysisSpaceCommandCUInputPort.deleteAnalysisSpace(spaceId, userId);

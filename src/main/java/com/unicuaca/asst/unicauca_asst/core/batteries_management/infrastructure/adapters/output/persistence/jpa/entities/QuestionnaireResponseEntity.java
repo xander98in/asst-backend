@@ -7,12 +7,12 @@ import lombok.*;
 /**
  * Entidad que representa una respuesta a una pregunta de un cuestionario.
  *
- * Mapea la tabla "respuestas_cuestionarios" en la base de datos.
+ * <p>Mapea la tabla "respuestas_cuestionarios" en la base de datos.</p>
  *
- * Cada respuesta está asociada a:
+ * <p>Cada respuesta está asociada a:
  * - Un registro de gestión de cuestionario (a través de {@code questionnaireManagementRecord}).
  * - Una pregunta específica (a través de {@code question}).
- * - Una opción de respuesta seleccionada (a través de {@code answerOption}).
+ * - Una opción de respuesta seleccionada (a través de {@code answerOption}).</p>
  */
 @Getter
 @Setter
@@ -42,8 +42,8 @@ public class QuestionnaireResponseEntity extends AuditableEntity {
     /**
      * Registro de gestión de cuestionario al que pertenece esta respuesta.
      *
-     * Relación muchos-a-uno:
-     * muchas respuestas pueden estar asociadas a un mismo registro de gestión de cuestionario.
+     * <p>Relación muchos-a-uno:
+     * muchas respuestas pueden estar asociadas a un mismo registro de gestión de cuestionario.</p>
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_registro_gestion_cuestionario", nullable = false)
@@ -52,8 +52,8 @@ public class QuestionnaireResponseEntity extends AuditableEntity {
     /**
      * Pregunta a la que corresponde esta respuesta.
      *
-     * Relación muchos-a-uno:
-     * muchas respuestas pueden estar asociadas a una misma pregunta.
+     * <p>Relación muchos-a-uno:
+     * muchas respuestas pueden estar asociadas a una misma pregunta.</p>
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_pregunta", nullable = false)
@@ -62,8 +62,8 @@ public class QuestionnaireResponseEntity extends AuditableEntity {
     /**
      * Opción de respuesta seleccionada para esta pregunta.
      *
-     * Relación muchos-a-uno:
-     * muchas respuestas pueden estar asociadas a una misma opción de respuesta.
+     * <p>Relación muchos-a-uno:
+     * muchas respuestas pueden estar asociadas a una misma opción de respuesta.</p>
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_opcion_respuesta", nullable = false)

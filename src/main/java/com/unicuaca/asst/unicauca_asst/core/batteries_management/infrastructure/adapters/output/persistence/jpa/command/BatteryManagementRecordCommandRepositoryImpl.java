@@ -11,6 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * Implementación del puerto de salida {@link BatteryManagementRecordCommandRepository}
+ * utilizando JPA como tecnología de persistencia.
+ *
+ * <p>Actúa como adaptador entre el dominio y la infraestructura para crear, actualizar
+ * y eliminar registros de gestión de baterías. Tras guardar, recarga el registro con
+ * sus relaciones principales para devolver al dominio un modelo hidratado.</p>
+ */
 @RequiredArgsConstructor
 @Service
 @Transactional

@@ -14,7 +14,8 @@ import lombok.Setter;
 
 /**
  * Entidad que representa el género de una persona.
- * Mapea la tabla "sexo" en la base de datos.
+ *
+ * <p>Mapea la tabla {@code sexo} en la base de datos.</p>
  */
 @Getter
 @Setter

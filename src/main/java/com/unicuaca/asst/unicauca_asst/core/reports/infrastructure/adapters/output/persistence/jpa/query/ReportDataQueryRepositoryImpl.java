@@ -41,18 +41,39 @@ public class ReportDataQueryRepositoryImpl implements ReportDataQueryRepository 
     private final QuestionnaireManagementRecordPersistenceMapper questionnaireRecordMapper;
     private final QuestionnaireResponsePersistenceMapper questionnaireResponseMapper;
 
+    /**
+     * Obtiene un registro de batería por su ID.
+     * Debe incluir la persona evaluada asociada.
+     *
+     * @param id identificador del registro de batería
+     * @return Optional con el registro encontrado
+     */
     @Override
     public Optional<BatteryManagementRecord> getBatteryRecordById(Long id) {
         return batteryRecordRepository.findByIdWithRelations(id)
             .map(batteryRecordMapper::toDomain);
     }
 
+    /**
+     * Obtiene los detalles sociodemográficos y laborales de una persona
+     * asociados a un registro de batería específico.
+     *
+     * @param batteryRecordId ID del registro de batería
+     * @return Optional con los detalles encontrados
+     */
     @Override
     public Optional<PersonEvaluatedDetails> getPersonDetailsByBatteryRecordId(Long batteryRecordId) {
         return personDetailsRepository.findByBatteryManagementRecordIdWithAll(batteryRecordId)
             .map(personDetailsMapper::toDomain);
     }
 
+    /**
+     * Obtiene todos los registros de gestión de cuestionarios de una batería.
+     * Cada registro incluye el cuestionario asociado (con su abreviatura).
+     *
+     * @param batteryRecordId ID del registro de batería
+     * @return lista de registros de gestión de cuestionarios
+     */
     @Override
     public List<QuestionnaireManagementRecord> getQuestionnaireRecordsByBatteryId(Long batteryRecordId) {
         return questionnaireRecordRepository.findAllByBatteryManagementRecord_Id(batteryRecordId)
@@ -61,6 +82,13 @@ public class ReportDataQueryRepositoryImpl implements ReportDataQueryRepository 
             .toList();
     }
 
+    /**
+     * Obtiene todas las respuestas de un registro de gestión de cuestionario,
+     * incluyendo las relaciones con pregunta (con orden) y opción de respuesta (con valor).
+     *
+     * @param questionnaireRecordId ID del registro de gestión de cuestionario
+     * @return lista de respuestas con relaciones cargadas
+     */
     @Override
     public List<QuestionnaireResponse> getResponsesByQuestionnaireRecordId(Long questionnaireRecordId) {
         return questionnaireResponseRepository.findAllByQuestionnaireManagementRecordIdWithAll(questionnaireRecordId)

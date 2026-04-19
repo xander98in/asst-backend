@@ -57,10 +57,12 @@ public class ApiResponse<T> {
     /**
      * Fábrica conveniente para construir una respuesta completa en una sola línea.
      *
+     * @param <T>     tipo del cuerpo de la respuesta
      * @param code    Código funcional (p. ej., {@code ASST-0002}).
      * @param message Mensaje humano de resultado.
      * @param data    Cuerpo de la respuesta.
      * @param path    Ruta del endpoint invocado.
+     * @return instancia de {@link ApiResponse} con el timestamp generado por el servidor
      */
     public static <T> ApiResponse<T> of(String code, String message, T data, String path) {
         return ApiResponse.<T>builder()

@@ -3,8 +3,10 @@ package com.unicuaca.asst.unicauca_asst.common.exceptions;
 import lombok.Getter;
 
 /**
- * Excepción para indicar la violación de una regla de negocio.
- * Suele mapear a 400 Bad Request.
+ * Excepción lanzada cuando se viola una regla de negocio definida en el dominio.
+ *
+ * <p>Suele mapear a HTTP 400 Bad Request. Es utilizada por los servicios de dominio
+ * para señalar condiciones funcionales que impiden completar la operación solicitada.</p>
  */
 @Getter
 public class BusinessRuleViolationException extends RuntimeException {

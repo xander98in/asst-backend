@@ -48,7 +48,8 @@ public class QuestionnaireResponseBatchUpdateRequestDTO {
 
     /**
      * Lista de respuestas individuales a actualizar.
-     * La anotación @Valid es crucial para que Spring valide cada objeto QuestionnaireAnswerUpdateRequestDTO dentro de la lista.
+     *
+     * <p>La anotación @Valid es crucial para que Spring valide cada objeto QuestionnaireAnswerUpdateRequestDTO dentro de la lista.</p>
      */
     @NotNull(message = "{questionnaireResponse.answers.notNull}", groups = FirstGroup.class)
     @NotEmpty(message = "{questionnaireResponse.answers.notEmpty}", groups = SecondGroup.class)

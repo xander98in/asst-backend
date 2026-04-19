@@ -14,7 +14,9 @@ import lombok.Setter;
 
 /**
  * Entidad que representa un rol del sistema.
- * Mapea la tabla "roles" en la base de datos.
+ *
+ * <p>Mapea la tabla {@code roles} en la base de datos y se utiliza como autoridad
+ * técnica por Spring Security.</p>
  */
 @Getter
 @Setter

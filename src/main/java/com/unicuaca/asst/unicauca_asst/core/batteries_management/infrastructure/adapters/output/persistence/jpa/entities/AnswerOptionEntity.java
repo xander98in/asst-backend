@@ -7,7 +7,7 @@ import lombok.*;
  * Entidad que representa una opción de respuesta posible en los cuestionarios.
  * Ejemplo: "Siempre" (Valor 5), "Nunca" (Valor 1), etc.
  *
- * Mapea la tabla "opciones_respuesta" en la base de datos.
+ * <p>Mapea la tabla "opciones_respuesta" en la base de datos.</p>
  */
 @Getter
 @Setter

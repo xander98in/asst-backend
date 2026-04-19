@@ -7,7 +7,9 @@ import java.util.List;
 /**
  * Puerto de entrada para los casos de uso relacionados con las respuestas de los cuestionarios.
  *
- * Define las operaciones de escritura (Command) que la capa de aplicación puede solicitar al dominio.
+ * <p>Define las operaciones de tipo "Command" (escritura) que la capa de aplicación puede
+ * solicitar al dominio sobre el modelo {@link QuestionnaireResponse}, incluyendo procesamiento
+ * de lotes para creación y actualización de respuestas.</p>
  */
 public interface QuestionnaireResponseCommandCUInputPort {
 

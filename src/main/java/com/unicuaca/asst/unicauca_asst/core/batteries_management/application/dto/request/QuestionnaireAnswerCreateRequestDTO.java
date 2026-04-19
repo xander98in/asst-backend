@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO que representa una respuesta individual dentro de un lote de respuestas.
- * Contiene el ID de la pregunta y el valor seleccionado.
+ *
+ * <p>Contiene el ID de la pregunta y el valor seleccionado.</p>
  */
 @Data
 @NoArgsConstructor

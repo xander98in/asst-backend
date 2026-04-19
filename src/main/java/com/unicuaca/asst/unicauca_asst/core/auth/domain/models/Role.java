@@ -16,7 +16,12 @@ import lombok.ToString;
 @ToString
 public class Role {
 
+    /** Identificador único del rol. */
     private Long id;
+
+    /** Nombre legible del rol (p. ej. "Administrador"). */
     private String name;
+
+    /** Clave técnica del rol utilizada por Spring Security (p. ej. "ADMIN"). */
     private String keyName;
 }

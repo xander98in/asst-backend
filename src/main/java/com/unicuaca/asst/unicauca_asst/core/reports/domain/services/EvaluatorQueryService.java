@@ -63,7 +63,15 @@ public class EvaluatorQueryService implements EvaluatorQueryCUInputPort {
         return evaluator;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Lista evaluadores del usuario de forma paginada con término de búsqueda opcional.
+     *
+     * @param userId     ID del usuario
+     * @param searchTerm término de búsqueda (puede ser null)
+     * @param page       número de página
+     * @param size       tamaño de página
+     * @return página de evaluadores
+     */
     @Override
     public Page<Evaluator> getEvaluatorsByUserPaged(Long userId, String searchTerm, Integer page, Integer size) {
         if (searchTerm != null && !searchTerm.isBlank()) {

@@ -17,15 +17,19 @@ import lombok.NoArgsConstructor;
 @Builder
 public class IntralaboralResultResponseDTO {
 
+    /** Dominios intralaborales con sus dimensiones y calificaciones. */
     @Schema(description = "Dominios con sus dimensiones")
     private List<DomainScoreResponseDTO> domains;
 
+    /** Puntaje bruto total del cuestionario intralaboral. */
     @Schema(description = "Puntaje bruto total intralaboral", example = "120")
     private int totalRawScore;
 
+    /** Puntaje transformado total del cuestionario intralaboral según el baremo aplicado. */
     @Schema(description = "Puntaje transformado total intralaboral", example = "28.6")
     private double totalTransformedScore;
 
+    /** Nivel de riesgo total intralaboral tras aplicar el baremo. */
     @Schema(description = "Nivel de riesgo total intralaboral", example = "Riesgo bajo")
     private String totalRiskLevel;
 }

@@ -39,8 +39,9 @@ public class SystemUserCommandRepositoryImpl implements SystemUserCommandReposit
 
     /**
      * Persiste un nuevo usuario del sistema.
-     * Convierte el modelo de dominio a entidad, asigna referencias JPA
-     * para status, roles y personEvaluated, y guarda.
+     *
+     * <p>Convierte el modelo de dominio a entidad, asigna referencias JPA
+     * para status, roles y personEvaluated, y guarda.</p>
      *
      * @param systemUser objeto de dominio a persistir
      * @return el usuario persistido con relaciones cargadas
@@ -74,7 +75,8 @@ public class SystemUserCommandRepositoryImpl implements SystemUserCommandReposit
 
     /**
      * Actualiza un usuario del sistema existente.
-     * Carga la entidad, modifica solo los campos proporcionados y guarda.
+     *
+     * <p>Carga la entidad, modifica solo los campos proporcionados y guarda.</p>
      *
      * @param systemUser objeto de dominio con datos actualizados
      * @return el usuario actualizado con relaciones cargadas

@@ -30,6 +30,12 @@ public class AnalysisSpaceCommandRepositoryImpl implements AnalysisSpaceCommandR
     private final EvaluatorSpringJpaRepository evaluatorJpaRepository;
     private final AnalysisSpacePersistenceMapper persistenceMapper;
 
+    /**
+     * Persiste un espacio de análisis (creación o actualización).
+     *
+     * @param analysisSpace espacio de análisis a guardar
+     * @return el espacio de análisis persistido
+     */
     @Override
     public AnalysisSpace save(AnalysisSpace analysisSpace) {
         AnalysisSpaceEntity entity = persistenceMapper.toEntity(analysisSpace);
@@ -38,6 +44,12 @@ public class AnalysisSpaceCommandRepositoryImpl implements AnalysisSpaceCommandR
         return persistenceMapper.toDomain(saved);
     }
 
+    /**
+     * Agrega una batería a un espacio de análisis.
+     *
+     * @param spaceId             ID del espacio de análisis
+     * @param batteryRecordId     ID del registro de batería
+     */
     @Override
     public void addBatteryToSpace(Long spaceId, Long batteryRecordId) {
         AnalysisSpaceEntity spaceRef = analysisSpaceJpaRepository.getReferenceById(spaceId);
@@ -49,21 +61,45 @@ public class AnalysisSpaceCommandRepositoryImpl implements AnalysisSpaceCommandR
         batteryJpaRepository.save(batteryEntity);
     }
 
+    /**
+     * Remueve una batería de un espacio de análisis.
+     *
+     * @param spaceId             ID del espacio de análisis
+     * @param batteryRecordId     ID del registro de batería
+     */
     @Override
     public void removeBatteryFromSpace(Long spaceId, Long batteryRecordId) {
         batteryJpaRepository.deleteByAnalysisSpace_IdAndBatteryManagementRecordId(spaceId, batteryRecordId);
     }
 
+    /**
+     * Elimina un espacio de análisis por su ID (cascade elimina las asociaciones).
+     *
+     * @param spaceId ID del espacio de análisis
+     */
     @Override
     public void deleteById(Long spaceId) {
         analysisSpaceJpaRepository.deleteById(spaceId);
     }
 
+    /**
+     * Verifica si existe un espacio con el mismo nombre para el usuario dado.
+     *
+     * @param name   nombre del espacio
+     * @param userId ID del usuario creador
+     * @return true si ya existe un espacio con ese nombre para el usuario
+     */
     @Override
     public boolean existsByNameAndCreatorUserId(String name, Long userId) {
         return analysisSpaceJpaRepository.existsByNameAndCreatorUserId(name, userId);
     }
 
+    /**
+     * Cuenta la cantidad de espacios de análisis de un usuario.
+     *
+     * @param userId ID del usuario creador
+     * @return cantidad de espacios del usuario
+     */
     @Override
     public int countByCreatorUserId(Long userId) {
         return analysisSpaceJpaRepository.countByCreatorUserId(userId);

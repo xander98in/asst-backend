@@ -2,10 +2,7 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.co
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.QuestionnaireManagementRecordResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.mappers.QuestionnaireManagementRecordMapper;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Questionnaire;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecord;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecordStatus;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.QuestionnaireManagementRecordCommandCUInputPort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.QuestionnaireManagementRecordCreateRequestDTO;
 
 import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
 
 /**
  * Implementación del manejador de comandos para la creación, actualización o eliminación de

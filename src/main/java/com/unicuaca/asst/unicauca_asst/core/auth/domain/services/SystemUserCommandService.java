@@ -264,6 +264,9 @@ public class SystemUserCommandService implements SystemUserCommandCUInputPort {
 
     /**
      * Normaliza un texto: trim y primera letra de cada palabra en mayúscula.
+     *
+     * @param text texto a normalizar (puede ser {@code null})
+     * @return el texto con la primera letra de cada palabra en mayúscula, o {@code null} si la entrada era nula
      */
     private String capitalizeWords(String text) {
         if (text == null) return null;

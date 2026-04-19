@@ -6,6 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO de respuesta que resume la información de una ciudad sin incluir su departamento.
+ *
+ * <p>Se utiliza para representar ciudades embebidas dentro de respuestas de departamento,
+ * evitando ciclos en la serialización.</p>
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

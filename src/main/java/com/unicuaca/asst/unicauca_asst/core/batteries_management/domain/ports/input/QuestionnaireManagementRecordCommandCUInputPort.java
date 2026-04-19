@@ -4,7 +4,10 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Q
 
 /**
  * Puerto de entrada para los casos de uso relacionados con la gestión de registros de cuestionarios.
- * Define las operaciones command (crear, actualizar, eliminar).
+ *
+ * <p>Define las operaciones de tipo "Command" (crear, actualizar, eliminar) sobre el modelo
+ * {@link QuestionnaireManagementRecord}, permitiendo que los adaptadores de entrada interactúen
+ * con la lógica de negocio sin acoplarse directamente a su implementación.</p>
  */
 public interface QuestionnaireManagementRecordCommandCUInputPort {
 

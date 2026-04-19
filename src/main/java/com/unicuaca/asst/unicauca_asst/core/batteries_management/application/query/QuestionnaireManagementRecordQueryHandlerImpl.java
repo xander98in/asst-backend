@@ -10,8 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementación del manejador de consultas para registros de gestión de cuestionarios.
- * Delega la lógica de negocio al puerto de entrada y transforma
- * el modelo de dominio en un DTO para la respuesta.
+ *
+ * <p>Delega la lógica de negocio al puerto de entrada y transforma
+ * el modelo de dominio en un DTO para la respuesta.</p>
  */
 @RequiredArgsConstructor
 @Component

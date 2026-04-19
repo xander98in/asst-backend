@@ -23,6 +23,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controlador REST para gestionar operaciones de escritura sobre los registros de gestión de baterías.
+ *
+ * <p>Forma parte del adaptador de entrada (Input Adapter) en la arquitectura hexagonal y delega la
+ * orquestación al {@link BatteryManagementRecordCommandHandler}. Expone endpoints para crear, eliminar
+ * y cerrar registros de gestión de baterías.</p>
+ */
 @Validated
 @RestController
 @RequestMapping("/asst/battery-management-record")
@@ -101,6 +108,13 @@ public class BatteryManagementRecordCommandController {
         );
     }
 
+    /**
+     * Elimina un registro de gestión de baterías a partir de su ID.
+     *
+     * @param recordId ID del registro de gestión de baterías a eliminar
+     * @param request objeto HttpServletRequest para construir la respuesta
+     * @return respuesta estandarizada indicando el éxito de la operación
+     */
     @Operation(
         summary = "Eliminar registro de gestión de baterías",
         description = "Elimina un registro de gestión de baterías a partir de su ID."

@@ -5,7 +5,11 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Q
 import java.util.List;
 
 /**
- * Puerto de entrada para consultas sobre las respuestas de los cuestionarios.
+ * Puerto de entrada para los casos de uso de consulta sobre las respuestas de los cuestionarios.
+ *
+ * <p>Define las operaciones de tipo "Query" del modelo {@link QuestionnaireResponse},
+ * permitiendo recuperar las respuestas asociadas a un registro de gestión de cuestionario
+ * sin acoplar los adaptadores de entrada a la implementación concreta.</p>
  */
 public interface QuestionnaireResponseQueryCUInputPort {
 

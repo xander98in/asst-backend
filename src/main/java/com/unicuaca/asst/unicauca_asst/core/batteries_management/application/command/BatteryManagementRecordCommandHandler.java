@@ -2,6 +2,10 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.co
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.BatteryManagementRecordResponseDTO;
 
+/**
+ * Manejador de comandos para operaciones sobre registros de gestión de baterías
+ * (BatteryManagementRecord).
+ */
 public interface BatteryManagementRecordCommandHandler {
 
     /**

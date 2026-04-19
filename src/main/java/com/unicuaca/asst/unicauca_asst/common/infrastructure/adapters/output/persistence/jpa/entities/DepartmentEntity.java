@@ -9,12 +9,11 @@ import java.util.Set;
 /**
  * Entidad que representa un departamento geográfico dentro del sistema.
  *
- * Un departamento funciona como una división territorial principal
- * dentro de la estructura geográfica. Cada departamento puede tener
- * asociadas múltiples ciudades.
+ * <p>Un departamento funciona como una división territorial principal dentro de la estructura
+ * geográfica. Cada departamento puede tener asociadas múltiples ciudades.</p>
  *
- * Esta entidad mapea la tabla "departamentos" en la base de datos.
- * Se valida que tanto el código como el nombre del departamento sean únicos.
+ * <p>Mapea la tabla {@code departamentos} en la base de datos. Se valida que tanto el código
+ * como el nombre del departamento sean únicos.</p>
  */
 @Getter
 @Setter

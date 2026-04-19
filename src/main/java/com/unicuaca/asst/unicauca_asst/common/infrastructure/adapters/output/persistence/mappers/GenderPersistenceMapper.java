@@ -5,9 +5,7 @@ import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.per
 import org.mapstruct.Mapper;
 
 /**
- * Mapper MapStruct entre:
- * - GenderEntity (JPA/infraestructura)
- * - Gender (dominio)
+ * Mapper MapStruct entre {@link GenderEntity} (JPA/infraestructura) y {@link Gender} (dominio).
  */
 @Mapper(componentModel = "spring")
 public interface GenderPersistenceMapper {

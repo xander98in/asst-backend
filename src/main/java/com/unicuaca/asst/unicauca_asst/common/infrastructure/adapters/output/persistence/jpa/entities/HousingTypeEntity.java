@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad que representa un tipo de vivienda.
+ * Entidad que representa el catálogo de tipos de vivienda.
  *
- * Mapea la tabla "tipo_vivienda" en la base de datos.
+ * <p>Mapea la tabla {@code tipo_vivienda} en la base de datos.</p>
  */
 @Getter
 @Setter
@@ -26,11 +26,17 @@ import lombok.Setter;
 @Table(name = "tipo_vivienda")
 public class HousingTypeEntity {
 
+    /**
+     * Identificador único del tipo de vivienda.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tipo_vivienda")
     private Long id;
 
+    /**
+     * Nombre del tipo de vivienda.
+     */
     @Column(name = "nombre", nullable = false, length = 30)
     private String name;
 }

@@ -13,8 +13,12 @@ import com.unicuaca.asst.unicauca_asst.core.reports.domain.ports.output.Evaluato
 import lombok.RequiredArgsConstructor;
 
 /**
- * Servicio de dominio que orquesta las operaciones de escritura sobre evaluadores,
- * incluyendo validación de propiedad (ownership) y verificación de uso antes de eliminar.
+ * Servicio de dominio para la gestión de comandos de evaluadores.
+ *
+ * <p>Orquesta la creación, actualización y eliminación de evaluadores,
+ * validando la propiedad (ownership) del usuario sobre el evaluador y
+ * verificando que no esté en uso por ningún espacio de análisis antes
+ * de eliminarlo.</p>
  */
 @RequiredArgsConstructor
 public class EvaluatorCommandService implements EvaluatorCommandCUInputPort {

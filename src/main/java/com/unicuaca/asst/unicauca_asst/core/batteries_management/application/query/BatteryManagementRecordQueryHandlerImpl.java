@@ -7,11 +7,10 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.in
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,6 +18,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Component
+@Transactional
 public class BatteryManagementRecordQueryHandlerImpl implements BatteryManagementRecordQueryHandler{
 
     private final BatteryManagementRecordQueryCUInputPort batteryManagementRecordQueryCUInputPort;
@@ -161,7 +161,20 @@ public class BatteryManagementRecordQueryHandlerImpl implements BatteryManagemen
     }
 
     /**
-     * {@inheritDoc}
+     * Lista baterías que pertenecen a un espacio de análisis, paginadas y con filtros
+     * opcionales múltiples.
+     *
+     * @param spaceId              ID del espacio de análisis (obligatorio)
+     * @param identificationNumber número de identificación (prefijo, puede ser null)
+     * @param workAreaName         área de trabajo (contenido parcial, puede ser null)
+     * @param dateFrom             fecha inicial del rango (puede ser null)
+     * @param dateTo               fecha final del rango (puede ser null)
+     * @param identificationTypeId ID del tipo de identificación (puede ser null)
+     * @param jobPositionTypeId    ID del tipo de cargo (puede ser null)
+     * @param intralaboralForm     forma intralaboral: "A" (cargos 1-2) o "B" (cargos 3-4), puede ser null
+     * @param page                 número de página
+     * @param size                 tamaño de página
+     * @return una página de {@link BatteryManagementRecordInformationResponseDTO}
      */
     @Override
     public Page<BatteryManagementRecordInformationResponseDTO> listByAnalysisSpaceWithMultipleFilters(

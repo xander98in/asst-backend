@@ -4,7 +4,8 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto
 
 /**
  * Manejador de consultas para respuestas de cuestionarios.
- * Este manejador se encarga de procesar las consultas relacionadas con las respuestas de los cuestionarios.
+ *
+ * <p>Este manejador se encarga de procesar las consultas relacionadas con las respuestas de los cuestionarios.</p>
  */
 public interface QuestionnaireResponseQueryHandler {
 

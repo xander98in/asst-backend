@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Mapper de MapStruct para convertir entre {@link QuestionnaireResponse} y {@link QuestionnaireResponseEntity}.
  *
- * Se utiliza en los adaptadores de infraestructura para persistir y recuperar datos desde la base de datos.
+ * <p>Se utiliza en los adaptadores de infraestructura para persistir y recuperar datos desde la base de datos.</p>
  */
 @Mapper(
     componentModel = "spring",

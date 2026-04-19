@@ -35,7 +35,10 @@ public class AnalysisSpaceQueryHandlerImpl implements AnalysisSpaceQueryHandler 
     private final BatteryManagementRecordMapper batteryManagementRecordMapper;
 
     /**
-     * {@inheritDoc}
+     * Lista los espacios de análisis del usuario autenticado.
+     *
+     * @param userId ID del usuario autenticado
+     * @return lista de resúmenes de espacios de análisis
      */
     @Override
     public List<AnalysisSpaceSummaryResponseDTO> getAnalysisSpacesByUser(Long userId) {
@@ -46,7 +49,11 @@ public class AnalysisSpaceQueryHandlerImpl implements AnalysisSpaceQueryHandler 
     }
 
     /**
-     * {@inheritDoc}
+     * Obtiene el detalle completo de un espacio de análisis.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @param userId  ID del usuario autenticado
+     * @return DTO con el espacio y sus baterías
      */
     @Override
     public AnalysisSpaceResponseDTO getAnalysisSpaceById(Long spaceId, Long userId) {
@@ -55,7 +62,21 @@ public class AnalysisSpaceQueryHandlerImpl implements AnalysisSpaceQueryHandler 
     }
 
     /**
-     * {@inheritDoc}
+     * Lista las baterías de un espacio de análisis con múltiples filtros opcionales,
+     * validando previamente que el espacio pertenezca al usuario.
+     *
+     * @param spaceId              ID del espacio de análisis (obligatorio)
+     * @param userId               ID del usuario autenticado
+     * @param identificationNumber número de identificación (prefijo, puede ser null)
+     * @param workAreaName         área de trabajo (contenido parcial, puede ser null)
+     * @param dateFrom             fecha inicial del rango (puede ser null)
+     * @param dateTo               fecha final del rango (puede ser null)
+     * @param identificationTypeId ID del tipo de identificación (puede ser null)
+     * @param jobPositionTypeId    ID del tipo de cargo (puede ser null)
+     * @param intralaboralForm     forma intralaboral: "A" (cargos 1-2) o "B" (cargos 3-4), puede ser null
+     * @param page                 número de página
+     * @param size                 tamaño de página
+     * @return página de baterías del espacio filtradas
      */
     @Override
     public Page<BatteryManagementRecordInformationResponseDTO> getSpaceBatteriesWithMultifilter(

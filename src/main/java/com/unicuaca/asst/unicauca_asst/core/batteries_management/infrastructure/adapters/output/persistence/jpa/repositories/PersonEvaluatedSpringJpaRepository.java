@@ -12,11 +12,11 @@ import org.springframework.data.repository.query.Param;
 
 /**
  * Repositorio JPA para la entidad {@link PersonEvaluatedEntity}.
- * 
- * Define operaciones de acceso a datos para la tabla {@code personas_evaluadas}, incluyendo
- * consultas personalizadas para verificar existencia y recuperación de relaciones.
  *
- * <p>Forma parte del adaptador de persistencia dentro de la arquitectura hexagonal, 
+ * <p>Define operaciones de acceso a datos para la tabla {@code personas_evaluadas}, incluyendo
+ * consultas personalizadas para verificar existencia y recuperación de relaciones.</p>
+ *
+ * <p>Forma parte del adaptador de persistencia dentro de la arquitectura hexagonal,
  * y se utiliza para interactuar con la base de datos relacional.</p>
  */
 public interface PersonEvaluatedSpringJpaRepository extends JpaRepository<PersonEvaluatedEntity, Long> {
@@ -117,5 +117,4 @@ public interface PersonEvaluatedSpringJpaRepository extends JpaRepository<Person
      * @return true si existe otra persona con esos datos, false en caso contrario
      */
     boolean existsByIdentificationTypeIdAndIdentificationNumberAndIdNot(Long identificationTypeId, String identificationNumber, Long id);
-
 }

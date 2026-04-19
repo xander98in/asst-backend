@@ -7,14 +7,19 @@ import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatter
 import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.input.CatalogQueryCUInputPort;
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.CatalogEmptyException;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityNotFoundPersException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
 /**
- * Implementación del servicio de consulta de catálogos.
+ * Servicio de dominio que implementa los casos de uso de consulta de catálogos transversales.
  *
- * Se encarga de manejar las solicitudes de consulta relacionadas con catálogos
+ * <p>Centraliza la lectura de catálogos maestros. Garantiza que los catálogos
+ * consultados no estén vacíos y que las búsquedas puntuales retornen un resultado existente,
+ * propagando excepciones tipadas vía {@link ResultFormatterOutputPort} cuando no se cumplen
+ * estas condiciones.</p>
  */
 @RequiredArgsConstructor
 public class CatalogQueryService implements CatalogQueryCUInputPort {
@@ -26,6 +31,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Obtiene una lista de todos los tipos de identificación.
      *
      * @return una lista de objetos IdentificationType
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<IdentificationType> getIdTypes() {
@@ -43,6 +49,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Obtiene una lista de todos los estados civiles.
      *
      * @return una lista de objetos CivilStatus
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<CivilStatus> getCivilStatuses() {
@@ -60,6 +67,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Obtiene una lista de todos los niveles educativos.
      *
      * @return una lista de objetos EducationLevel
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<EducationLevel> getEducationLevels() {
@@ -77,6 +85,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Obtiene una lista de todos los tipos de vivienda.
      *
      * @return una lista de objetos HousingType
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<HousingType> getHousingTypes() {
@@ -94,6 +103,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Obtiene una lista de todos los niveles socioeconómicos.
      *
      * @return una lista de objetos SocioeconomicLevel
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<SocioeconomicLevel> getSocioeconomicLevels() {
@@ -111,6 +121,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Obtiene una lista de todos los tipos de cargo.
      *
      * @return una lista de objetos JobPositionType
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<JobPositionType> getJobPositionTypes() {
@@ -128,6 +139,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Obtiene una lista de todos los tipos de contrato.
      *
      * @return una lista de objetos ContractType
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<ContractType> getContractTypes() {
@@ -145,6 +157,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Obtiene una lista de todos los tipos de salario.
      *
      * @return una lista de objetos SalaryType
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<SalaryType> getSalaryTypes() {
@@ -162,6 +175,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Obtiene una lista de todos los géneros.
      *
      * @return una lista de objetos Gender
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<Gender> getGenders() {
@@ -178,8 +192,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     /**
      * Obtiene una ciudad por su código incluyendo su departamento.
      *
-     * @param code código de la ciudad.
-     * @return la entidad City encontrada.
+     * @param code código de la ciudad
+     * @return la ciudad encontrada con su departamento
+     * @throws EntityNotFoundPersException si no existe una ciudad con el código indicado
      */
     @Override
     public City getCityByCodeWithDepartment(String code) {
@@ -196,8 +211,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     /**
      * Obtiene una ciudad por su nombre incluyendo su departamento.
      *
-     * @param name nombre de la ciudad.
-     * @return la entidad City encontrada.
+     * @param name nombre de la ciudad
+     * @return la ciudad encontrada con su departamento
+     * @throws EntityNotFoundPersException si no existe una ciudad con el nombre indicado
      */
     @Override
     public City getCityByNameWithDepartment(String name) {
@@ -214,8 +230,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     /**
      * Obtiene un departamento por su código incluyendo sus ciudades.
      *
-     * @param code código del departamento.
-     * @return la entidad Department encontrada.
+     * @param code código del departamento
+     * @return el departamento encontrado con sus ciudades
+     * @throws EntityNotFoundPersException si no existe un departamento con el código indicado
      */
     @Override
     public Department getDepartmentByCodeWithCities(String code) {
@@ -232,8 +249,9 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
     /**
      * Obtiene un departamento por su nombre incluyendo sus ciudades.
      *
-     * @param name nombre del departamento.
-     * @return la entidad Department encontrada.
+     * @param name nombre del departamento
+     * @return el departamento encontrado con sus ciudades
+     * @throws EntityNotFoundPersException si no existe un departamento con el nombre indicado
      */
     @Override
     public Department getDepartmentByNameWithCities(String name) {
@@ -252,6 +270,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Lista todos los departamentos (sin incluir sus ciudades).
      *
      * @return lista de departamentos.
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<Department> getAllDepartments() {
@@ -270,6 +289,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * (cada City sin su Department para evitar ciclos).
      *
      * @return lista de departamentos con sus ciudades.
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<Department> getAllDepartmentsWithCities() {
@@ -287,6 +307,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * Lista todas las ciudades (sin incluir su Department).
      *
      * @return lista de ciudades.
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<City> getAllCities() {
@@ -305,6 +326,7 @@ public class CatalogQueryService implements CatalogQueryCUInputPort {
      * (El Department no incluye sus cities para evitar ciclos).
      *
      * @return lista de ciudades con su departamento.
+     * @throws CatalogEmptyException si el catálogo está vacío o no se puede recuperar
      */
     @Override
     public List<City> getAllCitiesWithDepartment() {

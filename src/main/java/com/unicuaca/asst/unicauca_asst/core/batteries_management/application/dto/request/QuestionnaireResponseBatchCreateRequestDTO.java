@@ -17,8 +17,8 @@ import java.util.List;
 
 /**
  * DTO para la creación masiva de respuestas de un cuestionario.
- * <p>
- * Agrupa múltiples respuestas bajo un mismo registro de gestión de cuestionario.
+ *
+ * <p>Agrupa múltiples respuestas bajo un mismo registro de gestión de cuestionario.</p>
  */
 @Data
 @NoArgsConstructor
@@ -50,7 +50,8 @@ public class QuestionnaireResponseBatchCreateRequestDTO {
 
     /**
      * Lista de respuestas individuales.
-     * La anotación @Valid es crucial para que Spring valide cada objeto QuestionnaireAnswerRequestDTO dentro de la lista.
+     *
+     * <p>La anotación @Valid es crucial para que Spring valide cada objeto QuestionnaireAnswerRequestDTO dentro de la lista.</p>
      */
     @NotNull(message = "{questionnaireResponse.answers.notNull}", groups = FirstGroup.class)
     @NotEmpty(message = "{questionnaireResponse.answers.notEmpty}", groups = SecondGroup.class)

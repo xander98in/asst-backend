@@ -7,6 +7,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+/**
+ * Mapper MapStruct entre los modelos de dominio de catálogos y sus entidades JPA.
+ *
+ * <p>Cubre los catálogos maestros del sistema (tipos de identificación, estados civiles,
+ * niveles educativos, tipos de vivienda, niveles socioeconómicos, tipos de cargo, tipos de
+ * contrato, tipos de salario, géneros, ciudades y departamentos). Para ciudades y departamentos
+ * expone variantes resumidas (sin relaciones) y variantes enriquecidas (con la relación asociada)
+ * para evitar ciclos de serialización y consultas innecesarias.</p>
+ */
 @Mapper(componentModel = "spring")
 public interface CatalogPersistenceMapper {
 
@@ -215,8 +224,6 @@ public interface CatalogPersistenceMapper {
     @Named("toCityEntityWithDepartment")
     @Mapping(target = "department", qualifiedByName = "toDepartmentEntity")
     CityEntity toCityEntityWithDepartment(City domain);
-
-    /** DepartmentEntity -> Department incluyendo cities (City sin department) */
 
     /**
      * Convierte una entidad DepartmentEntity en el modelo de dominio Department, incluyendo las ciudades.

@@ -8,6 +8,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementación del manejador de comandos para registros de gestión de baterías
+ * (BatteryManagementRecord).
+ *
+ * <p>Su responsabilidad principal es convertir los datos de entrada (DTO) en modelos de dominio,
+ * delegar la ejecución del caso de uso al puerto correspondiente y transformar la respuesta del dominio
+ * en un DTO de salida adecuado para el cliente.</p>
+ */
 @RequiredArgsConstructor
 @Component
 @Transactional

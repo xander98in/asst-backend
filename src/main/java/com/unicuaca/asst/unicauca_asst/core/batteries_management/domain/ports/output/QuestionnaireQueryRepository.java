@@ -8,8 +8,8 @@ import java.util.Optional;
 /**
  * Puerto de salida para operaciones de consulta sobre el agregado {@link Questionnaire}.
  *
- * Define las firmas de los métodos que deben implementar los adaptadores de infraestructura
- * encargados de recuperar información desde fuentes externas, como bases de datos.
+ * <p>Define las firmas de los métodos que deben implementar los adaptadores de infraestructura
+ * encargados de recuperar información desde fuentes externas, como bases de datos.</p>
  */
 public interface QuestionnaireQueryRepository {
 

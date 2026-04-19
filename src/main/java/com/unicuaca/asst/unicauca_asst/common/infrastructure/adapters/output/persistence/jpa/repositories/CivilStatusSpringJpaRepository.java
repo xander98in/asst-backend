@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.CivilStatusEntity;
 
+/**
+ * Repositorio JPA para la entidad {@link CivilStatusEntity}.
+ */
 public interface CivilStatusSpringJpaRepository extends JpaRepository<CivilStatusEntity, Long> {
 
     /**

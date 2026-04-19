@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 /**
  * DTO de respuesta para representar los detalles adicionales de una persona evaluada.
  *
- * Incluye información demográfica y laboral relevante para la evaluación de riesgo psicosocial.
+ * <p>Incluye información demográfica y laboral relevante para la evaluación de riesgo psicosocial.</p>
  */
 @Data
 @NoArgsConstructor

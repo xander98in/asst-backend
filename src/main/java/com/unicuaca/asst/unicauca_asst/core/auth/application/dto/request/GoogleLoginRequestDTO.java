@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO para la solicitud de inicio de sesión con Google OAuth.
+ *
+ * <p>Transporta el token de identidad emitido por Google, que será validado
+ * por la infraestructura antes de autenticar al usuario en el sistema.</p>
  */
 @Data
 @NoArgsConstructor

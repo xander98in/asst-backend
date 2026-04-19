@@ -13,8 +13,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad que representa un tipo de cargo en el sistema.
- * Mapea la tabla "tipo_cargo" en la base de datos.
+ * Entidad que representa el catálogo de tipos de cargo.
+ *
+ * <p>Mapea la tabla {@code tipo_cargo} en la base de datos. El ID del tipo de cargo determina
+ * el formulario intralaboral aplicable en la batería: IDs 1-2 (Jefatura y Profesional) → Forma A
+ * (ILA); IDs 3-4 (Auxiliar y Operario) → Forma B (ILB).</p>
  */
 @Getter
 @Setter

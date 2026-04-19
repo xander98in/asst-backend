@@ -9,7 +9,7 @@ import com.unicuaca.asst.unicauca_asst.core.auth.domain.models.UserStatus;
  * Mapper que convierte entre el modelo de dominio {@link UserStatus}
  * y el DTO de respuesta del módulo de autenticación.
  *
- * Utiliza MapStruct para mapear automáticamente los campos.
+ * <p>Utiliza MapStruct para mapear automáticamente los campos.</p>
  */
 @Mapper(componentModel = "spring")
 public interface UserStatusMapper {

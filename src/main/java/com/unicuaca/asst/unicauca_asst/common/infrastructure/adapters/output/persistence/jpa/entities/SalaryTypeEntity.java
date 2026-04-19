@@ -13,8 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad que representa un tipo de salario
- * Mapeo de la tabla "tipo_salario"
+ * Entidad que representa el catálogo de tipos de salario.
+ *
+ * <p>Mapea la tabla {@code tipo_salario} en la base de datos.</p>
  */
 @Getter
 @Setter
@@ -26,7 +27,7 @@ import lombok.Setter;
 public class SalaryTypeEntity {
 
     /**
-     * Identificador único del tipo de salario
+     * Identificador único del tipo de salario.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +35,7 @@ public class SalaryTypeEntity {
     private Long id;
 
     /**
-     * Nombre del tipo de salario
+     * Nombre del tipo de salario.
      */
     @Column(name = "nombre", nullable = false, length = 120)
     private String name;

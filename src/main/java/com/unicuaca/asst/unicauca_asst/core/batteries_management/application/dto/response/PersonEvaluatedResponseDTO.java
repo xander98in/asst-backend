@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO de respuesta para representar los datos públicos de una persona evaluada.
- * 
- * Incluye información básica como nombres, identificación, género, año de nacimiento y correo electrónico.
+ *
+ * <p>Incluye información básica como nombres, identificación, género, año de nacimiento y correo electrónico.</p>
  */
 @Data
 @NoArgsConstructor

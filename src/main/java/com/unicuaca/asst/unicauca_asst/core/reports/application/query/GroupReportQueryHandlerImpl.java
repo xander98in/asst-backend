@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementación del manejador de consultas para informes grupales de riesgo psicosocial.
+ *
+ * <p>Delega al puerto de entrada de dominio y transforma los resultados
+ * calculados por {@link GroupReportEngine} a DTOs de respuesta.</p>
  */
 @RequiredArgsConstructor
 @Component
@@ -21,6 +24,13 @@ public class GroupReportQueryHandlerImpl implements GroupReportQueryHandler {
     private final GroupReportQueryCUInputPort groupReportQueryCUInputPort;
     private final GroupReportMapper groupReportMapper;
 
+    /**
+     * Obtiene el resumen general grupal de un espacio de análisis.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @param userId  ID del usuario autenticado
+     * @return DTO con el resumen grupal
+     */
     @Override
     public GroupSummaryResponseDTO getGroupSummary(Long spaceId, Long userId) {
         GroupReportEngine.GroupSummaryResult result =
@@ -28,6 +38,13 @@ public class GroupReportQueryHandlerImpl implements GroupReportQueryHandler {
         return groupReportMapper.toGroupSummaryDTO(result);
     }
 
+    /**
+     * Obtiene el desglose por dominios y dimensiones de un espacio de análisis.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @param userId  ID del usuario autenticado
+     * @return DTO con las distribuciones por dominio y dimensión
+     */
     @Override
     public DomainsAndDimensionsResponseDTO getDomainsAndDimensions(Long spaceId, Long userId) {
         GroupReportEngine.DomainsAndDimensionsResult result =
@@ -35,6 +52,13 @@ public class GroupReportQueryHandlerImpl implements GroupReportQueryHandler {
         return groupReportMapper.toDomainsAndDimensionsDTO(result);
     }
 
+    /**
+     * Obtiene la matriz de riesgo de un espacio de análisis.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @param userId  ID del usuario autenticado
+     * @return DTO con la matriz de riesgo
+     */
     @Override
     public RiskMatrixResponseDTO getRiskMatrix(Long spaceId, Long userId) {
         GroupReportEngine.RiskMatrixResult result =

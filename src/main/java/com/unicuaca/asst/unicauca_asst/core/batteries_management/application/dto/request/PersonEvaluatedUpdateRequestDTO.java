@@ -15,6 +15,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO para la actualización de una persona evaluada.
+ *
+ * <p>Contiene los datos permitidos para modificar el registro de una persona en el sistema
+ * de baterías de riesgo psicosocial, incluyendo validaciones de formato y obligatoriedad.</p>
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

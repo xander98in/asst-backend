@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad que representa un tipo de contrato
+ * Entidad que representa el catálogo de tipos de contrato.
  *
- * Mapeo de la tabla "tipo_contrato"
+ * <p>Mapea la tabla {@code tipo_contrato} en la base de datos.</p>
  */
 @Getter
 @Setter
@@ -26,11 +26,17 @@ import lombok.Setter;
 @Table(name = "tipo_contrato")
 public class ContractTypeEntity {
 
+    /**
+     * Identificador único del tipo de contrato.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tipo_contrato")
     private Long id;
 
+    /**
+     * Nombre del tipo de contrato.
+     */
     @Column(name = "nombre", nullable = false, length = 60)
     private String name;
 }

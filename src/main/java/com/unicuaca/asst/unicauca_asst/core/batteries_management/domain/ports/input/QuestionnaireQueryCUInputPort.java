@@ -7,8 +7,8 @@ import java.util.List;
 /**
  * Puerto de entrada para casos de uso de consulta de cuestionarios.
  *
- * Expone operaciones de solo lectura para que los adaptadores de entrada (p. ej. controladores REST)
- * interactúen con la lógica de negocio sin acoplarse a su implementación.
+ * <p>Expone operaciones de solo lectura para que los adaptadores de entrada (p. ej. controladores REST)
+ * interactúen con la lógica de negocio sin acoplarse a su implementación.</p>
  */
 public interface QuestionnaireQueryCUInputPort {
 

@@ -5,6 +5,14 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+/**
+ * Mapper para convertir entre entidades JPA y modelos del dominio relacionados
+ * con registros de gestión de baterías.
+ *
+ * <p>Utiliza MapStruct para generar el código automáticamente, delegando el mapeo
+ * de las relaciones a {@link PersonEvaluatedPersistenceMapper} y
+ * {@link BatteryManagementRecordStatusPersistenceMapper}.</p>
+ */
 @Mapper(
     componentModel = "spring",
     uses = {

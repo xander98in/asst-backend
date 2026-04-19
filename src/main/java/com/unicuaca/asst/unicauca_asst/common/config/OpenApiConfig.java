@@ -48,6 +48,8 @@ public class OpenApiConfig {
      * (tipos de identificación, géneros, estados civiles, etc.).
      *
      * Agrupa todos los endpoints bajo el prefijo <code>/asst/catalog/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de catálogos
      */
     @Bean
     GroupedOpenApi catalogsGroup() {
@@ -63,6 +65,8 @@ public class OpenApiConfig {
      * y su información asociada.
      *
      * Agrupa todos los endpoints bajo el prefijo <code>/asst/person-evaluated/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de personas evaluadas
      */
     @Bean
     GroupedOpenApi personasGroup() {
@@ -77,6 +81,8 @@ public class OpenApiConfig {
      * Grupo de documentación para los detalles de las personas evaluadas.
      *
      * Agrupa todos los endpoints bajo el prefijo <code>/asst/person-evaluated-details/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de detalles de personas evaluadas
      */
     @Bean
     GroupedOpenApi personEvaluatedDetailsGroup() {
@@ -93,6 +99,8 @@ public class OpenApiConfig {
      * de instrumentos psicosociales.
      *
      * Agrupa todos los endpoints bajo el prefijo <code>/asst/battery-management-record/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de registros de gestión de baterías
      */
     @Bean
     GroupedOpenApi BatteryManagementRecordGroup() {
@@ -108,6 +116,8 @@ public class OpenApiConfig {
      * (intralaboral, extralaboral, estrés, etc.).
      *
      * Agrupa todos los endpoints bajo el prefijo <code>/asst/questionnaires/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de cuestionarios
      */
     @Bean
     GroupedOpenApi QuestionnaireGroupedOpenApi() {
@@ -124,6 +134,8 @@ public class OpenApiConfig {
      *
      * Agrupa todos los endpoints bajo el prefijo
      * <code>/asst/questionnaire-management-record-statuses/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de estados de registros de gestión de cuestionarios
      */
     @Bean
     GroupedOpenApi QuestionnaireManagementRecordStatusGroup() {
@@ -141,6 +153,8 @@ public class OpenApiConfig {
      * que devuelven información del cuestionario asociado.
      *
      * Agrupa todos los endpoints bajo el prefijo <code>/asst/questions/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de preguntas de cuestionarios
      */
     @Bean
     GroupedOpenApi questionGroup() {
@@ -155,6 +169,8 @@ public class OpenApiConfig {
      * Grupo de documentación para los registros de gestión de cuestionarios,
      *
      * Agrupa todos los endpoints bajo el prefijo <code>/asst/questionnaire-management-record/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de registros de gestión de cuestionarios
      */
     @Bean
     GroupedOpenApi questionnaireManagementRecordGroup() {
@@ -165,6 +181,14 @@ public class OpenApiConfig {
             .build();
     }
 
+    /**
+     * Grupo de documentación para las respuestas de los cuestionarios
+     * (envío y consulta de respuestas asociadas a un registro de gestión).
+     *
+     * Agrupa todos los endpoints bajo el prefijo <code>/asst/questionnaire-response/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de respuestas de cuestionarios
+     */
     @Bean
     GroupedOpenApi questionnaireResponseGroup() {
         return GroupedOpenApi.builder()
@@ -179,6 +203,8 @@ public class OpenApiConfig {
      * (login, refresh, logout).
      *
      * Agrupa todos los endpoints bajo el prefijo <code>/auth/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de autenticación
      */
     @Bean
     GroupedOpenApi authGroup() {
@@ -194,6 +220,8 @@ public class OpenApiConfig {
      * (crear, actualizar, cambiar estado, eliminar, listar).
      *
      * Agrupa todos los endpoints bajo el prefijo <code>/asst/users/**</code>.
+     *
+     * @return configuración del grupo OpenAPI de usuarios del sistema
      */
     @Bean
     GroupedOpenApi usersGroup() {
@@ -209,6 +237,8 @@ public class OpenApiConfig {
      * (informes individuales, grupales, espacios de análisis).
      *
      * Agrupa todos los endpoints bajo el prefijo <code>/asst/reports/**</code>.
+     *
+     * @return configuración del grupo OpenAPI del módulo de informes
      */
     @Bean
     GroupedOpenApi reportsGroup() {
@@ -218,5 +248,4 @@ public class OpenApiConfig {
             .pathsToMatch("/asst/reports/**")
             .build();
     }
-
 }

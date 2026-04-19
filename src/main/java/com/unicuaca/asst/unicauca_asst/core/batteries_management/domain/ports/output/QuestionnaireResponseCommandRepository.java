@@ -5,7 +5,12 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Q
 import java.util.List;
 
 /**
- * Puerto de salida para operaciones de escritura (Command) sobre respuestas de cuestionarios.
+ * Puerto de salida para operaciones de escritura (Command) sobre respuestas de cuestionarios
+ * ({@link QuestionnaireResponse}).
+ *
+ * <p>Define el contrato que debe cumplir la infraestructura para persistir en lote o eliminar
+ * respuestas asociadas a un registro de gestión de cuestionario, sin acoplar el dominio
+ * a los detalles de persistencia.</p>
  */
 public interface QuestionnaireResponseCommandRepository {
 

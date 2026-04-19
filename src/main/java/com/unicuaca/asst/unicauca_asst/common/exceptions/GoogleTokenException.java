@@ -20,6 +20,11 @@ public class GoogleTokenException extends RuntimeException {
     /** Argumentos para el mensaje dinámico. */
     private final Object[] args;
 
+    /**
+     * Constructor que permite lanzar la excepción con un código de error específico.
+     *
+     * @param code código de error definido en {@link ErrorCode}
+     */
     public GoogleTokenException(ErrorCode code) {
         super(code.getMessageKey());
         this.code = code.getCode();
@@ -28,6 +33,12 @@ public class GoogleTokenException extends RuntimeException {
         this.args = null;
     }
 
+    /**
+     * Constructor que permite lanzar la excepción con un código y mensaje personalizados.
+     *
+     * @param code    código personalizado para la excepción
+     * @param message mensaje técnico para la excepción
+     */
     public GoogleTokenException(String code, String message) {
         super(message);
         this.code = code;
@@ -36,6 +47,13 @@ public class GoogleTokenException extends RuntimeException {
         this.args = null;
     }
 
+    /**
+     * Constructor que permite lanzar la excepción con un código, mensaje técnico y mensaje de usuario.
+     *
+     * @param code        código personalizado para la excepción
+     * @param message     mensaje técnico de la excepción
+     * @param userMessage mensaje amigable o clave de traducción
+     */
     public GoogleTokenException(String code, String message, String userMessage) {
         super(message);
         this.code = code;
@@ -44,6 +62,14 @@ public class GoogleTokenException extends RuntimeException {
         this.args = null;
     }
 
+    /**
+     * Constructor completo con soporte para argumentos dinámicos.
+     *
+     * @param code        código personalizado
+     * @param message     mensaje técnico
+     * @param userMessage clave de traducción
+     * @param args        argumentos para el mensaje
+     */
     public GoogleTokenException(String code, String message, String userMessage, Object[] args) {
         super(message);
         this.code = code;

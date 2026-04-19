@@ -7,8 +7,9 @@ import java.util.Optional;
 
 /**
  * Repositorio JPA para la entidad {@link BatteryManagementRecordStatusEntity}.
- * Proporciona métodos para realizar operaciones CRUD y consultas personalizadas en la tabla
- * "estados_registro_gestion_baterias".
+ *
+ * <p>Proporciona métodos para realizar operaciones CRUD y consultas personalizadas en la tabla
+ * {@code estados_registro_gestion_baterias}.</p>
  */
 public interface BatteryManagementRecordStatusSpringJpaRepository extends JpaRepository<BatteryManagementRecordStatusEntity, Long> {
 

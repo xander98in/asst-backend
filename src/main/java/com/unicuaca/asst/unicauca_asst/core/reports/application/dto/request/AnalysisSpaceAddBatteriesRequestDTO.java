@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Schema(description = "IDs de baterías cerradas a agregar al espacio de análisis")
 public class AnalysisSpaceAddBatteriesRequestDTO {
 
+    /** Lista de identificadores de registros de gestión de batería a agregar al espacio. */
     @NotNull(message = "{analysisSpace.batteryRecordIds.notNull}", groups = FirstGroup.class)
     @NotEmpty(message = "{analysisSpace.batteryRecordIds.notEmpty}", groups = FirstGroup.class)
     @Schema(description = "Lista de IDs de registros de gestión de batería", example = "[1, 2, 3]")

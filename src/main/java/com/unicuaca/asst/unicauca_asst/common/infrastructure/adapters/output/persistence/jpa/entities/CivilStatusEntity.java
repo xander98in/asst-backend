@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad que representa los estados civiles.
+ * Entidad que representa el catálogo de estados civiles.
  *
- * Mapeará los estados civiles a la base de datos.
+ * <p>Mapea la tabla {@code estado_civil} en la base de datos.</p>
  */
 @Getter
 @Setter

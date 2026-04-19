@@ -22,6 +22,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementación del puerto de salida {@link BatteryManagementRecordQueryRepository}
+ * utilizando JPA como tecnología de persistencia.
+ *
+ * <p>Actúa como adaptador entre el dominio y la infraestructura para recuperar registros
+ * de gestión de baterías, incluyendo consultas paginadas por estado, por término de búsqueda,
+ * por prefijo de identificación, y búsquedas dinámicas con múltiples filtros mediante
+ * {@link BatteryManagementRecordSpecification}.</p>
+ */
 @RequiredArgsConstructor
 @Service
 @Transactional

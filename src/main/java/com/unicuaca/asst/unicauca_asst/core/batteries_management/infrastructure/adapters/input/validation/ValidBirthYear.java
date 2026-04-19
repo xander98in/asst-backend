@@ -8,6 +8,12 @@ import java.lang.annotation.Target;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
+/**
+ * Anotación de validación que restringe un valor de año de nacimiento a un rango permitido.
+ *
+ * <p>Delega la validación en {@link BirthYearValidator}, que calcula dinámicamente el rango
+ * a partir del año actual (hasta 125 años hacia atrás).</p>
+ */
 @Constraint(validatedBy = BirthYearValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE, ElementType.PARAMETER})

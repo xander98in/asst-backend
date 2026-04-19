@@ -28,9 +28,11 @@ public final class ResponseUtil {
     /**
      * Respuesta 200 OK con body JSON estandarizado.
      *
-     * @param req   request para extraer la ruta (path) de la solicitud.
-     * @param code  código funcional de éxito (enum {@link SuccessCode}).
-     * @param body  payload de respuesta (DTO o colección).
+     * @param <T>     tipo del payload de respuesta
+     * @param req     request para extraer la ruta (path) de la solicitud.
+     * @param code    código funcional de éxito (enum {@link SuccessCode}).
+     * @param message mensaje humano del resultado; si es {@code null} o vacío se utiliza el mensaje del {@link SuccessCode}.
+     * @param body    payload de respuesta (DTO o colección).
      * @return {@code 200 OK} con {@link ApiResponse}.
      */
     public static <T> ResponseEntity<ApiResponse<T>> ok(HttpServletRequest req, SuccessCode code, String message, T body) {
@@ -48,6 +50,7 @@ public final class ResponseUtil {
      *
      * <p>La URI de Location se construye a partir del contexto actual + {@code locationPath}.</p>
      *
+     * @param <T>           tipo del payload del recurso creado
      * @param req           request para obtener el path de la llamada (trazabilidad).
      * @param locationPath  ruta absoluta/relativa del nuevo recurso (p. ej. "/asst/items/{id}").
      * @param code          código funcional de éxito.
@@ -74,6 +77,7 @@ public final class ResponseUtil {
     /**
      * Respuesta de error con status arbitrario y body JSON estandarizado.
      *
+     * @param <T>        tipo de los datos adicionales transportados en {@link ErrorResponse}
      * @param req        request para el path.
      * @param errorCode  código funcional de error (p. ej. "ASST-ERR-400").
      * @param status     HTTP status a retornar.
@@ -88,12 +92,39 @@ public final class ResponseUtil {
             .body(api);
     }
 
+    /**
+     * Atajo para respuestas de error {@code 400 Bad Request} con body JSON estandarizado.
+     *
+     * @param <T>     tipo de los datos adicionales transportados en {@link ErrorResponse}
+     * @param req     request para el path.
+     * @param message mensaje humano del error.
+     * @param details detalles adicionales del error.
+     * @return {@code 400 Bad Request} con {@link ApiResponse}.
+     */
     public static <T> ResponseEntity<ApiResponse<ErrorResponse<T>>> badRequest(HttpServletRequest req, String message, ErrorResponse<T> details) {
         return error(req, "ASST-ERR-400", HttpStatus.BAD_REQUEST, message, details);
     }
+
+    /**
+     * Atajo para respuestas de error {@code 404 Not Found} con body JSON estandarizado.
+     *
+     * @param <T>     tipo de los datos adicionales transportados en {@link ErrorResponse}
+     * @param req     request para el path.
+     * @param message mensaje humano del error.
+     * @return {@code 404 Not Found} con {@link ApiResponse} sin detalles adicionales.
+     */
     public static <T> ResponseEntity<ApiResponse<ErrorResponse<T>>> notFound(HttpServletRequest req, String message) {
         return error(req, "ASST-ERR-404", HttpStatus.NOT_FOUND, message, null);
     }
+
+    /**
+     * Atajo para respuestas de error {@code 409 Conflict} con body JSON estandarizado.
+     *
+     * @param <T>     tipo de los datos adicionales transportados en {@link ErrorResponse}
+     * @param req     request para el path.
+     * @param message mensaje humano del error.
+     * @return {@code 409 Conflict} con {@link ApiResponse} sin detalles adicionales.
+     */
     public static <T> ResponseEntity<ApiResponse<ErrorResponse<T>>> conflict(HttpServletRequest req, String message) {
         return error(req, "ASST-ERR-409", HttpStatus.CONFLICT, message, null);
     }

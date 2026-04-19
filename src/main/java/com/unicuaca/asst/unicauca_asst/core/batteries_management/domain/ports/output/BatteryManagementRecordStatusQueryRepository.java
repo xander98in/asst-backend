@@ -5,7 +5,11 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.B
 import java.util.Optional;
 
 /**
- * Puerto de salida para consultas relacionadas con los estados de los registros de gestión de baterías.
+ * Puerto de salida para operaciones de consulta sobre los estados de los registros
+ * de gestión de baterías.
+ *
+ * <p>Define el contrato que debe cumplir la infraestructura para recuperar información
+ * del catálogo de estados, sin acoplar el dominio a los detalles de persistencia.</p>
  */
 public interface BatteryManagementRecordStatusQueryRepository {
 

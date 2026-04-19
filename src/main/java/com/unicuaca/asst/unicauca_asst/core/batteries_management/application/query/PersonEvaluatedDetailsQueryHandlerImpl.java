@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Implementación del manejador de consultas para detalles de personas evaluadas.
  *
- * Delega la lógica de negocio al puerto de entrada y transforma
- * el modelo de dominio en un DTO para la respuesta.
+ * <p>Delega la lógica de negocio al puerto de entrada y transforma
+ * el modelo de dominio en un DTO para la respuesta.</p>
  */
 @RequiredArgsConstructor
 @Component
@@ -27,7 +27,7 @@ public class PersonEvaluatedDetailsQueryHandlerImpl implements PersonEvaluatedDe
      * Obtiene metadata del detalle de una persona evaluada asociado a un registro de gestión de bateria.
      *
      * @param batteryManagementRecordId ID del registro de gestión de batería
-     * @return
+     * @return DTO con la metadata del detalle de la persona evaluada
      */
     @Override
     public PersonEvaluatedDetailsMetaResponseDTO getMetaByBatteryManagementRecordId(Long batteryManagementRecordId) {

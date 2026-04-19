@@ -16,15 +16,17 @@ import com.unicuaca.asst.unicauca_asst.core.reports.domain.config.Transformation
  * Motor de calificación de la Batería de Instrumentos para la Evaluación
  * de Factores de Riesgo Psicosocial (Ministerio de la Protección Social, Colombia, 2010).
  *
- * Implementa los 5 pasos del manual:
- * 1. Calificación de ítems (directos e invertidos)
- * 2. Obtención de puntajes brutos por dimensión
- * 3. Transformación de puntajes brutos
- * 4. Comparación con baremos
- * 5. Clasificación en niveles de riesgo
+ * <p>Implementa los 5 pasos del manual:</p>
+ * <ol>
+ *   <li>Calificación de ítems (directos e invertidos)</li>
+ *   <li>Obtención de puntajes brutos por dimensión</li>
+ *   <li>Transformación de puntajes brutos</li>
+ *   <li>Comparación con baremos</li>
+ *   <li>Clasificación en niveles de riesgo</li>
+ * </ol>
  *
- * Clase de dominio pura, sin estado. No accede a base de datos — recibe datos
- * ya cargados como parámetros y retorna resultados calculados.
+ * <p>Clase de dominio pura, sin estado. No accede a base de datos — recibe datos
+ * ya cargados como parámetros y retorna resultados calculados.</p>
  */
 public class ScoringEngine {
 
@@ -335,6 +337,9 @@ public class ScoringEngine {
 
     /**
      * Redondea un valor a 1 decimal.
+     *
+     * @param value valor a redondear
+     * @return valor redondeado a un decimal
      */
     private double roundToOneDecimal(double value) {
         return Math.round(value * 10.0) / 10.0;

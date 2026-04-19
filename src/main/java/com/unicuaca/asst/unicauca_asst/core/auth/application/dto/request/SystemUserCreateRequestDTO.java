@@ -18,8 +18,9 @@ import lombok.NoArgsConstructor;
 /**
  * DTO para la creación de un usuario del sistema.
  *
- * Contiene los datos requeridos para registrar un nuevo usuario,
- * incluyendo validaciones de formato y obligatoriedad.
+ * <p>Contiene los datos requeridos para registrar un nuevo usuario,
+ * incluyendo validaciones de formato y obligatoriedad aplicadas mediante
+ * grupos de validación ({@link FirstGroup} y {@link SecondGroup}).</p>
  */
 @Data
 @NoArgsConstructor

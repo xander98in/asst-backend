@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Implementación del puerto de salida {@link PersonEvaluatedCommandRepository} para operaciones de escritura.
  *
- * Esta clase actúa como adaptador de salida para guardar entidades de persona en la base de datos.
+ * <p>Esta clase actúa como adaptador de salida para guardar entidades de persona en la base de datos.</p>
  */
 @RequiredArgsConstructor
 @Service

@@ -11,10 +11,25 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repositorio JPA para la entidad {@link BatteryManagementRecordEntity}.
+ *
+ * <p>Expone operaciones de acceso a datos sobre la tabla {@code registros_gestion_baterias},
+ * incluyendo consultas paginadas por estado, por término de búsqueda y por prefijo de
+ * identificación. Extiende {@link JpaSpecificationExecutor} para soportar consultas dinámicas
+ * basadas en especificaciones JPA.</p>
+ */
 public interface BatteryManagementRecordSpringJpaRepository
     extends JpaRepository<BatteryManagementRecordEntity, Long>,
             JpaSpecificationExecutor<BatteryManagementRecordEntity> {
 
+    /**
+     * Obtiene un registro de gestión de batería por su ID, cargando las relaciones con
+     * la persona evaluada y el estado mediante JOIN FETCH.
+     *
+     * @param id ID del registro de gestión de batería.
+     * @return registro con sus relaciones cargadas envuelto en un Optional, o vacío si no existe.
+     */
     @Query("""
        SELECT r
        FROM BatteryManagementRecordEntity r
@@ -24,6 +39,13 @@ public interface BatteryManagementRecordSpringJpaRepository
        """)
     Optional<BatteryManagementRecordEntity> findByIdWithRelations(@Param("id") Long id);
 
+    /**
+     * Lista todos los registros de gestión de batería asociados a una persona evaluada,
+     * cargando las relaciones con la persona y el estado mediante JOIN FETCH.
+     *
+     * @param personId ID de la persona evaluada.
+     * @return lista de registros de gestión de batería asociados a la persona.
+     */
     @Query("""
        SELECT DISTINCT r
        FROM BatteryManagementRecordEntity r
@@ -56,6 +78,7 @@ public interface BatteryManagementRecordSpringJpaRepository
      *
      * @param statusName nombre del estado a filtrar (ej: "Cerrado")
      * @param pageable paginación + orden
+     * @return página de registros con las relaciones cargadas
      */
     @Query(
         value = """
@@ -83,6 +106,7 @@ public interface BatteryManagementRecordSpringJpaRepository
      * @param statusName nombre del estado a filtrar
      * @param term término de búsqueda (identificación o área)
      * @param pageable paginación + orden
+     * @return página de registros con las relaciones cargadas
      */
     @Query(
         value = """
@@ -128,6 +152,7 @@ public interface BatteryManagementRecordSpringJpaRepository
      *
      * @param excludedStatus nombre del estado a excluir (ej: "Cerrado")
      * @param pageable paginación + orden
+     * @return página de registros con las relaciones cargadas
      */
     @Query(
         value = """
@@ -157,6 +182,7 @@ public interface BatteryManagementRecordSpringJpaRepository
      * @param excludedStatus nombre del estado a excluir
      * @param prefix prefijo del número de identificación para filtrar (puede ser nulo o vacío)
      * @param pageable paginación + orden
+     * @return página de registros con las relaciones cargadas
      */
     @Query(
         value = """
@@ -200,6 +226,7 @@ public interface BatteryManagementRecordSpringJpaRepository
      * @param excludedStatus nombre del estado a excluir
      * @param term término de búsqueda para filtrar (puede ser nulo o vacío)
      * @param pageable paginación + orden
+     * @return página de registros con las relaciones cargadas
      */
     @Query(
         value = """
@@ -238,6 +265,4 @@ public interface BatteryManagementRecordSpringJpaRepository
         @Param("term") String term,
         Pageable pageable
     );
-
-
 }

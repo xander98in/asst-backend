@@ -12,10 +12,11 @@ import java.util.Optional;
 /**
  * Puerto de salida para operaciones de consulta sobre el agregado {@link BatteryManagementRecord}.
  *
- * Define las firmas de los métodos que deben implementar los adaptadores de infraestructura encargados
- * de recuperar información desde fuentes externas (p. ej., base de datos relacional).
+ * <p>Define las firmas de los métodos que deben implementar los adaptadores de infraestructura
+ * encargados de recuperar información desde fuentes externas (p. ej., base de datos relacional).</p>
  *
- * Forma parte de la arquitectura hexagonal, separando las dependencias externas de la lógica del dominio.
+ * <p>Forma parte de la arquitectura hexagonal, separando las dependencias externas
+ * de la lógica del dominio.</p>
  */
 public interface BatteryManagementRecordQueryRepository {
 

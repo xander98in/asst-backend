@@ -15,6 +15,15 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
+/**
+ * Mapper de la capa de aplicación para convertir entre DTOs de respuestas de cuestionario
+ * (en formato batch) y el modelo de dominio {@link QuestionnaireResponse}.
+ *
+ * <p>Usa MapStruct y métodos default para orquestar el mapeo "desaplanado" desde un DTO padre
+ * (que contiene el ID del registro de gestión y una lista de respuestas hijas) hacia una lista
+ * de modelos de dominio, y viceversa. Incluye helpers para construir objetos anidados solo con
+ * los campos mínimos necesarios (ID o valor).</p>
+ */
 @Mapper(componentModel = "spring")
 public interface QuestionnaireResponseMapper {
 
@@ -117,11 +126,17 @@ public interface QuestionnaireResponseMapper {
 
     /**
      * Convierte una lista de dominios en lista de DTOs hijos.
+     *
+     * @param list lista de respuestas de dominio
+     * @return lista de DTOs de respuesta individual
      */
     List<QuestionnaireAnswerResponseDTO> toAnswerResponseList(List<QuestionnaireResponse> list);
 
     /**
      * Convierte una respuesta individual de dominio a DTO hijo.
+     *
+     * @param domain respuesta de dominio
+     * @return DTO con los datos aplanados de la pregunta y la opción seleccionada
      */
     @Mapping(target = "id", source = "id")
     @Mapping(target = "questionId", source = "question.id")
@@ -135,20 +150,36 @@ public interface QuestionnaireResponseMapper {
 
     // --- Métodos Helper para construir los objetos anidados ---
 
+    /**
+     * Construye un {@link QuestionnaireManagementRecord} solo con su ID a partir del identificador recibido.
+     *
+     * @param id identificador del registro de gestión de cuestionario
+     * @return instancia con solo el ID establecido, o {@code null} si el ID es nulo
+     */
     default QuestionnaireManagementRecord buildRecord(Long id) {
         if (id == null) return null;
         return QuestionnaireManagementRecord.builder().id(id).build();
     }
 
+    /**
+     * Construye un {@link Question} solo con su ID a partir del identificador recibido.
+     *
+     * @param id identificador de la pregunta
+     * @return instancia con solo el ID establecido, o {@code null} si el ID es nulo
+     */
     default Question buildQuestion(Long id) {
         if (id == null) return null;
         return Question.builder().id(id).build();
     }
 
+    /**
+     * Construye un {@link AnswerOption} solo con su valor numérico a partir del valor recibido.
+     *
+     * @param value valor numérico de la opción de respuesta
+     * @return instancia con solo el valor establecido, o {@code null} si el valor es nulo
+     */
     default AnswerOption buildAnswerOption(Integer value) {
         if (value == null) return null;
         return AnswerOption.builder().value(value).build();
     }
-
-
 }

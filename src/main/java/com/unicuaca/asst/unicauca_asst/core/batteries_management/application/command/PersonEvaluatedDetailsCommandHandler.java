@@ -2,7 +2,6 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.co
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedDetailsCreateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedDetailsUpdateRequestDTO;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedDetailsResponseDTO;
 
 /**
  * Manejador de comandos para operaciones de creación/modificación
@@ -21,7 +20,7 @@ public interface PersonEvaluatedDetailsCommandHandler {
      * Actualiza los detalles de una persona evaluada en el sistema.
      *
      * @param personEvaluatedDetailsId ID del registro a actualizar
-     * @param dto datos de entrada validados para la actualizacióN
+     * @param dto datos de entrada validados para la actualización
      */
     void updatePersonEvaluatedDetails(Long personEvaluatedDetailsId, PersonEvaluatedDetailsUpdateRequestDTO dto);
 

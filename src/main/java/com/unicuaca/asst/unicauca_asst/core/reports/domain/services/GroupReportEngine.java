@@ -365,6 +365,18 @@ public class GroupReportEngine {
 
     // ── Métodos auxiliares privados ─────────────────────────────────────
 
+    /**
+     * Construye el resumen grupal de un cuestionario a partir de la lista de puntajes y niveles
+     * calculando el promedio, el nivel promedio y la distribución de riesgo.
+     *
+     * @param totalPersons total de personas incluidas en el resumen
+     * @param formaACount  cantidad de personas con Forma A
+     * @param formaBCount  cantidad de personas con Forma B
+     * @param scores       lista de puntajes transformados individuales
+     * @param levels       lista de niveles de riesgo individuales
+     * @param classifier   función para clasificar el puntaje promedio con los baremos correspondientes
+     * @return resumen grupal con promedio, nivel promedio y distribución de riesgo
+     */
     private QuestionnaireGroupSummary buildSummary(
         int totalPersons, int formaACount, int formaBCount,
         List<Double> scores, List<String> levels,
@@ -410,6 +422,16 @@ public class GroupReportEngine {
         return buildSummary(total, formaACount, formaBCount, scores, levels, classifier);
     }
 
+    /**
+     * Construye una entrada de la matriz de riesgo a partir de los pares (riesgo, estrés) individuales,
+     * calculando la magnitud del riesgo, el índice de asociación con estrés y los semáforos asociados.
+     *
+     * @param name                    nombre del dominio, dimensión o total que identifica la entrada
+     * @param riskStressPairs         lista de pares [nivel de riesgo, nivel de estrés] de cada persona
+     * @param totalPersons            total de personas evaluadas
+     * @param totalMediumOrHighStress total de personas con estrés medio, alto o muy alto
+     * @return entrada de la matriz con magnitud, índice de asociación y semáforos
+     */
     private RiskMatrixEntry buildRiskMatrixEntry(
         String name, List<String[]> riskStressPairs, int totalPersons, long totalMediumOrHighStress
     ) {
@@ -436,6 +458,12 @@ public class GroupReportEngine {
         );
     }
 
+    /**
+     * Cuenta la cantidad de personas en cada nivel de riesgo a partir de una lista de niveles individuales.
+     *
+     * @param levels lista de niveles de riesgo individuales
+     * @return distribución con las cantidades por cada nivel (sin riesgo, bajo, medio, alto, muy alto)
+     */
     private RiskDistribution countRiskDistribution(List<String> levels) {
         int sinRiesgo = 0, bajo = 0, medio = 0, alto = 0, muyAlto = 0;
         for (String level : levels) {
@@ -451,6 +479,12 @@ public class GroupReportEngine {
         return new RiskDistribution(sinRiesgo, bajo, medio, alto, muyAlto, 0, 0);
     }
 
+    /**
+     * Calcula la moda (nivel más frecuente) dentro de una lista de niveles de riesgo.
+     *
+     * @param levels lista de niveles de riesgo individuales
+     * @return nivel más frecuente, o cadena vacía si la lista es vacía
+     */
     private String findMode(List<String> levels) {
         if (levels.isEmpty()) {
             return "";
@@ -465,30 +499,68 @@ public class GroupReportEngine {
             .orElse("");
     }
 
+    /**
+     * Indica si un nivel de riesgo corresponde a "Riesgo medio", "Riesgo alto" o "Riesgo muy alto".
+     *
+     * @param riskLevel nivel de riesgo a evaluar
+     * @return true si el nivel es medio, alto o muy alto; false en caso contrario
+     */
     private boolean isMediumOrHighRisk(String riskLevel) {
         return "Riesgo medio".equals(riskLevel) || "Riesgo alto".equals(riskLevel) || "Riesgo muy alto".equals(riskLevel);
     }
 
+    /**
+     * Indica si un nivel de estrés corresponde a "Medio", "Alto" o "Muy alto".
+     *
+     * @param stressLevel nivel de estrés a evaluar
+     * @return true si el nivel es medio, alto o muy alto; false en caso contrario
+     */
     private boolean isMediumOrHighStress(String stressLevel) {
         return "Medio".equals(stressLevel) || "Alto".equals(stressLevel) || "Muy alto".equals(stressLevel);
     }
 
+    /**
+     * Obtiene el semáforo asociado a la magnitud del riesgo según los umbrales definidos:
+     * VERDE (≤ 40%), AMARILLO (&lt; 60%) o ROJO (≥ 60%).
+     *
+     * @param magnitudePercent porcentaje de magnitud del riesgo
+     * @return color del semáforo ("VERDE", "AMARILLO" o "ROJO")
+     */
     private String getMagnitudeSemaphore(double magnitudePercent) {
         if (magnitudePercent <= 40.0) return "VERDE";
         if (magnitudePercent < 60.0) return "AMARILLO";
         return "ROJO";
     }
 
+    /**
+     * Obtiene el semáforo asociado al índice de asociación con estrés según los umbrales definidos:
+     * VERDE (≤ 0.29), AMARILLO (&lt; 0.70) o ROJO (≥ 0.70).
+     *
+     * @param associationIndex índice de asociación entre riesgo y estrés
+     * @return color del semáforo ("VERDE", "AMARILLO" o "ROJO")
+     */
     private String getAssociationSemaphore(double associationIndex) {
         if (associationIndex <= 0.29) return "VERDE";
         if (associationIndex < 0.70) return "AMARILLO";
         return "ROJO";
     }
 
+    /**
+     * Redondea un valor a 1 decimal.
+     *
+     * @param value valor a redondear
+     * @return valor redondeado a un decimal
+     */
     private double roundToOneDecimal(double value) {
         return Math.round(value * 10.0) / 10.0;
     }
 
+    /**
+     * Redondea un valor a 2 decimales.
+     *
+     * @param value valor a redondear
+     * @return valor redondeado a dos decimales
+     */
     private double roundToTwoDecimals(double value) {
         return Math.round(value * 100.0) / 100.0;
     }

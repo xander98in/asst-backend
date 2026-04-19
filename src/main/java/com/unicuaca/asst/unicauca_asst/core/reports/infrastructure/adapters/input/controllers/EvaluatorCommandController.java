@@ -34,6 +34,9 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Controlador REST para operaciones de escritura sobre evaluadores.
+ *
+ * <p>Pertenece a la capa de infraestructura (adaptador de entrada) y delega
+ * las solicitudes al handler de la capa de aplicación.</p>
  */
 @RestController
 @RequestMapping("/asst/reports/evaluators")
@@ -207,6 +210,11 @@ public class EvaluatorCommandController {
         return ResponseUtil.ok(httpRequest, SuccessCode.DELETED, "Evaluador eliminado exitosamente", null);
     }
 
+    /**
+     * Obtiene el ID del usuario autenticado a partir del {@link SecurityContextHolder}.
+     *
+     * @return ID del usuario autenticado
+     */
     private Long getAuthenticatedUserId() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return systemUserQueryHandler.getSystemUserByEmail(email).getId();

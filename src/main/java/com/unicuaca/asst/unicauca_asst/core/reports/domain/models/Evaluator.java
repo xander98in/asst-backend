@@ -20,14 +20,33 @@ import lombok.ToString;
 @ToString
 public class Evaluator {
 
+    /** Identificador único del evaluador. */
     private Long id;
+
+    /** Nombre completo del evaluador. */
     private String fullName;
+
+    /** Número de identificación del evaluador. */
     private String identificationNumber;
+
+    /** Profesión del evaluador (ej: Psicología). */
     private String profession;
+
+    /** Título de posgrado del evaluador (especialización, maestría o doctorado). */
     private String postgraduateDegree;
+
+    /** Número de tarjeta profesional del evaluador. */
     private String professionalCardNumber;
+
+    /** Número de licencia en seguridad y salud en el trabajo del evaluador. */
     private String occupationalHealthLicense;
+
+    /** Fecha de expiración de la licencia en seguridad y salud en el trabajo. */
     private LocalDate licenseExpirationDate;
+
+    /** Identificador del usuario del sistema que registró al evaluador. */
     private Long creatorUserId;
+
+    /** Fecha y hora en que se creó el registro del evaluador. */
     private LocalDateTime createdAt;
 }

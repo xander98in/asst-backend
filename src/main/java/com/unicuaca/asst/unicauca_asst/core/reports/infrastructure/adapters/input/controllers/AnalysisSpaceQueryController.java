@@ -52,7 +52,10 @@ public class AnalysisSpaceQueryController {
     private final SystemUserQueryHandler systemUserQueryHandler;
 
     /**
-     * Lista los espacios de análisis del usuario autenticado.
+     * Lista los espacios de análisis creados por el usuario autenticado.
+     *
+     * @param httpRequest solicitud HTTP entrante
+     * @return respuesta API con la lista de espacios de análisis del usuario en formato resumido
      */
     @Operation(
         summary = "Listar espacios de análisis del usuario",

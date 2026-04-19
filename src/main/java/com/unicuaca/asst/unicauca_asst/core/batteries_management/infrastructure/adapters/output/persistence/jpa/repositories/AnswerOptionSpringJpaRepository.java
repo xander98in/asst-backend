@@ -9,8 +9,8 @@ import java.util.Optional;
 /**
  * Repositorio Spring Data JPA para la entidad {@link AnswerOptionEntity}.
  *
- * Proporciona métodos para realizar operaciones CRUD y consultas personalizadas.
- * Para manejar el catálogo de opciones de respuesta.
+ * <p>Proporciona métodos para realizar operaciones CRUD y consultas personalizadas.
+ * Para manejar el catálogo de opciones de respuesta.</p>
  */
 @Repository
 public interface AnswerOptionSpringJpaRepository extends JpaRepository<AnswerOptionEntity, Long> {

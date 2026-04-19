@@ -33,9 +33,13 @@ public interface QuestionnaireManagementRecordPersistenceMapper {
 
     /**
      * Convierte el dominio a entidad.
-     * Al usar InheritInverseConfiguration, MapStruct intentará usar los mappers
-     * definidos en 'uses' para convertir las relaciones completas
-     * (Domain -> Entity) y no solo los IDs.
+     *
+     * <p>Al usar {@link InheritInverseConfiguration}, MapStruct intentará usar los mappers
+     * definidos en 'uses' para convertir las relaciones completas (Domain -&gt; Entity)
+     * y no solo los IDs.</p>
+     *
+     * @param domain el modelo de dominio del registro de gestión de cuestionario
+     * @return la entidad de persistencia correspondiente
      */
     @InheritInverseConfiguration
     @Mapping(target = "createdAt", ignore = true)

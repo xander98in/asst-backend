@@ -13,6 +13,11 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 
 /**
  * Repositorio JPA para {@link QuestionnaireManagementRecordEntity}.
+ *
+ * <p>Expone operaciones CRUD sobre la tabla {@code registros_gestion_cuestionarios} y
+ * consultas JPQL con {@code JOIN FETCH} que cargan de forma ansiosa las relaciones con
+ * el registro de gestión de batería, el cuestionario y el estado, evitando problemas de
+ * lazy loading al navegar el grafo desde el dominio.</p>
  */
 @Repository
 public interface QuestionnaireManagementRecordSpringJpaRepository extends JpaRepository<QuestionnaireManagementRecordEntity, Long> {
@@ -178,6 +183,10 @@ public interface QuestionnaireManagementRecordSpringJpaRepository extends JpaRep
     /**
      * Verifica existencia por los IDs de las relaciones.
      * Spring Data JPA genera la query automáticamente por el nombre del método.
+     *
+     * @param batteryId ID del registro de gestión de batería.
+     * @param questionnaireId ID del cuestionario asociado.
+     * @return {@code true} si existe al menos un registro que cumple ambos criterios, {@code false} en caso contrario.
      */
     boolean existsByBatteryManagementRecord_IdAndQuestionnaire_Id(Long batteryId, Long questionnaireId);
 

@@ -19,12 +19,12 @@ import lombok.Setter;
 /**
  * Entidad que representa un registro de gestión de cuestionario.
  *
- * Cada registro de gestión de cuestionario:
+ * <p>Cada registro de gestión de cuestionario:
  * - Está asociado a un único registro de gestión de batería.
  * - Está asociado a un único cuestionario.
- * - Tiene un estado específico (CREADO, PROCESADO, RADICADO, etc.).
+ * - Tiene un estado específico (CREADO, PROCESADO, RADICADO, etc.).</p>
  *
- * Mapea la tabla "registros_gestion_cuestionarios".
+ * <p>Mapea la tabla "registros_gestion_cuestionarios".</p>
  */
 @Getter
 @Setter
@@ -46,7 +46,7 @@ public class QuestionnaireManagementRecordEntity extends AuditableEntity {
     /**
      * Registro de gestión de batería al que pertenece este registro de gestión de cuestionario.
      *
-     * Relación muchos-a-uno.
+     * <p>Relación muchos-a-uno.</p>
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
@@ -58,9 +58,9 @@ public class QuestionnaireManagementRecordEntity extends AuditableEntity {
     /**
      * Cuestionario asociado a este registro de gestión de cuestionario.
      *
-     * Relación muchos-a-uno:
+     * <p>Relación muchos-a-uno:
      * - Un cuestionario puede estar asociado a varios registros de gestión de cuestionarios.
-     * - Un registro de gestión de cuestionario siempre está asociado a un único cuestionario.
+     * - Un registro de gestión de cuestionario siempre está asociado a un único cuestionario.</p>
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
@@ -72,7 +72,7 @@ public class QuestionnaireManagementRecordEntity extends AuditableEntity {
     /**
      * Estado actual del registro de gestión de cuestionario.
      *
-     * Relación muchos-a-uno.
+     * <p>Relación muchos-a-uno.</p>
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
@@ -82,7 +82,12 @@ public class QuestionnaireManagementRecordEntity extends AuditableEntity {
     private QuestionnaireManagementRecordStatusEntity status;
 
     /**
-     * Constructor útil para creación de nuevos registros.
+     * Constructor útil para creación de nuevos registros de gestión de cuestionario
+     * antes de persistirlos en base de datos.
+     *
+     * @param batteryManagementRecord registro de gestión de batería al que pertenece
+     * @param questionnaire cuestionario asociado al registro
+     * @param status estado inicial del registro de gestión de cuestionario
      */
     public QuestionnaireManagementRecordEntity(
             BatteryManagementRecordEntity batteryManagementRecord,

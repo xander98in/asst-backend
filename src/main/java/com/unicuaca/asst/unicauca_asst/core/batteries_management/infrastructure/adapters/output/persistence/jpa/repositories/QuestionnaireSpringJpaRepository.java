@@ -9,8 +9,8 @@ import java.util.Optional;
 /**
  * Repositorio JPA para la entidad {@link QuestionnaireEntity}.
  *
- * Proporciona operaciones CRUD básicas (crear, leer, actualizar, eliminar)
- * sobre la tabla {@code cuestionarios} utilizando las abstracciones de {@link JpaRepository}.
+ * <p>Proporciona operaciones CRUD básicas (crear, leer, actualizar, eliminar)
+ * sobre la tabla {@code cuestionarios} utilizando las abstracciones de {@link JpaRepository}.</p>
  */
 @Repository
 public interface QuestionnaireSpringJpaRepository extends JpaRepository<QuestionnaireEntity, Long> {

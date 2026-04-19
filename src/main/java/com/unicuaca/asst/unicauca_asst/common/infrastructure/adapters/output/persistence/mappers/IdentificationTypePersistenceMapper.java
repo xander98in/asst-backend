@@ -5,9 +5,8 @@ import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.per
 import org.mapstruct.Mapper;
 
 /**
- * Mapper MapStruct entre:
- * - IdentificationTypeEntity (JPA/infraestructura)
- * - IdentificationType (dominio)
+ * Mapper MapStruct entre {@link IdentificationTypeEntity} (JPA/infraestructura) y
+ * {@link IdentificationType} (dominio).
  */
 @Mapper(componentModel = "spring")
 public interface IdentificationTypePersistenceMapper {

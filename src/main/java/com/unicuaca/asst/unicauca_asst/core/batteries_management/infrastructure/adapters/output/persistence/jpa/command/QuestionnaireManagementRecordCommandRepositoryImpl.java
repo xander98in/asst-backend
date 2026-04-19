@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementación del puerto de salida {@link QuestionnaireManagementRecordCommandRepository}
  * utilizando JPA como tecnología de persistencia.
  *
- * Actúa como adaptador entre el dominio y la infraestructura para
- * persistir o eliminar información de los registros de gestión de cuestionarios.
+ * <p>Actúa como adaptador entre el dominio y la infraestructura para
+ * persistir o eliminar información de los registros de gestión de cuestionarios.</p>
  */
 @RequiredArgsConstructor
 @Service

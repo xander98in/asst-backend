@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO para la actualización del estado de un usuario del sistema.
+ *
+ * <p>Transporta el nombre del nuevo estado a asignar (Activo, Inactivo o Bloqueado)
+ * como parte del flujo de cambio de estado del usuario.</p>
  */
 @Data
 @NoArgsConstructor

@@ -8,6 +8,13 @@ import java.lang.annotation.Target;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
+/**
+ * Anotación de validación a nivel de clase que verifica la coherencia entre el número
+ * y el tipo de identificación (CC, CE, TI, PA, PEP, PPT).
+ *
+ * <p>Delega la validación en {@link IdentificationNumberValidator}, que aplica la expresión
+ * regular correspondiente al tipo sobre el número recibido.</p>
+ */
 @Constraint(validatedBy = IdentificationNumberValidator.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

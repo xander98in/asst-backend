@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PersonEvaluatedInformationResponseDTO {  //a
+public class PersonEvaluatedInformationResponseDTO {
 
     @Schema(example = "1", description = "ID de la persona evaluada")
     private Long id;

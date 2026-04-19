@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * Implementación del manejador de consultas de catálogos.
  *
- * Delega la lógica de negocio al puerto de entrada y transforma
- * el modelo de dominio en un DTO para la respuesta.
+ * <p>Delega las consultas al puerto de entrada del dominio y transforma los modelos
+ * retornados en los DTOs de respuesta correspondientes mediante {@link CatalogMapper}.</p>
  */
 @RequiredArgsConstructor
 @Component

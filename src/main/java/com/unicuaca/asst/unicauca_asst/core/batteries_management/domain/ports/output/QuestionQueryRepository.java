@@ -8,8 +8,8 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Q
 /**
  * Puerto de salida para operaciones de consulta sobre preguntas asociadas a cuestionarios.
  *
- * Define las firmas de los métodos que deben implementar los adaptadores de infraestructura 
- * encargados de recuperar información desde fuentes externas (p. ej., base de datos relacional).
+ * <p>Define las firmas de los métodos que deben implementar los adaptadores de infraestructura
+ * encargados de recuperar información desde fuentes externas (p. ej., base de datos relacional).</p>
  */
 public interface QuestionQueryRepository {
 

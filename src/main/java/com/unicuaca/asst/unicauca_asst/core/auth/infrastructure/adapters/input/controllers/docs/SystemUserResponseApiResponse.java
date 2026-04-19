@@ -5,7 +5,10 @@ import com.unicuaca.asst.unicauca_asst.core.auth.application.dto.response.System
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Wrapper SOLO para documentación OpenAPI del genérico ApiResponse que contiene los datos de un usuario del sistema.
+ * Wrapper de documentación OpenAPI para {@link ApiResponse} parametrizado con {@link SystemUserResponseDTO}.
+ *
+ * <p>Permite a Swagger renderizar correctamente el tipo genérico en la especificación;
+ * no se instancia en tiempo de ejecución.</p>
  */
 @Schema(name = "SystemUserResponseApiResponse", description = "Respuesta API que contiene los datos de un usuario del sistema")
 public class SystemUserResponseApiResponse extends ApiResponse<SystemUserResponseDTO> {

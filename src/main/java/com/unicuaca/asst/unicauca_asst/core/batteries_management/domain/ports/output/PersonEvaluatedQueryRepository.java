@@ -11,10 +11,10 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.S
 
 /**
  * Puerto de salida para operaciones de consulta sobre el agregado {@link PersonEvaluated}.
- * 
- * Define las firmas de los métodos que deben implementar los adaptadores de infraestructura encargados
- * de recuperar información desde fuentes externas, como bases de datos relacionales.
- * 
+ *
+ * <p>Define las firmas de los métodos que deben implementar los adaptadores de infraestructura
+ * encargados de recuperar información desde fuentes externas, como bases de datos relacionales.</p>
+ *
  * <p>Hace parte de la arquitectura hexagonal, separando las dependencias externas
  * de la lógica del dominio.</p>
  */
@@ -65,9 +65,11 @@ public interface PersonEvaluatedQueryRepository {
     /**
      * Consulta una lista paginada de personas evaluadas por su identidad.
      *
-     * @param identificationType  el tipo de identificación
-     * @param page                el número de página
-     * @param size                el tamaño de la página
+     * @param identificationType   el tipo de identificación
+     * @param identificationNumber el número de identificación
+     * @param page                 el número de página
+     * @param size                 el tamaño de la página
+     * @param sort                 criterio de ordenamiento
      * @return una página de personas evaluadas
      */
     Page<PersonEvaluated> queryByIdentity(IdentificationType identificationType, String identificationNumber, Integer page, Integer size, Sort sort);

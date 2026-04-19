@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.JobPositionTypeEntity;
 
+/**
+ * Repositorio JPA para la entidad {@link JobPositionTypeEntity}.
+ */
 public interface JobPositionTypeSpringJpaRepository extends JpaRepository<JobPositionTypeEntity, Long>{
     
     /**

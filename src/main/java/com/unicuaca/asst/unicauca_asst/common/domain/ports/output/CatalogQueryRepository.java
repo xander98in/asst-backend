@@ -1,9 +1,9 @@
 package com.unicuaca.asst.unicauca_asst.common.domain.ports.output;
 
+import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
+
 import java.util.List;
 import java.util.Optional;
-
-import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
 
 /**
  * Puerto de salida para las consultas de catálogos.
@@ -145,7 +145,7 @@ public interface CatalogQueryRepository {
      *
      * @param abbreviation la abreviatura del tipo de identificación
      * @return un {@link Optional} con el tipo de identificación correspondiente, o vacío si no se encuentra
-     */ 
+     */
     Optional<IdentificationType> getIdTypeByAbbreviation(String abbreviation);
 
     /**

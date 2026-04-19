@@ -11,7 +11,13 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Mapper para convertir entre objetos de dominio y DTOs.
+ * Mapper que convierte los modelos de dominio de catálogos transversales en sus DTOs de respuesta.
+ *
+ * <p>Cubre los catálogos maestros del sistema (tipos de identificación, estados civiles,
+ * niveles educativos, tipos de vivienda, niveles socioeconómicos, tipos de cargo, tipos de
+ * contrato, tipos de salario, géneros, ciudades y departamentos). Para ciudades y departamentos
+ * ofrece variantes resumidas (sin relaciones) que se usan como submappers para evitar ciclos
+ * en la serialización.</p>
  */
 @Mapper(componentModel = "spring")
 public interface CatalogMapper {
@@ -120,6 +126,7 @@ public interface CatalogMapper {
 
     /**
      * Convierte un objeto Department en un objeto DepartmentResponseDTO.
+     *
      * @param department el objeto Department a convertir
      * @return el objeto DepartmentResponseDTO resultante
      */

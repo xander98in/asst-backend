@@ -13,8 +13,8 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 /**
  * Repositorio JPA para la entidad {@link QuestionEntity}.
  *
- * Proporciona operaciones CRUD básicas y consultas especializadas
- * para manejar preguntas asociadas a cuestionarios.
+ * <p>Proporciona operaciones CRUD básicas y consultas especializadas
+ * para manejar preguntas asociadas a cuestionarios.</p>
  */
 @Repository
 public interface QuestionSpringJpaRepository extends JpaRepository<QuestionEntity, Long> {
@@ -82,7 +82,7 @@ public interface QuestionSpringJpaRepository extends JpaRepository<QuestionEntit
     /**
      * Busca preguntas por ID del cuestionario, ordenadas por el campo 'orden'.
      *
-     * @param questionnaireId
+     * @param questionnaireId identificador del cuestionario a buscar.
      * @return lista de preguntas asociadas al cuestionario con el ID especificado, ordenadas por su campo 'orden' de forma ascendente.
      */
     @Query("SELECT q FROM QuestionEntity q WHERE q.questionnaire.id = :questionnaireId ORDER BY q.order ASC")

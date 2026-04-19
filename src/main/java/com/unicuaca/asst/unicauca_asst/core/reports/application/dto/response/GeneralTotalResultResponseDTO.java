@@ -15,9 +15,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class GeneralTotalResultResponseDTO {
 
+    /** Puntaje transformado total general (intralaboral + extralaboral) según el baremo aplicado. */
     @Schema(description = "Puntaje transformado total general", example = "30.1")
     private double transformedScore;
 
+    /** Nivel de riesgo total general tras aplicar el baremo. */
     @Schema(description = "Nivel de riesgo total general", example = "Riesgo bajo")
     private String riskLevel;
 }

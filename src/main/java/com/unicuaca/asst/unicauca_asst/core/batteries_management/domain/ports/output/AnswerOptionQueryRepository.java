@@ -8,8 +8,8 @@ import java.util.Optional;
 /**
  * Puerto de salida para operaciones de consulta sobre las opciones de respuesta.
  *
- * Define el contrato que debe cumplir la infraestructura para
- * recuperar información del catálogo de respuestas.
+ * <p>Define el contrato que debe cumplir la infraestructura para recuperar información
+ * del catálogo de respuestas, sin acoplar el dominio a los detalles de persistencia.</p>
  */
 public interface AnswerOptionQueryRepository {
 

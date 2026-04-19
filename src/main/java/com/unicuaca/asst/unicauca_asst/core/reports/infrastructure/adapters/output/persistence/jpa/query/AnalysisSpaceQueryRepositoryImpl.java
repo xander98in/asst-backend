@@ -26,6 +26,12 @@ public class AnalysisSpaceQueryRepositoryImpl implements AnalysisSpaceQueryRepos
     private final AnalysisSpaceBatterySpringJpaRepository batteryJpaRepository;
     private final AnalysisSpacePersistenceMapper persistenceMapper;
 
+    /**
+     * Lista todos los espacios de análisis creados por un usuario.
+     *
+     * @param userId ID del usuario creador
+     * @return lista de espacios de análisis
+     */
     @Override
     public List<AnalysisSpace> findAllByCreatorUserId(Long userId) {
         return analysisSpaceJpaRepository.findAllByCreatorUserId(userId)
@@ -34,17 +40,36 @@ public class AnalysisSpaceQueryRepositoryImpl implements AnalysisSpaceQueryRepos
             .toList();
     }
 
+    /**
+     * Obtiene un espacio de análisis con sus baterías asociadas.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @return Optional con el espacio encontrado
+     */
     @Override
     public Optional<AnalysisSpace> findByIdWithBatteries(Long spaceId) {
         return analysisSpaceJpaRepository.findByIdWithBatteries(spaceId)
             .map(persistenceMapper::toDomain);
     }
 
+    /**
+     * Verifica si existe un espacio de análisis por su ID.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @return true si existe
+     */
     @Override
     public boolean existsById(Long spaceId) {
         return analysisSpaceJpaRepository.existsById(spaceId);
     }
 
+    /**
+     * Verifica si una batería ya está asociada a un espacio de análisis.
+     *
+     * @param spaceId             ID del espacio de análisis
+     * @param batteryRecordId     ID del registro de batería
+     * @return true si la batería ya está en el espacio
+     */
     @Override
     public boolean existsBatteryInSpace(Long spaceId, Long batteryRecordId) {
         return batteryJpaRepository.existsByAnalysisSpace_IdAndBatteryManagementRecordId(spaceId, batteryRecordId);

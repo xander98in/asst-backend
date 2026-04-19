@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.ContractTypeEntity;
 
+/**
+ * Repositorio JPA para la entidad {@link ContractTypeEntity}.
+ */
 public interface ContractTypeSpringJpaRepository extends JpaRepository<ContractTypeEntity, Long> {
 
     /**

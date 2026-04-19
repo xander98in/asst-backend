@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class AnalysisSpaceBatteryId implements Serializable {
 
+    /** ID del espacio de análisis (coincide con el campo {@code analysisSpace} de la entidad). */
     private Long analysisSpace;
+
+    /** ID del registro de gestión de batería asociado al espacio. */
     private Long batteryManagementRecordId;
 }

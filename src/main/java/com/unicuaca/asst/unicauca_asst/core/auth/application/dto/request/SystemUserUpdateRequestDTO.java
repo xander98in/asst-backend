@@ -17,6 +17,10 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO para la actualización de un usuario del sistema.
+ *
+ * <p>Contiene los datos modificables de un usuario existente, con validaciones
+ * de formato y obligatoriedad aplicadas mediante grupos de validación
+ * ({@link FirstGroup} y {@link SecondGroup}).</p>
  */
 @Data
 @NoArgsConstructor

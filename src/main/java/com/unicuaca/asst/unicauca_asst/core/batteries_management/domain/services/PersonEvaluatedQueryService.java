@@ -97,6 +97,9 @@ public class PersonEvaluatedQueryService implements PersonEvaluatedQueryCUInputP
 
     /**
      * Limpia y normaliza el término de búsqueda para evitar consultas inconsistentes.
+     *
+     * @param term término de búsqueda ingresado por el usuario
+     * @return el término normalizado (sin espacios al inicio o al final), o {@code null} si es nulo o blanco
      */
     private String normalizeTerm(String term) {
         if (term == null) return null;

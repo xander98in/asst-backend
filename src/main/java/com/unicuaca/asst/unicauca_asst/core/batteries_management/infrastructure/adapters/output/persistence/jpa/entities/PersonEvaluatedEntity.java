@@ -94,7 +94,16 @@ public class PersonEvaluatedEntity extends AuditableEntity {
     private StatusPersonEvaluatedEntity status;
 
     /**
-     * Constructor sin ID, útil para operaciones de creación.
+     * Constructor sin ID, útil para operaciones de creación de una nueva persona evaluada
+     * antes de persistirla en base de datos.
+     *
+     * @param identificationNumber número de identificación único de la persona evaluada
+     * @param firstName nombres de pila de la persona evaluada
+     * @param lastName apellidos completos de la persona evaluada
+     * @param birthYear año de nacimiento de la persona evaluada
+     * @param email correo electrónico único de la persona evaluada
+     * @param identificationType tipo de identificación asociado a la persona evaluada
+     * @param status estado de la persona evaluada
      */
     public PersonEvaluatedEntity(String identificationNumber, String firstName, String lastName, Integer birthYear,
                                  String email, IdentificationTypeEntity identificationType, StatusPersonEvaluatedEntity status) {

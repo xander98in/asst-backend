@@ -33,24 +33,30 @@ import lombok.Setter;
 @Table(name = "espacios_analisis")
 public class AnalysisSpaceEntity {
 
+    /** Identificador único autogenerado del espacio de análisis. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_espacio_analisis")
     private Long id;
 
+    /** Nombre descriptivo del espacio de análisis. */
     @Column(name = "nombre", nullable = false, length = 150)
     private String name;
 
+    /** Evaluador responsable del espacio (relación obligatoria, carga perezosa). */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_evaluador", nullable = false)
     private EvaluatorEntity evaluator;
 
+    /** ID del usuario del sistema que creó el espacio. */
     @Column(name = "id_usuario_creador", nullable = false)
     private Long creatorUserId;
 
+    /** Fecha y hora de creación del espacio de análisis. */
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime createdAt;
 
+    /** Baterías asociadas al espacio de análisis (relación con cascade y orphanRemoval). */
     @OneToMany(mappedBy = "analysisSpace", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<AnalysisSpaceBatteryEntity> batteries;
 }

@@ -4,6 +4,9 @@ import com.unicuaca.asst.unicauca_asst.core.auth.application.dto.response.AuthRe
 
 /**
  * Manejador de comandos para operaciones de autenticación.
+ *
+ * <p>Define el contrato para procesar el inicio de sesión de un usuario
+ * cuyo correo ha sido previamente verificado por el proveedor externo (Google OAuth).</p>
  */
 public interface AuthCommandHandler {
 

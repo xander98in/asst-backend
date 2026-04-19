@@ -14,7 +14,9 @@ import lombok.Setter;
 
 /**
  * Entidad que representa un estado de usuario del sistema.
- * Mapea la tabla "estados_usuario" en la base de datos.
+ *
+ * <p>Mapea la tabla {@code estados_usuario} en la base de datos y contiene los valores
+ * del catálogo de estados posibles (Activo, Inactivo, Bloqueado).</p>
  */
 @Getter
 @Setter

@@ -3,7 +3,11 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.o
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecord;
 
 /**
- * Puerto de salida para operaciones de escritura (Command) sobre registros de gestión de cuestionarios.
+ * Puerto de salida para operaciones de escritura (Command) sobre registros de gestión
+ * de cuestionarios ({@link QuestionnaireManagementRecord}).
+ *
+ * <p>Define el contrato que debe cumplir la infraestructura para persistir, actualizar
+ * o eliminar registros, sin acoplar el dominio a los detalles de persistencia.</p>
  */
 public interface QuestionnaireManagementRecordCommandRepository {
 

@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
  * Implementación del puerto de salida {@link QuestionQueryRepository}
  * utilizando JPA como tecnología de persistencia.
  *
- * Actúa como adaptador entre el dominio y la infraestructura.
+ * <p>Actúa como adaptador entre el dominio y la infraestructura.</p>
  */
 @RequiredArgsConstructor
 @Component

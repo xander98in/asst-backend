@@ -16,15 +16,19 @@ import lombok.NoArgsConstructor;
 @Builder
 public class IndividualReportResponseDTO {
 
+    /** Resultado del cuestionario intralaboral con dominios y dimensiones. */
     @Schema(description = "Resultado del cuestionario intralaboral")
     private IntralaboralResultResponseDTO intralaboral;
 
+    /** Resultado del cuestionario extralaboral con dimensiones. */
     @Schema(description = "Resultado del cuestionario extralaboral")
     private ExtralaboralResultResponseDTO extralaboral;
 
+    /** Resultado del puntaje total general (intralaboral + extralaboral). */
     @Schema(description = "Resultado del puntaje total general (intralaboral + extralaboral)")
     private GeneralTotalResultResponseDTO generalTotal;
 
+    /** Resultado del cuestionario de estrés. */
     @Schema(description = "Resultado del cuestionario de estrés")
     private StressResultResponseDTO stress;
 }

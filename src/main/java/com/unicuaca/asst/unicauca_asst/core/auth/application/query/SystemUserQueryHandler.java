@@ -6,6 +6,9 @@ import com.unicuaca.asst.unicauca_asst.core.auth.application.dto.response.System
 
 /**
  * Manejador de consultas para operaciones de lectura sobre usuarios del sistema.
+ *
+ * <p>Define el contrato para consultar usuarios por identificador o correo electrónico
+ * y para listarlos de forma paginada con soporte para términos de búsqueda.</p>
  */
 public interface SystemUserQueryHandler {
 

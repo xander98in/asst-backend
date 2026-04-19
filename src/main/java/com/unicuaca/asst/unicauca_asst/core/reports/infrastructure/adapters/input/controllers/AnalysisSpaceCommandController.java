@@ -47,6 +47,10 @@ public class AnalysisSpaceCommandController {
 
     /**
      * Crea un nuevo espacio de análisis para el usuario autenticado.
+     *
+     * @param request     información del espacio de análisis a crear
+     * @param httpRequest solicitud HTTP entrante
+     * @return respuesta API con el espacio de análisis creado
      */
     @Operation(
         summary = "Crear un espacio de análisis",
@@ -103,7 +107,12 @@ public class AnalysisSpaceCommandController {
     }
 
     /**
-     * Agrega baterías cerradas a un espacio de análisis existente.
+     * Agrega baterías cerradas a un espacio de análisis existente del usuario autenticado.
+     *
+     * @param spaceId     ID del espacio de análisis
+     * @param request     identificadores de las baterías a asociar
+     * @param httpRequest solicitud HTTP entrante
+     * @return respuesta API vacía confirmando la asociación
      */
     @Operation(
         summary = "Agregar baterías a un espacio de análisis",
@@ -155,7 +164,12 @@ public class AnalysisSpaceCommandController {
     }
 
     /**
-     * Remueve una batería de un espacio de análisis.
+     * Remueve una batería individual de un espacio de análisis del usuario autenticado.
+     *
+     * @param spaceId          ID del espacio de análisis
+     * @param batteryRecordId  ID del registro de gestión de batería a remover
+     * @param httpRequest      solicitud HTTP entrante
+     * @return respuesta API vacía confirmando la remoción
      */
     @Operation(
         summary = "Remover una batería de un espacio de análisis",
@@ -207,7 +221,12 @@ public class AnalysisSpaceCommandController {
     }
 
     /**
-     * Elimina un espacio de análisis completo con todas sus asociaciones.
+     * Elimina un espacio de análisis completo del usuario autenticado junto con todas
+     * sus asociaciones.
+     *
+     * @param spaceId     ID del espacio de análisis a eliminar
+     * @param httpRequest solicitud HTTP entrante
+     * @return respuesta API vacía confirmando la eliminación
      */
     @Operation(
         summary = "Eliminar un espacio de análisis",

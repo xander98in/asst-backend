@@ -22,9 +22,9 @@ import lombok.RequiredArgsConstructor;
 /**
  * Implementación del puerto de salida {@link PersonEvaluatedQueryRepository} para la obtención de datos de personas evaluadas.
  *
- * Esta clase actúa como adaptador de salida en la arquitectura hexagonal y utiliza un repositorio JPA
+ * <p>Esta clase actúa como adaptador de salida en la arquitectura hexagonal y utiliza un repositorio JPA
  * para acceder a la base de datos, junto con un mapper que convierte entre entidades persistentes
- * y modelos del dominio.
+ * y modelos del dominio.</p>
  *
  * <p>Las operaciones definidas aquí son de solo lectura (consultas), y no incluyen lógica de negocio.</p>
  */

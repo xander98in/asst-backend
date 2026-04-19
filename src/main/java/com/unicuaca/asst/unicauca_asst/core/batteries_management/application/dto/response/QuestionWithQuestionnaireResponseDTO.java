@@ -9,7 +9,8 @@ import lombok.Setter;
 
 /**
  * DTO de respuesta para preguntas con información del cuestionario asociado.
- * (Sin objetos anidados, estructura completamente plana)
+ *
+ * <p>(Sin objetos anidados, estructura completamente plana)</p>
  */
 @Setter
 @Getter

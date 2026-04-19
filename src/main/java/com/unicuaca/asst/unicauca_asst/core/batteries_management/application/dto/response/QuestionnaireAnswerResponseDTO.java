@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO que representa el detalle de una respuesta individual dentro de un cuestionario.
- * Incluye información de la respuesta, la pregunta asociada y la opción seleccionada.
+ *
+ * <p>Incluye información de la respuesta, la pregunta asociada y la opción seleccionada.</p>
  */
 @Data
 @NoArgsConstructor

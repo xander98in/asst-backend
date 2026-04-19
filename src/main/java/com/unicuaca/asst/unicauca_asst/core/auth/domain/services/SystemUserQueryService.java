@@ -91,6 +91,9 @@ public class SystemUserQueryService implements SystemUserQueryCUInputPort {
 
     /**
      * Limpia y normaliza el término de búsqueda para evitar consultas inconsistentes.
+     *
+     * @param term término de búsqueda recibido (puede ser {@code null} o vacío)
+     * @return el término sin espacios en blanco, o {@code null} si es nulo o queda vacío tras el trim
      */
     private String normalizeTerm(String term) {
         if (term == null) return null;

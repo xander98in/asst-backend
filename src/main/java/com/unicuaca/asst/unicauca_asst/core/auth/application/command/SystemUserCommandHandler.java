@@ -7,6 +7,9 @@ import com.unicuaca.asst.unicauca_asst.core.auth.application.dto.response.System
 
 /**
  * Manejador de comandos para operaciones de escritura sobre usuarios del sistema.
+ *
+ * <p>Define el contrato para registrar, actualizar, cambiar el estado y eliminar
+ * usuarios, delegando la lógica de negocio al puerto de entrada de dominio.</p>
  */
 public interface SystemUserCommandHandler {
 

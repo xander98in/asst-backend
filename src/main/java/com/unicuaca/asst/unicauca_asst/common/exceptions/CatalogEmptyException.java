@@ -5,6 +5,9 @@ import lombok.Getter;
 
 /**
  * Excepción lanzada cuando un catálogo solicitado no contiene elementos.
+ *
+ * <p>Suele mapear a HTTP 404 Not Found e indica que el catálogo consultado existe
+ * pero no tiene registros disponibles para su uso.</p>
  */
 @Getter
 public class CatalogEmptyException extends RuntimeException {

@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.unicuaca.asst.unicauca_asst.common.application.query.CatalogQueryHandler;
-import com.unicuaca.asst.unicauca_asst.common.docs.IdentificationTypesApiResponseDoc;
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,9 +28,9 @@ import lombok.RequiredArgsConstructor;
 /**
  * Controlador REST que expone los endpoints de consulta relacionados con catálogos comunes.
  *
- * Esta clase pertenece a la capa de infraestructura (adaptador de entrada) de la arquitectura hexagonal,
- * y se encarga de recibir las solicitudes HTTP desde el exterior y delegarlas al handler correspondiente
- * definido en la capa de aplicación.
+ * <p>Esta clase pertenece a la capa de infraestructura (adaptador de entrada) de la arquitectura
+ * hexagonal, y se encarga de recibir las solicitudes HTTP desde el exterior y delegarlas al handler
+ * correspondiente definido en la capa de aplicación.</p>
  *
  * <p>Utiliza {@link CatalogQueryHandler} para ejecutar la lógica de consulta relacionada con catálogos.</p>
  */
@@ -47,6 +46,7 @@ public class CatalogQueryController {
     /**
      * Endpoint para consultar los tipos de identificación disponibles.
      *
+     * @param request el request HTTP
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link IdentificationTypeResponseDTO} representando los tipos de identificación.
      */
@@ -79,9 +79,14 @@ public class CatalogQueryController {
     /**
      * Endpoint para consultar los estados civiles disponibles.
      *
+     * @param request el request HTTP
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link CivilStatusResponseDTO} representando los estados civiles.
      */
+    @Operation(
+        summary = "Listar estados civiles",
+        description = "Retorna el catálogo de estados civiles disponibles"
+    )
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
@@ -107,6 +112,7 @@ public class CatalogQueryController {
     /**
      * Endpoint para consultar los niveles educativos disponibles.
      *
+     * @param request el request HTTP
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link EducationLevelResponseDTO} representando los niveles educativos.
      */
@@ -139,6 +145,7 @@ public class CatalogQueryController {
     /**
      * Endpoint para consultar los tipos de vivienda disponibles.
      *
+     * @param request el request HTTP
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link HousingTypeResponseDTO} representando los tipos de vivienda.
      */
@@ -171,6 +178,7 @@ public class CatalogQueryController {
     /**
      * Endpoint para consultar los niveles socioeconómicos disponibles.
      *
+     * @param request el request HTTP
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link SocioeconomicLevelResponseDTO} representando los niveles socioeconómicos.
      */
@@ -203,6 +211,7 @@ public class CatalogQueryController {
     /**
      * Endpoint para consultar los tipos de cargo disponibles.
      *
+     * @param request el request HTTP
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link JobPositionTypeResponseDTO} representando los tipos de cargo.
      */
@@ -235,6 +244,7 @@ public class CatalogQueryController {
     /**
      * Endpoint para consultar los tipos de contrato disponibles.
      *
+     * @param request el request HTTP
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link ContractTypeResponseDTO} representando los tipos de contrato.
      */
@@ -267,6 +277,7 @@ public class CatalogQueryController {
     /**
      * Endpoint para consultar los tipos de salario disponibles.
      *
+     * @param request el request HTTP
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link SalaryTypeResponseDTO} representando los tipos de salario.
      */
@@ -299,6 +310,7 @@ public class CatalogQueryController {
     /**
      * Endpoint para consultar los géneros disponibles.
      *
+     * @param request el request HTTP
      * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene una lista de
      *         {@link GenderResponseDTO} representando los géneros.
      */
@@ -448,6 +460,10 @@ public class CatalogQueryController {
 
     /**
      * Lista todos los departamentos (sin incluir sus ciudades).
+     *
+     * @param request el request HTTP
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene la lista de
+     *         {@link DepartmentResponseDTO} sin sus ciudades.
      */
     @Operation(
         summary = "Listar departamentos (sin ciudades)",
@@ -474,6 +490,10 @@ public class CatalogQueryController {
     /**
      * Lista todos los departamentos incluyendo sus ciudades
      * (cada ciudad sin el campo department).
+     *
+     * @param request el request HTTP
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene la lista de
+     *         {@link DepartmentResponseDTO} con sus ciudades embebidas.
      */
     @Operation(
         summary = "Listar departamentos con sus ciudades",
@@ -499,6 +519,10 @@ public class CatalogQueryController {
 
     /**
      * Lista todas las ciudades (sin incluir su departamento).
+     *
+     * @param request el request HTTP
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene la lista resumen
+     *         de {@link CitySummaryResponseDTO}.
      */
     @Operation(
         summary = "Listar ciudades (sin departamento)",
@@ -525,6 +549,10 @@ public class CatalogQueryController {
     /**
      * Lista todas las ciudades incluyendo su departamento
      * (el Department no incluye sus cities).
+     *
+     * @param request el request HTTP
+     * @return una {@link ResponseEntity} con un {@link ApiResponse} que contiene la lista de
+     *         {@link CityResponseDTO} con su departamento en versión resumen.
      */
     @Operation(
         summary = "Listar ciudades con su departamento",

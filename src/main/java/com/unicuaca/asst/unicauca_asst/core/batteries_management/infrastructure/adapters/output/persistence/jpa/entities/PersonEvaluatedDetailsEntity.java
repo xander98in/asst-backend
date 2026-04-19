@@ -8,8 +8,8 @@ import lombok.*;
 /**
  * Entidad que representa los detalles complementarios de una persona evaluada.
  *
- * Mapea la tabla "personas_evaluadas_detalles" y se asocia 1:1 con la persona evaluada.
- * Contiene información demográfica, residencial y laboral.
+ * <p>Mapea la tabla "personas_evaluadas_detalles" y se asocia 1:1 con la persona evaluada.
+ * Contiene información demográfica, residencial y laboral.</p>
  */
 @Getter
 @Setter

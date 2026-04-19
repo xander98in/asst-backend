@@ -11,12 +11,19 @@ import org.mapstruct.Mapping;
  * Mapper que convierte un objeto del modelo de dominio {@link BatteryManagementRecord}
  * a un DTO de respuesta {@link BatteryManagementRecordResponseDTO}.
  *
- * Utiliza MapStruct para mapear automáticamente los campos, incluyendo
- * atributos anidados como persona evaluada y su tipo de identificación.
+ * <p>Utiliza MapStruct para mapear automáticamente los campos, incluyendo
+ * atributos anidados como persona evaluada y su tipo de identificación.</p>
  */
 @Mapper(componentModel = "spring")
 public interface BatteryManagementRecordMapper {
 
+    /**
+     * Mapea un objeto de dominio {@link BatteryManagementRecord} a su DTO de respuesta
+     * {@link BatteryManagementRecordResponseDTO}, aplanando atributos anidados de la persona evaluada.
+     *
+     * @param batteryManagementRecord el objeto de dominio a mapear
+     * @return el DTO de respuesta mapeado
+     */
     @Mapping(target = "id", source = "id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")

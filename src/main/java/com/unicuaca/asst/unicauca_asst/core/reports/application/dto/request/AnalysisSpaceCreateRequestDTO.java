@@ -24,11 +24,13 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Datos para crear un espacio de análisis")
 public class AnalysisSpaceCreateRequestDTO {
 
+    /** Nombre descriptivo del espacio de análisis. */
     @NotBlank(message = "{analysisSpace.name.notBlank}", groups = FirstGroup.class)
     @Size(max = 150, message = "{analysisSpace.name.size}", groups = SecondGroup.class)
     @Schema(description = "Nombre descriptivo del espacio de análisis", example = "Postgrados Mayo 2025")
     private String name;
 
+    /** Identificador del evaluador asociado al espacio. */
     @NotNull(message = "{analysisSpace.evaluatorId.notNull}", groups = FirstGroup.class)
     @Schema(description = "ID del evaluador asociado al espacio", example = "3")
     private Long evaluatorId;

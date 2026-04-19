@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO para la solicitud de refresco de token JWT.
+ *
+ * <p>Transporta el refresh token previamente emitido por el sistema,
+ * utilizado para obtener un nuevo access token sin requerir reautenticación.</p>
  */
 @Data
 @NoArgsConstructor

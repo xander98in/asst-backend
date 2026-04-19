@@ -29,12 +29,23 @@ public class Department {
     @ToString.Exclude
     private Set<City> cities = new HashSet<>();
 
-    // Helpers opcionales para mantener consistencia en el dominio (si los usas)
+    /**
+     * Agrega una ciudad al departamento y mantiene la relación bidireccional
+     * asignando este departamento como su contenedor.
+     *
+     * @param city ciudad a agregar
+     */
     public void addCity(City city) {
         this.cities.add(city);
         city.setDepartment(this);
     }
 
+    /**
+     * Remueve una ciudad del departamento y desvincula la referencia inversa
+     * para evitar un estado inconsistente en la ciudad.
+     *
+     * @param city ciudad a remover
+     */
     public void removeCity(City city) {
         this.cities.remove(city);
         city.setDepartment(null);

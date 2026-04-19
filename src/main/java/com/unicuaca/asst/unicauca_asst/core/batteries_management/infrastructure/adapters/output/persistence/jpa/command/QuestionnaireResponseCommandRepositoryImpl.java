@@ -15,8 +15,8 @@ import java.util.List;
  * Implementación del puerto de salida {@link QuestionnaireResponseCommandRepository}
  * utilizando JPA como tecnología de persistencia.
  *
- * Actúa como adaptador entre el dominio y la infraestructura para
- * guardar información de las respuestas a los cuestionarios.
+ * <p>Actúa como adaptador entre el dominio y la infraestructura para
+ * guardar información de las respuestas a los cuestionarios.</p>
  */
 @RequiredArgsConstructor
 @Service

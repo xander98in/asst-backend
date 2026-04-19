@@ -18,6 +18,9 @@ public interface AnalysisSpacePersistenceMapper {
     /**
      * Convierte una entidad JPA de espacio de análisis a modelo de dominio.
      * MapStruct usa automáticamente {@link #toBatteryDomain} para mapear la lista de baterías.
+     *
+     * @param entity entidad JPA a convertir
+     * @return modelo de dominio equivalente
      */
     @Mapping(source = "evaluator.id", target = "evaluatorId")
     AnalysisSpace toDomain(AnalysisSpaceEntity entity);
@@ -26,6 +29,9 @@ public interface AnalysisSpacePersistenceMapper {
      * Convierte un modelo de dominio a entidad JPA.
      * Las baterías se gestionan por separado (addBatteryToSpace/removeBatteryFromSpace).
      * El evaluador se asigna en el repositorio mediante getReferenceById.
+     *
+     * @param domain modelo de dominio a convertir
+     * @return entidad JPA equivalente sin baterías ni evaluador asignados
      */
     @Mapping(target = "batteries", ignore = true)
     @Mapping(target = "evaluator", ignore = true)
@@ -33,6 +39,9 @@ public interface AnalysisSpacePersistenceMapper {
 
     /**
      * Convierte una entidad de relación espacio-batería a modelo de dominio.
+     *
+     * @param entity entidad de relación espacio-batería a convertir
+     * @return modelo de dominio equivalente con el ID del espacio asociado
      */
     @Mapping(source = "analysisSpace.id", target = "analysisSpaceId")
     AnalysisSpaceBattery toBatteryDomain(AnalysisSpaceBatteryEntity entity);

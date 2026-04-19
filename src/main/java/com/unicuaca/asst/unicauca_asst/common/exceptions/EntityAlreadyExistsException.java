@@ -5,6 +5,9 @@ import lombok.Getter;
 
 /**
  * Excepción lanzada cuando se intenta crear una entidad que ya existe en el sistema.
+ *
+ * <p>Suele mapear a HTTP 409 Conflict y se dispara al detectar duplicidad lógica o
+ * la violación de una restricción de unicidad (por ejemplo, identificación o correo repetido).</p>
  */
 @Getter
 public class EntityAlreadyExistsException extends RuntimeException {

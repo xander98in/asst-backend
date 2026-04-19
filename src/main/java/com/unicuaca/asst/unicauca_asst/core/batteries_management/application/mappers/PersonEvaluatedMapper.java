@@ -13,8 +13,8 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.P
  * Mapper que convierte un objeto del modelo de dominio {@link PersonEvaluated}
  * a un DTO de respuesta {@link PersonEvaluatedResponseDTO}.
  *
- * Utiliza MapStruct para mapear automáticamente los campos, incluyendo
- * atributos anidados como identificación y género.
+ * <p>Utiliza MapStruct para mapear automáticamente los campos, incluyendo
+ * atributos anidados como identificación y género.</p>
  */
 @Mapper(componentModel = "spring")
 public interface PersonEvaluatedMapper {
@@ -22,9 +22,11 @@ public interface PersonEvaluatedMapper {
     /**
      * Convierte un modelo de dominio {@link PersonEvaluated} en un DTO de respuesta {@link PersonEvaluatedResponseDTO}.
      *
-     * Mapea los campos anidados 'identificationType' y 'gender' como sus descripciones.
+     * <p>Mapea los campos anidados 'identificationType' y 'gender' como sus descripciones.</p>
+     *
+     * @param person modelo de dominio a convertir
+     * @return DTO de respuesta correspondiente
      */
-   
     @Mapping(target = "identificationType", source = "identificationType.name")
     @Mapping(target = "email", source = "email")
     @Mapping(target = "identificacionAbbreviation", source = "identificationType.abbreviation")
@@ -33,7 +35,10 @@ public interface PersonEvaluatedMapper {
     /**
      * Convierte un DTO de creación en un modelo de dominio {@link PersonEvaluated}.
      *
-     * Construye objetos anidados con solo sus IDs.
+     * <p>Construye objetos anidados con solo sus IDs.</p>
+     *
+     * @param dto DTO con los datos de creación
+     * @return modelo de dominio listo para persistirse
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "email", source = "email")

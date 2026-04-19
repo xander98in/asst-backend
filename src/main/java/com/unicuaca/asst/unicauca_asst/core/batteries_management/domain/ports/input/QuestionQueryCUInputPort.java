@@ -5,11 +5,10 @@ import java.util.List;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Question;
 
 /**
- * Puerto de entrada (Command/Query Use Cases) para operaciones de consulta
- * relacionadas con preguntas de cuestionarios.
+ * Puerto de entrada para operaciones de consulta relacionadas con preguntas de cuestionarios.
  *
- * Expone operaciones de solo lectura para que los adaptadores de entrada (p. ej. controladores REST)
- * interactúen con la lógica de negocio sin acoplarse a su implementación.
+ * <p>Expone operaciones de solo lectura para que los adaptadores de entrada (p. ej. controladores REST)
+ * interactúen con la lógica de negocio sin acoplarse a su implementación.</p>
  */
 public interface QuestionQueryCUInputPort {
 

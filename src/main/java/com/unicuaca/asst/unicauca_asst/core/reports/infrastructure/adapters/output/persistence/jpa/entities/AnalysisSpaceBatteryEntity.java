@@ -31,15 +31,18 @@ import lombok.Setter;
 @IdClass(AnalysisSpaceBatteryId.class)
 public class AnalysisSpaceBatteryEntity {
 
+    /** Espacio de análisis asociado (parte de la clave primaria compuesta). */
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_espacio_analisis", nullable = false)
     private AnalysisSpaceEntity analysisSpace;
 
+    /** ID del registro de gestión de batería asociado (parte de la clave primaria compuesta). */
     @Id
     @Column(name = "id_registro_gestion_bateria", nullable = false)
     private Long batteryManagementRecordId;
 
+    /** Fecha y hora en que la batería fue agregada al espacio de análisis. */
     @Column(name = "fecha_agregado", nullable = false)
     private LocalDateTime addedAt;
 }

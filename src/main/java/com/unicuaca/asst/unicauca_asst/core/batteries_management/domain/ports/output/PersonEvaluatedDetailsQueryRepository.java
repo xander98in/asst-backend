@@ -5,7 +5,12 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.P
 import java.util.Optional;
 
 /**
- * Puerto de salida para consultas relacionadas con PersonEvaluatedDetails.
+ * Puerto de salida para operaciones de consulta sobre los detalles de una persona evaluada
+ * ({@link PersonEvaluatedDetails}).
+ *
+ * <p>Define las firmas que deben implementar los adaptadores de infraestructura encargados
+ * de recuperar información desde fuentes externas (p. ej., base de datos relacional),
+ * sin acoplar el dominio a los detalles de persistencia.</p>
  */
 public interface PersonEvaluatedDetailsQueryRepository {
 

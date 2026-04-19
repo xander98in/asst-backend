@@ -26,9 +26,9 @@ import lombok.RequiredArgsConstructor;
 /**
  * Controlador REST para gestionar operaciones de creación o actualización o eliminación (CRUD) de los
  * registros de gestión de cuestionarios.
-
- * Forma parte del adaptador de entrada (Input Adapter) en la arquitectura hexagonal.
- * Delega la orquestación al {@link QuestionnaireManagementRecordCommandHandler}.
+ *
+ * <p>Forma parte del adaptador de entrada (Input Adapter) en la arquitectura hexagonal.
+ * Delega la orquestación al {@link QuestionnaireManagementRecordCommandHandler}.</p>
  */
 @Tag(
     name = "Gestión de registros de cuestionarios",

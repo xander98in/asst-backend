@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.IdentificationTypeEntity;
 
+/**
+ * Repositorio JPA para la entidad {@link IdentificationTypeEntity}.
+ */
 public interface IdentificationTypeSpringJpaRepository extends JpaRepository<IdentificationTypeEntity, Long> {
 
     /**

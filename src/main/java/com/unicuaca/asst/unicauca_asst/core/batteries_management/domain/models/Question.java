@@ -8,8 +8,9 @@ import lombok.ToString;
 
 /**
  * Representa una pregunta asociada a un cuestionario.
- * 
- * Incluye el texto de la pregunta, su orden dentro del cuestionario y el cuestionario al que pertenece.
+ *
+ * <p>Incluye el texto de la pregunta, su orden dentro del cuestionario
+ * y el cuestionario al que pertenece.</p>
  */
 @Getter
 @Setter

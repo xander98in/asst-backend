@@ -10,6 +10,13 @@ import java.util.Optional;
 
 /**
  * Repositorio JPA para {@link PersonEvaluatedDetailsEntity}.
+ *
+ * <p>Define operaciones CRUD básicas sobre la tabla {@code detalles_persona_evaluada},
+ * junto con variantes JPQL con {@code JOIN FETCH} para cargar de forma ansiosa las
+ * relaciones sociodemográficas (género, estado civil, nivel educativo, ciudades con
+ * sus departamentos, estrato, tipo de vivienda, tipo de cargo, tipo de contrato y
+ * tipo de salario) y, cuando aplica, el registro de gestión de batería y la persona
+ * evaluada asociada.</p>
  */
 @Repository
 public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository<PersonEvaluatedDetailsEntity, Long> {
@@ -37,8 +44,7 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
      * @return true si existe un registro de detalles, false en caso contrario
      */
     @Query("""
-
-        SELECT CASE WHEN COUNT(d) > 0 THEN TRUE ELSE FALSE END
+       SELECT CASE WHEN COUNT(d) > 0 THEN TRUE ELSE FALSE END
        FROM PersonEvaluatedDetailsEntity d
        WHERE d.batteryManagementRecord.id = :batteryManagementRecordId
        """)
@@ -123,11 +129,15 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
            """)
     Optional<String> findWorkAreaNameByBatteryManagementRecordId(@Param("recordId") Long recordId);
 
-
-
-
-
-
+    /**
+     * Variante JPQL con JOIN FETCH para traer los detalles y sus relaciones auxiliares
+     * (género, estado civil, nivel de estudios, ciudades con sus departamentos, estrato,
+     * tipo de vivienda, tipo de cargo, tipo de contrato y tipo de salario) a partir
+     * del ID del registro de gestión de batería, sin cargar el registro mismo.
+     *
+     * @param recordId ID del registro de gestión de batería
+     * @return detalles de la persona evaluada con sus relaciones auxiliares envueltos en un Optional
+     */
     @Query("""
        SELECT d
        FROM PersonEvaluatedDetailsEntity d
@@ -147,6 +157,14 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
         """)
     Optional<PersonEvaluatedDetailsEntity> findDetailsWithRelationsWithoutRecordByBatteryManagementRecordId(@Param("recordId") Long recordId);
 
+    /**
+     * Variante JPQL con JOIN FETCH para traer los detalles junto con el registro de gestión
+     * de batería, la persona evaluada, su tipo de identificación y el estado del registro,
+     * además de todas las relaciones auxiliares, a partir del ID del registro de gestión de batería.
+     *
+     * @param recordId ID del registro de gestión de batería
+     * @return detalles completos de la persona evaluada con persona y registro envueltos en un Optional
+     */
     @Query("""
        SELECT d
        FROM PersonEvaluatedDetailsEntity d
@@ -199,5 +217,4 @@ public interface PersonEvaluatedDetailsSpringJpaRepository extends JpaRepository
        WHERE d.id = :id
        """)
     Optional<PersonEvaluatedDetailsEntity> findDetailsWithRecordAndPersonById(@Param("id") Long id);
-
 }

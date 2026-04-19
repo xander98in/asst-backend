@@ -15,12 +15,15 @@ import lombok.NoArgsConstructor;
 @Builder
 public class StressResultResponseDTO {
 
+    /** Puntaje bruto obtenido en el cuestionario de estrés. */
     @Schema(description = "Puntaje bruto de estrés", example = "18.5")
     private double rawScore;
 
+    /** Puntaje transformado del cuestionario de estrés según el baremo aplicado. */
     @Schema(description = "Puntaje transformado de estrés", example = "30.2")
     private double transformedScore;
 
+    /** Nivel de estrés asignado tras aplicar el baremo. */
     @Schema(description = "Nivel de estrés", example = "Medio")
     private String stressLevel;
 }

@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Implementación del handler de comandos para evaluadores.
+ *
+ * <p>Delega la lógica de negocio al puerto de entrada de dominio y transforma
+ * las entradas y salidas entre DTOs y modelos de dominio.</p>
  */
 @Component
 @RequiredArgsConstructor
@@ -23,6 +26,13 @@ public class EvaluatorCommandHandlerImpl implements EvaluatorCommandHandler {
     private final EvaluatorCommandCUInputPort evaluatorCommandCUInputPort;
     private final EvaluatorMapper evaluatorMapper;
 
+    /**
+     * Crea un nuevo evaluador asociado al usuario autenticado.
+     *
+     * @param request datos del evaluador a registrar
+     * @param userId  ID del usuario creador
+     * @return DTO de respuesta del evaluador creado
+     */
     @Override
     public EvaluatorResponseDTO createEvaluator(EvaluatorCreateRequestDTO request, Long userId) {
         Evaluator domain = evaluatorMapper.toDomain(request);
@@ -31,6 +41,14 @@ public class EvaluatorCommandHandlerImpl implements EvaluatorCommandHandler {
         return evaluatorMapper.toResponseDTO(created);
     }
 
+    /**
+     * Actualiza un evaluador existente.
+     *
+     * @param evaluatorId ID del evaluador a actualizar
+     * @param request     nuevos datos del evaluador
+     * @param userId      ID del usuario que realiza la operación
+     * @return DTO de respuesta del evaluador actualizado
+     */
     @Override
     public EvaluatorResponseDTO updateEvaluator(Long evaluatorId, EvaluatorUpdateRequestDTO request, Long userId) {
         Evaluator domain = evaluatorMapper.toDomain(request);
@@ -38,6 +56,12 @@ public class EvaluatorCommandHandlerImpl implements EvaluatorCommandHandler {
         return evaluatorMapper.toResponseDTO(updated);
     }
 
+    /**
+     * Elimina un evaluador existente.
+     *
+     * @param evaluatorId ID del evaluador a eliminar
+     * @param userId      ID del usuario que realiza la operación
+     */
     @Override
     public void deleteEvaluator(Long evaluatorId, Long userId) {
         evaluatorCommandCUInputPort.deleteEvaluator(evaluatorId, userId);

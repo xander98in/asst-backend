@@ -20,10 +20,21 @@ import lombok.ToString;
 @ToString
 public class AnalysisSpace {
 
+    /** Identificador único del espacio de análisis. */
     private Long id;
+
+    /** Nombre descriptivo del espacio de análisis. */
     private String name;
+
+    /** Identificador del evaluador asociado al espacio. */
     private Long evaluatorId;
+
+    /** Identificador del usuario del sistema que creó el espacio. */
     private Long creatorUserId;
+
+    /** Fecha y hora en que se creó el espacio de análisis. */
     private LocalDateTime createdAt;
+
+    /** Lista de baterías cerradas agregadas al espacio para el análisis grupal. */
     private List<AnalysisSpaceBattery> batteries;
 }

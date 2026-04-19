@@ -11,7 +11,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Q
  * Mapper de la capa de aplicación para convertir modelos de dominio de estados
  * de registro de gestión de cuestionarios a DTOs de respuesta.
  *
- * Usa MapStruct para generar el mapeo en tiempo de compilación.
+ * <p>Usa MapStruct para generar el mapeo en tiempo de compilación.</p>
  */
 @Mapper(componentModel = "spring")
 public interface QuestionnaireManagementRecordStatusMapper {

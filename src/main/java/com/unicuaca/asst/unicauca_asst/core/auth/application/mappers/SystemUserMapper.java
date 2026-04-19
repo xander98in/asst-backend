@@ -12,8 +12,8 @@ import com.unicuaca.asst.unicauca_asst.core.auth.domain.models.SystemUser;
  * Mapper que convierte entre el modelo de dominio {@link SystemUser}
  * y los DTOs de solicitud/respuesta del módulo de autenticación.
  *
- * Utiliza MapStruct para mapear automáticamente los campos,
- * incluyendo la conversión de objetos anidados (status, roles).
+ * <p>Utiliza MapStruct para mapear automáticamente los campos,
+ * incluyendo la conversión de objetos anidados (status, roles).</p>
  */
 @Mapper(componentModel = "spring")
 public interface SystemUserMapper {

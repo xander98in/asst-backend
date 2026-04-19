@@ -32,8 +32,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * Controlador REST para consultas de preguntas de cuestionarios.
  *
- * Actúa como adaptador de entrada, delegando en {@link QuestionQueryHandler}
- * las operaciones de solo lectura.
+ * <p>Actúa como adaptador de entrada, delegando en {@link QuestionQueryHandler}
+ * las operaciones de solo lectura.</p>
  */
 @Tag(
     name = "Preguntas de cuestionarios",

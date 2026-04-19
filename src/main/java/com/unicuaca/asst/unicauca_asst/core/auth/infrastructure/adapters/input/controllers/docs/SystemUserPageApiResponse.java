@@ -6,7 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.domain.Page;
 
 /**
- * Wrapper SOLO para documentación OpenAPI del genérico ApiResponse que contiene una lista paginada de usuarios del sistema.
+ * Wrapper de documentación OpenAPI para {@link ApiResponse} parametrizado con {@link Page} de {@link SystemUserResponseDTO}.
+ *
+ * <p>Permite a Swagger renderizar correctamente el tipo genérico en la especificación;
+ * no se instancia en tiempo de ejecución.</p>
  */
 @Schema(name = "SystemUserPageApiResponse", description = "Respuesta API que contiene una lista paginada de usuarios del sistema")
 public class SystemUserPageApiResponse extends ApiResponse<Page<SystemUserResponseDTO>> {

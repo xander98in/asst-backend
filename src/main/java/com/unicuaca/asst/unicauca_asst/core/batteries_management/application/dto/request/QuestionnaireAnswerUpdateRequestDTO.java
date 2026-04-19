@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO que representa una respuesta individual a actualizar dentro de un lote.
- * Contiene el ID de la respuesta existente, el ID de la pregunta y el nuevo valor.
+ *
+ * <p>Contiene el ID de la respuesta existente, el ID de la pregunta y el nuevo valor.</p>
  */
 @Data
 @NoArgsConstructor
@@ -34,7 +35,8 @@ public class QuestionnaireAnswerUpdateRequestDTO {
 
     /**
      * ID de la pregunta asociada.
-     * Aunque el ID de respuesta ya identifica el registro, el ID de pregunta sirve para validaciones de consistencia.
+     *
+     * <p>Aunque el ID de respuesta ya identifica el registro, el ID de pregunta sirve para validaciones de consistencia.</p>
      */
     @NotNull(message = "{questionnaireResponse.questionId.notNull}", groups = FirstGroup.class)
     @Positive(message = "{questionnaireResponse.questionId.positive}", groups = SecondGroup.class)

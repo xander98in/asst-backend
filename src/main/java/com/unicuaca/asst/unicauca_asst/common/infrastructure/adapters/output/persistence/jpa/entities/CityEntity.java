@@ -6,11 +6,11 @@ import lombok.*;
 /**
  * Entidad que representa una ciudad dentro del sistema.
  *
- * Cada ciudad pertenece a un departamento y se encuentra identificada
- * por un código único (por ejemplo, código 001) y un nombre.
+ * <p>Cada ciudad pertenece a un departamento y se encuentra identificada por un código único
+ * (por ejemplo, código 001) y un nombre.</p>
  *
- * Esta entidad mapea la tabla "ciudades" en la base de datos, donde
- * se valida que tanto el código como el nombre sean únicos.
+ * <p>Mapea la tabla {@code ciudades} en la base de datos, donde se valida que tanto el código
+ * como el nombre sean únicos.</p>
  */
 @Getter
 @Setter

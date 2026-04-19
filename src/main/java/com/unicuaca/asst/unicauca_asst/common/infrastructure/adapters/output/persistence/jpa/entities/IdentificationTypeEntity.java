@@ -12,9 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Entidad que representa los tipos de identificación
+/**
+ * Entidad que representa el catálogo de tipos de identificación.
  *
- * Mapeará los tipos de identificación a la base de datos.
+ * <p>Mapea la tabla {@code tipos_identificacion} en la base de datos.</p>
  */
 @Getter
 @Setter

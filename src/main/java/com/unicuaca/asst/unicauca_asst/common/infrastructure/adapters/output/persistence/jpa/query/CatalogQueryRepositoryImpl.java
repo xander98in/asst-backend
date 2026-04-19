@@ -23,9 +23,12 @@ import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.per
 import lombok.RequiredArgsConstructor;
 
 /**
- * Implementación del puerto de salida para las consultas de catálogos.
+ * Implementación JPA del puerto de salida {@link CatalogQueryRepository} para las consultas de
+ * catálogos.
  *
- * Se encarga de recuperar la información desde la base de datos utilizando JPA.
+ * <p>Se encarga de recuperar la información desde la base de datos utilizando los repositorios
+ * Spring Data JPA correspondientes y de traducir las entidades JPA al modelo de dominio mediante
+ * {@link CatalogPersistenceMapper}.</p>
  */
 @RequiredArgsConstructor
 @Service

@@ -6,7 +6,12 @@ import org.springframework.data.domain.Page;
 import java.time.LocalDateTime;
 
 /**
- * Puerto de entrada para consultas de registros de gestión de baterías.
+ * Puerto de entrada para los casos de uso de consulta sobre registros de gestión de baterías.
+ *
+ * <p>Define las operaciones de tipo "Query" del modelo {@link BatteryManagementRecordInformation},
+ * incluyendo listados paginados, búsquedas con filtros múltiples y obtención por identificador.
+ * Permite que los adaptadores de entrada interactúen con la lógica de negocio sin acoplarse
+ * directamente a su implementación.</p>
  */
 public interface BatteryManagementRecordQueryCUInputPort {
 

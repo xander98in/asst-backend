@@ -13,8 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad que representa el nivel socioeconómico.
- * Mapea la tabla "estrato" en la base de datos.
+ * Entidad que representa el catálogo de niveles socioeconómicos.
+ *
+ * <p>Mapea la tabla {@code estrato} en la base de datos.</p>
  */
 @Getter
 @Setter

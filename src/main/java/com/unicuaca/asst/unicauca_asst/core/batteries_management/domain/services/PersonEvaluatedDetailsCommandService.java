@@ -85,6 +85,9 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
 
     /**
      * Actualiza la información sociodemográfica existente.
+     *
+     * @param id identificador del detalle a actualizar
+     * @param personEvaluatedDetails datos a persistir sobre el detalle existente
      */
     @Override
     public void updatePersonEvaluatedDetails(Long id, PersonEvaluatedDetails personEvaluatedDetails) {
@@ -116,6 +119,11 @@ public class PersonEvaluatedDetailsCommandService implements PersonEvaluatedDeta
 
     /**
      * Elimina los detalles sociodemográficos.
+     *
+     * <p>Regla de integridad: no se permite la eliminación si ya existen cuestionarios
+     * intralaborales asociados a la batería contenedora.</p>
+     *
+     * @param personEvaluatedDetailsId identificador del detalle a eliminar
      */
     @Override
     public void deletePersonEvaluatedDetails(Long personEvaluatedDetailsId) {

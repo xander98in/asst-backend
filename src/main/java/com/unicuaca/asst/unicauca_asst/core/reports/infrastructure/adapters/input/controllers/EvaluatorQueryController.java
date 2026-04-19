@@ -34,6 +34,9 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Controlador REST para operaciones de lectura sobre evaluadores.
+ *
+ * <p>Pertenece a la capa de infraestructura (adaptador de entrada) y delega
+ * las solicitudes al handler de la capa de aplicación.</p>
  */
 @RestController
 @RequestMapping("/asst/reports/evaluators")
@@ -45,6 +48,12 @@ public class EvaluatorQueryController {
     private final EvaluatorQueryHandler evaluatorQueryHandler;
     private final SystemUserQueryHandler systemUserQueryHandler;
 
+    /**
+     * Lista los evaluadores creados por el usuario autenticado.
+     *
+     * @param httpRequest solicitud HTTP entrante
+     * @return lista de {@link EvaluatorResponseDTO} del usuario autenticado
+     */
     @Operation(
         summary = "Listar evaluadores del usuario",
         description = "Retorna los evaluadores creados por el usuario autenticado."
@@ -122,6 +131,13 @@ public class EvaluatorQueryController {
         return ResponseUtil.ok(httpRequest, SuccessCode.RETRIEVED, "Consulta exitosa", response);
     }
 
+    /**
+     * Obtiene un evaluador por su ID, asegurándose de que pertenezca al usuario autenticado.
+     *
+     * @param evaluatorId ID del evaluador a consultar
+     * @param httpRequest solicitud HTTP entrante
+     * @return detalle del evaluador solicitado
+     */
     @Operation(
         summary = "Obtener un evaluador por ID",
         description = "Retorna el detalle de un evaluador del usuario autenticado."
@@ -152,14 +168,6 @@ public class EvaluatorQueryController {
             )
         )
     })
-
-    /**
-     * Obtiene un evaluador por su ID, asegurándose de que pertenezca al usuario autenticado.
-     *
-     * @param evaluatorId ID del evaluador a consultar
-     * @param httpRequest solicitud HTTP entrante
-     * @return detalle del evaluador solicitado
-     */
     @GetMapping("/{evaluatorId}")
     public ResponseEntity<ApiResponse<EvaluatorResponseDTO>> getEvaluatorById(
         @PathVariable Long evaluatorId,
@@ -170,6 +178,11 @@ public class EvaluatorQueryController {
         return ResponseUtil.ok(httpRequest, SuccessCode.RETRIEVED, "Consulta exitosa", response);
     }
 
+    /**
+     * Obtiene el ID del usuario autenticado a partir del {@link SecurityContextHolder}.
+     *
+     * @return ID del usuario autenticado
+     */
     private Long getAuthenticatedUserId() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return systemUserQueryHandler.getSystemUserByEmail(email).getId();

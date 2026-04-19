@@ -7,6 +7,12 @@ import org.mapstruct.Mapping;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecordStatus;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.QuestionnaireManagementRecordStatusEntity;
 
+/**
+ * Mapper para convertir entre entidades JPA y modelos del dominio relacionados con los
+ * estados de los registros de gestión de cuestionarios.
+ *
+ * <p>Utiliza MapStruct para generar el código automáticamente.</p>
+ */
 @Mapper(
     componentModel = "spring",
     builder = @Builder(disableBuilder = true)

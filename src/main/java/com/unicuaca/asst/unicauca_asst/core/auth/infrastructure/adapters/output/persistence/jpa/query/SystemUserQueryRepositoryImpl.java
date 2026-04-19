@@ -88,7 +88,10 @@ public class SystemUserQueryRepositoryImpl implements SystemUserQueryRepository 
     }
 
     /**
-     * {@inheritDoc}
+     * Verifica si existe un usuario con el nombre de usuario proporcionado.
+     *
+     * @param username nombre de usuario a verificar
+     * @return {@code true} si ya hay un usuario registrado con ese username, {@code false} si no
      */
     @Override
     public boolean existsByUsername(String username) {
@@ -96,7 +99,11 @@ public class SystemUserQueryRepositoryImpl implements SystemUserQueryRepository 
     }
 
     /**
-     * {@inheritDoc}
+     * Verifica si el nombre de usuario ya está asignado a un usuario distinto del ID dado.
+     *
+     * @param username nombre de usuario a verificar
+     * @param id       ID del usuario actual
+     * @return {@code true} si el username pertenece a otro usuario, {@code false} en caso contrario
      */
     @Override
     public boolean isUsernameAssignedToDifferentUser(String username, Long id) {

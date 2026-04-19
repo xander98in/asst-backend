@@ -6,7 +6,8 @@ import lombok.*;
  * Representa un cuestionario que forma parte de la batería de instrumentos
  * para la evaluación de factores de riesgo psicosocial.
  *
- * Incluye información básica como el nombre, la abreviatura y la descripción del cuestionario.
+ * <p>Incluye información básica como el nombre, la abreviatura y la descripción
+ * del cuestionario.</p>
  */
 @Getter
 @Setter

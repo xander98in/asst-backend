@@ -25,9 +25,9 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Controlador REST para gestionar operaciones de creación de personas evaluadas.
- * 
- * Forma parte de la capa de entrada (Input Adapter) en la arquitectura hexagonal.
- * Delega la lógica al {@link PersonEvaluatedCommandHandler}.
+ *
+ * <p>Forma parte de la capa de entrada (Input Adapter) en la arquitectura hexagonal.
+ * Delega la lógica al {@link PersonEvaluatedCommandHandler}.</p>
  */
 @RestController
 @RequestMapping("/asst/person-evaluated")
@@ -154,6 +154,13 @@ public class PersonEvaluatedCommandController {
         return ResponseUtil.ok(request, SuccessCode.UPDATED, "Persona evaluada actualizada exitosamente.", response);
     }
 
+    /**
+     * Elimina una persona evaluada existente a partir de su ID.
+     *
+     * @param id ID de la persona evaluada a eliminar
+     * @param request objeto HttpServletRequest para construir la respuesta
+     * @return respuesta estandarizada indicando el éxito de la operación
+     */
     @Operation(
         summary = "Eliminar persona evaluada",
         description = "Este endpoint permite eliminar una persona evaluada existente por su ID."

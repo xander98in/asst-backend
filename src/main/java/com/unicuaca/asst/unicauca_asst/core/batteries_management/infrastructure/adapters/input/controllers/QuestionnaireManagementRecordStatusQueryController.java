@@ -28,8 +28,8 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Controlador REST para consultas de estados de registros de gestión de cuestionarios.
- * 
- * Actúa como adaptador de entrada, delegando en {@link QuestionnaireManagementRecordStatusHandler} las operaciones de solo lectura.
+ *
+ * <p>Actúa como adaptador de entrada, delegando en {@link QuestionnaireManagementRecordStatusHandler} las operaciones de solo lectura.</p>
  */
 @Tag(
     name = "Estados de registros de gestión de cuestionarios",

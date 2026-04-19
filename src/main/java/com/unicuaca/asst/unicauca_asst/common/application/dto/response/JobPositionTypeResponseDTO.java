@@ -8,7 +8,10 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO de respuesta para representar un tipo de cargo.
- * Incluye información como el ID y el nombre del tipo de cargo.
+ *
+ * <p>El ID recibido determina el formulario intralaboral que debe aplicarse en la
+ * batería: IDs 1-2 (Jefatura y Profesional) → Forma A (ILA); IDs 3-4 (Auxiliar y
+ * Operario) → Forma B (ILB). La selección del cuestionario se resuelve en el frontend.</p>
  */
 @Data
 @NoArgsConstructor

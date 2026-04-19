@@ -16,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Implementación del handler de consultas para evaluadores.
+ *
+ * <p>Delega al puerto de entrada de dominio y transforma los resultados
+ * a DTOs de respuesta.</p>
  */
 @Component
 @RequiredArgsConstructor
@@ -25,6 +28,12 @@ public class EvaluatorQueryHandlerImpl implements EvaluatorQueryHandler {
     private final EvaluatorQueryCUInputPort evaluatorQueryCUInputPort;
     private final EvaluatorMapper evaluatorMapper;
 
+    /**
+     * Lista los evaluadores registrados por un usuario.
+     *
+     * @param userId ID del usuario creador
+     * @return lista de DTOs de evaluadores
+     */
     @Override
     public List<EvaluatorResponseDTO> getEvaluatorsByUser(Long userId) {
         return evaluatorQueryCUInputPort.getEvaluatorsByUser(userId).stream()
@@ -32,6 +41,13 @@ public class EvaluatorQueryHandlerImpl implements EvaluatorQueryHandler {
             .toList();
     }
 
+    /**
+     * Obtiene un evaluador específico por su ID.
+     *
+     * @param evaluatorId ID del evaluador
+     * @param userId      ID del usuario que realiza la operación
+     * @return DTO del evaluador solicitado
+     */
     @Override
     public EvaluatorResponseDTO getEvaluatorById(Long evaluatorId, Long userId) {
         Evaluator evaluator = evaluatorQueryCUInputPort.getEvaluatorById(evaluatorId, userId);

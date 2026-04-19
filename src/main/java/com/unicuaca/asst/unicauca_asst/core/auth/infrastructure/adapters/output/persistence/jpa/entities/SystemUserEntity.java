@@ -28,8 +28,9 @@ import lombok.Setter;
 
 /**
  * Entidad que representa un usuario del sistema.
- * Mapea la tabla "usuarios_sistema" en la base de datos.
- * Hereda campos de auditoría (fecha_creacion, fecha_actualizacion) de {@link AuditableEntity}.
+ *
+ * <p>Mapea la tabla {@code usuarios_sistema} en la base de datos y hereda los campos
+ * de auditoría ({@code fecha_creacion}, {@code fecha_actualizacion}) de {@link AuditableEntity}.</p>
  */
 @Getter
 @Setter

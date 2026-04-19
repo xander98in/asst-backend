@@ -8,8 +8,9 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.P
  * Puerto de salida que define las operaciones de comando (creación o modificación)
  * relacionadas con el agregado {@link PersonEvaluated}.
  *
- * Esta interfaz representa el contrato que debe implementar la infraestructura
- * para permitir la persistencia de datos de personas en una fuente externa (por ejemplo, base de datos).
+ * <p>Esta interfaz representa el contrato que debe implementar la infraestructura
+ * para permitir la persistencia de datos de personas en una fuente externa
+ * (por ejemplo, base de datos).</p>
  *
  * <p>Hace parte del patrón de arquitectura hexagonal, permitiendo que el dominio
  * se mantenga desacoplado de los detalles técnicos de almacenamiento.</p>

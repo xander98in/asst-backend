@@ -36,7 +36,13 @@ public class IndividualReportQueryService implements IndividualReportQueryCUInpu
     private final ScoringEngine scoringEngine;
     private final ResultFormatterOutputPort resultFormatter;
 
-    /** {@inheritDoc} */
+    /**
+     * Genera el informe individual de calificación de riesgo psicosocial
+     * para una batería cerrada.
+     *
+     * @param batteryManagementRecordId ID del registro de gestión de batería
+     * @return resultado consolidado con intralaboral, extralaboral, total general y estrés
+     */
     @Override
     public ScoringEngine.IndividualScoringResult getIndividualReport(Long batteryManagementRecordId) {
         BatteryManagementRecord record = loadAndValidateClosedBattery(batteryManagementRecordId);
@@ -44,7 +50,15 @@ public class IndividualReportQueryService implements IndividualReportQueryCUInpu
         return calculateReport(record, personDetails, batteryManagementRecordId);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Genera el PDF del informe individual de riesgo psicosocial para una batería cerrada,
+     * incluyendo los datos del evaluador asociado al espacio de análisis.
+     *
+     * @param batteryManagementRecordId ID del registro de gestión de batería
+     * @param spaceId                   ID del espacio de análisis (para obtener el evaluador)
+     * @param userId                    ID del usuario que solicita el informe
+     * @return arreglo de bytes con el contenido del PDF generado
+     */
     @Override
     public byte[] getIndividualReportPdf(Long batteryManagementRecordId, Long spaceId, Long userId) {
         // 1. Validar espacio y ownership
@@ -84,6 +98,12 @@ public class IndividualReportQueryService implements IndividualReportQueryCUInpu
 
     // ── Métodos auxiliares privados ──────────────────────────────────────
 
+    /**
+     * Carga el registro de gestión de batería por su ID y valida que se encuentre en estado CERRADO.
+     *
+     * @param batteryManagementRecordId ID del registro de gestión de batería
+     * @return el registro de gestión de batería cargado y validado
+     */
     private BatteryManagementRecord loadAndValidateClosedBattery(Long batteryManagementRecordId) {
         Optional<BatteryManagementRecord> optionalRecord =
             reportDataQueryRepository.getBatteryRecordById(batteryManagementRecordId);
@@ -99,6 +119,12 @@ public class IndividualReportQueryService implements IndividualReportQueryCUInpu
         return record;
     }
 
+    /**
+     * Carga los detalles de la persona evaluada asociada al registro de gestión de batería.
+     *
+     * @param batteryManagementRecordId ID del registro de gestión de batería
+     * @return los detalles de la persona evaluada
+     */
     private PersonEvaluatedDetails loadPersonDetails(Long batteryManagementRecordId) {
         Optional<PersonEvaluatedDetails> optionalDetails =
             reportDataQueryRepository.getPersonDetailsByBatteryRecordId(batteryManagementRecordId);
@@ -110,6 +136,16 @@ public class IndividualReportQueryService implements IndividualReportQueryCUInpu
         return optionalDetails.get();
     }
 
+    /**
+     * Determina la forma intralaboral (ILA o ILB) según el tipo de cargo, recupera las respuestas
+     * de los cuestionarios intralaboral, extralaboral y de estrés, y delega el cálculo del informe
+     * individual al {@link ScoringEngine}.
+     *
+     * @param record                    registro de gestión de batería (en estado CERRADO)
+     * @param personDetails             detalles de la persona evaluada
+     * @param batteryManagementRecordId ID del registro de gestión de batería
+     * @return resultado consolidado del informe individual
+     */
     private ScoringEngine.IndividualScoringResult calculateReport(
         BatteryManagementRecord record, PersonEvaluatedDetails personDetails, Long batteryManagementRecordId
     ) {

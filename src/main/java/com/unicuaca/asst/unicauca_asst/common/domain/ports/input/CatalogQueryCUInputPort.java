@@ -4,6 +4,17 @@ import java.util.List;
 
 import com.unicuaca.asst.unicauca_asst.common.domain.models.*;
 
+/**
+ * Puerto de entrada para los casos de uso de consulta de catálogos transversales del sistema.
+ *
+ * <p>Expone operaciones de lectura sobre catálogos maestros utilizados por múltiples módulos:
+ * tipos de identificación, estados civiles, niveles educativos, tipos de vivienda, niveles
+ * socioeconómicos, tipos de cargo, tipos de contrato, tipos de salario, géneros, ciudades
+ * y departamentos. Permite que los adaptadores de entrada consuman estos catálogos sin
+ * acoplarse a la implementación concreta.</p>
+ *
+ * <p>Forma parte de la capa de dominio dentro de la arquitectura hexagonal.</p>
+ */
 public interface CatalogQueryCUInputPort {
 
     /**

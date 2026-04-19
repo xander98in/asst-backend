@@ -6,6 +6,9 @@ import com.unicuaca.asst.unicauca_asst.core.auth.application.dto.response.RoleRe
 
 /**
  * Manejador de consultas para operaciones de lectura sobre roles del sistema.
+ *
+ * <p>Define el contrato para recuperar el catálogo de roles disponibles,
+ * delegando la lógica de consulta al puerto de entrada de dominio.</p>
  */
 public interface RoleQueryHandler {
 

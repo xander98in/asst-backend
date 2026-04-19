@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.jpa.entities.GenderEntity;
 
+/**
+ * Repositorio JPA para la entidad {@link GenderEntity}.
+ */
 public interface GenderSpringJpaRepository extends JpaRepository<GenderEntity, Long> {
 
     /**

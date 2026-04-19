@@ -17,18 +17,23 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DomainScoreResponseDTO {
 
+    /** Nombre del dominio. */
     @Schema(description = "Nombre del dominio", example = "Liderazgo y relaciones sociales en el trabajo")
     private String domainName;
 
+    /** Puntaje bruto obtenido en el dominio. */
     @Schema(description = "Puntaje bruto del dominio", example = "56")
     private int rawScore;
 
+    /** Puntaje transformado del dominio según el baremo aplicado. */
     @Schema(description = "Puntaje transformado del dominio", example = "29.2")
     private double transformedScore;
 
+    /** Nivel de riesgo asignado al dominio tras aplicar el baremo. */
     @Schema(description = "Nivel de riesgo del dominio", example = "Riesgo bajo")
     private String riskLevel;
 
+    /** Dimensiones que componen el dominio con sus respectivas calificaciones. */
     @Schema(description = "Dimensiones que componen el dominio")
     private List<DimensionScoreResponseDTO> dimensions;
 }

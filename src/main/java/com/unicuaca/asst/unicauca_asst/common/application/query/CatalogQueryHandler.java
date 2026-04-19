@@ -4,6 +4,13 @@ import java.util.List;
 
 import com.unicuaca.asst.unicauca_asst.common.application.dto.response.*;
 
+/**
+ * Manejador de consultas para catálogos transversales del sistema.
+ *
+ * <p>Expone las operaciones de lectura de catálogos maestros consumidas por los
+ * adaptadores de entrada, devolviendo siempre DTOs de respuesta listos para ser
+ * serializados por los controllers.</p>
+ */
 public interface CatalogQueryHandler {
 
     /**

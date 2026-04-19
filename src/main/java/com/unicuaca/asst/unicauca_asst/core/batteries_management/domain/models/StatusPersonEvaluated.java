@@ -7,7 +7,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Modelo que representa los estados de una persona evaluada.
+ * Representa el estado de una persona evaluada.
+ *
+ * <p>Incluye un identificador único y un nombre descriptivo que indica si la
+ * persona tiene o no un registro de batería asociado (por ejemplo, "Sin registro",
+ * "Con registro").</p>
  */
 @Getter
 @Setter
@@ -16,6 +20,9 @@ import lombok.ToString;
 @ToString
 public class StatusPersonEvaluated {
 
+    /** Identificador único del estado. */
     private Long id;
+
+    /** Nombre descriptivo del estado. */
     private String name;
 }

@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * Repositorio Spring Data JPA para la entidad QuestionnaireResponseEntity.
  *
- * Proporciona operacionea CRUD y de consulta personalizados para recuperar respuestas de cuestionarios.
+ * <p>Proporciona operaciones CRUD y de consulta personalizadas para recuperar respuestas de cuestionarios.</p>
  */
 @Repository
 public interface QuestionnaireResponseSpringJpaRepository extends JpaRepository<QuestionnaireResponseEntity,Long> {
@@ -45,6 +45,10 @@ public interface QuestionnaireResponseSpringJpaRepository extends JpaRepository<
 
     /**
      * Consulta por ID de registro y pregunta (Sin forzar relaciones).
+     *
+     * @param recordId ID del registro de gestión de cuestionario.
+     * @param questionId ID de la pregunta.
+     * @return respuesta encontrada o vacío si no existe.
      */
     Optional<QuestionnaireResponseEntity> findByQuestionnaireManagementRecord_IdAndQuestion_Id(Long recordId, Long questionId);
 

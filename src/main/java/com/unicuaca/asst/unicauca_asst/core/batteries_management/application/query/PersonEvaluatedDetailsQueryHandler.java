@@ -12,6 +12,7 @@ public interface PersonEvaluatedDetailsQueryHandler {
      * Obtiene metadata del detalle de una persona evaluada asociado a un registro de gestión de bateria.
      *
      * @param batteryManagementRecordId ID del registro de gestión de batería
+     * @return DTO con la metadata del detalle de la persona evaluada
      */
     PersonEvaluatedDetailsMetaResponseDTO getMetaByBatteryManagementRecordId(Long batteryManagementRecordId);
 

@@ -3,7 +3,11 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.i
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.QuestionnaireManagementRecord;
 
 /**
- * Puerto de entrada para consultas sobre QuestionnaireManagementRecord.
+ * Puerto de entrada para los casos de uso de consulta sobre registros de gestión de cuestionarios.
+ *
+ * <p>Define las operaciones de tipo "Query" del modelo {@link QuestionnaireManagementRecord},
+ * permitiendo que los adaptadores de entrada interactúen con la lógica de negocio sin acoplarse
+ * directamente a su implementación.</p>
  */
 public interface QuestionnaireManagementRecordQueryCUInputPort {
 

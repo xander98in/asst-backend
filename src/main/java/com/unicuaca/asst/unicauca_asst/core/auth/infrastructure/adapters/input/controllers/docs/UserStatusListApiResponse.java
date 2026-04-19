@@ -7,7 +7,10 @@ import com.unicuaca.asst.unicauca_asst.core.auth.application.dto.response.UserSt
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Wrapper SOLO para documentación OpenAPI del genérico ApiResponse que contiene la lista de estados de usuario.
+ * Wrapper de documentación OpenAPI para {@link ApiResponse} parametrizado con {@link List} de {@link UserStatusResponseDTO}.
+ *
+ * <p>Permite a Swagger renderizar correctamente el tipo genérico en la especificación;
+ * no se instancia en tiempo de ejecución.</p>
  */
 @Schema(name = "UserStatusListApiResponse", description = "Respuesta API con lista de estados de usuario del sistema")
 public class UserStatusListApiResponse extends ApiResponse<List<UserStatusResponseDTO>> {

@@ -6,6 +6,9 @@ import org.springframework.data.domain.Page;
 import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedResponseDTO;
 
+/**
+ * Manejador de consultas para operaciones de lectura sobre personas evaluadas.
+ */
 public interface PersonEvaluatedQueryHandler {
 
     /**

@@ -20,6 +20,15 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.B
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;
 
 
+/**
+ * Mapper de la capa de aplicación para convertir entre el modelo de dominio
+ * {@link PersonEvaluatedDetails} y sus DTOs de request/response.
+ *
+ * <p>Utiliza MapStruct para mapear automáticamente los campos, incluyendo
+ * atributos anidados como género, estado civil, nivel educativo, ciudad, tipo de cargo,
+ * tipo de contrato y tipo de salario, construyendo objetos de solo-ID a partir de los
+ * identificadores recibidos en los DTOs de entrada.</p>
+ */
 @Mapper(componentModel = "spring")
 public interface PersonEvaluatedDetailsMapper {
 
@@ -81,6 +90,16 @@ public interface PersonEvaluatedDetailsMapper {
     @Mapping(target = "updatedAt", source = "updatedAt")
     PersonEvaluatedDetailsMetaResponseDTO toMetaResponseDTO(PersonEvaluatedDetails details);
 
+    /**
+     * Convierte un DTO de creación {@link PersonEvaluatedDetailsCreateRequestDTO}
+     * en un modelo de dominio {@link PersonEvaluatedDetails}.
+     *
+     * <p>Construye objetos anidados (género, ciudad, tipo de cargo, etc.) únicamente con su ID
+     * a partir de los identificadores recibidos, ignorando los campos auditables.</p>
+     *
+     * @param dto DTO con los datos de creación
+     * @return modelo de dominio listo para persistirse
+     */
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "batteryManagementRecordId", target = "batteryManagementRecord")
     @Mapping(source = "genderId", target = "gender")
@@ -104,6 +123,17 @@ public interface PersonEvaluatedDetailsMapper {
     @Mapping(target = "updatedAt", ignore = true)
     PersonEvaluatedDetails toDomain(PersonEvaluatedDetailsCreateRequestDTO dto);
 
+    /**
+     * Convierte un DTO de actualización {@link PersonEvaluatedDetailsUpdateRequestDTO}
+     * en un modelo de dominio {@link PersonEvaluatedDetails}.
+     *
+     * <p>Construye objetos anidados únicamente con su ID a partir de los identificadores recibidos.
+     * Ignora el ID de la entidad, la referencia al registro de batería y los campos auditables,
+     * ya que estos se resuelven y completan en la capa de servicio durante la actualización.</p>
+     *
+     * @param dto DTO con los datos de actualización
+     * @return modelo de dominio con los campos a actualizar
+     */
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "genderId", target = "gender")
     @Mapping(source = "civilStatusId", target = "civilStatus")

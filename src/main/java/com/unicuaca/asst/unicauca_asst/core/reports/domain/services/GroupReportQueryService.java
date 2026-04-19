@@ -39,21 +39,39 @@ public class GroupReportQueryService implements GroupReportQueryCUInputPort {
         List<String> forms
     ) {}
 
-    /** {@inheritDoc} */
+    /**
+     * Genera el resumen general grupal de un espacio de análisis.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @param userId  ID del usuario que solicita el informe
+     * @return resumen grupal con distribuciones, promedios y nivel por cuestionario
+     */
     @Override
     public GroupReportEngine.GroupSummaryResult getGroupSummary(Long spaceId, Long userId) {
         CalculationContext context = calculateAllIndividualReports(spaceId, userId);
         return groupReportEngine.calculateGroupSummary(context.results(), context.forms());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Genera el desglose por dominios y dimensiones de un espacio de análisis.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @param userId  ID del usuario que solicita el informe
+     * @return distribuciones de riesgo por dominio y dimensión
+     */
     @Override
     public GroupReportEngine.DomainsAndDimensionsResult getDomainsAndDimensions(Long spaceId, Long userId) {
         CalculationContext context = calculateAllIndividualReports(spaceId, userId);
         return groupReportEngine.calculateDomainsAndDimensions(context.results());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Genera la matriz de riesgo de un espacio de análisis.
+     *
+     * @param spaceId ID del espacio de análisis
+     * @param userId  ID del usuario que solicita el informe
+     * @return matriz con magnitud del riesgo, índice de asociación y semáforos
+     */
     @Override
     public GroupReportEngine.RiskMatrixResult getRiskMatrix(Long spaceId, Long userId) {
         CalculationContext context = calculateAllIndividualReports(spaceId, userId);
@@ -140,6 +158,11 @@ public class GroupReportQueryService implements GroupReportQueryCUInputPort {
     /**
      * Busca el registro de gestión de cuestionario por abreviatura y obtiene sus respuestas.
      * Lanza excepción si no se encuentra el cuestionario o no tiene respuestas.
+     *
+     * @param records         lista de registros de gestión de cuestionarios de la batería
+     * @param abbreviation    abreviatura del cuestionario a buscar ("ILA", "ILB", "EXT", "EST")
+     * @param batteryRecordId ID del registro de gestión de batería (para mensajes de error)
+     * @return lista de respuestas del cuestionario
      */
     private List<QuestionnaireResponse> getResponsesByAbbreviation(
         List<QuestionnaireManagementRecord> records,

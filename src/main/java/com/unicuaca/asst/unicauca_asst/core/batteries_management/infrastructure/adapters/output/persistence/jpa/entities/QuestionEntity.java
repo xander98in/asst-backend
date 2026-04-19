@@ -18,7 +18,7 @@ import lombok.Setter;
 /**
  * Entidad que representa una pregunta asociada a un cuestionario.
  *
- * Mapea la tabla "preguntas" en la base de datos.
+ * <p>Mapea la tabla "preguntas" en la base de datos.</p>
  */
 @Getter
 @Setter
@@ -51,8 +51,8 @@ public class QuestionEntity {
     /**
      * Cuestionario al que pertenece esta pregunta.
      *
-     * Relación muchos-a-uno:
-     * muchas preguntas pueden estar asociadas a un mismo cuestionario.
+     * <p>Relación muchos-a-uno:
+     * muchas preguntas pueden estar asociadas a un mismo cuestionario.</p>
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
@@ -62,7 +62,11 @@ public class QuestionEntity {
     private QuestionnaireEntity questionnaire;
 
     /**
-     * Constructor útil para creación de nuevos registros.
+     * Constructor útil para creación de nuevos registros de pregunta antes de persistirlos.
+     *
+     * @param text texto de la pregunta
+     * @param order posición u orden de la pregunta dentro del cuestionario
+     * @param questionnaire cuestionario al que pertenece esta pregunta
      */
     public QuestionEntity(String text, Integer order, QuestionnaireEntity questionnaire) {
         this.text = text;

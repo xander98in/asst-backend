@@ -7,6 +7,12 @@ import org.mapstruct.Mapping;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.Question;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.jpa.entities.QuestionEntity;
 
+/**
+ * Mapper para convertir entre entidades JPA y modelos del dominio relacionados con preguntas.
+ *
+ * <p>Utiliza MapStruct para generar el código automáticamente, delegando el mapeo
+ * del cuestionario asociado a {@link QuestionnairePersistenceMapper}.</p>
+ */
 @Mapper(
     componentModel = "spring",
     uses = {

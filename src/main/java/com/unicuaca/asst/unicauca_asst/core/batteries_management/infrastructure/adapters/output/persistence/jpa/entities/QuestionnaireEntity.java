@@ -11,7 +11,7 @@ import lombok.*;
  * Cada cuestionario puede corresponder a instrumentos como:
  * Cuestionario Intralaboral (Forma A o B), Cuestionario Extralaboral o Cuestionario de Estrés.
  *
- * Mapea la tabla "cuestionarios" en la base de datos.
+ * <p>Mapea la tabla "cuestionarios" en la base de datos.</p>
  */
 @Getter
 @Setter
@@ -57,15 +57,19 @@ public class QuestionnaireEntity {
     /**
      * Lista de preguntas asociadas a este cuestionario.
      *
-     * Relación uno-a-muchos:
-     * un cuestionario puede tener muchas preguntas asociadas.
+     * <p>Relación uno-a-muchos:
+     * un cuestionario puede tener muchas preguntas asociadas.</p>
      */
     @Builder.Default
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionEntity> questions = new ArrayList<>();
 
     /**
-     * Constructor útil para creación de nuevos registros.
+     * Constructor útil para creación de nuevos registros de cuestionario antes de persistirlos.
+     *
+     * @param name nombre único del cuestionario
+     * @param abbreviation abreviatura única del cuestionario (ej.: ILA, ILB, EXT, EST)
+     * @param description descripción detallada u observaciones del cuestionario
      */
     public QuestionnaireEntity(String name, String abbreviation, String description) {
         this.name = name;

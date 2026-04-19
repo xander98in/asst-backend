@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Controlador REST para consultas relacionadas con las respuestas de los cuestionarios.
  *
- * Forma parte de la capa de entrada (Input Adapter) en la arquitectura hexagonal.
- * Delega la lógica al {@link QuestionnaireResponseQueryHandler}.
+ * <p>Forma parte de la capa de entrada (Input Adapter) en la arquitectura hexagonal.
+ * Delega la lógica al {@link QuestionnaireResponseQueryHandler}.</p>
  */
 @Tag(
     name = "Consulta de respuestas de cuestionarios",

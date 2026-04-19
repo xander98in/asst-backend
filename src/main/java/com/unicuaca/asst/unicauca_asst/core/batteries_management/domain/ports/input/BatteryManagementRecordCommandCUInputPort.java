@@ -2,6 +2,13 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.i
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
 
+/**
+ * Puerto de entrada para los casos de uso de escritura sobre registros de gestión de baterías.
+ *
+ * <p>Define las operaciones de tipo "Command" del modelo {@link BatteryManagementRecord},
+ * permitiendo que los adaptadores de entrada (como controladores REST o handlers de aplicación)
+ * interactúen con la lógica de negocio sin acoplarse directamente a su implementación.</p>
+ */
 public interface BatteryManagementRecordCommandCUInputPort {
 
     /**

@@ -32,7 +32,11 @@ public interface QuestionnaireManagementRecordMapper {
 
     /**
      * Convierte el DTO de creación al modelo de Dominio.
-     * Mapeamos los IDs a objetos anidados vacíos (solo con ID) para que el dominio los use.
+     *
+     * <p>Mapeamos los IDs a objetos anidados vacíos (solo con ID) para que el dominio los use.</p>
+     *
+     * @param dto DTO con los datos de creación
+     * @return modelo de dominio listo para ser procesado
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

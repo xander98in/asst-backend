@@ -15,8 +15,8 @@ import java.util.Optional;
 /**
  * Implementación del puerto de salida {@link PersonEvaluatedDetailsQueryRepository} para la obtención de datos de detalles de personas evaluadas.
  *
- * Esta clase actúa como adaptador de salida en la arquitectura hexagonal y utiliza un repositorio JPA
- * para acceder a la base de datos.
+ * <p>Esta clase actúa como adaptador de salida en la arquitectura hexagonal y utiliza un repositorio JPA
+ * para acceder a la base de datos.</p>
  *
  * <p>Las operaciones definidas aquí son de solo lectura (consultas), y no incluyen lógica de negocio.</p>
  */

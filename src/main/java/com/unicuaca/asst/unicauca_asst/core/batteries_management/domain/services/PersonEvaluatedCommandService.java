@@ -100,9 +100,9 @@ public class PersonEvaluatedCommandService implements PersonEvaluatedCommandCUIn
 
     /**
      * Actualiza la información de una persona evaluada existente.
-     * 
-     * Valida que la persona exista y que el nuevo correo no esté asignado a otra persona.
-     *      * Si la persona no existe o el correo está duplicado, lanza una excepción personalizada.
+     *
+     * <p>Valida que la persona exista y que el nuevo correo no esté asignado a otra persona.
+     * Si la persona no existe o el correo está duplicado, lanza una excepción personalizada.</p>
      *
      * @param personEvaluated modelo con los datos actualizados e ID válido
      * @return la persona evaluada con los cambios persistidos

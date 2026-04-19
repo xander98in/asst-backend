@@ -5,6 +5,9 @@ import lombok.Getter;
 
 /**
  * Excepción lanzada cuando falla la creación de una entidad.
+ *
+ * <p>Suele mapear a HTTP 500 Internal Server Error y se dispara ante errores
+ * de persistencia o fallos inesperados durante el proceso de creación.</p>
  */
 @Getter
 public class EntityCreationException extends RuntimeException {

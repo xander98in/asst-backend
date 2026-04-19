@@ -26,29 +26,59 @@ import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatter
 import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
 import com.unicuaca.asst.unicauca_asst.common.domain.services.CatalogQueryService;
 
+/**
+ * Registro central de los beans de servicios de dominio de la aplicación.
+ *
+ * <p>En la arquitectura hexagonal + CQRS del proyecto, los servicios de dominio se escriben
+ * en Java puro sin anotaciones de Spring para mantener la capa {@code domain} libre del
+ * framework. Esta clase declara manualmente cada uno de esos servicios como {@code @Bean},
+ * inyectando los puertos de salida (repositorios y adaptadores) necesarios para construirlos.</p>
+ *
+ * <p>Los servicios de infraestructura (por ejemplo {@code GoogleTokenService} o
+ * {@code JwtService}) quedan fuera de este registro porque utilizan directamente la anotación
+ * {@code @Service}.</p>
+ */
 @Configuration
 public class BeanConfigurations {
 
+    /**
+     * Registra el servicio de dominio {@link CatalogQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
-    CatalogQueryService catalogQueryService(CatalogQueryRepository catalogQueryRepository, ResultFormatterOutputPort resultFormatterOutputPort) {
-        return new CatalogQueryService(catalogQueryRepository, resultFormatterOutputPort);
-    }
-
-    @Bean
-    PersonEvaluatedQueryService personQueryService(PersonEvaluatedQueryRepository personQueryRepository, ResultFormatterOutputPort resultFormatterOutputPort,
-                                                   CatalogQueryRepository catalogQueryRepository) {
-        return new PersonEvaluatedQueryService(personQueryRepository, catalogQueryRepository, resultFormatterOutputPort);
+    CatalogQueryService catalogQueryService(
+        CatalogQueryRepository catalogQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new CatalogQueryService(
+            catalogQueryRepository,
+            resultFormatterOutputPort
+        );
     }
 
     /**
-     * Crea una instancia de PersonEvaluatedCommandService.
+     * Registra el servicio de dominio {@link PersonEvaluatedQueryService}.
      *
-     * @param personEvaluatedCommandRepository
-     * @param personEvaluatedQueryRepository
-     * @param batteryManagementRecordQueryRepository
-     * @param catalogQueryRepository
-     * @param resultFormatterOutputPort
-     * @return
+     * @return instancia del servicio lista para ser inyectada
+     */
+    @Bean
+    PersonEvaluatedQueryService personQueryService(
+        PersonEvaluatedQueryRepository personQueryRepository,
+        ResultFormatterOutputPort resultFormatterOutputPort,
+        CatalogQueryRepository catalogQueryRepository
+    ) {
+        return new PersonEvaluatedQueryService(
+            personQueryRepository,
+            catalogQueryRepository,
+            resultFormatterOutputPort
+        );
+    }
+
+    /**
+     * Registra el servicio de dominio {@link PersonEvaluatedCommandService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
      */
     @Bean
     PersonEvaluatedCommandService personEvaluatedCommandService(
@@ -58,9 +88,20 @@ public class BeanConfigurations {
         CatalogQueryRepository catalogQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
-        return new PersonEvaluatedCommandService(personEvaluatedCommandRepository, personEvaluatedQueryRepository, batteryManagementRecordQueryRepository, catalogQueryRepository, resultFormatterOutputPort);
+        return new PersonEvaluatedCommandService(
+            personEvaluatedCommandRepository,
+            personEvaluatedQueryRepository,
+            batteryManagementRecordQueryRepository,
+            catalogQueryRepository,
+            resultFormatterOutputPort
+        );
     }
 
+    /**
+     * Registra el servicio de dominio {@link BatteryManagementRecordCommandService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     BatteryManagementRecordCommandService batteryManagementRecordCommandService(
         BatteryManagementRecordCommandRepository batteryManagementRecordCommandRepository,
@@ -70,7 +111,8 @@ public class BeanConfigurations {
         QuestionnaireManagementRecordCommandRepository questionnaireManagementRecordCommandRepository,
         QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository,
         QuestionnaireManagementRecordStatusQueryRepository questionnaireManagementRecordStatusQueryRepository,
-        ResultFormatterOutputPort resultFormatterOutputPort) {
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
         return new BatteryManagementRecordCommandService(
             batteryManagementRecordCommandRepository,
             batteryManagementRecordQueryRepository,
@@ -79,16 +121,30 @@ public class BeanConfigurations {
             questionnaireManagementRecordCommandRepository,
             questionnaireManagementRecordQueryRepository,
             questionnaireManagementRecordStatusQueryRepository,
-            resultFormatterOutputPort);
+            resultFormatterOutputPort
+        );
     }
 
+    /**
+     * Registra el servicio de dominio {@link QuestionnaireQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     QuestionnaireQueryService questionnaireQueryService(
         QuestionnaireQueryRepository questionnaireQueryRepository,
-        ResultFormatterOutputPort resultFormatterOutputPort) {
-        return new QuestionnaireQueryService(questionnaireQueryRepository, resultFormatterOutputPort);
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
+        return new QuestionnaireQueryService(
+            questionnaireQueryRepository, resultFormatterOutputPort
+        );
     }
 
+    /**
+     * Registra el servicio de dominio {@link PersonEvaluatedDetailsCommandService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     PersonEvaluatedDetailsCommandService personEvaluatedDetailsCommandService(
         CatalogQueryRepository catalogQueryRepository,
@@ -99,7 +155,7 @@ public class BeanConfigurations {
         BatteryManagementRecordCommandRepository batteryManagementRecordCommandRepository,
         BatteryManagementRecordStatusQueryRepository batteryManagementRecordStatusQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
-        ) {
+    ) {
         return new PersonEvaluatedDetailsCommandService(
             catalogQueryRepository,
             batteryManagementRecordQueryRepository,
@@ -112,21 +168,33 @@ public class BeanConfigurations {
         );
     }
 
+    /**
+     * Registra el servicio de dominio {@link QuestionnaireManagementRecordStatusQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     QuestionnaireManagementRecordStatusQueryService questionnaireManagementRecordStatusQueryService(
         QuestionnaireManagementRecordStatusQueryRepository questionnaireManagementRecordStatusQueryRepository,
-        ResultFormatterOutputPort resultFormatterOutputPort) {
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
         return new QuestionnaireManagementRecordStatusQueryService(
             questionnaireManagementRecordStatusQueryRepository,
             resultFormatterOutputPort
         );
     }
 
+    /**
+     * Registra el servicio de dominio {@link QuestionQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     QuestionQueryService questionQueryService(
         QuestionQueryRepository questionQueryRepository,
         QuestionnaireQueryRepository questionnaireQueryRepository,
-        ResultFormatterOutputPort resultFormatterOutputPort) {
+        ResultFormatterOutputPort resultFormatterOutputPort
+    ) {
         return new QuestionQueryService(
             questionQueryRepository,
             questionnaireQueryRepository,
@@ -134,15 +202,29 @@ public class BeanConfigurations {
         );
     }
 
+    /**
+     * Registra el servicio de dominio {@link BatteryManagementRecordQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public BatteryManagementRecordQueryService batteryManagementRecordQueryCUInputPort(
         BatteryManagementRecordQueryRepository recordQueryRepository,
         PersonEvaluatedDetailsQueryRepository detailsQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
-        return new BatteryManagementRecordQueryService(recordQueryRepository, detailsQueryRepository, resultFormatterOutputPort);
+        return new BatteryManagementRecordQueryService(
+            recordQueryRepository,
+            detailsQueryRepository,
+            resultFormatterOutputPort
+        );
     }
 
+    /**
+     * Registra el servicio de dominio {@link PersonEvaluatedDetailsQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public PersonEvaluatedDetailsQueryService personEvaluatedDetailsQueryService(
         PersonEvaluatedDetailsQueryRepository personEvaluatedDetailsQueryRepository,
@@ -157,11 +239,9 @@ public class BeanConfigurations {
     }
 
     /**
-     * Crea una instancia de QuestionnaireManagementRecordQueryService.
+     * Registra el servicio de dominio {@link QuestionnaireManagementRecordQueryService}.
      *
-     * @param questionnaireManagementRecordQueryRepository
-     * @param resultFormatterOutputPort
-     * @return QuestionnaireManagementRecordQueryService
+     * @return instancia del servicio lista para ser inyectada
      */
     @Bean
     public QuestionnaireManagementRecordQueryService questionnaireManagementRecordQueryService(
@@ -176,17 +256,9 @@ public class BeanConfigurations {
 
 
     /**
-     * Crea una instancia de QuestionnaireResponseCommandService.
-     * Implementa la lógica de negocio para manejar las respuestas a los cuestionarios, incluyendo validaciones,
-     * reglas de negocio y orquestación de llamadas a los repositorios necesarios para procesar las respuestas.
+     * Registra el servicio de dominio {@link QuestionnaireResponseCommandService}.
      *
-     * @param questionnaireManagementRecordQueryRepository
-     * @param questionQueryRepository
-     * @param answerOptionQueryRepository
-     * @param questionnaireResponseQueryRepository
-     * @param questionnaireResponseCommandRepository
-     * @param resultFormatterOutputPort
-     * @return QuestionnaireResponseCommandService
+     * @return instancia del servicio lista para ser inyectada
      */
     @Bean
     public QuestionnaireResponseCommandService questionnaireResponseCommandService(
@@ -207,7 +279,7 @@ public class BeanConfigurations {
             answerOptionQueryRepository,
             questionnaireResponseQueryRepository,
             questionnaireManagementRecordStatusQueryRepository,
-           batteryManagementRecordStatusQueryRepository,
+            batteryManagementRecordStatusQueryRepository,
             batteryManagementRecordCommandRepository,
             questionnaireResponseCommandRepository,
             questionnaireManagementRecordCommandRepository,
@@ -215,6 +287,11 @@ public class BeanConfigurations {
         );
     }
 
+    /**
+     * Registra el servicio de dominio {@link QuestionnaireManagementRecordCommandService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public QuestionnaireManagementRecordCommandService questionnaireManagementRecordCommandService(
         BatteryManagementRecordQueryRepository batteryManagementRecordQueryRepository,
@@ -240,6 +317,11 @@ public class BeanConfigurations {
         );
     }
 
+    /**
+     * Registra el servicio de dominio {@link QuestionnaireResponseQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public QuestionnaireResponseQueryService questionnaireResponseQueryService(
         QuestionnaireManagementRecordQueryRepository questionnaireManagementRecordQueryRepository,
@@ -255,14 +337,27 @@ public class BeanConfigurations {
 
     // ── Módulo Auth ──────────────────────────────────────────────────────
 
+    /**
+     * Registra el servicio de dominio {@link AuthService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public AuthService authService(
         SystemUserQueryRepository systemUserQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
-        return new AuthService(systemUserQueryRepository, resultFormatterOutputPort);
+        return new AuthService(
+            systemUserQueryRepository,
+            resultFormatterOutputPort
+        );
     }
 
+    /**
+     * Registra el servicio de dominio {@link SystemUserCommandService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public SystemUserCommandService systemUserCommandService(
         SystemUserCommandRepository systemUserCommandRepository,
@@ -280,22 +375,43 @@ public class BeanConfigurations {
         );
     }
 
+    /**
+     * Registra el servicio de dominio {@link SystemUserQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public SystemUserQueryService systemUserQueryService(
         SystemUserQueryRepository systemUserQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
-        return new SystemUserQueryService(systemUserQueryRepository, resultFormatterOutputPort);
+        return new SystemUserQueryService(
+            systemUserQueryRepository,
+            resultFormatterOutputPort
+        );
     }
 
+    /**
+     * Registra el servicio de dominio {@link RoleQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public RoleQueryService roleQueryService(
         RoleQueryRepository roleQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
-        return new RoleQueryService(roleQueryRepository, resultFormatterOutputPort);
+        return new RoleQueryService(
+            roleQueryRepository,
+            resultFormatterOutputPort
+        );
     }
 
+    /**
+     * Registra el servicio de dominio {@link UserStatusQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public UserStatusQueryService userStatusQueryService(
         UserStatusQueryRepository userStatusQueryRepository
@@ -305,11 +421,21 @@ public class BeanConfigurations {
 
     // ── Módulo de Informes ──────────────────────────────────────────────
 
+    /**
+     * Registra el motor de dominio {@link ScoringEngine}.
+     *
+     * @return instancia del motor lista para ser inyectada
+     */
     @Bean
     public ScoringEngine scoringEngine() {
         return new ScoringEngine();
     }
 
+    /**
+     * Registra el servicio de dominio {@link IndividualReportQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public IndividualReportQueryService individualReportQueryService(
         ReportDataQueryRepository reportDataQueryRepository,
@@ -329,6 +455,11 @@ public class BeanConfigurations {
         );
     }
 
+    /**
+     * Registra el servicio de dominio {@link AnalysisSpaceCommandService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public AnalysisSpaceCommandService analysisSpaceCommandService(
         AnalysisSpaceCommandRepository analysisSpaceCommandRepository,
@@ -337,9 +468,20 @@ public class BeanConfigurations {
         EvaluatorQueryRepository evaluatorQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
-        return new AnalysisSpaceCommandService(analysisSpaceCommandRepository, analysisSpaceQueryRepository, reportDataQueryRepository, evaluatorQueryRepository, resultFormatterOutputPort);
+        return new AnalysisSpaceCommandService(
+            analysisSpaceCommandRepository,
+            analysisSpaceQueryRepository,
+            reportDataQueryRepository,
+            evaluatorQueryRepository,
+            resultFormatterOutputPort
+        );
     }
 
+    /**
+     * Registra el servicio de dominio {@link AnalysisSpaceQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public AnalysisSpaceQueryService analysisSpaceQueryService(
         AnalysisSpaceQueryRepository analysisSpaceQueryRepository,
@@ -353,11 +495,21 @@ public class BeanConfigurations {
         );
     }
 
+    /**
+     * Registra el motor de dominio {@link GroupReportEngine}.
+     *
+     * @return instancia del motor lista para ser inyectada
+     */
     @Bean
     public GroupReportEngine groupReportEngine() {
         return new GroupReportEngine();
     }
 
+    /**
+     * Registra el servicio de dominio {@link GroupReportQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public GroupReportQueryService groupReportQueryService(
         AnalysisSpaceQueryRepository analysisSpaceQueryRepository,
@@ -366,23 +518,46 @@ public class BeanConfigurations {
         GroupReportEngine groupReportEngine,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
-        return new GroupReportQueryService(analysisSpaceQueryRepository, reportDataQueryRepository, scoringEngine, groupReportEngine, resultFormatterOutputPort);
+        return new GroupReportQueryService(
+            analysisSpaceQueryRepository,
+            reportDataQueryRepository,
+            scoringEngine,
+            groupReportEngine,
+            resultFormatterOutputPort
+        );
     }
 
+    /**
+     * Registra el servicio de dominio {@link EvaluatorCommandService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public EvaluatorCommandService evaluatorCommandService(
         EvaluatorCommandRepository evaluatorCommandRepository,
         EvaluatorQueryRepository evaluatorQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
-        return new EvaluatorCommandService(evaluatorCommandRepository, evaluatorQueryRepository, resultFormatterOutputPort);
+        return new EvaluatorCommandService(
+            evaluatorCommandRepository,
+            evaluatorQueryRepository,
+            resultFormatterOutputPort
+        );
     }
 
+    /**
+     * Registra el servicio de dominio {@link EvaluatorQueryService}.
+     *
+     * @return instancia del servicio lista para ser inyectada
+     */
     @Bean
     public EvaluatorQueryService evaluatorQueryService(
         EvaluatorQueryRepository evaluatorQueryRepository,
         ResultFormatterOutputPort resultFormatterOutputPort
     ) {
-        return new EvaluatorQueryService(evaluatorQueryRepository, resultFormatterOutputPort);
+        return new EvaluatorQueryService(
+            evaluatorQueryRepository,
+            resultFormatterOutputPort
+        );
     }
 }

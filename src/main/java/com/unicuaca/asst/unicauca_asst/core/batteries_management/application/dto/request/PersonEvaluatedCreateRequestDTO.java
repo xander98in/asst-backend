@@ -17,9 +17,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO para la creación de una persona evaluada.
- * 
- * Contiene los datos básicos requeridos para registrar a una persona en el sistema de baterías de riesgo psicosocial,
- * incluyendo validaciones de formato y obligatoriedad.
+ *
+ * <p>Contiene los datos básicos requeridos para registrar a una persona en el sistema de baterías de riesgo psicosocial,
+ * incluyendo validaciones de formato y obligatoriedad.</p>
  */
 @Data
 @NoArgsConstructor

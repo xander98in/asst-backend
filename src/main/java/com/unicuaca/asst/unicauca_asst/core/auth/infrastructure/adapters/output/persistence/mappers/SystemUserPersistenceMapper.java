@@ -27,7 +27,8 @@ public interface SystemUserPersistenceMapper {
 
     /**
      * Convierte una entidad JPA en un modelo de dominio.
-     * El campo personEvaluated (entidad) se mapea a personEvaluatedId (Long).
+     *
+     * <p>El campo {@code personEvaluated} (entidad) se mapea a {@code personEvaluatedId} (Long).</p>
      *
      * @param entity entidad de base de datos
      * @return modelo de dominio
@@ -37,7 +38,8 @@ public interface SystemUserPersistenceMapper {
 
     /**
      * Convierte un modelo de dominio en una entidad JPA.
-     * El campo personEvaluated se ignora y se gestiona manualmente en el repositorio.
+     *
+     * <p>El campo {@code personEvaluated} se ignora y se gestiona manualmente en el repositorio.</p>
      *
      * @param domain modelo de dominio
      * @return entidad de base de datos

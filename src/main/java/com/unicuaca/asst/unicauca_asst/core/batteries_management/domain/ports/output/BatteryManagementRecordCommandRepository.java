@@ -5,14 +5,22 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.B
 import java.util.Optional;
 
 /**
- * Puerto de salida para operaciones de comando (escritura) sobre el agregado BatteryManagementRecord.
- * Forma parte de la arquitectura hexagonal: el dominio depende del contrato, no de la implementación.
+ * Puerto de salida para operaciones de comando (escritura) sobre el agregado
+ * {@link BatteryManagementRecord}.
+ *
+ * <p>Forma parte de la arquitectura hexagonal: el dominio depende del contrato,
+ * no de la implementación concreta de persistencia.</p>
  */
 public interface BatteryManagementRecordCommandRepository {
 
     /**
      * Persiste un nuevo registro de gestión de batería.
-     * Debe retornar el registro con datos generados por la persistencia (p.ej. ID, timestamps).
+     *
+     * <p>Debe retornar el registro con los datos generados por la persistencia
+     * (por ejemplo, ID y timestamps).</p>
+     *
+     * @param record registro a persistir
+     * @return un {@link Optional} con el registro persistido, o vacío si no se pudo guardar
      */
     Optional<BatteryManagementRecord> saveBatteryManagementRecord(BatteryManagementRecord record);
 

@@ -7,7 +7,12 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Puerto de salida para consultas relacionadas con los registros de gestión de cuestionarios.
+ * Puerto de salida para operaciones de consulta sobre los registros de gestión de cuestionarios
+ * ({@link QuestionnaireManagementRecord}).
+ *
+ * <p>Define las firmas de los métodos que deben implementar los adaptadores de infraestructura
+ * encargados de recuperar información desde fuentes externas (p. ej., base de datos relacional),
+ * sin acoplar el dominio a los detalles de persistencia.</p>
  */
 public interface QuestionnaireManagementRecordQueryRepository {
 

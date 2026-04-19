@@ -30,9 +30,9 @@ import lombok.RequiredArgsConstructor;
 /**
  * Controlador REST que expone los endpoints de consulta relacionados con el agregado {@code Person}.
  *
- * Esta clase pertenece a la capa de infraestructura (adaptador de entrada) de la arquitectura hexagonal,
+ * <p>Esta clase pertenece a la capa de infraestructura (adaptador de entrada) de la arquitectura hexagonal,
  * y se encarga de recibir las solicitudes HTTP desde el exterior y delegarlas a los casos de uso
- * definidos en la capa de aplicación.
+ * definidos en la capa de aplicación.</p>
  *
  * <p>Utiliza {@link PersonEvaluatedQueryHandler} como puerto de entrada para ejecutar la lógica de consulta
  * relacionada con personas.</p>

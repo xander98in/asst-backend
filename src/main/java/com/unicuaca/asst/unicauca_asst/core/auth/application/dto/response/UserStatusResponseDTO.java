@@ -9,6 +9,9 @@ import lombok.Setter;
 
 /**
  * DTO de respuesta para representar los datos de un estado de usuario del sistema.
+ *
+ * <p>Expone el identificador y el nombre del estado (Activo, Inactivo o Bloqueado)
+ * para ser utilizado en los catálogos de la API.</p>
  */
 @Getter
 @Setter
@@ -17,9 +20,11 @@ import lombok.Setter;
 @Builder
 public class UserStatusResponseDTO {
 
+    /** Identificador único del estado de usuario. */
     @Schema(example = "1", description = "ID único del estado de usuario")
     private Long id;
 
+    /** Nombre del estado de usuario (por ejemplo, "Activo"). */
     @Schema(example = "Activo", description = "Nombre del estado de usuario")
     private String name;
 }

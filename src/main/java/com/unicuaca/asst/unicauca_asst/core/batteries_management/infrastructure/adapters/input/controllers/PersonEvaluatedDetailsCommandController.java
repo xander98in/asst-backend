@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.*;
  * Controlador REST para gestionar operaciones de creación de detalles
  * de una persona evaluada (PersonEvaluatedDetails).
  *
- * Forma parte del adaptador de entrada (Input Adapter) en la arquitectura hexagonal.
- * Delega la orquestación al {@link PersonEvaluatedDetailsCommandHandler}.
+ * <p>Forma parte del adaptador de entrada (Input Adapter) en la arquitectura hexagonal.
+ * Delega la orquestación al {@link PersonEvaluatedDetailsCommandHandler}.</p>
  */
 @RestController
 @RequestMapping("/asst/person-evaluated-details")
@@ -39,6 +39,8 @@ public class PersonEvaluatedDetailsCommandController {
      * Crea los detalles adicionales de una persona evaluada de un registro de gestión de baterías.
      *
      * @param dto datos de entrada validados para la creación
+     * @param request objeto HttpServletRequest para construir la respuesta
+     * @return respuesta estandarizada indicando el éxito de la operación
      */
     @Operation(
         summary = "Crear detalles de persona evaluada de un registro de gestión de baterías.",

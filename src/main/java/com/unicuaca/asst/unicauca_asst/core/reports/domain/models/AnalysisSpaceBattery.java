@@ -19,7 +19,12 @@ import lombok.ToString;
 @ToString
 public class AnalysisSpaceBattery {
 
+    /** Identificador del espacio de análisis al que pertenece la batería. */
     private Long analysisSpaceId;
+
+    /** Identificador del registro de gestión de batería asociado al espacio. */
     private Long batteryManagementRecordId;
+
+    /** Fecha y hora en que la batería fue agregada al espacio de análisis. */
     private LocalDateTime addedAt;
 }

@@ -1,5 +1,10 @@
 package com.unicuaca.asst.unicauca_asst.common.application.output;
 
+import com.unicuaca.asst.unicauca_asst.common.exceptions.BusinessRuleViolationException;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.CatalogEmptyException;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityAlreadyExistsException;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityCreationException;
+import com.unicuaca.asst.unicauca_asst.common.exceptions.EntityNotFoundPersException;
 import com.unicuaca.asst.unicauca_asst.common.exceptions.structure.ErrorCode;
 
 /**
@@ -17,6 +22,7 @@ public interface ResultFormatterOutputPort {
      * @param errorCode código de error estandarizado
      * @param userMessageKey clave de traducción para el mensaje de usuario
      * @param args argumentos para formatear el mensaje dinámicamente
+     * @throws EntityAlreadyExistsException siempre que se invoque
      */
     void throwEntityAlreadyExists(ErrorCode errorCode, String userMessageKey, Object... args);
 
@@ -26,6 +32,7 @@ public interface ResultFormatterOutputPort {
      * @param errorCode código de error estandarizado
      * @param userMessageKey clave de traducción para el mensaje de usuario
      * @param args argumentos dinámicos
+     * @throws EntityNotFoundPersException siempre que se invoque
      */
     void throwEntityNotFound(ErrorCode errorCode, String userMessageKey, Object... args);
 
@@ -35,6 +42,7 @@ public interface ResultFormatterOutputPort {
      * @param errorCode código de error estandarizado
      * @param userMessageKey clave de traducción para el mensaje de usuario
      * @param args argumentos dinámicos
+     * @throws BusinessRuleViolationException siempre que se invoque
      */
     void throwBusinessRuleViolation(ErrorCode errorCode, String userMessageKey, Object... args);
 
@@ -44,6 +52,7 @@ public interface ResultFormatterOutputPort {
      * @param errorCode código de error estandarizado
      * @param userMessageKey clave de traducción para el mensaje de usuario
      * @param args argumentos dinámicos
+     * @throws EntityCreationException siempre que se invoque
      */
     void throwEntityCreationFailed(ErrorCode errorCode, String userMessageKey, Object... args);
 
@@ -53,6 +62,7 @@ public interface ResultFormatterOutputPort {
      * @param errorCode código de error estandarizado
      * @param userMessageKey clave de traducción para el mensaje de usuario
      * @param args argumentos dinámicos
+     * @throws CatalogEmptyException siempre que se invoque
      */
     void throwCatalogEmptyException(ErrorCode errorCode, String userMessageKey, Object... args);
 
@@ -62,6 +72,7 @@ public interface ResultFormatterOutputPort {
      * Lanza una excepción cuando se detecta que la entidad ya existe.
      *
      * @param message mensaje técnico explicativo
+     * @throws EntityAlreadyExistsException siempre que se invoque
      */
     void throwEntityAlreadyExists(String message);
 
@@ -70,6 +81,7 @@ public interface ResultFormatterOutputPort {
      *
      * @param errorCode código estructurado del error
      * @param message mensaje técnico explicativo
+     * @throws EntityAlreadyExistsException siempre que se invoque
      */
     void throwEntityAlreadyExists(String errorCode, String message);
 
@@ -80,6 +92,7 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @param userMessage clave de traducción para el mensaje de usuario
      * @param args argumentos dinámicos para formatear el mensaje de usuario
+     * @throws EntityAlreadyExistsException siempre que se invoque
      */
     void throwEntityAlreadyExists(String errorCode, String message, String userMessage, Object... args);
 
@@ -88,16 +101,18 @@ public interface ResultFormatterOutputPort {
      *
      * @param errorCode código estructurado del error
      * @param message mensaje técnico explicativo
+     * @throws EntityNotFoundPersException siempre que se invoque
      */
     void throwEntityNotFound(String errorCode, String message);
 
     /**
-     * Lanza una excepción cuando no se encuentra una entidad, con soporte i18n manual
+     * Lanza una excepción cuando no se encuentra una entidad, con soporte i18n manual.
      *
-     * @param errorCode
-     * @param message
-     * @param userMessage
-     * @param args
+     * @param errorCode código estructurado del error
+     * @param message mensaje técnico explicativo
+     * @param userMessage clave de traducción para el mensaje de usuario
+     * @param args argumentos dinámicos para formatear el mensaje de usuario
+     * @throws EntityNotFoundPersException siempre que se invoque
      */
     void throwEntityNotFound(String errorCode, String message, String userMessage, Object... args);
 
@@ -105,13 +120,16 @@ public interface ResultFormatterOutputPort {
      * Lanza una excepción cuando se viola una regla de negocio.
      *
      * @param message mensaje técnico explicativo
+     * @throws BusinessRuleViolationException siempre que se invoque
      */
     void throwBusinessRuleViolation(String message);
 
     /**
      * Lanza una excepción cuando se viola una regla de negocio con código específico.
+     *
      * @param errorCode código estructurado del error
      * @param message mensaje técnico explicativo
+     * @throws BusinessRuleViolationException siempre que se invoque
      */
     void throwBusinessRuleViolation(String errorCode, String message);
 
@@ -122,6 +140,7 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @param userMessage clave de traducción para el mensaje de usuario
      * @param args argumentos dinámicos para formatear el mensaje de usuario
+     * @throws BusinessRuleViolationException siempre que se invoque
      */
     void throwBusinessRuleViolation(String errorCode, String message, String userMessage, Object... args);
 
@@ -130,6 +149,7 @@ public interface ResultFormatterOutputPort {
      *
      * @param errorCode código estructurado del error
      * @param message mensaje técnico explicativo
+     * @throws EntityCreationException siempre que se invoque
      */
     void throwEntityCreationFailed(String errorCode, String message);
 
@@ -140,6 +160,7 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @param userMessage clave de traducción para el mensaje de usuario
      * @param args argumentos dinámicos para formatear el mensaje de usuario
+     * @throws EntityCreationException siempre que se invoque
      */
     void throwEntityCreationFailed(String errorCode, String message, String userMessage, Object... args);
 
@@ -148,6 +169,7 @@ public interface ResultFormatterOutputPort {
      *
      * @param errorCode código estructurado del error
      * @param message mensaje técnico explicativo
+     * @throws CatalogEmptyException siempre que se invoque
      */
     void throwCatalogEmptyException(String errorCode, String message);
 
@@ -158,6 +180,7 @@ public interface ResultFormatterOutputPort {
      * @param message mensaje técnico explicativo
      * @param userMessage clave de traducción para el mensaje de usuario
      * @param args argumentos dinámicos para formatear el mensaje de usuario
+     * @throws CatalogEmptyException siempre que se invoque
      */
     void throwCatalogEmptyException(String errorCode, String message, String userMessage, Object... args);
 }

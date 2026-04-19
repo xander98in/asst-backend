@@ -2,7 +2,6 @@ package com.unicuaca.asst.unicauca_asst.core.batteries_management.application.co
 
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedDetailsCreateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedDetailsUpdateRequestDTO;
-import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.response.PersonEvaluatedDetailsResponseDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.mappers.PersonEvaluatedDetailsMapper;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.ports.input.PersonEvaluatedDetailsCommandCUInputPort;
@@ -27,7 +26,7 @@ public class PersonEvaluatedDetailsCommandHandlerImpl implements PersonEvaluated
     private final PersonEvaluatedDetailsCommandCUInputPort personEvaluatedDetailsCommandCUInputPort;
     private final PersonEvaluatedDetailsMapper personEvaluatedDetailsMapper;
 
-    /** 
+    /**
      * Registra los detalles de una persona evaluada en el sistema.
      *
      * @param dto datos de entrada validados para la creación
@@ -42,7 +41,7 @@ public class PersonEvaluatedDetailsCommandHandlerImpl implements PersonEvaluated
      * Actualiza los detalles de una persona evaluada en el sistema.
      *
      * @param personEvaluatedDetailsId ID del registro a actualizar
-     * @param dto datos de entrada validados para la actualizacióN
+     * @param dto datos de entrada validados para la actualización
      */
     @Override
     public void updatePersonEvaluatedDetails(Long personEvaluatedDetailsId, PersonEvaluatedDetailsUpdateRequestDTO dto) {

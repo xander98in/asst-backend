@@ -11,7 +11,7 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.
 /**
  * Repositorio JPA para la entidad {@link QuestionnaireManagementRecordStatusEntity}.
  *
- * Proporciona operaciones CRUD básicas sobre la tabla {@code estados_registro_gestion_cuestionarios}.
+ * <p>Proporciona operaciones CRUD básicas sobre la tabla {@code estados_registro_gestion_cuestionarios}.</p>
  */
 public interface QuestionnaireManagementRecordStatusSpringJpaRepository extends JpaRepository<QuestionnaireManagementRecordStatusEntity, Long> {
 

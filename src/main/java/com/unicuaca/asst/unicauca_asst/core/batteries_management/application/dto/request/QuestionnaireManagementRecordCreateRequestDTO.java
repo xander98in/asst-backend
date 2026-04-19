@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 /**
  * DTO para la creación de un registro de gestión de cuestionarios.
  *
- * Contiene los identificadores necesarios para asociar un cuestionario a un registro de gestión de baterías.
+ * <p>Contiene los identificadores necesarios para asociar un cuestionario a un registro de gestión de baterías.</p>
  */
 @Getter
 @NoArgsConstructor

@@ -12,9 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Entidad que representa el nivel de educación
+/**
+ * Entidad que representa el catálogo de niveles educativos.
  *
- * Mapea la tabla "nivel_estudio" en la base de datos.
+ * <p>Mapea la tabla {@code nivel_estudio} en la base de datos.</p>
  */
 @Getter
 @Setter
@@ -25,11 +26,17 @@ import lombok.Setter;
 @Table(name = "nivel_estudio")
 public class EducationLevelEntity {
 
+    /**
+     * Identificador único del nivel educativo.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_nivel_estudio")
     private Long id;
 
+    /**
+     * Nombre del nivel educativo.
+     */
     @Column(name = "nombre", nullable = false, length = 60)
     private String name;
 }
