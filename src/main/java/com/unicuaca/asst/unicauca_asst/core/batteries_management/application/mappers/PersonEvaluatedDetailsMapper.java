@@ -6,15 +6,15 @@ import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.unicuaca.asst.unicauca_asst.common.domain.models.City;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.CivilStatus;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.ContractType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.EducationLevel;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.Gender;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.HousingType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.JobPositionType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SalaryType;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.SocioeconomicLevel;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.City;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.CivilStatus;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.ContractType;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.EducationLevel;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.Gender;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.HousingType;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.JobPositionType;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.SalaryType;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.SocioeconomicLevel;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.application.dto.request.PersonEvaluatedDetailsCreateRequestDTO;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.BatteryManagementRecord;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluatedDetails;

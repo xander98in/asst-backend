@@ -1,0 +1,24 @@
+package com.unicuaca.asst.unicauca_asst.core.catalog.application.dto.response;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * DTO de respuesta para representar el estado civil de una persona.
+ * Incluye información como el ID y la descripción del estado civil.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class CivilStatusResponseDTO {
+
+    @Schema(example = "1")
+    private Long id;
+
+    @Schema(example = "Soltero (a)")
+    private String name;
+}

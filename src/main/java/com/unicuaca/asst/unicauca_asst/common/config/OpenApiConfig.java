@@ -55,7 +55,7 @@ public class OpenApiConfig {
     GroupedOpenApi catalogsGroup() {
         return GroupedOpenApi.builder()
             .group("catalogs")
-            .packagesToScan("com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.input.controllers")
+            .packagesToScan("com.unicuaca.asst.unicauca_asst.core.catalog.infrastructure.adapters.input.controllers")
             .pathsToMatch("/asst/catalog/**")
             .build();
     }

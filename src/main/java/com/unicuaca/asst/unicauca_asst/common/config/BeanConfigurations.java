@@ -23,8 +23,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.unicuaca.asst.unicauca_asst.common.application.output.ResultFormatterOutputPort;
-import com.unicuaca.asst.unicauca_asst.common.domain.ports.output.CatalogQueryRepository;
-import com.unicuaca.asst.unicauca_asst.common.domain.services.CatalogQueryService;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.ports.output.CatalogQueryRepository;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.services.CatalogQueryService;
 
 /**
  * Registro central de los beans de servicios de dominio de la aplicación.

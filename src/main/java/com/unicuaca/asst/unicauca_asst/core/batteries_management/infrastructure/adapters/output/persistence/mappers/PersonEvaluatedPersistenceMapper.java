@@ -1,6 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.output.persistence.mappers;
 
-import com.unicuaca.asst.unicauca_asst.common.infrastructure.adapters.output.persistence.mappers.IdentificationTypePersistenceMapper;
+import com.unicuaca.asst.unicauca_asst.core.catalog.infrastructure.adapters.output.persistence.mappers.IdentificationTypePersistenceMapper;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

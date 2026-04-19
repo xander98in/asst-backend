@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
-import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.IdentificationType;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.PersonEvaluated;
 import com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models.StatusPersonEvaluated;
 

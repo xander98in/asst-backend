@@ -1,7 +1,7 @@
 package com.unicuaca.asst.unicauca_asst.core.batteries_management.domain.models;
 
-import com.unicuaca.asst.unicauca_asst.common.domain.models.Gender;
-import com.unicuaca.asst.unicauca_asst.common.domain.models.IdentificationType;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.Gender;
+import com.unicuaca.asst.unicauca_asst.core.catalog.domain.models.IdentificationType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
