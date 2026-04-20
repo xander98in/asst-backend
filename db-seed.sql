@@ -1,6 +1,6 @@
 -- ==========================================================
 -- db-seed.sql — Datos semilla del sistema ASST
--- Ejecutar después de que Hibernate haya creado las tablas (ddl-auto=update).
+-- Ejecutar después de db-create.sql.
 -- Orden: catálogos comunes → baterías → auth → geografía
 -- ==========================================================
 
@@ -19,115 +19,115 @@ INSERT INTO estados_registro_gestion_cuestionarios (id, nombre) VALUES
 
 -- Insertar datos en la tabla tipos_identificacion
 
-INSERT INTO tipos_identificacion (nombre, abreviatura) VALUES
-  ('Cédula de Ciudadanía',            'CC'),
-  ('Tarjeta de Identidad',            'TI'),
-  ('Cédula de Extranjería',           'CE'),
-  ('Pasaporte',                       'PA'),
-  ('Permiso por Protección Temporal', 'PPT'),
-  ('Permiso Especial de Permanencia', 'PEP');
+INSERT INTO tipos_identificacion (id_tipo_identificacion, nombre, abreviatura) VALUES
+  (1, 'Cédula de Ciudadanía',            'CC'),
+  (2, 'Tarjeta de Identidad',            'TI'),
+  (3, 'Cédula de Extranjería',           'CE'),
+  (4, 'Pasaporte',                       'PA'),
+  (5, 'Permiso por Protección Temporal', 'PPT'),
+  (6, 'Permiso Especial de Permanencia', 'PEP');
 
 
 -- Insertar datos en la tabla estado_civil
 
-INSERT INTO estado_civil (nombre) VALUES 
-('Soltero (a)'),
-('Casado (a)'),
-('Unión libre'),
-('Separado (a)'),
-('Divorciado (a)'),
-('Viudo (a)'),
-('Sacerdote / Monja');
+INSERT INTO estado_civil (id_estado_civil, nombre) VALUES
+(1, 'Soltero (a)'),
+(2, 'Casado (a)'),
+(3, 'Unión libre'),
+(4, 'Separado (a)'),
+(5, 'Divorciado (a)'),
+(6, 'Viudo (a)'),
+(7, 'Sacerdote / Monja');
 
 
 -- Insertar datos en la tabla nivel_estudio
 
-INSERT INTO nivel_estudio (nombre) VALUES
-('Ninguno'),
-('Primaria incompleta'),
-('Primaria completa'),
-('Bachillerato incompleto'),
-('Bachillerato completo'),
-('Técnico / tecnológico incompleto'),
-('Técnico / tecnológico completo'),
-('Profesional incompleto'),
-('Profesional completo'),
-('Carrera militar / policía'),
-('Post-grado incompleto'),
-('Post-grado completo');
+INSERT INTO nivel_estudio (id_nivel_estudio, nombre) VALUES
+(1,  'Ninguno'),
+(2,  'Primaria incompleta'),
+(3,  'Primaria completa'),
+(4,  'Bachillerato incompleto'),
+(5,  'Bachillerato completo'),
+(6,  'Técnico / tecnológico incompleto'),
+(7,  'Técnico / tecnológico completo'),
+(8,  'Profesional incompleto'),
+(9,  'Profesional completo'),
+(10, 'Carrera militar / policía'),
+(11, 'Post-grado incompleto'),
+(12, 'Post-grado completo');
 
 
 -- Insertar datos en la tabla tipo_vivienda y estrato
 
-INSERT INTO tipo_vivienda (nombre) VALUES
-('Propia'),
-('En arriendo'),
-('Familiar');
+INSERT INTO tipo_vivienda (id_tipo_vivienda, nombre) VALUES
+(1, 'Propia'),
+(2, 'En arriendo'),
+(3, 'Familiar');
 
 
 -- Insertar datos en la tabla estrato 
 
-INSERT INTO estrato (nombre) VALUES
-('1'),
-('2'),
-('3'),
-('4'),
-('5'),
-('6'),
-('Finca'),
-('No sé');
+INSERT INTO estrato (id_estrato, nombre) VALUES
+(1, '1'),
+(2, '2'),
+(3, '3'),
+(4, '4'),
+(5, '5'),
+(6, '6'),
+(7, 'Finca'),
+(8, 'No sé');
 
 
 -- Insertar datos en la tabla tipo_cargo
 
-INSERT INTO tipo_cargo (nombre) VALUES
-('Jefatura - tiene personal a cargo'),
-('Profesional, analista, técnico, tecnólogo'),
-('Auxiliar, asistente administrativo, asistente técnico'),
-('Operario, operador, ayudante, servicios generales');
+INSERT INTO tipo_cargo (id_tipo_cargo, nombre) VALUES
+(1, 'Jefatura - tiene personal a cargo'),
+(2, 'Profesional, analista, técnico, tecnólogo'),
+(3, 'Auxiliar, asistente administrativo, asistente técnico'),
+(4, 'Operario, operador, ayudante, servicios generales');
 
 
 -- Insertar datos en la tabla tipo_contrato
 
-INSERT INTO tipo_contrato (nombre) VALUES
-('Temporal de menos de 1 año'),
-('Temporal de 1 año o más'),
-('Término indefinido'),
-('Cooperado (cooperativa)'),
-('Prestación de servicios'),
-('No sé');
+INSERT INTO tipo_contrato (id_tipo_contrato, nombre) VALUES
+(1, 'Temporal de menos de 1 año'),
+(2, 'Temporal de 1 año o más'),
+(3, 'Término indefinido'),
+(4, 'Cooperado (cooperativa)'),
+(5, 'Prestación de servicios'),
+(6, 'No sé');
 
 
 -- Insertar datos en la tabla tipo_salario
 
-INSERT INTO tipo_salario (nombre) VALUES
-('Fijo (diario, semanal, quincenal o mensual)'),
-('Una parte fija y otra variable'),
-('Todo variable (a destajo, por producción, por comisión)');
+INSERT INTO tipo_salario (id_tipo_salario, nombre) VALUES
+(1, 'Fijo (diario, semanal, quincenal o mensual)'),
+(2, 'Una parte fija y otra variable'),
+(3, 'Todo variable (a destajo, por producción, por comisión)');
 
 
 
 -- Insertar datos en la tabla sexo
 
-INSERT INTO sexo (nombre) VALUES
-('Masculino'),
-('Femenino');
+INSERT INTO sexo (id_sexo, nombre) VALUES
+(1, 'Masculino'),
+(2, 'Femenino');
 
 
 -- Insertar datos en la tabla estados_persona_evaluada
 
-INSERT INTO estados_persona_evaluada (nombre) VALUES
-('Sin registro'),
-('Con registro');
+INSERT INTO estados_persona_evaluada (id_estado_persona_evaluada, nombre) VALUES
+(1, 'Sin registro'),
+(2, 'Con registro');
 
 
 -- Insertar datos en la tabla estados_registro_gestion_baterias
 
-INSERT INTO estados_registro_gestion_baterias (nombre) VALUES
-('Creado'),
-('En diligenciamiento'),
-('Diligenciado'),
-('Cerrado');
+INSERT INTO estados_registro_gestion_baterias (id_estado_registro_gestion_bateria, nombre) VALUES
+(1, 'Creado'),
+(2, 'En diligenciamiento'),
+(3, 'Diligenciado'),
+(4, 'Cerrado');
 
 
 -- ==========================================================
@@ -144,13 +144,13 @@ VALUES
 (4, 'Cuestionario para la Evaluación del Estrés', 'EST', 'Instrumento validado para medir síntomas y niveles de estrés asociados al contexto laboral y personal.');
 
 
-INSERT INTO opciones_respuesta (id, texto, valor) VALUES
-(1, 'Nunca', 1),
-(2, 'Casi nunca', 2),
-(3, 'A veces', 3),
-(4, 'Casi siempre', 4),
-(5, 'Siempre', 5),
-(6, 'Sin valor', 0);
+INSERT INTO opciones_respuesta (id, orden, texto, valor) VALUES
+(1, 5, 'Nunca',         1),
+(2, 4, 'Casi nunca',    2),
+(3, 3, 'A veces',       3),
+(4, 2, 'Casi siempre',  4),
+(5, 1, 'Siempre',       5),
+(6, 0, 'Sin valor',     0);
 
 -- Insertar datos en la tabla preguntas
 
@@ -453,40 +453,36 @@ VALUES
 
 -- ==========================================================
 -- 3. MÓDULO AUTH — Estados, Roles, Usuario inicial
--- Script idempotente: usar INSERT IGNORE para evitar duplicados.
+-- Script idempotente: usar ON CONFLICT DO NOTHING para evitar duplicados.
 -- ==========================================================
 
-INSERT IGNORE INTO estados_usuario (nombre) VALUES
-('Activo'),
-('Inactivo'),
-('Bloqueado');
+INSERT INTO estados_usuario (id, nombre) VALUES
+(1, 'Activo'),
+(2, 'Inactivo'),
+(3, 'Bloqueado')
+ON CONFLICT (nombre) DO NOTHING;
 
 -- 2. Roles del sistema
-INSERT IGNORE INTO roles (nombre, nombre_clave) VALUES
-('Administrador', 'ADMIN'),
-('Profesional ASST', 'PROFESIONAL_ASST'),
-('Persona Evaluada', 'PERSONA_EVALUADA');
+INSERT INTO roles (id, nombre, nombre_clave) VALUES
+(1, 'Administrador',     'ADMIN'),
+(2, 'Profesional ASST',  'PROFESIONAL_ASST'),
+(3, 'Persona Evaluada',  'PERSONA_EVALUADA')
+ON CONFLICT (nombre_clave) DO NOTHING;
 
 -- 3. Usuario ADMIN inicial
 --    fecha_creacion es NOT NULL (AuditableEntity) — se asigna manualmente porque @PrePersist no aplica en SQL directo.
-INSERT IGNORE INTO usuarios_sistema (correo_electronico, nombre_usuario, nombre_completo, fecha_registro, fecha_creacion, estado_usuario_id)
-SELECT 'leyderin@unicauca.edu.co', 'admin', 'Administrador ASST', NOW(), NOW(),
+INSERT INTO usuarios_sistema (id, correo_electronico, nombre_usuario, nombre_completo, fecha_registro, fecha_creacion, estado_usuario_id)
+SELECT 1, 'leyderin@unicauca.edu.co', 'admin', 'Administrador ASST', NOW(), NOW(),
        (SELECT id FROM estados_usuario WHERE nombre = 'Activo')
-FROM DUAL
-WHERE NOT EXISTS (
-    SELECT 1 FROM usuarios_sistema WHERE correo_electronico = 'leyderin@unicauca.edu.co'
-);
+ON CONFLICT (correo_electronico) DO NOTHING;
 
 -- 4. Asignar rol ADMIN al usuario inicial
-INSERT IGNORE INTO usuarios_sistema_roles (usuario_sistema_id, rol_id)
+INSERT INTO usuarios_sistema_roles (usuario_sistema_id, rol_id)
 SELECT u.id, r.id
 FROM usuarios_sistema u, roles r
 WHERE u.correo_electronico = 'leyderin@unicauca.edu.co'
   AND r.nombre_clave = 'ADMIN'
-  AND NOT EXISTS (
-    SELECT 1 FROM usuarios_sistema_roles usr
-    WHERE usr.usuario_sistema_id = u.id AND usr.rol_id = r.id
-  );
+ON CONFLICT (usuario_sistema_id, rol_id) DO NOTHING;
 
 
 -- ==========================================================
@@ -1658,3 +1654,76 @@ INSERT INTO ciudades (id, codigo, nombre, departamento_id) VALUES
 (1122,'524','La Primavera',33),
 (1123,'572','Santa Rosalía',33),
 (1124,'666','Cumaribo',33);
+
+
+-- ==========================================================
+-- 5. RESINCRONIZACIÓN DE SECUENCIAS IDENTITY
+-- ==========================================================
+-- Necesario en PostgreSQL después de insertar IDs explícitos.
+-- Sin esto, la próxima inserción auto-generada podría chocar con un ID existente.
+-- Fórmula segura para tablas con o sin datos:
+--   setval(seq, COALESCE(MAX(id), 0) + 1, false) → próximo nextval = MAX+1 (o 1 si vacía)
+
+-- Catálogos comunes
+SELECT setval(pg_get_serial_sequence('tipos_identificacion', 'id_tipo_identificacion'),
+              COALESCE((SELECT MAX(id_tipo_identificacion) FROM tipos_identificacion), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('estado_civil', 'id_estado_civil'),
+              COALESCE((SELECT MAX(id_estado_civil) FROM estado_civil), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('nivel_estudio', 'id_nivel_estudio'),
+              COALESCE((SELECT MAX(id_nivel_estudio) FROM nivel_estudio), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('tipo_vivienda', 'id_tipo_vivienda'),
+              COALESCE((SELECT MAX(id_tipo_vivienda) FROM tipo_vivienda), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('estrato', 'id_estrato'),
+              COALESCE((SELECT MAX(id_estrato) FROM estrato), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('tipo_cargo', 'id_tipo_cargo'),
+              COALESCE((SELECT MAX(id_tipo_cargo) FROM tipo_cargo), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('tipo_contrato', 'id_tipo_contrato'),
+              COALESCE((SELECT MAX(id_tipo_contrato) FROM tipo_contrato), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('tipo_salario', 'id_tipo_salario'),
+              COALESCE((SELECT MAX(id_tipo_salario) FROM tipo_salario), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('sexo', 'id_sexo'),
+              COALESCE((SELECT MAX(id_sexo) FROM sexo), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('departamentos', 'id'),
+              COALESCE((SELECT MAX(id) FROM departamentos), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('ciudades', 'id'),
+              COALESCE((SELECT MAX(id) FROM ciudades), 0) + 1, false);
+
+-- Módulo Baterías — estados y catálogos
+SELECT setval(pg_get_serial_sequence('estados_persona_evaluada', 'id_estado_persona_evaluada'),
+              COALESCE((SELECT MAX(id_estado_persona_evaluada) FROM estados_persona_evaluada), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('estados_registro_gestion_baterias', 'id_estado_registro_gestion_bateria'),
+              COALESCE((SELECT MAX(id_estado_registro_gestion_bateria) FROM estados_registro_gestion_baterias), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('estados_registro_gestion_cuestionarios', 'id'),
+              COALESCE((SELECT MAX(id) FROM estados_registro_gestion_cuestionarios), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('cuestionarios', 'id'),
+              COALESCE((SELECT MAX(id) FROM cuestionarios), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('preguntas', 'id'),
+              COALESCE((SELECT MAX(id) FROM preguntas), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('opciones_respuesta', 'id'),
+              COALESCE((SELECT MAX(id) FROM opciones_respuesta), 0) + 1, false);
+
+-- Módulo Baterías — negocio
+SELECT setval(pg_get_serial_sequence('personas_evaluadas', 'id'),
+              COALESCE((SELECT MAX(id) FROM personas_evaluadas), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('registros_gestion_baterias', 'id_registro_gestion_bateria'),
+              COALESCE((SELECT MAX(id_registro_gestion_bateria) FROM registros_gestion_baterias), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('personas_evaluadas_detalles', 'id'),
+              COALESCE((SELECT MAX(id) FROM personas_evaluadas_detalles), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('registros_gestion_cuestionarios', 'id'),
+              COALESCE((SELECT MAX(id) FROM registros_gestion_cuestionarios), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('respuestas_cuestionarios', 'id'),
+              COALESCE((SELECT MAX(id) FROM respuestas_cuestionarios), 0) + 1, false);
+
+-- Módulo Auth
+SELECT setval(pg_get_serial_sequence('estados_usuario', 'id'),
+              COALESCE((SELECT MAX(id) FROM estados_usuario), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('roles', 'id'),
+              COALESCE((SELECT MAX(id) FROM roles), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('usuarios_sistema', 'id'),
+              COALESCE((SELECT MAX(id) FROM usuarios_sistema), 0) + 1, false);
+
+-- Módulo Reportes
+SELECT setval(pg_get_serial_sequence('evaluadores', 'id_evaluador'),
+              COALESCE((SELECT MAX(id_evaluador) FROM evaluadores), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('espacios_analisis', 'id_espacio_analisis'),
+              COALESCE((SELECT MAX(id_espacio_analisis) FROM espacios_analisis), 0) + 1, false);
