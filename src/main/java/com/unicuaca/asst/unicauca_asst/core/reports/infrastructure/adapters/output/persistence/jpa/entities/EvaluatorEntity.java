@@ -59,7 +59,7 @@ public class EvaluatorEntity {
 
     /** Fecha de expedición de la licencia de salud ocupacional. */
     @Column(name = "fecha_expedicion_licencia", nullable = false)
-    private LocalDate licenseExpirationDate;
+    private LocalDate licenseIssueDate;
 
     /** ID del usuario del sistema que creó el evaluador. */
     @Column(name = "id_usuario_creador", nullable = false)

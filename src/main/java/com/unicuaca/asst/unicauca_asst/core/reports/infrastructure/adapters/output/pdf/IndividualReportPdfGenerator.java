@@ -117,8 +117,8 @@ public class IndividualReportPdfGenerator implements IndividualReportPdfOutputPo
         context.setVariable("evaluatorProfessionalCard", evaluator.getProfessionalCardNumber());
         context.setVariable("evaluatorLicense", evaluator.getOccupationalHealthLicense());
         context.setVariable("evaluatorLicenseDate",
-            evaluator.getLicenseExpirationDate() != null
-                ? evaluator.getLicenseExpirationDate().format(DATE_FORMATTER)
+            evaluator.getLicenseIssueDate() != null
+                ? evaluator.getLicenseIssueDate().format(DATE_FORMATTER)
                 : "—");
     }
 

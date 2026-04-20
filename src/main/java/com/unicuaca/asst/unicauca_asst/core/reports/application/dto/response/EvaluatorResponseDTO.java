@@ -46,9 +46,9 @@ public class EvaluatorResponseDTO {
     @Schema(description = "Número de licencia en salud ocupacional", example = "LIC-98765")
     private String occupationalHealthLicense;
 
-    /** Fecha de expiración de la licencia en seguridad y salud en el trabajo. */
+    /** Fecha de expedición de la licencia en seguridad y salud en el trabajo. */
     @Schema(description = "Fecha de expedición de la licencia", example = "2024-03-15")
-    private LocalDate licenseExpirationDate;
+    private LocalDate licenseIssueDate;
 
     /** Fecha y hora en que se creó el registro del evaluador. */
     @Schema(description = "Fecha y hora de creación del registro", example = "2025-05-01T08:00:00")

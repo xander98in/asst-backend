@@ -91,7 +91,7 @@ class EvaluatorCommandServiceTest {
                     .postgraduateDegree("MAESTRÍA")
                     .professionalCardNumber("TP-123")
                     .occupationalHealthLicense("LIC-456")
-                    .licenseExpirationDate(LocalDate.of(2030, 1, 1))
+                    .licenseIssueDate(LocalDate.of(2030, 1, 1))
                     .build();
             when(evaluatorQueryRepository.findById(1L)).thenReturn(Optional.of(existing));
             when(evaluatorCommandRepository.save(any(Evaluator.class))).thenReturn(existing);
@@ -248,7 +248,7 @@ class EvaluatorCommandServiceTest {
                 .postgraduateDegree("ESPECIALIZACIÓN")
                 .professionalCardNumber("TP-000")
                 .occupationalHealthLicense("LIC-000")
-                .licenseExpirationDate(LocalDate.of(2028, 12, 31))
+                .licenseIssueDate(LocalDate.of(2028, 12, 31))
                 .creatorUserId(creatorUserId)
                 .build();
     }

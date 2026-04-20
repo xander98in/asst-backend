@@ -61,8 +61,8 @@ public class EvaluatorCreateRequestDTO {
     @Schema(description = "Número de licencia en salud ocupacional", example = "LIC-98765")
     private String occupationalHealthLicense;
 
-    /** Fecha de expiración de la licencia en seguridad y salud en el trabajo. */
-    @NotNull(message = "{evaluator.licenseExpirationDate.notNull}", groups = FirstGroup.class)
+    /** Fecha de expedición de la licencia en seguridad y salud en el trabajo. */
+    @NotNull(message = "{evaluator.licenseIssueDate.notNull}", groups = FirstGroup.class)
     @Schema(description = "Fecha de expedición de la licencia", example = "2024-03-15")
-    private LocalDate licenseExpirationDate;
+    private LocalDate licenseIssueDate;
 }

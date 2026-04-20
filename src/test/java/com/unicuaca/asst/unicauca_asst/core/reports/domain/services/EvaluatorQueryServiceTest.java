@@ -197,7 +197,7 @@ class EvaluatorQueryServiceTest {
                 .postgraduateDegree("ESPECIALIZACIÓN")
                 .professionalCardNumber("TP-000")
                 .occupationalHealthLicense("LIC-000")
-                .licenseExpirationDate(LocalDate.of(2028, 12, 31))
+                .licenseIssueDate(LocalDate.of(2028, 12, 31))
                 .creatorUserId(creatorUserId)
                 .build();
     }

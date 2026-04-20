@@ -73,7 +73,7 @@ public class EvaluatorCommandService implements EvaluatorCommandCUInputPort {
         existing.setPostgraduateDegree(evaluator.getPostgraduateDegree());
         existing.setProfessionalCardNumber(evaluator.getProfessionalCardNumber());
         existing.setOccupationalHealthLicense(evaluator.getOccupationalHealthLicense());
-        existing.setLicenseExpirationDate(evaluator.getLicenseExpirationDate());
+        existing.setLicenseIssueDate(evaluator.getLicenseIssueDate());
 
         return evaluatorCommandRepository.save(existing);
     }

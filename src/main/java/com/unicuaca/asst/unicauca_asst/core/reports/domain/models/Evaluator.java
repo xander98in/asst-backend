@@ -41,8 +41,8 @@ public class Evaluator {
     /** Número de licencia en seguridad y salud en el trabajo del evaluador. */
     private String occupationalHealthLicense;
 
-    /** Fecha de expiración de la licencia en seguridad y salud en el trabajo. */
-    private LocalDate licenseExpirationDate;
+    /** Fecha de expedición de la licencia en seguridad y salud en el trabajo. */
+    private LocalDate licenseIssueDate;
 
     /** Identificador del usuario del sistema que registró al evaluador. */
     private Long creatorUserId;
