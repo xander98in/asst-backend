@@ -56,7 +56,7 @@ public class BatteryManagementRecordQueryRepositoryImpl implements BatteryManage
      * @return un {@link Optional} con el estado encontrado o vacío si no existe
      */
     @Override
-    public Optional<BatteryManagementRecordStatus> getBatteryManagementRecordStatudByName(String name) {
+    public Optional<BatteryManagementRecordStatus> getBatteryManagementRecordStatusByName(String name) {
         return batteryManagementRecordStatusSpringJpaRepository.findByName(name)
                 .map(batteryManagementRecordStatusPersistenceMapper::toDomain);
     }

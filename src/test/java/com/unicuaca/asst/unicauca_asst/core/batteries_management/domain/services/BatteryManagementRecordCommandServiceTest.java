@@ -154,7 +154,7 @@ class BatteryManagementRecordCommandServiceTest {
             savedRecord.setStatus(initialStatus);
             savedRecord.setPersonEvaluated(updatedPerson);
 
-            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CREATED.getDescription()))
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
@@ -198,7 +198,7 @@ class BatteryManagementRecordCommandServiceTest {
             // Arrange
             Long personEvaluatedId = 1L;
 
-            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CREATED.getDescription()))
                     .thenReturn(Optional.empty());
             doThrow(new EntityNotFoundPersException(
@@ -227,7 +227,7 @@ class BatteryManagementRecordCommandServiceTest {
             Long personEvaluatedId = 1L;
             BatteryManagementRecordStatus initialStatus = buildStatus(1L, BatteryManagementRecordStatusCode.CREATED);
 
-            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CREATED.getDescription()))
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
@@ -258,7 +258,7 @@ class BatteryManagementRecordCommandServiceTest {
             BatteryManagementRecordStatus initialStatus = buildStatus(1L, BatteryManagementRecordStatusCode.CREATED);
             PersonEvaluated person = buildPersonEvaluated();
 
-            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CREATED.getDescription()))
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
@@ -294,7 +294,7 @@ class BatteryManagementRecordCommandServiceTest {
             PersonEvaluated person = buildPersonEvaluated();
             StatusPersonEvaluated withRecordStatus = buildPersonStatus(2L, StatusPersonEvaluatedEnum.WITH_RECORD);
 
-            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CREATED.getDescription()))
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
@@ -333,7 +333,7 @@ class BatteryManagementRecordCommandServiceTest {
             PersonEvaluated updatedPerson = buildPersonEvaluated();
             updatedPerson.setStatus(withRecordStatus);
 
-            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CREATED.getDescription()))
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
@@ -374,7 +374,7 @@ class BatteryManagementRecordCommandServiceTest {
             PersonEvaluated updatedPerson = buildPersonEvaluated();
             updatedPerson.setStatus(withRecordStatus);
 
-            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CREATED.getDescription()))
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
@@ -609,7 +609,7 @@ class BatteryManagementRecordCommandServiceTest {
                     .thenReturn(Optional.of(closedQStatus));
             when(questionnaireManagementRecordQueryRepository.findAllByBatteryManagementRecordId(1L))
                     .thenReturn(List.of(q1, q2));
-            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CLOSED.getDescription()))
                     .thenReturn(Optional.of(closedBatteryStatus));
             when(batteryManagementRecordCommandRepository.saveBatteryManagementRecord(any(BatteryManagementRecord.class)))
@@ -733,7 +733,7 @@ class BatteryManagementRecordCommandServiceTest {
                     .thenReturn(Optional.of(closedQStatus));
             when(questionnaireManagementRecordQueryRepository.findAllByBatteryManagementRecordId(1L))
                     .thenReturn(List.of());
-            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CLOSED.getDescription()))
                     .thenReturn(Optional.empty());
             doThrow(new EntityNotFoundPersException(
@@ -772,7 +772,7 @@ class BatteryManagementRecordCommandServiceTest {
                     .thenReturn(Optional.of(closedQStatus));
             when(questionnaireManagementRecordQueryRepository.findAllByBatteryManagementRecordId(1L))
                     .thenReturn(List.of());
-            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatudByName(
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CLOSED.getDescription()))
                     .thenReturn(Optional.of(closedBatteryStatus));
             when(batteryManagementRecordCommandRepository.saveBatteryManagementRecord(any(BatteryManagementRecord.class)))

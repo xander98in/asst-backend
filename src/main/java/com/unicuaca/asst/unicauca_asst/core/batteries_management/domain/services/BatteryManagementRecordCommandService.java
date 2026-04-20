@@ -62,7 +62,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
 
         // Resolución del estado inicial 'Creado'
         Optional<BatteryManagementRecordStatus> optionalInitialStatus = batteryManagementRecordQueryRepository
-            .getBatteryManagementRecordStatudByName(BatteryManagementRecordStatusCode.CREATED.getDescription());
+            .getBatteryManagementRecordStatusByName(BatteryManagementRecordStatusCode.CREATED.getDescription());
         if (optionalInitialStatus.isEmpty()) {
             this.resultFormatterOutputPort.throwEntityNotFound(
                 ErrorCode.BATTERY_STATUS_NOT_FOUND,
@@ -214,7 +214,7 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
 
         // Actualización final del registro de batería
         Optional<BatteryManagementRecordStatus> optionalClosedBatteryStatus = batteryManagementRecordQueryRepository
-            .getBatteryManagementRecordStatudByName(BatteryManagementRecordStatusCode.CLOSED.getDescription());
+            .getBatteryManagementRecordStatusByName(BatteryManagementRecordStatusCode.CLOSED.getDescription());
         if (optionalClosedBatteryStatus.isEmpty()) {
             this.resultFormatterOutputPort.throwEntityNotFound(
                 ErrorCode.BATTERY_STATUS_NOT_FOUND,

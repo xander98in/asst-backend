@@ -34,7 +34,7 @@ public interface BatteryManagementRecordQueryRepository {
      * @param name nombre del estado del registro de gestión de batería
      * @return un {@link Optional} con el estado encontrado o vacío si no existe
      */
-    Optional<BatteryManagementRecordStatus> getBatteryManagementRecordStatudByName(String name);
+    Optional<BatteryManagementRecordStatus> getBatteryManagementRecordStatusByName(String name);
 
     /**
      * Verifica si existe un registro de gestión de batería con el ID proporcionado.
