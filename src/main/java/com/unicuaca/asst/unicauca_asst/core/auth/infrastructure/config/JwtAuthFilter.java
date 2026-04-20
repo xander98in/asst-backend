@@ -22,6 +22,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Filtro de autenticación JWT que intercepta cada petición HTTP.
@@ -34,6 +35,7 @@ import lombok.RequiredArgsConstructor;
  * {@link HttpServletResponse} usando {@link SecurityResponseWriter}, ya que los filtros
  * no pasan por {@code @RestControllerAdvice}.</p>
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -72,6 +74,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             jwtService.validateAccessToken(token);
         } catch (InvalidJwtException e) {
+            log.warn("JWT invalido en {} {} - {}", request.getMethod(), request.getRequestURI(), e.getMessage());
             SecurityResponseWriter.writeErrorResponse(
                 request,
                 response,

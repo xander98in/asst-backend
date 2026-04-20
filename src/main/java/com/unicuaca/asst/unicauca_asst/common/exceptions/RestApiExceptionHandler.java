@@ -32,6 +32,7 @@ import com.unicuaca.asst.unicauca_asst.common.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Manejador global de excepciones para los controladores REST de la aplicación.
@@ -40,6 +41,7 @@ import lombok.RequiredArgsConstructor;
  * convirtiéndolos en respuestas estructuradas del tipo {@link ApiResponse} que encapsulan un {@link ErrorResponse}.
  * Esto garantiza consistencia, trazabilidad y claridad para el cliente consumidor de la API.</p>
  */
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class RestApiExceptionHandler {
@@ -89,6 +91,7 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(EntityNotFoundPersException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityNotFoundException(HttpServletRequest req, EntityNotFoundPersException ex) {
+        log.warn("[404] {} {} - EntityNotFound: {}", req.getMethod(), req.getRequestURI(), ex.getMessage());
         String defaultMsg = resolveUserMessage("user.default.entity_not_found", null, req, "Registro no encontrado.");
         String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
         String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
@@ -119,6 +122,7 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(BusinessRuleViolationException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleBusinessRuleViolationException(HttpServletRequest req, BusinessRuleViolationException ex) {
+        log.warn("[400] {} {} - BusinessRuleViolation: {}", req.getMethod(), req.getRequestURI(), ex.getMessage());
         String defaultMsg = resolveUserMessage("user.default.business_rule_violation", null, req, "Regla de negocio violada.");
         String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
         String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
@@ -149,6 +153,7 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityAlreadyExistsException(HttpServletRequest req, EntityAlreadyExistsException ex) {
+        log.warn("[409] {} {} - EntityAlreadyExists: {}", req.getMethod(), req.getRequestURI(), ex.getMessage());
         String defaultMsg = resolveUserMessage("user.default.entity_already_exists", null, req, "Entidad existente.");
         String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
         String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
@@ -177,6 +182,7 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(EntityCreationException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleEntityCreationException(HttpServletRequest req, EntityCreationException ex) {
+        log.error("[500] {} {} - EntityCreationException: {}", req.getMethod(), req.getRequestURI(), ex.getMessage(), ex);
         String defaultMsg = resolveUserMessage("user.default.entity_creation_error", null, req, "Error al crear registro.");
         String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
         String techDetail = resolveUserMessage(ex.getMessage(), ex.getArgs(), req, ex.getMessage());
@@ -208,6 +214,7 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Map<String, String>>>> handleValidationExceptions(
             HttpServletRequest req, MethodArgumentNotValidException ex) {
+        log.warn("[400] {} {} - ValidationError: {} campo(s) invalido(s)", req.getMethod(), req.getRequestURI(), ex.getErrorCount());
 
         Map<String, String> fieldErrors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
@@ -247,6 +254,7 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(CatalogEmptyException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleCatalogEmpty(
             HttpServletRequest req, CatalogEmptyException ex) {
+        log.warn("[404] {} {} - CatalogEmpty: {}", req.getMethod(), req.getRequestURI(), ex.getMessage());
 
         String defaultMsg = resolveUserMessage("user.default.catalog_empty", null, req, "Catálogo vacío.");
         String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
@@ -279,6 +287,7 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(GoogleTokenException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleGoogleTokenException(
             HttpServletRequest req, GoogleTokenException ex) {
+        log.warn("[401] {} {} - GoogleTokenException: {}", req.getMethod(), req.getRequestURI(), ex.getMessage());
 
         String defaultMsg = resolveUserMessage("user.auth.invalid_google_token", null, req, "Error de autenticación con Google.");
         String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
@@ -325,6 +334,7 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(InvalidJwtException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleInvalidJwtException(
             HttpServletRequest req, InvalidJwtException ex) {
+        log.warn("[401] {} {} - InvalidJwtException: {}", req.getMethod(), req.getRequestURI(), ex.getMessage());
 
         String defaultMsg = resolveUserMessage("user.auth.jwt_malformed", null, req, "Token de seguridad inválido.");
         String userMsg = resolveUserMessage(ex.getUserMessage(), ex.getArgs(), req, defaultMsg);
@@ -367,6 +377,7 @@ public class RestApiExceptionHandler {
      */
     @ExceptionHandler(QueryTimeoutException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleQueryTimeout(HttpServletRequest req, QueryTimeoutException ex) {
+        log.error("[504] {} {} - QueryTimeout: {}", req.getMethod(), req.getRequestURI(), ex.getMessage(), ex);
 
         String userMsg = resolveUserMessage("user.generic.query_timeout", null, req, "Timeout en consulta.");
         String techDetail = resolveTechMessage(ErrorCode.DB_TIMEOUT, req);
@@ -399,6 +410,7 @@ public class RestApiExceptionHandler {
         CannotCreateTransactionException.class
     })
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleDbUnavailable(HttpServletRequest req, Exception ex) {
+        log.error("[503] {} {} - DbUnavailable: {}", req.getMethod(), req.getRequestURI(), ex.getMessage(), ex);
 
         String userMsg = resolveUserMessage("user.generic.db_unavailable", null, req, "Servicio no disponible.");
         String techDetail = resolveTechMessage(ErrorCode.DB_UNAVAILABLE, req);
@@ -430,6 +442,7 @@ public class RestApiExceptionHandler {
         InvalidDataAccessResourceUsageException.class
     })
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleSqlGrammar(HttpServletRequest req, Exception ex) {
+        log.error("[500] {} {} - SqlGrammarError: {}", req.getMethod(), req.getRequestURI(), ex.getMessage(), ex);
 
         String userMsg = resolveUserMessage("user.generic.sql_grammar", null, req, "Error interno.");
         String techDetail = resolveTechMessage(ErrorCode.SQL_GRAMMAR, req);
@@ -460,6 +473,7 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleDataAccess(
             HttpServletRequest req, DataAccessException ex) {
+        log.error("[500] {} {} - DataAccessException: {}", req.getMethod(), req.getRequestURI(), ex.getMessage(), ex);
 
         String userMsg = resolveUserMessage("user.generic.data_access", null, req, "Error de acceso a datos.");
         String techDetail = resolveTechMessage(ErrorCode.DATA_ACCESS, req);
@@ -493,6 +507,7 @@ public class RestApiExceptionHandler {
         ConstraintViolationException.class
     })
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleBadRequest(HttpServletRequest req, Exception ex) {
+        log.warn("[400] {} {} - BadRequest: {}", req.getMethod(), req.getRequestURI(), ex.getMessage());
 
         String userMsg = resolveUserMessage("user.generic.bad_request", null, req, "Solicitud inválida.");
         String techDetail = resolveTechMessage(ErrorCode.BAD_REQUEST, req);
@@ -523,6 +538,7 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleMethodNotAllowed(
             HttpServletRequest req, HttpRequestMethodNotSupportedException ex) {
+        log.warn("[405] {} {} - MethodNotAllowed: {}", req.getMethod(), req.getRequestURI(), ex.getMessage());
 
         String userMsg = resolveUserMessage("user.generic.method_not_allowed", null, req, "Método no permitido.");
         String techDetail = resolveTechMessage(ErrorCode.METHOD_NOT_ALLOWED, req);
@@ -553,6 +569,7 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleUnsupportedMediaType(
             HttpServletRequest req, HttpMediaTypeNotSupportedException ex) {
+        log.warn("[415] {} {} - UnsupportedMediaType: {}", req.getMethod(), req.getRequestURI(), ex.getMessage());
 
         String userMsg = resolveUserMessage("user.generic.unsupported_media_type", null, req, "Tipo de contenido no soportado.");
         String techDetail = resolveTechMessage(ErrorCode.UNSUPPORTED_MEDIA_TYPE, req);
@@ -583,6 +600,7 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleNotAcceptable(
             HttpServletRequest req, HttpMediaTypeNotAcceptableException ex) {
+        log.warn("[406] {} {} - NotAcceptable: {}", req.getMethod(), req.getRequestURI(), ex.getMessage());
 
         String userMsg = resolveUserMessage("user.generic.not_acceptable", null, req, "Formato no aceptable.");
         String techDetail = resolveTechMessage(ErrorCode.NOT_ACCEPTABLE, req);
@@ -613,6 +631,7 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(NoSuchBeanDefinitionException.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleNoBean(
             HttpServletRequest req, NoSuchBeanDefinitionException ex) {
+        log.error("[500] {} {} - NoSuchBeanDefinition: {}", req.getMethod(), req.getRequestURI(), ex.getMessage(), ex);
 
         String userMsg = resolveUserMessage("user.generic.config_error", null, req, "Error de configuración.");
         String techDetail = resolveTechMessage(ErrorCode.MAPPER_ERROR, req);
@@ -643,9 +662,8 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<ErrorResponse<Void>>> handleGeneric(
             HttpServletRequest req, Exception ex) {
-
-        ex.printStackTrace();
-
+        log.error("[500] {} {} - UnhandledException: {}", req.getMethod(), req.getRequestURI(), ex.getMessage(), ex);
+        //ex.printStackTrace();
         String userMsg = resolveUserMessage("user.generic.error", null, req, "Error inesperado.");
 
         var details = ErrorUtils.of(
