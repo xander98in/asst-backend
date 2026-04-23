@@ -65,6 +65,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
@@ -184,6 +189,13 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>@{argLine} -da:org.hibernate...</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
@@ -204,16 +216,22 @@
 				<configuration>
 					<excludes>
 						<exclude>**/application/**</exclude>
-						<exclude>**/config/**</exclude>
 						<exclude>**/docs/**</exclude>
 						<exclude>**/exceptions/**</exclude>
-						<exclude>**/infrastructure/**</exclude>
 						<exclude>**/response/**</exclude>
 						<exclude>**/validation/**</exclude>
 						<exclude>**/domain/models/**</exclude>
 						<exclude>**/domain/ports/**</exclude>
 						<exclude>**/enums/**</exclude>
 						<exclude>**/*Application*</exclude>
+						<exclude>**/config/OpenApiConfig*</exclude>
+						<exclude>**/config/MessageSourceConfig*</exclude>
+						<exclude>**/config/BeanConfigurations*</exclude>
+						<exclude>**/infrastructure/adapters/output/**</exclude>
+						<exclude>**/infrastructure/config/RequestLoggingFilter*</exclude>
+						<exclude>**/infrastructure/config/SecurityResponseWriter*</exclude>
+						<exclude>**/infrastructure/config/SecurityAuthenticationEntryPoint*</exclude>
+						<exclude>**/infrastructure/config/SecurityAccessDeniedHandler*</exclude>
 					</excludes>
 				</configuration>
 				<executions>

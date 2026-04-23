@@ -33,7 +33,9 @@ public interface BatteryManagementRecordSpringJpaRepository
     @Query("""
        SELECT r
        FROM BatteryManagementRecordEntity r
-       JOIN FETCH r.personEvaluated
+       JOIN FETCH r.personEvaluated p
+       JOIN FETCH p.identificationType
+       JOIN FETCH p.status
        JOIN FETCH r.status
        WHERE r.id = :id
        """)
@@ -50,6 +52,8 @@ public interface BatteryManagementRecordSpringJpaRepository
        SELECT DISTINCT r
        FROM BatteryManagementRecordEntity r
        JOIN FETCH r.personEvaluated p
+       JOIN FETCH p.identificationType
+       JOIN FETCH p.status
        JOIN FETCH r.status s
        WHERE p.id = :personId
        """)
