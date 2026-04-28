@@ -1,7 +1,9 @@
 package com.unicuaca.asst.unicauca_asst.common.infrastructure.config;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -42,6 +44,9 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final SecurityAuthenticationEntryPoint authenticationEntryPoint;
     private final SecurityAccessDeniedHandler accessDeniedHandler;
+
+    @Value("${cors.allowed-origins}")
+    private String allowedOriginsProperty;
 
     /**
      * SecurityFilterChain base con la menor prioridad.
@@ -103,7 +108,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
+        List<String> allowedOrigins = Arrays.stream(allowedOriginsProperty.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
+        config.setAllowedOrigins(allowedOrigins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

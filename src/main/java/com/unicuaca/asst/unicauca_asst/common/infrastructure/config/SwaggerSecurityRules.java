@@ -1,5 +1,6 @@
 package com.unicuaca.asst.unicauca_asst.common.infrastructure.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -22,6 +23,11 @@ import lombok.RequiredArgsConstructor;
  */
 @Configuration
 @RequiredArgsConstructor
+@ConditionalOnProperty(
+        name = "app.swagger.enabled",
+        havingValue = "true",
+        matchIfMissing = true
+)
 public class SwaggerSecurityRules {
 
     private final JwtAuthFilter jwtAuthFilter;
