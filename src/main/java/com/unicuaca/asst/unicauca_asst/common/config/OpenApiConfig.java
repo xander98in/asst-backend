@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
     ),
     servers = {
         @Server(url = "http://localhost:8080", description = "Local"),
-        @Server(url = "https://api.unicauca.edu.co", description = "Prod")
+        @Server(url = "https://https://asst-backend-kwvb.onrender.com", description = "Prod")
     }
 )
 @SecurityScheme(
@@ -71,7 +71,7 @@ public class OpenApiConfig {
     @Bean
     GroupedOpenApi personasGroup() {
         return GroupedOpenApi.builder()
-            .group("personas")
+            .group("personas evaluadas")
             .packagesToScan("com.unicuaca.asst.unicauca_asst.core.batteries_management.infrastructure.adapters.input.controllers")
             .pathsToMatch("/asst/person-evaluated/**")  // Si tienes diferentes rutas para personas
             .build();
