@@ -84,6 +84,23 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
         }
         PersonEvaluated personEvaluated = optionalPerson.get();
 
+        // Regla de Negocio: No permitir múltiples procesos activos simultáneos
+        boolean hasActiveRecord = batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+            personEvaluatedId,
+            List.of(
+                BatteryManagementRecordStatusCode.CREATED.getDescription(),
+                BatteryManagementRecordStatusCode.IN_PROCESSING.getDescription(),
+                BatteryManagementRecordStatusCode.COMPLETED.getDescription()
+            )
+        );
+        if (hasActiveRecord) {
+            this.resultFormatterOutputPort.throwEntityAlreadyExists(
+                ErrorCode.BATTERY_RECORD_ALREADY_EXISTS,
+                "user.battery.already_exists",
+                personEvaluatedId
+            );
+        }
+
         // Actualización de estado de la persona para reflejar vinculación a proceso
         Optional<StatusPersonEvaluated> optionalWithRecordStatus = personEvaluatedQueryRepository
             .getStatusPersonEvaluatedByName(StatusPersonEvaluatedEnum.WITH_RECORD.getDescription());
@@ -107,15 +124,6 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
         }
         personEvaluated = optionalUpdatedPerson.get();
         record.setPersonEvaluated(personEvaluated);
-
-        // Regla de Negocio: No permitir múltiples procesos activos simultáneos
-        if (batteryManagementRecordQueryRepository.existsByPersonEvaluatedId(personEvaluatedId)) {
-            this.resultFormatterOutputPort.throwEntityAlreadyExists(
-                ErrorCode.BATTERY_RECORD_ALREADY_EXISTS,
-                "user.battery.already_exists",
-                personEvaluatedId
-            );
-        }
 
         // Guarda y retorna el nuevo registro de gestión de baterías
         Optional<BatteryManagementRecord> optionalSaved = batteryManagementRecordCommandRepository.saveBatteryManagementRecord(record);
@@ -233,6 +241,12 @@ public class BatteryManagementRecordCommandService implements BatteryManagementR
                 recordId
             );
         }
+
+        PersonEvaluated personEvaluated = record.getPersonEvaluated();
+        if (personEvaluated != null) {
+            syncPersonStatusAfterDelete(personEvaluated);
+        }
+
         return optionalSaved.get();
     }
 
