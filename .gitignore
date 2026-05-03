@@ -40,3 +40,7 @@ application-local.properties
 
 ### IntelliJ run configurations with secrets ###
 .idea/runConfigurations/*.xml
+
+### Internal context docs (not for repo) ###
+CONTEXTO_BACKEND.md
+CONTEXTO_BACKEND_TESTS.md
