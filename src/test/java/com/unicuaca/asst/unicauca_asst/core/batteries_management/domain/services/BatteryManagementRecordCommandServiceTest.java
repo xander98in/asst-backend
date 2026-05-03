@@ -159,13 +159,14 @@ class BatteryManagementRecordCommandServiceTest {
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
                     .thenReturn(Optional.of(person));
+            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+                    eq(personEvaluatedId), anyList()))
+                    .thenReturn(false);
             when(personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(
                     StatusPersonEvaluatedEnum.WITH_RECORD.getDescription()))
                     .thenReturn(Optional.of(withRecordStatus));
             when(personEvaluatedCommandRepository.updatePersonEvaluated(any(PersonEvaluated.class)))
                     .thenReturn(Optional.of(updatedPerson));
-            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedId(personEvaluatedId))
-                    .thenReturn(false);
             when(batteryManagementRecordCommandRepository.saveBatteryManagementRecord(any(BatteryManagementRecord.class)))
                     .thenReturn(Optional.of(savedRecord));
 
@@ -247,6 +248,7 @@ class BatteryManagementRecordCommandServiceTest {
                     ErrorCode.PERSON_NOT_FOUND,
                     "user.battery.person_not_found",
                     personEvaluatedId);
+            verify(batteryManagementRecordQueryRepository, never()).existsByPersonEvaluatedIdAndStatusNameIn(anyLong(), anyList());
             verify(batteryManagementRecordCommandRepository, never()).saveBatteryManagementRecord(any());
         }
 
@@ -263,6 +265,9 @@ class BatteryManagementRecordCommandServiceTest {
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
                     .thenReturn(Optional.of(person));
+            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+                    eq(personEvaluatedId), anyList()))
+                    .thenReturn(false);
             when(personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(
                     StatusPersonEvaluatedEnum.WITH_RECORD.getDescription()))
                     .thenReturn(Optional.empty());
@@ -299,6 +304,9 @@ class BatteryManagementRecordCommandServiceTest {
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
                     .thenReturn(Optional.of(person));
+            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+                    eq(personEvaluatedId), anyList()))
+                    .thenReturn(false);
             when(personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(
                     StatusPersonEvaluatedEnum.WITH_RECORD.getDescription()))
                     .thenReturn(Optional.of(withRecordStatus));
@@ -329,21 +337,14 @@ class BatteryManagementRecordCommandServiceTest {
             Long personEvaluatedId = 1L;
             BatteryManagementRecordStatus initialStatus = buildStatus(1L, BatteryManagementRecordStatusCode.CREATED);
             PersonEvaluated person = buildPersonEvaluated();
-            StatusPersonEvaluated withRecordStatus = buildPersonStatus(2L, StatusPersonEvaluatedEnum.WITH_RECORD);
-            PersonEvaluated updatedPerson = buildPersonEvaluated();
-            updatedPerson.setStatus(withRecordStatus);
 
             when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
                     BatteryManagementRecordStatusCode.CREATED.getDescription()))
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
                     .thenReturn(Optional.of(person));
-            when(personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(
-                    StatusPersonEvaluatedEnum.WITH_RECORD.getDescription()))
-                    .thenReturn(Optional.of(withRecordStatus));
-            when(personEvaluatedCommandRepository.updatePersonEvaluated(any(PersonEvaluated.class)))
-                    .thenReturn(Optional.of(updatedPerson));
-            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedId(personEvaluatedId))
+            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+                    eq(personEvaluatedId), anyList()))
                     .thenReturn(true);
             doThrow(new EntityAlreadyExistsException(
                     ErrorCode.BATTERY_RECORD_ALREADY_EXISTS.getCode(),
@@ -360,6 +361,8 @@ class BatteryManagementRecordCommandServiceTest {
                     ErrorCode.BATTERY_RECORD_ALREADY_EXISTS,
                     "user.battery.already_exists",
                     personEvaluatedId);
+            verify(personEvaluatedQueryRepository, never()).getStatusPersonEvaluatedByName(anyString());
+            verify(personEvaluatedCommandRepository, never()).updatePersonEvaluated(any());
             verify(batteryManagementRecordCommandRepository, never()).saveBatteryManagementRecord(any());
         }
 
@@ -379,13 +382,14 @@ class BatteryManagementRecordCommandServiceTest {
                     .thenReturn(Optional.of(initialStatus));
             when(personEvaluatedQueryRepository.getPersonEvaluatedById(personEvaluatedId))
                     .thenReturn(Optional.of(person));
+            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+                    eq(personEvaluatedId), anyList()))
+                    .thenReturn(false);
             when(personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(
                     StatusPersonEvaluatedEnum.WITH_RECORD.getDescription()))
                     .thenReturn(Optional.of(withRecordStatus));
             when(personEvaluatedCommandRepository.updatePersonEvaluated(any(PersonEvaluated.class)))
                     .thenReturn(Optional.of(updatedPerson));
-            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedId(personEvaluatedId))
-                    .thenReturn(false);
             when(batteryManagementRecordCommandRepository.saveBatteryManagementRecord(any(BatteryManagementRecord.class)))
                     .thenReturn(Optional.empty());
             doThrow(new EntityCreationException(
@@ -582,15 +586,17 @@ class BatteryManagementRecordCommandServiceTest {
     class CloseBatteryManagementRecord {
 
         @Test
-        @DisplayName("Debe cerrar registro con cierre en cascada de cuestionarios")
+        @DisplayName("Debe cerrar registro con cierre en cascada de cuestionarios y sincronizar persona")
         void should_closeRecord_when_statusIsCompleted() {
             // Arrange
             BatteryManagementRecord record = buildBatteryManagementRecord();
             record.setStatus(buildStatus(3L, BatteryManagementRecordStatusCode.COMPLETED));
+            record.getPersonEvaluated().setStatus(buildPersonStatus(2L, StatusPersonEvaluatedEnum.WITH_RECORD));
 
             QuestionnaireManagementRecordStatus closedQStatus = QuestionnaireManagementRecordStatus.builder()
                     .id(4L).name(QuestionnaireManagementRecordStatusEnum.CERRADO.getName()).build();
             BatteryManagementRecordStatus closedBatteryStatus = buildStatus(4L, BatteryManagementRecordStatusCode.CLOSED);
+            StatusPersonEvaluated withoutRecordStatus = buildPersonStatus(1L, StatusPersonEvaluatedEnum.WITHOUT_RECORD);
 
             QuestionnaireManagementRecord q1 = QuestionnaireManagementRecord.builder()
                     .id(10L).batteryManagementRecord(record).status(QuestionnaireManagementRecordStatus.builder()
@@ -614,6 +620,14 @@ class BatteryManagementRecordCommandServiceTest {
                     .thenReturn(Optional.of(closedBatteryStatus));
             when(batteryManagementRecordCommandRepository.saveBatteryManagementRecord(any(BatteryManagementRecord.class)))
                     .thenReturn(Optional.of(closedRecord));
+            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+                    eq(1L), anyList()))
+                    .thenReturn(false);
+            when(personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(
+                    StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription()))
+                    .thenReturn(Optional.of(withoutRecordStatus));
+            when(personEvaluatedCommandRepository.updatePersonEvaluated(any(PersonEvaluated.class)))
+                    .thenReturn(Optional.of(record.getPersonEvaluated()));
 
             // Act
             BatteryManagementRecord result = batteryManagementRecordCommandService.closeBatteryManagementRecord(1L);
@@ -631,6 +645,10 @@ class BatteryManagementRecordCommandServiceTest {
             verify(batteryManagementRecordCommandRepository).saveBatteryManagementRecord(recordCaptor.capture());
             assertThat(recordCaptor.getValue().getStatus().getName())
                     .isEqualTo(BatteryManagementRecordStatusCode.CLOSED.getDescription());
+
+            verify(personEvaluatedCommandRepository).updatePersonEvaluated(personCaptor.capture());
+            assertThat(personCaptor.getValue().getStatus().getName())
+                    .isEqualTo(StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription());
         }
 
         @Test
@@ -752,6 +770,138 @@ class BatteryManagementRecordCommandServiceTest {
                     "user.battery.close_status_failed",
                     BatteryManagementRecordStatusCode.CLOSED.getDescription());
             verify(batteryManagementRecordCommandRepository, never()).saveBatteryManagementRecord(any());
+        }
+
+        @Test
+        @DisplayName("Debe cerrar registro y mantener estado de persona cuando tiene otros registros activos")
+        void should_closeRecord_and_keepPersonStatus_when_personHasOtherActiveRecords() {
+            // Arrange
+            BatteryManagementRecord record = buildBatteryManagementRecord();
+            record.setStatus(buildStatus(3L, BatteryManagementRecordStatusCode.COMPLETED));
+            record.getPersonEvaluated().setStatus(buildPersonStatus(2L, StatusPersonEvaluatedEnum.WITH_RECORD));
+
+            BatteryManagementRecordStatus closedBatteryStatus = buildStatus(4L, BatteryManagementRecordStatusCode.CLOSED);
+            QuestionnaireManagementRecordStatus closedQStatus = QuestionnaireManagementRecordStatus.builder()
+                    .id(4L).name(QuestionnaireManagementRecordStatusEnum.CERRADO.getName()).build();
+
+            BatteryManagementRecord closedRecord = buildBatteryManagementRecord();
+            closedRecord.setStatus(closedBatteryStatus);
+
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordById(1L))
+                    .thenReturn(Optional.of(record));
+            when(questionnaireManagementRecordStatusQueryRepository.getQuestionnaireManagementRecordStatusByName(
+                    QuestionnaireManagementRecordStatusEnum.CERRADO.getName()))
+                    .thenReturn(Optional.of(closedQStatus));
+            when(questionnaireManagementRecordQueryRepository.findAllByBatteryManagementRecordId(1L))
+                    .thenReturn(List.of());
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
+                    BatteryManagementRecordStatusCode.CLOSED.getDescription()))
+                    .thenReturn(Optional.of(closedBatteryStatus));
+            when(batteryManagementRecordCommandRepository.saveBatteryManagementRecord(any(BatteryManagementRecord.class)))
+                    .thenReturn(Optional.of(closedRecord));
+            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+                    eq(1L), anyList()))
+                    .thenReturn(true);
+
+            // Act
+            BatteryManagementRecord result = batteryManagementRecordCommandService.closeBatteryManagementRecord(1L);
+
+            // Assert
+            assertThat(result).isNotNull();
+            assertThat(result.getStatus().getName())
+                    .isEqualTo(BatteryManagementRecordStatusCode.CLOSED.getDescription());
+            verify(personEvaluatedCommandRepository, never()).updatePersonEvaluated(any());
+        }
+
+        @Test
+        @DisplayName("Debe cerrar registro sin sincronizar cuando la persona es null")
+        void should_closeRecord_without_sync_when_personIsNull() {
+            // Arrange
+            BatteryManagementRecord record = buildBatteryManagementRecord();
+            record.setStatus(buildStatus(3L, BatteryManagementRecordStatusCode.COMPLETED));
+            record.setPersonEvaluated(null);
+
+            BatteryManagementRecordStatus closedBatteryStatus = buildStatus(4L, BatteryManagementRecordStatusCode.CLOSED);
+            QuestionnaireManagementRecordStatus closedQStatus = QuestionnaireManagementRecordStatus.builder()
+                    .id(4L).name(QuestionnaireManagementRecordStatusEnum.CERRADO.getName()).build();
+
+            BatteryManagementRecord closedRecord = buildBatteryManagementRecord();
+            closedRecord.setStatus(closedBatteryStatus);
+
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordById(1L))
+                    .thenReturn(Optional.of(record));
+            when(questionnaireManagementRecordStatusQueryRepository.getQuestionnaireManagementRecordStatusByName(
+                    QuestionnaireManagementRecordStatusEnum.CERRADO.getName()))
+                    .thenReturn(Optional.of(closedQStatus));
+            when(questionnaireManagementRecordQueryRepository.findAllByBatteryManagementRecordId(1L))
+                    .thenReturn(List.of());
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
+                    BatteryManagementRecordStatusCode.CLOSED.getDescription()))
+                    .thenReturn(Optional.of(closedBatteryStatus));
+            when(batteryManagementRecordCommandRepository.saveBatteryManagementRecord(any(BatteryManagementRecord.class)))
+                    .thenReturn(Optional.of(closedRecord));
+
+            // Act
+            BatteryManagementRecord result = batteryManagementRecordCommandService.closeBatteryManagementRecord(1L);
+
+            // Assert
+            assertThat(result).isNotNull();
+            assertThat(result.getStatus().getName())
+                    .isEqualTo(BatteryManagementRecordStatusCode.CLOSED.getDescription());
+            verify(batteryManagementRecordQueryRepository, never()).existsByPersonEvaluatedIdAndStatusNameIn(anyLong(), anyList());
+            verify(personEvaluatedCommandRepository, never()).updatePersonEvaluated(any());
+        }
+
+        @Test
+        @DisplayName("Debe lanzar EntityNotFound cuando el estado de sincronización no existe después de cerrar")
+        void should_throwEntityNotFound_when_syncStatusNotFoundAfterClose() {
+            // Arrange
+            BatteryManagementRecord record = buildBatteryManagementRecord();
+            record.setStatus(buildStatus(3L, BatteryManagementRecordStatusCode.COMPLETED));
+            record.getPersonEvaluated().setStatus(buildPersonStatus(2L, StatusPersonEvaluatedEnum.WITH_RECORD));
+
+            BatteryManagementRecordStatus closedBatteryStatus = buildStatus(4L, BatteryManagementRecordStatusCode.CLOSED);
+            QuestionnaireManagementRecordStatus closedQStatus = QuestionnaireManagementRecordStatus.builder()
+                    .id(4L).name(QuestionnaireManagementRecordStatusEnum.CERRADO.getName()).build();
+
+            BatteryManagementRecord closedRecord = buildBatteryManagementRecord();
+            closedRecord.setStatus(closedBatteryStatus);
+
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordById(1L))
+                    .thenReturn(Optional.of(record));
+            when(questionnaireManagementRecordStatusQueryRepository.getQuestionnaireManagementRecordStatusByName(
+                    QuestionnaireManagementRecordStatusEnum.CERRADO.getName()))
+                    .thenReturn(Optional.of(closedQStatus));
+            when(questionnaireManagementRecordQueryRepository.findAllByBatteryManagementRecordId(1L))
+                    .thenReturn(List.of());
+            when(batteryManagementRecordQueryRepository.getBatteryManagementRecordStatusByName(
+                    BatteryManagementRecordStatusCode.CLOSED.getDescription()))
+                    .thenReturn(Optional.of(closedBatteryStatus));
+            when(batteryManagementRecordCommandRepository.saveBatteryManagementRecord(any(BatteryManagementRecord.class)))
+                    .thenReturn(Optional.of(closedRecord));
+            when(batteryManagementRecordQueryRepository.existsByPersonEvaluatedIdAndStatusNameIn(
+                    eq(1L), anyList()))
+                    .thenReturn(false);
+            when(personEvaluatedQueryRepository.getStatusPersonEvaluatedByName(
+                    StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription()))
+                    .thenReturn(Optional.empty());
+            doThrow(new EntityNotFoundPersException(
+                    ErrorCode.PERSON_STATUS_NOT_FOUND.getCode(),
+                    ErrorCode.PERSON_STATUS_NOT_FOUND.getMessageKey(),
+                    "user.battery.sync_delete_error",
+                    new Object[]{StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription()}))
+                .when(resultFormatterOutputPort).throwEntityNotFound(any(ErrorCode.class), anyString(), any());
+
+            // Act & Assert
+            assertThatThrownBy(() -> batteryManagementRecordCommandService.closeBatteryManagementRecord(1L))
+                    .isInstanceOf(EntityNotFoundPersException.class);
+
+            verify(batteryManagementRecordCommandRepository).saveBatteryManagementRecord(any());
+            verify(resultFormatterOutputPort).throwEntityNotFound(
+                    ErrorCode.PERSON_STATUS_NOT_FOUND,
+                    "user.battery.sync_delete_error",
+                    StatusPersonEvaluatedEnum.WITHOUT_RECORD.getDescription());
+            verify(personEvaluatedCommandRepository, never()).updatePersonEvaluated(any());
         }
 
         @Test
